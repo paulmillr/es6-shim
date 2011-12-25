@@ -11,7 +11,7 @@ browsers.
     npm install es6-shim
 
 ## Safe shims
-* Maps & Sets
+* Maps & Sets (FIXME: iteration doesn't work)
 * String.prototype.repeat, String.prototype.startsWith,
 String.prototype.endsWith, String.prototype.contains, String.prototype.toArray
 * Array.from, Array.of
