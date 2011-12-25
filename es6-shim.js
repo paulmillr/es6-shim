@@ -141,6 +141,14 @@
       return x !== x && y !== y;
     }
   });
+  
+  defineProperties(Math, {
+    sign: function(value) {
+      var number = +value;
+      if (global_isNaN(number) || number === 0) return number;
+      return (number < 0) ? -1 : 1;
+    }
+  });
 
   defineProperties(globall, {
     Map: (function() {

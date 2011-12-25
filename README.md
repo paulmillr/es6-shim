@@ -7,12 +7,14 @@ closely as possible to ECMAScript 6 (Harmony).
     npm install es6-shim
 
 ## Safe shims
+* Maps & Sets
 * String.prototype.repeat, String.prototype.startsWith,
 String.prototype.endsWith, String.prototype.contains, String.prototype.toArray
 * Array.from, Array.of
-* Number.isNaN, Number.toInteger
-* Object.getOwnPropertyDescriptors, Object.is, Object.isInteger
-* Maps & Sets
+* Number.isNaN, Number.toInteger, Number.isInteger
+* Object.getOwnPropertyDescriptors, Object.getPropertyDescriptor,
+Object.getPropertyNames, Object.is
+* Math.sign
 
 ## Dubious shims
 
