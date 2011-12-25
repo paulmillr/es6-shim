@@ -33,7 +33,7 @@
   var sign = function(n) {
     return (n < 0) ? -1 : 1;
   };
-  
+
   var unique = function(iterable) {
     return Array.from(Set.from(iterable));
   };
@@ -64,15 +64,33 @@
   });
 
   // http://wiki.ecmascript.org/doku.php?id=strawman:array_extras
+  // Based on spec proposal production semantics defined by https://gist.github.com/1074126
   defineProperties(Array, {
-    of: function(iterable) {
-      return Array.prototype.slice.call(iterable);
+    from: function(iterable) {
+      var O = Object(iterable);
+      var len = O.length >>> 0;
+      var A = new Array();
+      var k = 0;
+
+      while( k < len ) {
+        var kValue;
+
+        if ( k in O ) {
+          kValue = O[ k ];
+          A[ k ] = kValue;
+        }
+        k++;
+      }
+      return A;
+    },
+    of: function() {
+      return Array.prototype.slice.call(arguments, 0);
     }
   });
 
   defineProperties(Number, {
     isInteger: function(value) {
-      return typeof value === 'number' && global_isFinite(value) && 
+      return typeof value === 'number' && global_isFinite(value) &&
         value > -9007199254740992 && value < 9007199254740992 &&
         Math.floor(value) === value;
     },
@@ -132,7 +150,7 @@
       return x !== x && y !== y;
     }
   });
-  
+
   defineProperties(Math, {
     sign: function(value) {
       var number = +value;
@@ -213,7 +231,7 @@
       // TODO: iteration.
     })()
   });
-  
+
   defineProperties(globall.Set, {
     of: function(iterable) {
       var object = Object(iterable);
