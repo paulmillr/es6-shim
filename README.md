@@ -2,7 +2,7 @@
 Provides compatibility shims so that legacy JavaScript engines behave as
 closely as possible to ECMAScript 6 (Harmony).
 
-Project targets ES5-supported engines. With
+Project targets engines that support ES5. With
 [ES5-shim](https://github.com/kriskowal/es5-shim) it would also work in older
 browsers.
 
