@@ -52,7 +52,13 @@ describe('Object', function() {
   describe('Object.getPropertyNames()', function() {
     it('should produce an array of property names including inherited ones',
       function() {
-      expect(false).to.be.ok();
+      expect(Object.getPropertyNames(Object.create(null))).to.eql([]);
+      var obj = {};
+      expect(Object.getPropertyNames(Object.create(obj))).to.eql(
+        Object.getOwnPropertyNames(obj).concat(
+          Object.getOwnPropertyNames(Object.getPrototypeOf(obj))
+        )
+      );
     });
   });
 });
