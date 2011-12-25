@@ -54,8 +54,21 @@
   });
 
   defineProperties(Array, {
-    of: function(iterable) {
-      return Array.prototype.slice.call(iterable);
+    from: function(iterable) {
+      var object = Object(iterable);
+      var array = [];
+
+      for (var key = 0, length = object.length >>> 0; key < length; key++) {
+        if (key in object) {
+          array[key] = object[key];
+        }
+      }
+
+      return array;
+    },
+
+    of: function() {
+      return Array.prototype.slice.call(arguments);
     }
   });
 
@@ -203,7 +216,7 @@
     })()
   });
   
-  defineProperties(globall.Set, {
+  /*defineProperties(globall.Set, {
     of: function(iterable) {
       var object = Object(iterable);
       var set = Set();
@@ -216,5 +229,5 @@
 
       return set;
     }
-  });
+  });*/
 });
