@@ -20,7 +20,6 @@ String.prototype.endsWith, String.prototype.contains, String.prototype.toArray
 Object.getPropertyNames, Object.is
 * Math.sign
 
-
 ## License
 The MIT License (MIT)
 
