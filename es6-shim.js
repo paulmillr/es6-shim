@@ -44,38 +44,29 @@
     repeat: function(times) {
       return new Array(times + 1).join(this);
     },
+
     startsWith: function(substring) {
       return this.indexOf(substring) === 0;
     },
+
     endsWith: function(s) {
       var t = String(s);
       return this.lastIndexOf(t) === this.length - t.length;
     },
+
     contains: function(s) {
       return this.indexOf(s) !== -1;
     },
+
     toArray: function() {
       return this.split('');
     }
   });
 
-  // https://gist.github.com/1074126
+  // http://wiki.ecmascript.org/doku.php?id=strawman:array_extras
   defineProperties(Array, {
-    from: function(iterable) {
-      var object = Object(iterable);
-      var array = [];
-
-      for (var key = 0, length = object.length >>> 0; key < length; key++) {
-        if (key in object) {
-          array[key] = object[key];
-        }
-      }
-
-      return array;
-    },
-
-    of: function() {
-      return Array.prototype.slice.call(arguments);
+    of: function(iterable) {
+      return Array.prototype.slice.call(iterable);
     }
   });
 
@@ -224,7 +215,7 @@
   });
   
   defineProperties(globall.Set, {
-    from: function(iterable) {
+    of: function(iterable) {
       var object = Object(iterable);
       var set = Set();
 
@@ -235,10 +226,6 @@
       }
 
       return set;
-    },
-
-    of: function() {
-      return Set.from(arguments);
     }
   });
 });
