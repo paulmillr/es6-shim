@@ -22,20 +22,24 @@ describe('Object', function() {
     });
   });
   
-  describe('#getOwnPropertyDescriptors()', function() {
+  describe('Object.getOwnPropertyDescriptors()', function() {
     it('should produce an array of properties', function() {
-      expect(false).to.be.ok();
+      expect(Object.getOwnPropertyDescriptors({a: 1, b: 2, c: 3})).to.eql [
+        {configurable: true, enumerable: true, value: 1, writable: true},
+        {configurable: true, enumerable: true, value: 2, writable: true},
+        {configurable: true, enumerable: true, value: 3, writable: true}
+      ];
     });
   });
   
-  describe('#getPropertyDescriptor()', function() {
+  describe('Object.getPropertyDescriptor()', function() {
     it('should produce an array of properties including inherited ones',
       function() {
       expect(false).to.be.ok();
     });
   });
-  
-  describe('#getPropertyNames()', function() {
+
+  describe('Object.getPropertyNames()', function() {
     it('should produce an array of property names including inherited ones',
       function() {
       expect(false).to.be.ok();
