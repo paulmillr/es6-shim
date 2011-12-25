@@ -23,20 +23,22 @@ describe('Object', function() {
   });
   
   describe('#getOwnPropertyDescriptors()', function() {
-    it('', function() {
-      
+    it('should produce an array of properties', function() {
+      expect(false).to.be.ok();
     });
   });
   
   describe('#getPropertyDescriptor()', function() {
-    it('', function() {
-      
+    it('should produce an array of properties including inherited ones',
+      function() {
+      expect(false).to.be.ok();
     });
   });
   
   describe('#getPropertyNames()', function() {
-    it('', function() {
-      
+    it('should produce an array of property names including inherited ones',
+      function() {
+      expect(false).to.be.ok();
     });
   });
 });

@@ -20,7 +20,6 @@ describe('Number', function() {
 
   describe('Number.isNaN()', function() {
     it('should be truthy on NaN', function() {
-      console.log(Number.isNaN);
       expect(Number.isNaN(NaN)).to.be.ok();
     });
 
