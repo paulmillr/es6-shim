@@ -35,7 +35,17 @@ describe('Object', function() {
   describe('Object.getPropertyDescriptor()', function() {
     it('should produce an array of properties including inherited ones',
       function() {
-      expect(false).to.be.ok();
+      expect(Object.getPropertyDescriptor([1], 'length')).to.eql({
+        configurable: false, enumerable: false, value: 1, writable: true
+      });
+
+      expect(Object.getPropertyDescriptor([1, 5], 'length')).to.eql({
+        configurable: false, enumerable: false, value: 2, writable: true
+      });
+
+      expect(Object.getPropertyDescriptor(function(a) {}, 'length')).to.eql({
+        configurable: false, enumerable: false, value: 1, writable: false
+      });
     });
   });
 
