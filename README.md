@@ -3,7 +3,7 @@ Provides compatibility shims so that legacy JavaScript engines behave as
 closely as possible to ECMAScript 6 (Harmony).
 
 Project targets engines that support ES5 (Firefox, Chrome, Safari, Opera). With
-[ES5-shim](https://github.com/kriskowal/es5-shim) it would also work in older
+[ES5-shim](https://github.com/kriskowal/es5-shim) it could also work in older
 browsers.
 
 ## Installation
