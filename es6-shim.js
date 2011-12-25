@@ -201,7 +201,6 @@
         }
       });
       return Map;
-      // TODO: iteration.
     })(),
 
     Set: (function() {
@@ -225,7 +224,6 @@
       });
 
       return Set;
-      // TODO: iteration.
     })()
   });
   

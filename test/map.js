@@ -31,11 +31,13 @@ describe('Map', function() {
   it('should return true on values that set has not', function() {
     map.set(1);
     expect(map.has(2)).to.not.be.ok();
+    expect(map.get(2)).to.equal(void 0);
   });
     
   it('should delete props', function() {
     map.set(1, 2);
     map.delete(1);
     expect(map.has(1)).to.not.be.ok();
+    expect(map.get(1)).to.equal(void 0);
   });
 });
