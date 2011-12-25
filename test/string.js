@@ -2,13 +2,13 @@ var expect = require('expect.js');
 require('../');
 
 describe('String', function() {
-  describe('#repeat', function() {
+  describe('#repeat()', function() {
     it('should work', function() {
       expect('test'.repeat(3)).to.eql('testtesttest');
     });
   });
 
-  describe('#startsWith', function() {
+  describe('#startsWith()', function() {
     it('should be truthy on correct results', function() {
       expect('test'.startsWith('te')).to.be.ok();
     });
@@ -18,7 +18,7 @@ describe('String', function() {
     });
   });
 
-  describe('#endsWith', function() {
+  describe('#endsWith()', function() {
     it('should be truthy on correct results', function() {
       expect('test'.endsWith('st')).to.be.ok();
     })
@@ -28,7 +28,7 @@ describe('String', function() {
     });
   });
 
-  describe('#contains', function() {
+  describe('#contains()', function() {
     it('should be truthy on correct results', function() {
       expect('test'.contains('es')).to.be.ok();
     });
@@ -38,12 +38,9 @@ describe('String', function() {
     });
   });
 
-  describe('#toArray', function() {
-    it('should be truthy on correct results', function() {
+  describe('#toArray()', function() {
+    it('should convert string to array of strings', function() {
       expect('string'.toArray()).to.eql(['s', 't', 'r', 'i', 'n', 'g']);
-    });
-    
-    it('should be falsy on incorrect results', function() {
       expect(''.toArray()).to.eql([]);
     });
   });

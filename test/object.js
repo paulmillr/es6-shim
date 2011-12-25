@@ -2,7 +2,7 @@ var expect = require('expect.js');
 require('../');
 
 describe('Object', function() {
-  describe('Object.is', function() {
+  describe('Object.is()', function() {
     it('should compare regular objects correctly', function() {
       expect(Object.is(null, null)).to.be.ok();
       expect(Object.is(void 0, void 0)).to.be.ok();
@@ -22,19 +22,19 @@ describe('Object', function() {
     });
   });
   
-  describe('#getOwnPropertyDescriptors', function() {
+  describe('#getOwnPropertyDescriptors()', function() {
     it('', function() {
       
     });
   });
   
-  describe('#getPropertyDescriptor', function() {
+  describe('#getPropertyDescriptor()', function() {
     it('', function() {
       
     });
   });
   
-  describe('#getPropertyNames', function() {
+  describe('#getPropertyNames()', function() {
     it('', function() {
       
     });

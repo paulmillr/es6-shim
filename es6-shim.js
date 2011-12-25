@@ -30,16 +30,6 @@
     });
   };
 
-  var sign = function(n) {
-    return (n < 0) ? -1 : 1;
-  };
-  
-  var unique = function(iterable) {
-    return Array.from(Set.from(iterable));
-  };
-
-  // http://wiki.ecmascript.org/doku.php?id=harmony:string.prototype.repeat
-  // http://wiki.ecmascript.org/doku.php?id=harmony:string_extras
   defineProperties(String.prototype, {
     repeat: function(times) {
       return new Array(times + 1).join(this);
@@ -63,7 +53,6 @@
     }
   });
 
-  // http://wiki.ecmascript.org/doku.php?id=strawman:array_extras
   defineProperties(Array, {
     of: function(iterable) {
       return Array.prototype.slice.call(iterable);
@@ -85,7 +74,7 @@
       var n = +value;
       if (isNaN(n)) return +0;
       if (n === 0 || !global_isFinite(n)) return n;
-      return sign(n) * Math.floor(Math.abs(n));
+      return Math.sign(n) * Math.floor(Math.abs(n));
     }
   });
 
