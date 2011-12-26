@@ -1,12 +1,7 @@
-(function(definition) {
-  // RequireJS.
-  if (typeof define === 'function') {
-    define(definition);
-  // CommonJS and <script>.
-  } else {
-    definition();
-  }
-})(function() {
+({define: (typeof define === 'function')
+    ? define  // RequireJS
+    : function(definition) {definition();} // CommonJS and <script>
+}).define(function() {
   'use strict';
 
   var globall = (typeof global === 'undefined') ? window : global;
