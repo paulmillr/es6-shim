@@ -21,6 +21,8 @@ Object.getPropertyNames, Object.is
 * Math.sign
 
 ## License
+The project was initially based on [es6-shim by Axel Rauschmayer](https://github.com/rauschma/es6-shim).
+
 The MIT License (MIT)
 
 Copyright (c) 2011 Paul Miller (http://paulmillr.com)
