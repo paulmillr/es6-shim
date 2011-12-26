@@ -54,7 +54,8 @@
 
     endsWith: function(s) {
       var t = String(s);
-      return this.lastIndexOf(t) === this.length - t.length;
+      var index = this.lastIndexOf(t)
+      return index >= 0 && index === this.length - t.length;
     },
 
     contains: function(s) {

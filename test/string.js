@@ -25,6 +25,9 @@ describe('String', function() {
 
     it('should be falsy on incorrect results', function() {
       expect('test'.endsWith('te')).to.not.be.ok();
+      expect(''.endsWith('/')).to.not.be.ok();
+      expect('#'.endsWith('/')).to.not.be.ok();
+      expect('##'.endsWith('///')).to.not.be.ok();
     });
   });
 
