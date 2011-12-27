@@ -7,19 +7,6 @@
   var globall = (typeof global === 'undefined') ? window : global;
   var global_isNaN = globall.isNaN;
   var global_isFinite = globall.isFinite;
-  
-  var unique = function(array) {
-    var result = [];
-    var item;
-
-    for (var i = 0, length = array.length; i < length; i++) {
-      item = array[i];
-      if (result.indexOf(item) === -1) {
-        result.push(item);
-      }
-    }
-    return result;
-  };
 
   var defineProperty = function(object, name, method) {
     if (!object[name]) {
@@ -122,11 +109,16 @@
     getPropertyNames: function(subject, name) {
       var result = Object.getOwnPropertyNames(subject);
       var proto = Object.getPrototypeOf(subject);
+      var property;
       while (proto !== null) {
-        result = result.concat(Object.getOwnPropertyNames(proto));
+        Object.getOwnPropertyNames(proto).forEach(function(property) {
+          if (result.indexOf(property) === -1) {
+            result.push(property);
+          }
+        });
         proto = Object.getPrototypeOf(proto);
       }
-      return unique(result);
+      return result;
     },
 
     is: function(x, y) {
