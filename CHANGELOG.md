@@ -1,10 +1,10 @@
-## 0.2.1 / 2012-01-07
+## es6-shim 0.2.1 (January 07, 2012)
 * Fixed a bug in String#endsWith().
 
-## 0.2.0 / 2011-12-25
+## es6-shim 0.2.0 (December 25, 2011)
 * Added browser support.
 * Added tests.
 * Added Math.sign().
 
-## 0.1.0 / 2011-12-25
+## es6-shim 0.1.0 (December 25, 2011)
 * Initial release
