@@ -69,8 +69,12 @@
   });
 
   defineProperties(Number, {
+    isFinite: function(value) {
+      return typeof value === 'number' && global_isFinite(value);
+    },
+
     isInteger: function(value) {
-      return typeof value === 'number' && global_isFinite(value) && 
+      return Number.isFinite(value) && 
         value > -9007199254740992 && value < 9007199254740992 &&
         Math.floor(value) === value;
     },
