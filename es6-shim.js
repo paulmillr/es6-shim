@@ -137,6 +137,10 @@
       // isNaN is broken: it converts its argument to number, so
       // isNaN("foo") => true
       return x !== x && y !== y;
+    },
+    
+    isnt: function(x, y) {
+      return !Object.is(x, y);
     }
   });
   
