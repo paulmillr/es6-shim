@@ -207,26 +207,11 @@
         },
 
         'delete': function(key) {
-          return this.map.delete(key);
+          return this.map['delete'](key);
         }
       });
 
       return Set;
     })()
   });
-  
-  /*defineProperties(globall.Set, {
-    of: function(iterable) {
-      var object = Object(iterable);
-      var set = Set();
-
-      for (var key = 0, length = object.length >>> 0; key < length; key++) {
-        if (key in object && !(set.has(key))) {
-          set.add(object[key]);
-        }
-      }
-
-      return set;
-    }
-  });*/
 });

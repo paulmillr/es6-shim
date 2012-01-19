@@ -32,15 +32,7 @@ describe('Set', function() {
     
   it('should delete props', function() {
     set.add(1);
-    set.delete(1);
+    set['delete'](1);
     expect(set.has(1)).to.not.be.ok();
   });
-  
-  //describe('Set.of()', function() {
-  //  it('should create new set from iterable', function() {
-  //    expect(Set.of([1, 2, 3, 4, 5, 4, 3, 2, 1])).to.eql([
-  //      1, 2, 3, 4, 5
-  //    ]);
-  //  });
-  //});
 });
