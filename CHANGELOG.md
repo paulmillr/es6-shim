@@ -1,3 +1,6 @@
+## es6-shim 0.3.0 (unreleased)
+* Added Number.isFinite() and Object.isnt().
+
 ## es6-shim 0.2.1 (January 07, 2012)
 * Fixed a bug in String#endsWith().
 

@@ -15,9 +15,9 @@ browsers.
 * String.prototype.repeat, String.prototype.startsWith,
 String.prototype.endsWith, String.prototype.contains, String.prototype.toArray
 * Array.from, Array.of
-* Number.isNaN, Number.toInteger, Number.isInteger
+* Number.isNaN, Number.toInteger, Number.isInteger, Number.isFinite
 * Object.getOwnPropertyDescriptors, Object.getPropertyDescriptor,
-Object.getPropertyNames, Object.is
+Object.getPropertyNames, Object.is, Object.isnt
 * Math.sign
 
 ## License
@@ -25,7 +25,7 @@ The project was initially based on [es6-shim by Axel Rauschmayer](https://github
 
 The MIT License (MIT)
 
-Copyright (c) 2011 Paul Miller (http://paulmillr.com)
+Copyright (c) 2012 Paul Miller (http://paulmillr.com)
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
