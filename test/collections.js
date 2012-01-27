@@ -128,7 +128,7 @@ describe('Collections', function() {
         expect(set.has(key)).to.be(false);
         set.add(key);
         expect(set.has(key)).to.be(true);
-        set.delete(key);
+        set['delete'](key);
         expect(set.has(key)).to.be(false);
       };
       

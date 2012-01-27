@@ -1,4 +1,4 @@
-## es6-shim 0.3.0 (unreleased)
+## es6-shim 0.3.0 (January 27, 2012)
 * Added Number.isFinite() and Object.isnt().
 
 ## es6-shim 0.2.1 (January 07, 2012)

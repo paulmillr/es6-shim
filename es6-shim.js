@@ -5,7 +5,6 @@
   'use strict';
 
   var globall = (typeof global === 'undefined') ? window : global;
-  var global_isNaN = globall.isNaN;
   var global_isFinite = globall.isFinite;
   var factorial = function(value) {
     var result = 1;
@@ -41,10 +40,10 @@
       return this.indexOf(substring) === 0;
     },
 
-    endsWith: function(s) {
-      var t = String(s);
-      var index = this.lastIndexOf(t)
-      return index >= 0 && index === this.length - t.length;
+    endsWith: function(substring) {
+      var substr = String(substring);
+      var index = this.lastIndexOf(substr)
+      return index >= 0 && index === this.length - substr.length;
     },
 
     contains: function(s) {
@@ -81,20 +80,20 @@
     },
 
     isInteger: function(value) {
-      return Number.isFinite(value) && 
+      return Number.isFinite(value) &&
         value > -9007199254740992 && value < 9007199254740992 &&
         Math.floor(value) === value;
     },
 
     isNaN: function(value) {
-      return typeof value === 'number' && global_isNaN(value);
+      return Object.is(value, NaN);
     },
 
     toInteger: function(value) {
-      var n = +value;
-      if (isNaN(n)) return +0;
-      if (n === 0 || !global_isFinite(n)) return n;
-      return Math.sign(n) * Math.floor(Math.abs(n));
+      var number = +value;
+      if (Object.is(number, NaN)) return +0;
+      if (number === 0 || !Number.isFinite(number)) return number;
+      return Math.sign(number) * Math.floor(Math.abs(number));
     }
   });
 
@@ -135,7 +134,11 @@
     is: function(x, y) {
       if (x === y) {
         // 0 === -0, but they are not identical
-        return x !== 0 || 1 / x === 1 / y;
+        if (x === 0) {
+          return 1 / x === 1 / y;
+        } else {
+          return true;
+        }
       }
 
       // NaN !== NaN, but they are identical.
@@ -210,7 +213,7 @@
 
     sign: function(value) {
       var number = +value;
-      if (global_isNaN(number) || number === 0) return number;
+      if (Object.is(number, NaN) || number === 0) return number;
       return (number < 0) ? -1 : 1;
     },
     
