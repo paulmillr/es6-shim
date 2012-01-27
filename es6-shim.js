@@ -33,10 +33,10 @@
       return this.indexOf(substring) === 0;
     },
 
-    endsWith: function(s) {
-      var t = String(s);
-      var index = this.lastIndexOf(t)
-      return index >= 0 && index === this.length - t.length;
+    endsWith: function(substring) {
+      var substr = String(substring);
+      var index = this.lastIndexOf(substr)
+      return index >= 0 && index === this.length - substr.length;
     },
 
     contains: function(s) {
@@ -73,7 +73,7 @@
     },
 
     isInteger: function(value) {
-      return Number.isFinite(value) && 
+      return Number.isFinite(value) &&
         value > -9007199254740992 && value < 9007199254740992 &&
         Math.floor(value) === value;
     },
