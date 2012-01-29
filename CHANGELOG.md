@@ -1,3 +1,6 @@
+## es6-shim 0.3.1 (January 30, 2012)
+* Added IE8 support.
+
 ## es6-shim 0.3.0 (January 27, 2012)
 * Added Number.isFinite() and Object.isnt().
 

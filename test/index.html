@@ -7,19 +7,20 @@
   <link rel="stylesheet" href="mocha.css" />
   <script src="https://raw.github.com/visionmedia/mocha/c9935e7c168afb2ebb2cebf6f161f842b8677295/mocha.js"></script>
   <script src="https://github.com/LearnBoost/expect.js/raw/master/expect.js"></script>
+  <script src="https://raw.github.com/kriskowal/es5-shim/master/es5-shim.min.js"></script>
   <script src="../es6-shim.js"></script>
   <script>
+    var _expect = window.expect;
     var require = function(name) {
-      return expect;
+      return _expect;
     };
     mocha.setup('bdd')
   </script>
   <script src="array.js"></script>
-  <script src="map.js"></script>
+  <script src="collections.js"></script>
   <script src="math.js"></script>
   <script src="number.js"></script>
   <script src="object.js"></script>
-  <script src="set.js"></script>
   <script src="string.js"></script>
   <script>
     window.onload = function() {
