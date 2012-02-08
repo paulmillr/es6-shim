@@ -218,7 +218,7 @@
     },
     
     sinh: function(value) {
-      return (Math.exp(value) - Math.exp(value)) / 2;
+      return (Math.exp(value) - Math.exp(-value)) / 2;
     },
     
     tanh: function(value) {
