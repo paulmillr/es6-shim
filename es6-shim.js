@@ -6,6 +6,13 @@
 
   var globall = (typeof global === 'undefined') ? window : global;
   var global_isFinite = globall.isFinite;
+  var factorial = function(value) {
+    var result = 1;
+    for (var i = 2; i <= value; i++) {
+      result *= i;
+    }
+    return result;
+  };
 
   var defineProperty = function(object, name, method) {
     if (!object[name]) {
@@ -145,13 +152,81 @@
     isnt: function(x, y) {
       return !Object.is(x, y);
     }
-  });
+  });  
   
   defineProperties(Math, {
+    acosh: function(value) {
+      return Math.log(value + Math.sqrt(value * value - 1));
+    },
+    
+    asinh: function(value) {
+      return Math.log(value + Math.sqrt(value * value + 1));
+    },
+    
+    atanh: function(value) {
+      return 0.5 * Math.log((1 + value) / (1 - value));
+    },
+
+    cosh: function(value) {
+      if (value < 0) value = -value;
+      if (value > 21) return Math.exp(value) / 2;
+      return (Math.exp(value) + Math.exp(-value)) / 2;
+    },
+    
+    expm1: function(value) {
+      var result = 0;
+      var n = 50;
+      for (var i = 1; i < n; i++) {
+        result += Math.pow(value, i) / factorial(i);
+      }
+      return result;
+    },
+    
+    hypot: function(x, y) {
+      return Math.sqrt(x * x + y * y) || 0;
+    },
+
+    log2: function(value) {
+      return Math.log(value) * (1 / Math.LN2);
+    },
+    
+    log10: function(value) {
+      return Math.log(value) * (1 / Math.LN10);
+    },
+    
+    log1p: function(value) {
+      var result = 0;
+      var n = 50;
+
+      if (value <= -1) return -Infinity;
+      if (value < 0 || value > 1) return Math.log(1 + value);
+      for (var i = 1; i < n; i++) {
+        if ((i % 2) === 0) {
+          result -= Math.pow(value, i) / i;
+        } else {
+          result += Math.pow(value, i) / i;
+        }
+      }
+
+      return result;
+    },
+
     sign: function(value) {
       var number = +value;
       if (Object.is(number, NaN) || number === 0) return number;
       return (number < 0) ? -1 : 1;
+    },
+    
+    sinh: function(value) {
+      return (Math.exp(value) - Math.exp(-value)) / 2;
+    },
+    
+    tanh: function(value) {
+      return (Math.exp(value) - Math.exp(-value)) / (Math.exp(value) + Math.exp(-value));
+    },
+    
+    trunc: function(value) {
+      return ~~value;
     }
   });
 

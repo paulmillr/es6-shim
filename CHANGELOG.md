@@ -1,3 +1,8 @@
+## es6-shim 0.4.0 (February 8, 2012)
+* Added Math.log10, Math.log2, Math.log1p, Math.expm1, Math.cosh,
+Math.sinh, Math.tanh, Math.acosh, Math.asinh, Math.atanh, Math.hypot,
+Math.trunc.
+
 ## es6-shim 0.3.1 (January 30, 2012)
 * Added IE8 support.
 
