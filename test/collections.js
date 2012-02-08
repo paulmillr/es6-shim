@@ -1,6 +1,3 @@
-var expect = require('expect.js');
-require('../');
-
 // Big thanks to V8 folks for test ideas.
 // v8/test/mjsunit/harmony/collections.js
 

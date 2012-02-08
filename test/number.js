@@ -1,6 +1,3 @@
-var expect = require('expect.js');
-require('../');
-
 describe('Number', function() {
   var integers = [5295, -5295, -9007199254740991, 9007199254740991, 0, -0];
   var nonIntegers = [-9007199254740992, 9007199254740992, 5.9];

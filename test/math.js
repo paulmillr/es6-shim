@@ -1,6 +1,3 @@
-var expect = require('expect.js');
-require('../');
-
 describe('Math', function() {
   describe('#acosh()', function() {
     it('should be correct', function() {

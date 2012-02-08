@@ -1,6 +1,3 @@
-var expect = require('expect.js');
-require('../');
-
 describe('String', function() {
   describe('#repeat()', function() {
     it('should work', function() {
