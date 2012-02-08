@@ -18,8 +18,9 @@ String.prototype.endsWith, String.prototype.contains, String.prototype.toArray
 * Number.isNaN, Number.toInteger, Number.isInteger, Number.isFinite
 * Object.getOwnPropertyDescriptors, Object.getPropertyDescriptor,
 Object.getPropertyNames, Object.is, Object.isnt
-* Math.log10, Math.log2, Math.log1p, Math.expm1, Math.cosh, Math.sinh,
-Math.tanh, Math.acosh, Math.asinh, Math.atanh, Math.hypot, Math.trunc
+* Math.sign, Math.log10, Math.log2, Math.log1p, Math.expm1, Math.cosh,
+Math.sinh, Math.tanh, Math.acosh, Math.asinh, Math.atanh, Math.hypot,
+Math.trunc
 
 ## IE8 support
 There are some shims that do not work in IE8, because it is simply not
