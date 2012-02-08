@@ -1,6 +1,3 @@
-var expect = require('expect.js');
-require('../');
-
 describe('Array', function() {
   describe('Array.from()', function() {
     it('should create correct array from iterable', function() {

@@ -1,6 +1,3 @@
-var expect = require('expect.js');
-require('../');
-
 describe('Math', function() {
   describe('Math.sign()', function() {
     it('should be 1 on positive values', function() {

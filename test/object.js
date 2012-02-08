@@ -1,6 +1,3 @@
-var expect = require('expect.js');
-require('../');
-
 describe('Object', function() {
   describe('Object.is()', function() {
     it('should compare regular objects correctly', function() {
