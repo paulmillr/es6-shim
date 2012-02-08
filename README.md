@@ -20,6 +20,12 @@ String.prototype.endsWith, String.prototype.contains, String.prototype.toArray
 Object.getPropertyNames, Object.is, Object.isnt
 * Math.sign
 
+## IE8 support
+There are some shims that do not work in IE8, because it is simply not
+possible to implement them properly:
+
+* Object.getOwnPropertyDescriptors, Object.getPropertyDescriptor, Object.getPropertyNames
+
 ## License
 The project was initially based on [es6-shim by Axel Rauschmayer](https://github.com/rauschma/es6-shim).
 
