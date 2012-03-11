@@ -58,7 +58,6 @@ describe('Collections', function() {
       testMapping(key, 'to-be-present');
       expect(map.has(key)).to.be(true);
       expect(map.has(new Object)).to.be(false);
-      // FIXME
       testMapping(key, void 0);
       expect(map.has(key)).to.be(false);
       expect(map.has(new Object)).to.be(false);
