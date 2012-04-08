@@ -20,7 +20,7 @@ String.prototype.endsWith, String.prototype.contains, String.prototype.toArray
 Object.getPropertyNames, Object.is, Object.isnt
 * Math.sign, Math.log10, Math.log2, Math.log1p, Math.expm1, Math.cosh,
 Math.sinh, Math.tanh, Math.acosh, Math.asinh, Math.atanh, Math.hypot,
-Math.trunc
+Math.trunc (accuracy is 1e-11).
 
 ## WeakMap shim
 It is not possible to implement WeakMap in pure javascript.
