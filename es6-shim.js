@@ -81,7 +81,7 @@
 
     isInteger: function(value) {
       return Number.isFinite(value) &&
-        value => -9007199254740992 && value <= 9007199254740992 &&
+        value >= -9007199254740992 && value <= 9007199254740992 &&
         Math.floor(value) === value;
     },
 
