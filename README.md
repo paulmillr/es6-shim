@@ -10,6 +10,8 @@ browsers.
 
     npm install es6-shim
 
+Or just include es6-shim before your scripts if you want to use it in browser.
+
 ## Safe shims
 * Maps & Sets
 * String.prototype.repeat, String.prototype.startsWith,
@@ -40,12 +42,47 @@ possible to implement them properly:
 
 * Object.getOwnPropertyDescriptors, Object.getPropertyDescriptor, Object.getPropertyNames
 
+## Getting started
+
+```javascript
+'abc'.startsWith('a') // true
+'abc'.endsWith('a') // false
+Object.is(NaN, NaN) // Fixes ===. 0 isnt -0, NaN is NaN
+'123'.repeat(2)     // '123123'
+'123'.toArray()     // ['1', '2', '3']
+'john alice'.contains('john') // true
+Number.isNaN('123') // false. isNaN('123') will give true.
+Number.toInteger(2.4) // 2. converts values to IEEE754 double precision integers
+// Tests if value is a number, finite,
+// > -9007199254740992 && < 9007199254740992 and floor(value) === value
+Number.isInteger(2.4) // true.
+Number.isFinite('asd') // false. Global isFinite() will give true.
+Math.sign(400) // 1, 0 or -1 depending on sign. In this case 1.
+
+// Replacement for `{}` key-value storage.
+// Keys can be anything.
+var map = new Map()
+map.set('John', 25)
+map.set('Alice', 400)
+map.set(['meh'], 555)
+map.get(['meh']) // undefined because you need to use exactly the same object.
+map.delete('Alice')
+
+// Useful for storing unique items.
+var set = new Set()
+set.add(1)
+set.add(5)
+set.has(1)
+set.has(4)  // => false
+set.delete(5)
+```
+
 ## License
 The project was initially based on [es6-shim by Axel Rauschmayer](https://github.com/rauschma/es6-shim).
 
 The MIT License (MIT)
 
-Copyright (c) 2012 Paul Miller (http://paulmillr.com)
+Copyright (c) Paul Miller (http://paulmillr.com)
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
