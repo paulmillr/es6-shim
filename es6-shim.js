@@ -37,17 +37,16 @@
     },
 
     startsWith: function(substring) {
-      return this.indexOf(substring) === 0;
+      return this.lastIndexOf(substring, 0) === 0;
     },
 
     endsWith: function(substring) {
-      var substr = String(substring);
-      var index = this.lastIndexOf(substr)
-      return index >= 0 && index === this.length - substr.length;
+      var startFrom = this.length - String(substring).length;
+      return startFrom >= 0 && this.indexOf(substring, startFrom) === startFrom;
     },
 
-    contains: function(s) {
-      return this.indexOf(s) !== -1;
+    contains: function(substring) {
+      return this.indexOf(substring) !== -1;
     },
 
     toArray: function() {

@@ -12,6 +12,9 @@ describe('String', function() {
 
     it('should be falsy on incorrect results', function() {
       expect('test'.startsWith('st')).to.not.be.ok();
+      expect(''.startsWith('/')).to.not.be.ok();
+      expect('#'.startsWith('/')).to.not.be.ok();
+      expect('##'.startsWith('///')).to.not.be.ok();
     });
   });
 
