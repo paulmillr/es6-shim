@@ -1,6 +1,6 @@
 describe('Number', function() {
   var integers = [5295, -5295, -9007199254740991, 9007199254740991, 0, -0];
-  var nonIntegers = [-9007199254740992, 9007199254740992, 5.9];
+  var nonIntegers = [-9007199254741992, 9007199254741992, 5.9];
   var infinities = [Infinity, -Infinity];
   var nonNumbers = [void 0, true, null, {}, [], 'str'];
   var expectToBeOk = function(item) {
