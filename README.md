@@ -55,7 +55,7 @@ Number.isNaN('123') // false. isNaN('123') will give true.
 Number.toInteger(2.4) // 2. converts values to IEEE754 double precision integers
 // Tests if value is a number, finite,
 // >= -9007199254740992 && <= 9007199254740992 and floor(value) === value
-Number.isInteger(2.4) // true.
+Number.isInteger(2.4) // false.
 Number.isFinite('asd') // false. Global isFinite() will give true.
 Math.sign(400) // 1, 0 or -1 depending on sign. In this case 1.
 
