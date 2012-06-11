@@ -55,4 +55,18 @@ describe('Number', function() {
       });
     });
   });
+
+  describe('#clz()', function() {
+    it('should have proper uint32 conversion', function() {
+      infinities.forEach(function(item) {
+        expect(item.clz()).to.equal(32);
+      });
+      nonIntegers.forEach(function(item) {
+        expect(item.clz()).to.be.within(0, 32);
+      });
+      expect(NaN.clz()).to.equal(32);
+      expect(0x100000000.clz()).to.equal(31);
+      expect((-1).clz()).to.equal(0);
+    });
+  });
 });
