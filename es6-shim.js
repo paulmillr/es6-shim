@@ -4,8 +4,8 @@
 }).define(function() {
   'use strict';
 
-  var globall = (typeof global === 'undefined') ? window : global;
-  var global_isFinite = globall.isFinite;
+  var globals = (typeof global === 'undefined') ? window : global;
+  var global_isFinite = globals.isFinite;
   var factorial = function(value) {
     var result = 1;
     for (var i = 2; i <= value; i++) {
@@ -74,13 +74,19 @@
   });
 
   defineProperties(Number, {
+    MAX_INTEGER: 9007199254740992,
+    EPSILON: 2.220446049250313e-16,
+
+    parseInt: globals.parseInt,
+    parseFloat: globals.parseFloat,
+
     isFinite: function(value) {
       return typeof value === 'number' && global_isFinite(value);
     },
 
     isInteger: function(value) {
       return Number.isFinite(value) &&
-        value >= -9007199254740992 && value <= 9007199254740992 &&
+        value >= -9007199254740992 && value <= Number.MAX_INTEGER &&
         Math.floor(value) === value;
     },
 
@@ -160,6 +166,10 @@
     
     isnt: function(x, y) {
       return !Object.is(x, y);
+    },
+
+    isObject: function(value) {
+      return typeof value === 'object' && value !== null;
     }
   });  
   
@@ -240,7 +250,7 @@
     }
   });
 
-  defineProperties(globall, {
+  defineProperties(globals, {
     Map: (function() {
       var indexOfIdentical = function(keys, key) {
         for (var i = 0, length = keys.length; i < length; i++) {

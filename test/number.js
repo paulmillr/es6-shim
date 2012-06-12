@@ -10,6 +10,28 @@ describe('Number', function() {
     expect(item).to.not.be.ok();
   };
 
+  describe('Number constants', function() {
+    it('should has max integer', function() {
+      expect(Number.MAX_INTEGER).to.equal(9007199254740992);
+    });
+    
+    it('should has epsilon', function() {
+      expect(Number.EPSILON).to.equal(2.220446049250313e-16);
+    });
+  });
+
+  describe('Number.parseInt()', function() {
+    it('should work', function() {
+      expect(Number.parseInt('601')).to.equal(601);
+    });
+  });
+
+  describe('Number.parseFloat()', function() {
+    it('should work', function() {
+      expect(Number.parseFloat('5.5')).to.equal(5.5);
+    });
+  });
+
   describe('Number.isFinite()', function() {
     it('should work', function() {
       integers.map(Number.isFinite).forEach(expectToBeOk);

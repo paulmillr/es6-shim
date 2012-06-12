@@ -34,7 +34,23 @@ describe('Object', function() {
       expect(Object.isnt(NaN, NaN)).to.not.be.ok();
     });
   });
-  
+
+  describe('Object.isObject()', function() {
+    it('should compare regular objects correctly', function() {
+      [{}, [], new String('h')].map(Object.isObject).forEach(function(result) {
+        expect(result).to.be.ok();
+      });
+
+      [void 0, 'hello', 5].map(Object.isObject).forEach(function(result) {
+        expect(result).to.not.be.ok();
+      });
+    });
+
+    it('should compare 0 and -0 correctly', function() {
+      expect(Object.isObject(null)).to.not.be.ok();
+    });
+  });
+
   describe('Object.getOwnPropertyDescriptors()', function() {
     it('should produce an array of properties', function() {
       expect(Object.getOwnPropertyDescriptors({a: 1, b: 2, c: 3})).to.eql({
