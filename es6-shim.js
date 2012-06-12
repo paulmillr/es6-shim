@@ -222,7 +222,7 @@
 
     sign: function(value) {
       var number = +value;
-      return (number === 0 && Object.is(number, -0)) ? -1 : 1;
+      if (number === 0) { Object.is(number, -0) ? -0 : 0; }
       if (Object.is(number, NaN)) return number;
       return (number < 0) ? -1 : 1;
     },
