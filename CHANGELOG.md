@@ -1,3 +1,7 @@
+# es6-shim 0.5.0 (June 13, 2012)
+* Added Number.MAX_INTEGER, Number.EPSILON, Number.parseInt,
+Number.parseFloat, Number.prototype.clz, Object.isObject.
+
 # es6-shim 0.4.1 (May 11, 2012)
 * Fixed boundary checking in Number.isInteger.
 
