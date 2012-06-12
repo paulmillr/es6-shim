@@ -79,12 +79,17 @@ set.has(4)  // => false
 set.delete(5)
 ```
 
+Other stuff:
+
+* [ECMAScript 6 drafts](http://wiki.ecmascript.org/doku.php?id=harmony:specification_drafts)
+* [Harmony proposals](http://wiki.ecmascript.org/doku.php?id=harmony:harmony)
+
 ## License
 The project was initially based on [es6-shim by Axel Rauschmayer](https://github.com/rauschma/es6-shim).
 
 The MIT License (MIT)
 
-Copyright (c) Paul Miller (http://paulmillr.com)
+Copyright (c) 2012 Paul Miller (http://paulmillr.com)
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
