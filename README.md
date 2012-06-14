@@ -34,9 +34,6 @@ for the collection. es6-shim decided to not include incorrect shim.
 WeakMap has very unusual use-case so you probably won't need it at all (
 use simple `Map` instead).
 
-es6-collections Map and Set are also implemented incorrectly and don't pass
-all V8 collection tests.
-
 ## IE8 support
 There are some shims that do not work in IE8, because it is simply not
 possible to implement them properly:
