@@ -59,7 +59,7 @@ describe('Collections', function() {
       expect(map.has(key)).to.be(true);
       expect(map.has(new Object)).to.be(false);
       testMapping(key, void 0);
-      expect(map.has(key)).to.be(false);
+      expect(map.has(key)).to.be(true);
       expect(map.has(new Object)).to.be(false);
     });
     

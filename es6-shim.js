@@ -280,11 +280,6 @@
           var values = this.values;
           var index = indexOfIdentical(keys, key);
           if (index < 0) index = keys.length;
-          if (value === void 0) {
-            keys.splice(index, 1);
-            values.splice(index, 1);
-            return;
-          }
           keys[index] = key;
           values[index] = value;
         },
