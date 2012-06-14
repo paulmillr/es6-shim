@@ -10,14 +10,14 @@
   },
   "main": "es6-shim",
   "scripts": {
-    "test": "make test"
+    "test": "./node_modules/mocha/bin/mocha --reporter spec --require 'test/test_helpers.js'"
   },
   "engines": {
     "node": "~0.6.5"
   },
   "dependencies": {},
   "devDependencies": {
-    "mocha": "0.7.1",
-    "expect.js": "0.1.1"
+    "mocha": "1.1.0",
+    "expect.js": "0.1.2"
   }
 }
