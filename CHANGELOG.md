@@ -1,3 +1,7 @@
+# es6-shim 0.5.1 (June 14, 2012)
+* Made Map and Set follow Spidermonkey implementation instead of V8.
+`var m = Map(); m.set('key', void 0); m.has('key');` now gives true.
+
 # es6-shim 0.5.0 (June 13, 2012)
 * Added Number.MAX_INTEGER, Number.EPSILON, Number.parseInt,
 Number.parseFloat, Number.prototype.clz, Object.isObject.
