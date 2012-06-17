@@ -4,16 +4,16 @@ describe('Object', function() {
       [null, void 0, [0], 5, 'str', {a: null}].map(function(item) {
         return Object.is(item, item)
       }).forEach(function(result) {
-        expect(result).to.be.ok();
+        expect(result).to.be.ok;
       });
     });
 
     it('should compare 0 and -0 correctly', function() {
-      expect(Object.is(0, -0)).to.not.be.ok();
+      expect(Object.is(0, -0)).to.not.be.ok;
     });
 
     it('should compare NaNs correctly', function() {
-      expect(Object.is(NaN, NaN)).to.be.ok();
+      expect(Object.is(NaN, NaN)).to.be.ok;
     });
   });
 
@@ -22,32 +22,16 @@ describe('Object', function() {
       [null, void 0, [0], 5, 'str', {a: null}].map(function(item) {
         return Object.isnt(item, item)
       }).forEach(function(result) {
-        expect(result).to.not.be.ok();
+        expect(result).to.not.be.ok;
       });
     });
 
     it('should compare 0 and -0 correctly', function() {
-      expect(Object.isnt(0, -0)).to.be.ok();
+      expect(Object.isnt(0, -0)).to.be.ok;
     });
 
     it('should compare NaNs correctly', function() {
-      expect(Object.isnt(NaN, NaN)).to.not.be.ok();
-    });
-  });
-
-  describe('Object.isObject()', function() {
-    it('should compare regular objects correctly', function() {
-      [{}, [], new String('h')].map(Object.isObject).forEach(function(result) {
-        expect(result).to.be.ok();
-      });
-
-      [void 0, 'hello', 5].map(Object.isObject).forEach(function(result) {
-        expect(result).to.not.be.ok();
-      });
-    });
-
-    it('should compare 0 and -0 correctly', function() {
-      expect(Object.isObject(null)).to.not.be.ok();
+      expect(Object.isnt(NaN, NaN)).to.not.be.ok;
     });
   });
 

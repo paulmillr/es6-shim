@@ -30,14 +30,14 @@ describe('Collections', function() {
     });
 
     it('should exist in global namespace', function() {
-      expect(Map).to.be.ok();
+      expect(Map).to.be.ok;
     });
 
     it('should has valid getter and setter calls', function() {
       ['get', 'set', 'has', 'delete'].forEach(function(method) {
         expect(function() {
           map[method](new Object);
-        }).to.not.throwException();
+        }).to.not.throw();
       })
     });
 
@@ -56,25 +56,25 @@ describe('Collections', function() {
     it('should has correct querying behavior', function() {
       var key = new Object;
       testMapping(key, 'to-be-present');
-      expect(map.has(key)).to.be(true);
-      expect(map.has(new Object)).to.be(false);
+      expect(map.has(key)).to.be.true;
+      expect(map.has(new Object)).to.be.false;
       testMapping(key, void 0);
-      expect(map.has(key)).to.be(true);
-      expect(map.has(new Object)).to.be(false);
+      expect(map.has(key)).to.be.true;
+      expect(map.has(new Object)).to.be.false;
     });
     
     it('should allow to be initialized directly', function() {
-      expect(Map()).to.be.a(Map);
+      expect(Map()).to.be.an.instanceof(Map);
     });
     
     it('should allow NaN values as keys', function() {
-      expect(map.has(NaN)).to.be(false);
-      expect(map.has(NaN + 1)).to.be(false);
-      expect(map.has(23)).to.be(false);
+      expect(map.has(NaN)).to.be.false;
+      expect(map.has(NaN + 1)).to.be.false;
+      expect(map.has(23)).to.be.false;
       map.set(NaN, 'value');
-      expect(map.has(NaN)).to.be(true);
-      expect(map.has(NaN + 1)).to.be(true);
-      expect(map.has(23)).to.be(false);
+      expect(map.has(NaN)).to.be.true;
+      expect(map.has(NaN + 1)).to.be.true;
+      expect(map.has(23)).to.be.false;
     });
     
     it('should not have [[Enumerable]] props', function() {
@@ -84,11 +84,11 @@ describe('Collections', function() {
     });
     
     it('should allow common ecmascript idioms', function() {
-      expect(map).to.be.a(Map);
-      expect(Map.prototype.get).to.be.a(Function);
-      expect(Map.prototype.set).to.be.a(Function);
-      expect(Map.prototype.has).to.be.a(Function);
-      expect(Map.prototype['delete']).to.be.a(Function);
+      expect(map).to.be.an.instanceof(Map);
+      expect(Map.prototype.get).to.be.an.instanceof(Function);
+      expect(Map.prototype.set).to.be.an.instanceof(Function);
+      expect(Map.prototype.has).to.be.an.instanceof(Function);
+      expect(Map.prototype['delete']).to.be.an.instanceof(Function);
     });
     
     it('should has unique constructor', function() {
@@ -108,24 +108,24 @@ describe('Collections', function() {
     });
 
     it('should exist in global namespace', function() {
-      expect(Set).to.be.ok();
+      expect(Set).to.be.ok;
     });
     
     it('should has valid getter and setter calls', function() {
       ['add', 'has', 'delete'].forEach(function(method) {
         expect(function() {
           set[method](new Object);
-        }).to.not.throwException();
+        }).to.not.throw();
       })
     });
     
     it('should work as expected', function() {
       var testSet = function(key) {
-        expect(set.has(key)).to.be(false);
+        expect(set.has(key)).to.be.false;
         set.add(key);
-        expect(set.has(key)).to.be(true);
+        expect(set.has(key)).to.be.true;
         set['delete'](key);
-        expect(set.has(key)).to.be(false);
+        expect(set.has(key)).to.be.false;
       };
       
       range(1, 20).forEach(function(number) {
@@ -139,17 +139,17 @@ describe('Collections', function() {
     });
     
     it('should allow to be initialized directly', function() {
-      expect(Set()).to.be.a(Set);
+      expect(Set()).to.be.an.instanceof(Set);
     });
     
     it('should allow NaN values as keys', function() {
-      expect(set.has(NaN)).to.be(false);
-      expect(set.has(NaN + 1)).to.be(false);
-      expect(set.has(23)).to.be(false);
+      expect(set.has(NaN)).to.be.false;
+      expect(set.has(NaN + 1)).to.be.false;
+      expect(set.has(23)).to.be.false;
       set.add(NaN);
-      expect(set.has(NaN)).to.be(true);
-      expect(set.has(NaN + 1)).to.be(true);
-      expect(set.has(23)).to.be(false);
+      expect(set.has(NaN)).to.be.true;
+      expect(set.has(NaN + 1)).to.be.true;
+      expect(set.has(23)).to.be.false;
     });
     
     it('should not have [[Enumerable]] props', function() {
@@ -159,10 +159,10 @@ describe('Collections', function() {
     });
 
     it('should allow common ecmascript idioms', function() {
-      expect(set).to.be.a(Set);
-      expect(Set.prototype.add).to.be.a(Function);
-      expect(Set.prototype.has).to.be.a(Function);
-      expect(Set.prototype['delete']).to.be.a(Function);
+      expect(set).to.be.an.instanceof(Set);
+      expect(Set.prototype.add).to.be.an.instanceof(Function);
+      expect(Set.prototype.has).to.be.an.instanceof(Function);
+      expect(Set.prototype['delete']).to.be.an.instanceof(Function);
     });
     
     it('should has unique constructor', function() {

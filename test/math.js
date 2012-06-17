@@ -83,7 +83,7 @@ describe('Math', function() {
 
       expect(Math.sign(0)).to.equal(0);
       expect(Math.sign(-0)).to.equal(-0);
-      expect(Number.isNaN(Math.sign(NaN))).to.be.ok();
+      expect(Number.isNaN(Math.sign(NaN))).to.be.ok;
     });
   });
 

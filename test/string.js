@@ -7,44 +7,37 @@ describe('String', function() {
 
   describe('#startsWith()', function() {
     it('should be truthy on correct results', function() {
-      expect('test'.startsWith('te')).to.be.ok();
+      expect('test'.startsWith('te')).to.be.ok;
     });
 
     it('should be falsy on incorrect results', function() {
-      expect('test'.startsWith('st')).to.not.be.ok();
-      expect(''.startsWith('/')).to.not.be.ok();
-      expect('#'.startsWith('/')).to.not.be.ok();
-      expect('##'.startsWith('///')).to.not.be.ok();
+      expect('test'.startsWith('st')).to.not.be.ok;
+      expect(''.startsWith('/')).to.not.be.ok;
+      expect('#'.startsWith('/')).to.not.be.ok;
+      expect('##'.startsWith('///')).to.not.be.ok;
     });
   });
 
   describe('#endsWith()', function() {
     it('should be truthy on correct results', function() {
-      expect('test'.endsWith('st')).to.be.ok();
+      expect('test'.endsWith('st')).to.be.ok;
     })
 
     it('should be falsy on incorrect results', function() {
-      expect('test'.endsWith('te')).to.not.be.ok();
-      expect(''.endsWith('/')).to.not.be.ok();
-      expect('#'.endsWith('/')).to.not.be.ok();
-      expect('##'.endsWith('///')).to.not.be.ok();
+      expect('test'.endsWith('te')).to.not.be.ok;
+      expect(''.endsWith('/')).to.not.be.ok;
+      expect('#'.endsWith('/')).to.not.be.ok;
+      expect('##'.endsWith('///')).to.not.be.ok;
     });
   });
 
   describe('#contains()', function() {
     it('should be truthy on correct results', function() {
-      expect('test'.contains('es')).to.be.ok();
+      expect('test'.contains('es')).to.be.ok;
     });
 
     it('should be falsy on incorrect results', function() {
-      expect('test'.contains('1290')).to.not.be.ok();
-    });
-  });
-
-  describe('#toArray()', function() {
-    it('should convert string to array of strings', function() {
-      expect('string'.toArray()).to.eql(['s', 't', 'r', 'i', 'n', 'g']);
-      expect(''.toArray()).to.eql([]);
+      expect('test'.contains('1290')).to.not.be.ok;
     });
   });
 });

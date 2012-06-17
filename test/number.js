@@ -4,10 +4,10 @@ describe('Number', function() {
   var infinities = [Infinity, -Infinity];
   var nonNumbers = [void 0, true, null, {}, [], 'str'];
   var expectToBeOk = function(item) {
-    expect(item).to.be.ok();
+    expect(item).to.be.ok;
   };
   var expectToNotBeOk = function(item) {
-    expect(item).to.not.be.ok();
+    expect(item).to.not.be.ok;
   };
 
   describe('Number constants', function() {
@@ -57,7 +57,7 @@ describe('Number', function() {
 
   describe('Number.isNaN()', function() {
     it('should be truthy only on NaN', function() {
-      expect(Number.isNaN(NaN)).to.be.ok();
+      expect(Number.isNaN(NaN)).to.be.ok;
       integers.concat(nonIntegers).map(Number.isNaN).forEach(expectToNotBeOk);
     });
 

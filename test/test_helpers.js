@@ -1,2 +1,2 @@
-expect = require('expect.js');
+expect = require('chai').expect;
 require('../');
