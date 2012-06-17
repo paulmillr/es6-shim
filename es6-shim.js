@@ -47,10 +47,6 @@
 
     contains: function(substring) {
       return this.indexOf(substring) !== -1;
-    },
-
-    toArray: function() {
-      return this.split('');
     }
   });
 
@@ -166,10 +162,6 @@
     
     isnt: function(x, y) {
       return !Object.is(x, y);
-    },
-
-    isObject: function(value) {
-      return typeof value === 'object' && value !== null;
     }
   });  
   

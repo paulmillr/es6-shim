@@ -1,3 +1,6 @@
+# es6-shim 0.5.2 (June 17, 2012)
+* Removed `String#toArray` and `Object.isObject` as per spec updates.
+
 # es6-shim 0.5.1 (June 14, 2012)
 * Made Map and Set follow Spidermonkey implementation instead of V8.
 `var m = Map(); m.set('key', void 0); m.has('key');` now gives true.

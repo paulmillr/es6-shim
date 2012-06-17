@@ -15,12 +15,12 @@ Or just include es6-shim before your scripts if you want to use it in browser.
 ## Safe shims
 * Maps & Sets
 * String.prototype.repeat, String.prototype.startsWith,
-String.prototype.endsWith, String.prototype.contains, String.prototype.toArray
+String.prototype.endsWith, String.prototype.contains
 * Array.from, Array.of
 * Number.MAX_INTEGER, Number.EPSILON, Number.parseInt, Number.parseFloat,
 Number.isNaN, Number.toInteger, Number.isInteger, Number.isFinite
 * Object.getOwnPropertyDescriptors, Object.getPropertyDescriptor,
-Object.getPropertyNames, Object.is, Object.isnt, Object.isObject
+Object.getPropertyNames, Object.is, Object.isnt
 * Math.sign, Math.log10, Math.log2, Math.log1p, Math.expm1, Math.cosh,
 Math.sinh, Math.tanh, Math.acosh, Math.asinh, Math.atanh, Math.hypot,
 Math.trunc (accuracy is 1e-11).
@@ -46,9 +46,7 @@ possible to implement them properly:
 'abc'.startsWith('a') // true
 'abc'.endsWith('a') // false
 Object.is(NaN, NaN) // Fixes ===. 0 isnt -0, NaN is NaN
-Object.isObject(null) // false. Fixes null.
 '123'.repeat(2)     // '123123'
-'123'.toArray()     // ['1', '2', '3']
 'john alice'.contains('john') // true
 Number.isNaN('123') // false. isNaN('123') will give true.
 Number.toInteger(2.4) // 2. converts values to IEEE754 double precision integers
