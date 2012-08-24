@@ -1,3 +1,7 @@
+// ES6-shim 0.5.2 (c) 2012 Paul Miller (paulmillr.com)
+// ES6-shim may be freely distributed under the MIT license.
+// For more details and documentation:
+// https://github.com/paulmillr/es6-shim/
 ({define: (typeof define === 'function')
     ? define  // RequireJS
     : function(definition) {definition();} // CommonJS and <script>
