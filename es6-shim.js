@@ -36,8 +36,12 @@
   };
 
   defineProperties(String.prototype, {
+    // Fast repeat, uses the `Exponentiation by squaring` algorithm.
     repeat: function(times) {
-      return new Array(times + 1).join(this);
+      if (times < 1) return '';
+      if (times % 2) return this.repeat(times - 1) + this;
+      var half = this.repeat(times / 2);
+      return half + half;
     },
 
     startsWith: function(substring) {
