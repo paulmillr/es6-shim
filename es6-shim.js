@@ -152,7 +152,7 @@
 
     is: function(x, y) {
       if (x === y) {
-        // 0 === -0, but they are not identical
+        // 0 === -0, but they are not identical.
         if (x === 0) {
           return 1 / x === 1 / y;
         } else {
@@ -164,7 +164,7 @@
       // NaNs are the only non-reflexive value, i.e., if x !== x,
       // then x is a NaN.
       // isNaN is broken: it converts its argument to number, so
-      // isNaN("foo") => true
+      // isNaN('foo') => true
       return x !== x && y !== y;
     },
     
