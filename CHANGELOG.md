@@ -1,3 +1,6 @@
+# es6-shim 0.5.3 (September 2, 2012)
+* Made `String#startsWith`, `String#endsWith` fully conform spec.
+
 # es6-shim 0.5.2 (June 17, 2012)
 * Removed `String#toArray` and `Object.isObject` as per spec updates.
 
