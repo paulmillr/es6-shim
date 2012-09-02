@@ -10,7 +10,7 @@
   },
   "main": "es6-shim",
   "scripts": {
-    "test": "./node_modules/mocha/bin/mocha --reporter spec --require 'test/test_helpers.js'"
+    "test": "mocha --require 'test/test_helpers.js'"
   },
   "engines": {
     "node": "~0.6.5"
