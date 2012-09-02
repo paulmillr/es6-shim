@@ -238,21 +238,21 @@
       // isNaN('foo') => true
       return x !== x && y !== y;
     },
-    
+
     isnt: function(x, y) {
       return !Object.is(x, y);
     }
-  });  
-  
+  });
+
   defineProperties(Math, {
     acosh: function(value) {
       return Math.log(value + Math.sqrt(value * value - 1));
     },
-    
+
     asinh: function(value) {
       return Math.log(value + Math.sqrt(value * value + 1));
     },
-    
+
     atanh: function(value) {
       return 0.5 * Math.log((1 + value) / (1 - value));
     },
@@ -262,7 +262,7 @@
       if (value > 21) return Math.exp(value) / 2;
       return (Math.exp(value) + Math.exp(-value)) / 2;
     },
-    
+
     expm1: function(value) {
       var result = 0;
       var n = 50;
@@ -271,7 +271,7 @@
       }
       return result;
     },
-    
+
     hypot: function(x, y) {
       return Math.sqrt(x * x + y * y) || 0;
     },
@@ -279,11 +279,11 @@
     log2: function(value) {
       return Math.log(value) * (1 / Math.LN2);
     },
-    
+
     log10: function(value) {
       return Math.log(value) * (1 / Math.LN10);
     },
-    
+
     log1p: function(value) {
       var result = 0;
       var n = 50;
@@ -307,15 +307,15 @@
       if (Object.is(number, NaN)) return number;
       return (number < 0) ? -1 : 1;
     },
-    
+
     sinh: function(value) {
       return (Math.exp(value) - Math.exp(-value)) / 2;
     },
-    
+
     tanh: function(value) {
       return (Math.exp(value) - Math.exp(-value)) / (Math.exp(value) + Math.exp(-value));
     },
-    
+
     trunc: function(value) {
       return ~~value;
     }
