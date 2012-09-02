@@ -2,9 +2,9 @@
 // ES6-shim may be freely distributed under the MIT license.
 // For more details and documentation:
 // https://github.com/paulmillr/es6-shim/
-({define: (typeof define === 'function')
-    ? define  // RequireJS
-    : function(definition) {definition();} // CommonJS and <script>
+({define: (typeof define === 'function') ?
+  define : // RequireJS
+  function(definition) {definition();} // CommonJS and <script>
 }).define(function() {
   'use strict';
 
@@ -47,35 +47,35 @@
     startsWith: function(searchString) {
       var position = arguments[1];
 
-      // 1. Let searchStr be ToString(searchString).
+      // Let searchStr be ToString(searchString).
       var searchStr = searchString.toString();
 
-      // 2. ReturnIfAbrupt(searchStr).
+      // ReturnIfAbrupt(searchStr).
 
-      // 3. Let S be the result of calling ToString,
+      // Let S be the result of calling ToString,
       // giving it the this value as its argument.
       var s = this.toString();
 
-      // 4. ReturnIfAbrupt(S).
+      // ReturnIfAbrupt(S).
 
-      // 5. Let pos be ToInteger(position).
+      // Let pos be ToInteger(position).
       // (If position is undefined, this step produces the value 0).
       var pos = (position === undefined) ? 0 : Number.toInteger(position);
-      // 6. ReturnIfAbrupt(pos).
+      // ReturnIfAbrupt(pos).
 
-      // 7. Let len be the number of elements in S.
+      // Let len be the number of elements in S.
       var len = s.length;
 
-      // 8. Let start be min(max(pos, 0), len).
+      // Let start be min(max(pos, 0), len).
       var start = Math.min(Math.max(pos, 0), len);
 
-      // 9. Let searchLength be the number of elements in searchString.
+      // Let searchLength be the number of elements in searchString.
       var searchLength = searchString.length;
 
-      // 10. If searchLength+start is greater than len, return false.
+      // If searchLength+start is greater than len, return false.
       if ((searchLength + start) > len) return false;
 
-      // 9. If the searchLength sequence of elements of S starting at
+      // If the searchLength sequence of elements of S starting at
       // start is the same as the full element sequence of searchString,
       // return true.
       var index = ''.indexOf.call(s, searchString, start);
@@ -131,7 +131,7 @@
 
   defineProperties(Array, {
     from: function(iterable) {
-      var object = Object(iterable);
+      var object = new Object(iterable);
       var array = [];
 
       for (var key = 0, length = object.length >>> 0; key < length; key++) {
@@ -206,16 +206,18 @@
       return pd;
     },
 
-    getPropertyNames: function(subject, name) {
+    getPropertyNames: function(subject) {
       var result = Object.getOwnPropertyNames(subject);
       var proto = Object.getPrototypeOf(subject);
-      var property;
+
+      var addProperty = function(property) {
+        if (result.indexOf(property) === -1) {
+          result.push(property);
+        }
+      };
+
       while (proto !== null) {
-        Object.getOwnPropertyNames(proto).forEach(function(property) {
-          if (result.indexOf(property) === -1) {
-            result.push(property);
-          }
-        });
+        Object.getOwnPropertyNames(proto).forEach(addProperty);
         proto = Object.getPrototypeOf(proto);
       }
       return result;
@@ -331,7 +333,7 @@
       };
 
       function Map() {
-        if (!(this instanceof Map)) return new Map;
+        if (!(this instanceof Map)) return new Map();
         defineProperty(this, 'keys', []);
         defineProperty(this, 'values', []);
       }
@@ -371,8 +373,8 @@
 
     Set: (function() {
       function Set() {
-        if (!(this instanceof Set)) return new Set;
-        defineProperty(this, 'map', Map());
+        if (!(this instanceof Set)) return new Set();
+        defineProperty(this, 'map', new Map());
       }
 
       defineProperties(Set.prototype, {
