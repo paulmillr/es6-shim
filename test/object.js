@@ -44,7 +44,7 @@ describe('Object', function() {
       });
     });
   });
-  
+
   describe('Object.getPropertyDescriptor()', function() {
     it('should produce an array of properties including inherited ones',
       function() {

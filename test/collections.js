@@ -9,7 +9,7 @@ describe('Collections', function() {
     }
     return result;
   };
-  
+
   var expectNotEnumerable = function(object) {
     expect(Object.keys(object).length).to.equal(0);
   };
@@ -24,7 +24,7 @@ describe('Collections', function() {
     beforeEach(function() {
       map = new Map();
     });
-    
+
     afterEach(function() {
       map = null;
     });
@@ -41,18 +41,18 @@ describe('Collections', function() {
       })
     });
 
-    it('should map values correctly', function() {      
+    it('should map values correctly', function() {
       range(1, 20).forEach(function(number) {
         testMapping(number, new Object);
         testMapping(number / 100, new Object);
         testMapping('key-' + number, new Object);
       });
-      
+
       [+0, -0, Infinity, -Infinity, true, false, null, undefined].forEach(function(key) {
         testMapping(key, new Object);
       });
     });
-    
+
     it('should has correct querying behavior', function() {
       var key = new Object;
       testMapping(key, 'to-be-present');
@@ -62,11 +62,11 @@ describe('Collections', function() {
       expect(map.has(key)).to.be.true;
       expect(map.has(new Object)).to.be.false;
     });
-    
+
     it('should allow to be initialized directly', function() {
       expect(Map()).to.be.an.instanceof(Map);
     });
-    
+
     it('should allow NaN values as keys', function() {
       expect(map.has(NaN)).to.be.false;
       expect(map.has(NaN + 1)).to.be.false;
@@ -76,13 +76,13 @@ describe('Collections', function() {
       expect(map.has(NaN + 1)).to.be.true;
       expect(map.has(23)).to.be.false;
     });
-    
+
     it('should not have [[Enumerable]] props', function() {
       expectNotEnumerable(Map);
       expectNotEnumerable(Map.prototype);
       expectNotEnumerable(new Map);
     });
-    
+
     it('should allow common ecmascript idioms', function() {
       expect(map).to.be.an.instanceof(Map);
       expect(Map.prototype.get).to.be.an.instanceof(Function);
@@ -90,7 +90,7 @@ describe('Collections', function() {
       expect(Map.prototype.has).to.be.an.instanceof(Function);
       expect(Map.prototype['delete']).to.be.an.instanceof(Function);
     });
-    
+
     it('should has unique constructor', function() {
       expect(Map.prototype).to.not.equal(Object.prototype);
     });
@@ -102,7 +102,7 @@ describe('Collections', function() {
     beforeEach(function() {
       set = new Set();
     });
-    
+
     afterEach(function() {
       set = null;
     });
@@ -110,7 +110,7 @@ describe('Collections', function() {
     it('should exist in global namespace', function() {
       expect(Set).to.be.ok;
     });
-    
+
     it('should has valid getter and setter calls', function() {
       ['add', 'has', 'delete'].forEach(function(method) {
         expect(function() {
@@ -118,7 +118,7 @@ describe('Collections', function() {
         }).to.not.throw();
       })
     });
-    
+
     it('should work as expected', function() {
       var testSet = function(key) {
         expect(set.has(key)).to.be.false;
@@ -127,21 +127,21 @@ describe('Collections', function() {
         set['delete'](key);
         expect(set.has(key)).to.be.false;
       };
-      
+
       range(1, 20).forEach(function(number) {
         testSet(new Object);
         testSet(number);
         testSet(number / 100);
         testSet('key-' + number);
       });
-      
+
       [+0, -0, Infinity, -Infinity, true, false, null, undefined].forEach(testSet);
     });
-    
+
     it('should allow to be initialized directly', function() {
       expect(Set()).to.be.an.instanceof(Set);
     });
-    
+
     it('should allow NaN values as keys', function() {
       expect(set.has(NaN)).to.be.false;
       expect(set.has(NaN + 1)).to.be.false;
@@ -151,7 +151,7 @@ describe('Collections', function() {
       expect(set.has(NaN + 1)).to.be.true;
       expect(set.has(23)).to.be.false;
     });
-    
+
     it('should not have [[Enumerable]] props', function() {
       expectNotEnumerable(Set);
       expectNotEnumerable(Set.prototype);
@@ -164,14 +164,14 @@ describe('Collections', function() {
       expect(Set.prototype.has).to.be.an.instanceof(Function);
       expect(Set.prototype['delete']).to.be.an.instanceof(Function);
     });
-    
+
     it('should has unique constructor', function() {
       expect(Set.prototype).to.not.equal(Object.prototype);
     });
-    
+
     it('should throw proper errors when user invokes methods with wrong types of receiver',
       function() {
-      
+
     });
   });
 });

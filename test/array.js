@@ -16,7 +16,7 @@ describe('Array', function() {
       })();
     });
   });
-  
+
   describe('Array.of()', function() {
     it('should create correct array from arguments', function() {
       expect(Array.of(1, null, void 0)).to.eql([1, null, void 0])
