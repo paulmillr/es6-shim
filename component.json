@@ -4,5 +4,8 @@
   "description": "ECMAScript 6 (Harmony) compatibility shims for legacy JavaScript engines",
   "version": "0.5.3",
   "keywords": ["ecmascript", "harmony", "shim"],
-  "main": "es6-shim.js"
+  "main": "es6-shim.js",
+  "scripts": ["es6-shim.js"],
+  "dependencies": {},
+  "development": {}
 }
