@@ -2,10 +2,7 @@
 // ES6-shim may be freely distributed under the MIT license.
 // For more details and documentation:
 // https://github.com/paulmillr/es6-shim/
-({define: (typeof define === 'function') ?
-  define : // RequireJS
-  function(definition) {definition();} // CommonJS and <script>
-}).define(function() {
+var main = function() {
   'use strict';
 
   var globals = (typeof global === 'undefined') ? window : global;
@@ -395,3 +392,9 @@
     })()
   });
 });
+
+if (typeof define === 'function' && typeof define.amd == 'object' && define.amd) {
+  define(main); // RequireJS
+} else {
+  main(); // CommonJS and <script>
+}
