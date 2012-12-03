@@ -38,7 +38,9 @@ use simple `Map` instead).
 There are some shims that do not work in IE8, because it is simply not
 possible to implement them properly:
 
-* Object.getOwnPropertyDescriptors, Object.getPropertyDescriptor, Object.getPropertyNames
+* Object.getOwnPropertyDescriptors
+* Object.getPropertyDescriptor
+* Object.getPropertyNames
 
 ## Getting started
 
