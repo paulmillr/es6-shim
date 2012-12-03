@@ -391,7 +391,7 @@ var main = function() {
       return Set;
     })()
   });
-});
+};
 
 if (typeof define === 'function' && typeof define.amd == 'object' && define.amd) {
   define(main); // RequireJS
