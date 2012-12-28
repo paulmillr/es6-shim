@@ -66,6 +66,9 @@ map.set('Alice', 400)
 map.set(['meh'], 555)
 map.get(['meh']) // undefined because you need to use exactly the same object.
 map.delete('Alice')
+map.keys()
+map.values()
+map.size // 2
 
 // Useful for storing unique items.
 var set = new Set()

@@ -331,37 +331,55 @@ var main = function() {
 
       function Map() {
         if (!(this instanceof Map)) return new Map();
-        defineProperty(this, 'keys', []);
-        defineProperty(this, 'values', []);
+        defineProperty(this, '_keys', []);
+        defineProperty(this, '_values', []);
+        defineProperty(this, '_size', 0);
+        Object.defineProperty(this, 'size', {
+          configurable: true,
+          enumerable: false,
+          get: (function() {
+            return this._size;
+          }).bind(this)
+        });
       }
 
       defineProperties(Map.prototype, {
         get: function(key) {
-          var index = indexOfIdentical(this.keys, key);
-          return index < 0 ? undefined : this.values[index];
+          var index = indexOfIdentical(this._keys, key);
+          return index < 0 ? undefined : this._values[index];
         },
 
         has: function(key) {
-          return indexOfIdentical(this.keys, key) >= 0;
+          return indexOfIdentical(this._keys, key) >= 0;
         },
 
         set: function(key, value) {
-          var keys = this.keys;
-          var values = this.values;
+          var keys = this._keys;
+          var values = this._values;
           var index = indexOfIdentical(keys, key);
           if (index < 0) index = keys.length;
           keys[index] = key;
           values[index] = value;
+          this._size += 1;
         },
 
         'delete': function(key) {
-          var keys = this.keys;
-          var values = this.values;
+          var keys = this._keys;
+          var values = this._values;
           var index = indexOfIdentical(keys, key);
           if (index < 0) return false;
           keys.splice(index, 1);
           values.splice(index, 1);
+          this._size -= 1;
           return true;
+        },
+
+        keys: function() {
+          return this._keys;
+        },
+
+        values: function() {
+          return this._values;
         }
       });
 

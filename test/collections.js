@@ -94,6 +94,19 @@ describe('Collections', function() {
     it('should has unique constructor', function() {
       expect(Map.prototype).to.not.equal(Object.prototype);
     });
+
+    it('should have keys, values and size props', function() {
+      map.set('a', 1);
+      map.set('b', 2);
+      map.set('c', 3);
+      expect(map.keys).to.be.an.instanceof(Function);
+      expect(map.values).to.be.an.instanceof(Function);
+      expect(map.keys()).to.eql(['a', 'b', 'c']);
+      expect(map.values()).to.eql([1, 2, 3]);
+      expect(map.size).to.equal(3);
+      map.delete('a');
+      expect(map.size).to.equal(2);
+    })
   });
 
   describe('Set', function() {
