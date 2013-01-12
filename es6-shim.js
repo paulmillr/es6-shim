@@ -122,7 +122,7 @@ var main = function() {
       var position = arguments[1];
 
       // Somehow this trick makes method 100% compat with the spec.
-      return ''.indexOf.call(this, searchString, position) !== -1;
+      return ~''.indexOf.call(this, searchString, position);
     }
   });
 
