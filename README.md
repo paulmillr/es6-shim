@@ -7,10 +7,15 @@ Project targets engines that support ES5 (Firefox, Chrome, Safari, Opera). With
 browsers.
 
 ## Installation
+If you want to use it in browser:
+
+* Just include es6-shim before your scripts.
+* `component install paulmillr/es6-shim` if you’re using [component(1)](https://github.com/component/component).
+* `bower install es6-shim` if you’re using [Twitter Bower](http://twitter.github.com/bower/).
+
+For node.js:
 
     npm install es6-shim
-
-Or just include es6-shim before your scripts if you want to use it in browser.
 
 ## Safe shims
 * Maps & Sets
