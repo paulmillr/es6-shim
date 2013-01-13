@@ -151,6 +151,22 @@ describe('Collections', function() {
       [+0, -0, Infinity, -Infinity, true, false, null, undefined].forEach(testSet);
     });
 
+    it('should has #size', function() {
+      set.add(1);
+      set.add(5);
+      expect(set.size).to.equal(2);
+    });
+
+    it('should has #clear method', function() {
+      set.add(1);
+      set.add(5);
+      expect(set.size).to.equal(2);
+      expect(set.has(5)).to.be.true;
+      set.clear();
+      expect(set.size).to.equal(0);
+      expect(set.has(5)).to.be.false;
+    });
+
     it('should allow to be initialized directly', function() {
       expect(Set()).to.be.an.instanceof(Set);
     });

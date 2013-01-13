@@ -389,20 +389,36 @@ var main = function() {
     Set: (function() {
       function Set() {
         if (!(this instanceof Set)) return new Set();
-        defineProperty(this, 'map', new Map());
+        defineProperty(this, '[[SetData]]', new Map());
+        Object.defineProperty(this, 'size', {
+          configurable: true,
+          enumerable: false,
+          get: (function() {
+            return this['[[SetData]]'].size;
+          }).bind(this)
+        });
       }
 
       defineProperties(Set.prototype, {
         has: function(key) {
-          return this.map.has(key);
+          return this['[[SetData]]'].has(key);
         },
 
         add: function(key) {
-          this.map.set(key, true);
+          this['[[SetData]]'].set(key, true);
         },
 
         'delete': function(key) {
-          return this.map['delete'](key);
+          return this['[[SetData]]']['delete'](key);
+        },
+
+        clear: function() {
+          Object.defineProperty(this, '[[SetData]]', {
+            configurable: true,
+            enumerable: false,
+            writable: true,
+            value: new Map()
+          });
         }
       });
 
