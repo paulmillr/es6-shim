@@ -2,7 +2,7 @@
   "author": "Paul Miller (http://paulmillr.com/)",
   "name": "es6-shim",
   "description": "ECMAScript 6 (Harmony) compatibility shims for legacy JavaScript engines",
-  "version": "0.5.3",
+  "version": "0.6.0",
   "homepage": "https://github.com/paulmillr/es6-shim/",
   "repository": {
     "type": "git",
@@ -13,11 +13,11 @@
     "test": "mocha --require 'test/test_helpers.js'"
   },
   "engines": {
-    "node": "~0.6.5"
+    "node": "~0.8.0 || ~0.9.0"
   },
   "dependencies": {},
   "devDependencies": {
-    "mocha": "1.1.0",
-    "chai": "1.0.4"
+    "mocha": "1.8.1",
+    "chai": "1.4.2"
   }
 }

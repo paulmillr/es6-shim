@@ -1,3 +1,6 @@
+# es6-shim 0.6.0 (January 15, 2013)
+* Added `Map#keys`, `Map#values`, `Map#size`, `Set#size`, `Set#clear`.
+
 # es6-shim 0.5.3 (September 2, 2012)
 * Made `String#startsWith`, `String#endsWith` fully conform spec.
 

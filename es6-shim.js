@@ -1,4 +1,4 @@
-// ES6-shim 0.5.3 (c) 2012 Paul Miller (paulmillr.com)
+// ES6-shim 0.6.0 (c) 2013 Paul Miller (paulmillr.com)
 // ES6-shim may be freely distributed under the MIT license.
 // For more details and documentation:
 // https://github.com/paulmillr/es6-shim/
