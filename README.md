@@ -1,3 +1,4 @@
+<a href="https://jepso-ci.com/paulmillr/es6-shim"><img src="https://jepso-ci.com/paulmillr/es6-shim.svg" align="right" alt="jepso-ci status" /></a>
 # ES6 Shim
 Provides compatibility shims so that legacy JavaScript engines behave as
 closely as possible to ECMAScript 6 (Harmony).
