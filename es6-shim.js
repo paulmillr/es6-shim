@@ -15,20 +15,19 @@ var main = function() {
     return result;
   };
 
-  var defineProperty = function(object, name, method) {
-    if (!object[name]) {
-      Object.defineProperty(object, name, {
-        configurable: true,
-        enumerable: false,
-        writable: true,
-        value: method
-      });
-    }
-  };
-
+  // Define configurable, writable and non-enumerable props
+  // if they don’t exists.
   var defineProperties = function(object, map) {
     Object.keys(map).forEach(function(name) {
-      defineProperty(object, name, map[name]);
+      var method = map[name];
+      if (!object[name]) {
+        Object.defineProperty(object, name, {
+          configurable: true,
+          enumerable: false,
+          writable: true,
+          value: method
+        });
+      }
     });
   };
 
@@ -331,9 +330,13 @@ var main = function() {
 
       function Map() {
         if (!(this instanceof Map)) return new Map();
-        defineProperty(this, '_keys', []);
-        defineProperty(this, '_values', []);
-        defineProperty(this, '_size', 0);
+
+        defineProperties(this, {
+          '_keys': [],
+          '_values': [],
+          '_size': 0
+        });
+
         Object.defineProperty(this, 'size', {
           configurable: true,
           enumerable: false,
@@ -389,7 +392,7 @@ var main = function() {
     Set: (function() {
       function Set() {
         if (!(this instanceof Set)) return new Set();
-        defineProperty(this, '[[SetData]]', new Map());
+        defineProperties(this, {'[[SetData]]': new Map()});
         Object.defineProperty(this, 'size', {
           configurable: true,
           enumerable: false,
