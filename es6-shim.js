@@ -192,6 +192,10 @@ var main = function() {
       return descs;
     },
 
+    getOwnPropertyKeys: function(subject) {
+      return Object.keys(subject);
+    },
+
     getPropertyDescriptor: function(subject, name) {
       var pd = Object.getOwnPropertyDescriptor(subject, name);
       var proto = Object.getPrototypeOf(subject);
