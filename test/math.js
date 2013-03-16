@@ -27,6 +27,20 @@ describe('Math', function() {
       expect(Math.atanh(0.444)).to.almostEqual(0.47720201260109457);
     });
   });
+  
+  describe('#cbrt()', function() {
+    it('should be correct', function () {
+      expect(isNaN(Math.cbrt(NaN))).to.be.ok;
+      expect(Math.cbrt(+0)).to.equal(+0);
+      expect(Math.cbrt(-0)).to.equal(-0);
+      expect(Math.cbrt(Infinity)).to.equal(Infinity);
+      expect(Math.cbrt(-Infinity)).to.equal(-Infinity);
+      expect(Math.cbrt(-8)).to.almostEqual(-2);
+      expect(Math.cbrt(8)).to.almostEqual(2);
+      expect(Math.cbrt(-1000)).to.almostEqual(-10);
+      expect(Math.cbrt(1000)).to.almostEqual(10);
+    });
+  });
 
   describe('#cosh()', function() {
     it('should be correct', function() {
@@ -45,8 +59,27 @@ describe('Math', function() {
 
   describe('#hypot()', function() {
     it('should be correct', function() {
+      expect(Math.hypot(Infinity)).to.equal(Infinity);
+      expect(Math.hypot(-Infinity)).to.equal(Infinity);
+      expect(Math.hypot(Infinity, NaN)).to.equal(Infinity);
+      expect(Math.hypot(-Infinity, 'Hello')).to.equal(Infinity);
+      expect(isNaN(Math.hypot(NaN))).to.be.ok;
+      expect(Math.hypot()).to.equal(0);
       expect(Math.hypot(66, 66)).to.almostEqual(93.33809511662427);
       expect(Math.hypot(0.1, 100)).to.almostEqual(100.0000499999875);
+      });
+  });
+  
+  describe('#hypot2()', function() {
+    it('should be correct', function() {
+      expect(Math.hypot2(Infinity)).to.equal(Infinity);
+      expect(Math.hypot2(-Infinity)).to.equal(Infinity);
+      expect(Math.hypot2(Infinity, NaN)).to.equal(Infinity);
+      expect(Math.hypot2(-Infinity, 'Hello')).to.equal(Infinity);
+      expect(isNaN(Math.hypot2(NaN))).to.be.ok;
+      expect(Math.hypot2()).to.equal(0);
+      expect(Math.hypot2(66, 66)).to.almostEqual(8712);
+      expect(Math.hypot2(0.1, 100)).to.almostEqual(10000.01);
     });
   });
 
