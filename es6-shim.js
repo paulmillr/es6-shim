@@ -258,6 +258,13 @@ var main = function() {
     atanh: function(value) {
       return 0.5 * Math.log((1 + value) / (1 - value));
     },
+    
+    cbrt: function (value) {
+      var negate = value < 0, result;
+      if (negate) { value = -value }
+      result = Math.pow(value, 1/3);
+      return negate ? -result : result;
+    },
 
     cosh: function(value) {
       if (value < 0) value = -value;
@@ -274,8 +281,19 @@ var main = function() {
       return result;
     },
 
-    hypot: function(x, y) {
-      return Math.sqrt(x * x + y * y) || 0;
+    hypot: function(x, y, z) {
+      if (z == null) { z = 0; }
+      return Math.sqrt(Math.hypot2(x, y, z));
+    },
+    
+    hypot2: function (x, y, z) {
+      if (x == null) { x = 0; }
+      if (y == null) { y = 0; }
+      if (z == null) { z = 0; }
+      var xSq = x * x, ySq = y * y, zSq = z * z, inf = Infinity;
+      if (xSq === inf || ySq === inf || zSq === inf) { return inf; }
+      else if (isNaN(xSq) || isNaN(ySq) || isNaN(zSq)) { return NaN }
+      return x * x + y * y + z * z || 0;
     },
 
     log2: function(value) {
