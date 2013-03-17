@@ -279,6 +279,15 @@ var main = function() {
     },
 
     atanh: function(value) {
+      if (Number.isNaN(value) || value < -1 || value > 1) {
+        return NaN;
+      } else if (value === -1) {
+        return -Infinity;
+      } else if (value === 1) {
+        return Infinity;
+      } else if (value === 0) {
+        return value;
+      }
       return 0.5 * Math.log((1 + value) / (1 - value));
     },
 

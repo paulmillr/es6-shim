@@ -39,6 +39,13 @@ describe('Math', function() {
 
   describe('#atanh()', function() {
     it('should be correct', function() {
+      expect(Number.isNaN(Math.atanh(NaN))).to.be.ok;
+      expect(Number.isNaN(Math.atanh(-1.00000001))).to.be.ok;
+      expect(Number.isNaN(Math.atanh(1.00000001))).to.be.ok;
+      expect(Math.atanh(-1)).to.equal(-Infinity);
+      expect(Math.atanh(1)).to.equal(Infinity);
+      expect(isPositiveZero(Math.atanh(+0))).to.be.ok;
+      expect(isNegativeZero(Math.atanh(-0))).to.be.ok;
       expect(Math.atanh(0.5)).to.almostEqual(0.5493061443340549);
       expect(Math.atanh(-0.5)).to.almostEqual(-0.5493061443340549);
       expect(Math.atanh(-0.5)).to.almostEqual(-0.5493061443340549);
