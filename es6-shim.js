@@ -257,6 +257,13 @@ var main = function() {
 
   defineProperties(Math, {
     acosh: function(value) {
+      if (Number.isNaN(value) || value < 1) {
+        return NaN;
+      } else if (value === 1) {
+        return +0;
+      } else if (value === Infinity) {
+        return Infinity;
+      }
       return Math.log(value + Math.sqrt(value * value - 1));
     },
 

@@ -15,6 +15,11 @@ var isNegativeZero = function (zero) {
 describe('Math', function() {
   describe('#acosh()', function() {
     it('should be correct', function() {
+      expect(Number.isNaN(Math.acosh(NaN))).to.be.ok;
+      expect(Number.isNaN(Math.acosh(0))).to.be.ok;
+      expect(Number.isNaN(Math.acosh(0.9999999))).to.be.ok;
+      expect(isPositiveZero(Math.acosh(1))).to.be.ok;
+      expect(Math.acosh(Infinity)).to.equal(Infinity);
       expect(Math.acosh(1234)).to.almostEqual(7.811163220849231);
       expect(Math.acosh(8.88)).to.almostEqual(2.8737631531629235);
     });
