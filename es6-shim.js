@@ -188,44 +188,48 @@ var main = function() {
     }
   });
 
-  defineProperties(Object, {
-    getOwnPropertyDescriptors: function(subject) {
-      var descs = {};
-      Object.getOwnPropertyNames(subject).forEach(function(propName) {
-        descs[propName] = Object.getOwnPropertyDescriptor(subject, propName);
-      });
-      return descs;
-    },
+  if (isES5) {
+    defineProperties(Object, {
+      getOwnPropertyDescriptors: function(subject) {
+        var descs = {};
+        Object.getOwnPropertyNames(subject).forEach(function(propName) {
+          descs[propName] = Object.getOwnPropertyDescriptor(subject, propName);
+        });
+        return descs;
+      },
 
+      getPropertyDescriptor: function(subject, name) {
+        var pd = Object.getOwnPropertyDescriptor(subject, name);
+        var proto = Object.getPrototypeOf(subject);
+        while (pd === undefined && proto !== null) {
+          pd = Object.getOwnPropertyDescriptor(proto, name);
+          proto = Object.getPrototypeOf(proto);
+        }
+        return pd;
+      },
+
+      getPropertyNames: function(subject) {
+        var result = Object.getOwnPropertyNames(subject);
+        var proto = Object.getPrototypeOf(subject);
+
+        var addProperty = function(property) {
+          if (result.indexOf(property) === -1) {
+            result.push(property);
+          }
+        };
+
+        while (proto !== null) {
+          Object.getOwnPropertyNames(proto).forEach(addProperty);
+          proto = Object.getPrototypeOf(proto);
+        }
+        return result;
+      }
+    });
+  }
+
+  defineProperties(Object, {
     getOwnPropertyKeys: function(subject) {
       return Object.keys(subject);
-    },
-
-    getPropertyDescriptor: function(subject, name) {
-      var pd = Object.getOwnPropertyDescriptor(subject, name);
-      var proto = Object.getPrototypeOf(subject);
-      while (pd === undefined && proto !== null) {
-        pd = Object.getOwnPropertyDescriptor(proto, name);
-        proto = Object.getPrototypeOf(proto);
-      }
-      return pd;
-    },
-
-    getPropertyNames: function(subject) {
-      var result = Object.getOwnPropertyNames(subject);
-      var proto = Object.getPrototypeOf(subject);
-
-      var addProperty = function(property) {
-        if (result.indexOf(property) === -1) {
-          result.push(property);
-        }
-      };
-
-      while (proto !== null) {
-        Object.getOwnPropertyNames(proto).forEach(addProperty);
-        proto = Object.getPrototypeOf(proto);
-      }
-      return result;
     },
 
     is: function(x, y) {
