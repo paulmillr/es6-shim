@@ -19,7 +19,7 @@ For node.js:
     npm install es6-shim
 
 ## Safe shims
-* Maps & Sets
+* Maps & Sets (only in a true ES5 environment)
 * String.prototype.repeat, String.prototype.startsWith,
 String.prototype.endsWith, String.prototype.contains
 * Array.from, Array.of
