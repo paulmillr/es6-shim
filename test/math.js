@@ -27,6 +27,11 @@ describe('Math', function() {
 
   describe('#asinh()', function() {
     it('should be correct', function() {
+      expect(Number.isNaN(Math.asinh(NaN))).to.be.ok;
+      expect(isPositiveZero(Math.asinh(+0))).to.be.ok;
+      expect(isNegativeZero(Math.asinh(-0))).to.be.ok;
+      expect(Math.asinh(Infinity)).to.equal(Infinity);
+      expect(Math.asinh(-Infinity)).to.equal(-Infinity);
       expect(Math.asinh(1234)).to.almostEqual(7.811163549201245);
       expect(Math.asinh(9.99)).to.almostEqual(2.997227420191335);
     });
