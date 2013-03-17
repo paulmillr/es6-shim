@@ -4,6 +4,14 @@ Assertion.prototype.almostEqual = function(obj, precision) {
   return this.within(obj - allowedDiff, obj + allowedDiff);
 }
 
+var isPositiveZero = function (zero) {
+  return zero === 0 && 1 / zero === Infinity;
+};
+
+var isNegativeZero = function (zero) {
+  return zero === 0 && 1 / zero === -Infinity;
+};
+
 describe('Math', function() {
   describe('#acosh()', function() {
     it('should be correct', function() {
