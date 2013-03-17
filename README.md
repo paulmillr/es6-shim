@@ -33,12 +33,12 @@ Math.trunc (accuracy is 1e-11).
 
 ## WeakMap shim
 It is not possible to implement WeakMap in pure javascript.
-[es6-collections](https://github.com/WebReflection/es6-collections)
-implementation doesn't held values strongly which is critical
-for the collection. es6-shim decided to not include incorrect shim.
+The [es6-collections](https://github.com/WebReflection/es6-collections)
+implementation doesn't hold values strongly, which is critical
+for the collection. es6-shim decided to not include an incorrect shim.
 
-WeakMap has very unusual use-case so you probably won't need it at all (
-use simple `Map` instead).
+WeakMap has a very unusual use-case so you probably won't need it at all
+(use simple `Map` instead).
 
 ## IE8 support
 There are some shims that do not work in IE8, because it is simply not
