@@ -7,6 +7,7 @@ var main = function() {
 
   var globals = (typeof global === 'undefined') ? window : global;
   var global_isFinite = globals.isFinite;
+  var isES5 = !!Object.defineProperty;
   var factorial = function(value) {
     var result = 1;
     for (var i = 2; i <= value; i++) {
@@ -21,12 +22,16 @@ var main = function() {
     Object.keys(map).forEach(function(name) {
       var method = map[name];
       if (!object[name]) {
-        Object.defineProperty(object, name, {
-          configurable: true,
-          enumerable: false,
-          writable: true,
-          value: method
-        });
+        if (isES5) {
+          Object.defineProperty(object, name, {
+            configurable: true,
+            enumerable: false,
+            writable: true,
+            value: method
+          });
+        } else {
+          object[name] = method;
+        }
       }
     });
   };
@@ -183,44 +188,48 @@ var main = function() {
     }
   });
 
-  defineProperties(Object, {
-    getOwnPropertyDescriptors: function(subject) {
-      var descs = {};
-      Object.getOwnPropertyNames(subject).forEach(function(propName) {
-        descs[propName] = Object.getOwnPropertyDescriptor(subject, propName);
-      });
-      return descs;
-    },
+  if (isES5) {
+    defineProperties(Object, {
+      getOwnPropertyDescriptors: function(subject) {
+        var descs = {};
+        Object.getOwnPropertyNames(subject).forEach(function(propName) {
+          descs[propName] = Object.getOwnPropertyDescriptor(subject, propName);
+        });
+        return descs;
+      },
 
+      getPropertyDescriptor: function(subject, name) {
+        var pd = Object.getOwnPropertyDescriptor(subject, name);
+        var proto = Object.getPrototypeOf(subject);
+        while (pd === undefined && proto !== null) {
+          pd = Object.getOwnPropertyDescriptor(proto, name);
+          proto = Object.getPrototypeOf(proto);
+        }
+        return pd;
+      },
+
+      getPropertyNames: function(subject) {
+        var result = Object.getOwnPropertyNames(subject);
+        var proto = Object.getPrototypeOf(subject);
+
+        var addProperty = function(property) {
+          if (result.indexOf(property) === -1) {
+            result.push(property);
+          }
+        };
+
+        while (proto !== null) {
+          Object.getOwnPropertyNames(proto).forEach(addProperty);
+          proto = Object.getPrototypeOf(proto);
+        }
+        return result;
+      }
+    });
+  }
+
+  defineProperties(Object, {
     getOwnPropertyKeys: function(subject) {
       return Object.keys(subject);
-    },
-
-    getPropertyDescriptor: function(subject, name) {
-      var pd = Object.getOwnPropertyDescriptor(subject, name);
-      var proto = Object.getPrototypeOf(subject);
-      while (pd === undefined && proto !== null) {
-        pd = Object.getOwnPropertyDescriptor(proto, name);
-        proto = Object.getPrototypeOf(proto);
-      }
-      return pd;
-    },
-
-    getPropertyNames: function(subject) {
-      var result = Object.getOwnPropertyNames(subject);
-      var proto = Object.getPrototypeOf(subject);
-
-      var addProperty = function(property) {
-        if (result.indexOf(property) === -1) {
-          result.push(property);
-        }
-      };
-
-      while (proto !== null) {
-        Object.getOwnPropertyNames(proto).forEach(addProperty);
-        proto = Object.getPrototypeOf(proto);
-      }
-      return result;
     },
 
     is: function(x, y) {
@@ -258,7 +267,7 @@ var main = function() {
     atanh: function(value) {
       return 0.5 * Math.log((1 + value) / (1 - value));
     },
-    
+
     cbrt: function (value) {
       var negate = value < 0, result;
       if (negate) { value = -value }
@@ -285,7 +294,7 @@ var main = function() {
       if (z == null) { z = 0; }
       return Math.sqrt(Math.hypot2(x, y, z));
     },
-    
+
     hypot2: function (x, y, z) {
       if (x == null) { x = 0; }
       if (y == null) { y = 0; }
@@ -341,115 +350,118 @@ var main = function() {
     }
   });
 
-  defineProperties(globals, {
-    Map: (function() {
-      var indexOfIdentical = function(keys, key) {
-        for (var i = 0, length = keys.length; i < length; i++) {
-          if (Object.is(keys[i], key)) return i;
-        }
-        return -1;
-      };
+  if (isES5) {
+    // Map and Set require a true ES5 environment
+    defineProperties(globals, {
+      Map: (function() {
+        var indexOfIdentical = function(keys, key) {
+          for (var i = 0, length = keys.length; i < length; i++) {
+            if (Object.is(keys[i], key)) return i;
+          }
+          return -1;
+        };
 
-      function Map() {
-        if (!(this instanceof Map)) return new Map();
+        function Map() {
+          if (!(this instanceof Map)) return new Map();
 
-        defineProperties(this, {
-          '_keys': [],
-          '_values': [],
-          '_size': 0
-        });
+          defineProperties(this, {
+            '_keys': [],
+            '_values': [],
+            '_size': 0
+          });
 
-        Object.defineProperty(this, 'size', {
-          configurable: true,
-          enumerable: false,
-          get: (function() {
-            return this._size;
-          }).bind(this)
-        });
-      }
-
-      defineProperties(Map.prototype, {
-        get: function(key) {
-          var index = indexOfIdentical(this._keys, key);
-          return index < 0 ? undefined : this._values[index];
-        },
-
-        has: function(key) {
-          return indexOfIdentical(this._keys, key) >= 0;
-        },
-
-        set: function(key, value) {
-          var keys = this._keys;
-          var values = this._values;
-          var index = indexOfIdentical(keys, key);
-          if (index < 0) index = keys.length;
-          keys[index] = key;
-          values[index] = value;
-          this._size += 1;
-        },
-
-        'delete': function(key) {
-          var keys = this._keys;
-          var values = this._values;
-          var index = indexOfIdentical(keys, key);
-          if (index < 0) return false;
-          keys.splice(index, 1);
-          values.splice(index, 1);
-          this._size -= 1;
-          return true;
-        },
-
-        keys: function() {
-          return this._keys;
-        },
-
-        values: function() {
-          return this._values;
-        }
-      });
-
-      return Map;
-    })(),
-
-    Set: (function() {
-      function Set() {
-        if (!(this instanceof Set)) return new Set();
-        defineProperties(this, {'[[SetData]]': new Map()});
-        Object.defineProperty(this, 'size', {
-          configurable: true,
-          enumerable: false,
-          get: (function() {
-            return this['[[SetData]]'].size;
-          }).bind(this)
-        });
-      }
-
-      defineProperties(Set.prototype, {
-        has: function(key) {
-          return this['[[SetData]]'].has(key);
-        },
-
-        add: function(key) {
-          this['[[SetData]]'].set(key, true);
-        },
-
-        'delete': function(key) {
-          return this['[[SetData]]']['delete'](key);
-        },
-
-        clear: function() {
-          Object.defineProperty(this, '[[SetData]]', {
+          Object.defineProperty(this, 'size', {
             configurable: true,
             enumerable: false,
-            writable: true,
-            value: new Map()
+            get: (function() {
+              return this._size;
+            }).bind(this)
           });
         }
-      });
 
-      return Set;
-    })()
-  });
+        defineProperties(Map.prototype, {
+          get: function(key) {
+            var index = indexOfIdentical(this._keys, key);
+            return index < 0 ? undefined : this._values[index];
+          },
+
+          has: function(key) {
+            return indexOfIdentical(this._keys, key) >= 0;
+          },
+
+          set: function(key, value) {
+            var keys = this._keys;
+            var values = this._values;
+            var index = indexOfIdentical(keys, key);
+            if (index < 0) index = keys.length;
+            keys[index] = key;
+            values[index] = value;
+            this._size += 1;
+          },
+
+          'delete': function(key) {
+            var keys = this._keys;
+            var values = this._values;
+            var index = indexOfIdentical(keys, key);
+            if (index < 0) return false;
+            keys.splice(index, 1);
+            values.splice(index, 1);
+            this._size -= 1;
+            return true;
+          },
+
+          keys: function() {
+            return this._keys;
+          },
+
+          values: function() {
+            return this._values;
+          }
+        });
+
+        return Map;
+      })(),
+
+      Set: (function() {
+        function Set() {
+          if (!(this instanceof Set)) return new Set();
+          defineProperties(this, {'[[SetData]]': new Map()});
+          Object.defineProperty(this, 'size', {
+            configurable: true,
+            enumerable: false,
+            get: (function() {
+              return this['[[SetData]]'].size;
+            }).bind(this)
+          });
+        }
+
+        defineProperties(Set.prototype, {
+          has: function(key) {
+            return this['[[SetData]]'].has(key);
+          },
+
+          add: function(key) {
+            this['[[SetData]]'].set(key, true);
+          },
+
+          'delete': function(key) {
+            return this['[[SetData]]']['delete'](key);
+          },
+
+          clear: function() {
+            Object.defineProperty(this, '[[SetData]]', {
+              configurable: true,
+              enumerable: false,
+              writable: true,
+              value: new Map()
+            });
+          }
+        });
+
+        return Set;
+      })()
+    });
+  }
 };
 
 if (typeof define === 'function' && typeof define.amd == 'object' && define.amd) {

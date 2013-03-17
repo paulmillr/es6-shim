@@ -19,14 +19,15 @@ For node.js:
     npm install es6-shim
 
 ## Safe shims
-* Maps & Sets
+* Maps & Sets (only in a true ES5 environment)
 * String.prototype.repeat, String.prototype.startsWith,
 String.prototype.endsWith, String.prototype.contains
 * Array.from, Array.of
 * Number.MAX_INTEGER, Number.EPSILON, Number.parseInt, Number.parseFloat,
 Number.isNaN, Number.toInteger, Number.isInteger, Number.isFinite
 * Object.getOwnPropertyDescriptors, Object.getPropertyDescriptor,
-Object.getPropertyNames, Object.is, Object.isnt
+Object.getPropertyNames (only in a true ES5 environment)
+* Object.is, Object.isnt
 * Math.sign, Math.log10, Math.log2, Math.log1p, Math.expm1, Math.cosh,
 Math.sinh, Math.tanh, Math.acosh, Math.asinh, Math.atanh, Math.hypot,
 Math.trunc (accuracy is 1e-11).
