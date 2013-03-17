@@ -354,6 +354,13 @@ var main = function() {
     },
 
     sinh: function(value) {
+      if (Number.isNaN(value)) {
+        return NaN;
+      } else if (value === 0) {
+        return value;
+      } else if (value === Infinity || value === -Infinity) {
+        return value;
+      }
       return (Math.exp(value) - Math.exp(-value)) / 2;
     },
 

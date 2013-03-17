@@ -142,6 +142,11 @@ describe('Math', function() {
 
   describe('#sinh()', function() {
     it('should be correct', function() {
+      expect(Number.isNaN(Math.sinh(NaN))).to.be.ok;
+      expect(isPositiveZero(Math.sinh(+0))).to.be.ok;
+      expect(isNegativeZero(Math.sinh(-0))).to.be.ok;
+      expect(Math.sinh(Infinity)).to.equal(Infinity);
+      expect(Math.sinh(-Infinity)).to.equal(-Infinity);
       expect(Math.sinh(-5)).to.almostEqual(-74.20321057778875);
       expect(Math.sinh(2)).to.almostEqual(3.6268604078470186);
     });
