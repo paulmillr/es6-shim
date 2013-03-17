@@ -1,6 +1,6 @@
 var Assertion = expect().constructor;
-Assertion.prototype.almostEqual = function(obj) {
-  var allowedDiff = 1e-11;
+Assertion.prototype.almostEqual = function(obj, precision) {
+  var allowedDiff = precision || 1e-11;
   return this.within(obj - allowedDiff, obj + allowedDiff);
 }
 
@@ -44,9 +44,16 @@ describe('Math', function() {
 
   describe('#cosh()', function() {
     it('should be correct', function() {
-      expect(Math.cosh(12)).to.almostEqual(81377.39571257407);
-      expect(Math.cosh(0)).to.almostEqual(1);
-      expect(Math.cosh(-10)).to.almostEqual(11013.232920103323);
+      expect(Number.isNaN(Math.cosh(NaN))).to.be.ok;
+      expect(Math.cosh(-0)).to.equal(1);
+      expect(Math.cosh(+0)).to.equal(1);
+      expect(Math.cosh(Infinity)).to.equal(Infinity);
+      expect(Math.cosh(-Infinity)).to.equal(-Infinity);
+      // Overridden precision values here are for Chrome, as of v25.0.1364.172
+      expect(Math.cosh(12)).to.almostEqual(81377.39571257407, 3e-11);
+      expect(Math.cosh(22)).to.almostEqual(1792456423.065795780980053377, 1e-5);
+      expect(Math.cosh(-10)).to.almostEqual(11013.23292010332313972137);
+      expect(Math.cosh(-23)).to.almostEqual(4872401723.1244513000, 1e-5);
     });
   });
 
