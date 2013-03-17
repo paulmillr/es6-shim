@@ -16,7 +16,7 @@ var main = function() {
   };
 
   // Define configurable, writable and non-enumerable props
-  // if they don’t exists.
+  // if they don’t exist.
   var defineProperties = function(object, map) {
     Object.keys(map).forEach(function(name) {
       var method = map[name];
