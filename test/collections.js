@@ -198,7 +198,7 @@ describe('Collections', function() {
       expect(Set.prototype).to.not.equal(Object.prototype);
     });
 
-    it('should throw proper errors when user invokes methods with wrong types of receiver',
+    it.skip('should throw proper errors when user invokes methods with wrong types of receiver',
       function() {
 
     });
