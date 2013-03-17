@@ -22,15 +22,15 @@ var main = function() {
     Object.keys(map).forEach(function(name) {
       var method = map[name];
       if (!object[name]) {
-        if (!isES5) {
-          object[name] = method;
-        } else {
+        if (isES5) {
           Object.defineProperty(object, name, {
             configurable: true,
             enumerable: false,
             writable: true,
             value: method
           });
+        } else {
+          object[name] = method;
         }
       }
     });
