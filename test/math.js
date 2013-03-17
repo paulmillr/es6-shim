@@ -1,6 +1,6 @@
 var Assertion = expect().constructor;
-Assertion.prototype.almostEqual = function(obj) {
-  var allowedDiff = 1e-11;
+Assertion.prototype.almostEqual = function(obj, precision) {
+  var allowedDiff = precision || 1e-11;
   return this.within(obj - allowedDiff, obj + allowedDiff);
 }
 
