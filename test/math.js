@@ -67,6 +67,11 @@ describe('Math', function() {
 
   describe('#expm1()', function() {
     it('should be correct', function() {
+      expect(Number.isNaN(Math.expm1(NaN))).to.be.ok;
+      expect(isPositiveZero(Math.expm1(+0))).to.be.ok;
+      expect(isNegativeZero(Math.expm1(-0))).to.be.ok;
+      expect(Math.expm1(Infinity)).to.equal(Infinity);
+      expect(Math.expm1(-Infinity)).to.equal(-1);
       expect(Math.expm1(10)).to.almostEqual(22025.465794806718);
       expect(Math.expm1(-10)).to.almostEqual(-0.9999546000702375);
     });

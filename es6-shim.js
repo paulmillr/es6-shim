@@ -289,6 +289,15 @@ var main = function() {
     },
 
     expm1: function(value) {
+      if (Number.isNaN(value)) {
+        return NaN;
+      } else if (value === 0) {
+        return value;
+      } else if (value === Infinity) {
+        return Infinity;
+      } else if (value === -Infinity) {
+        return -1;
+      }
       var result = 0;
       var n = 50;
       for (var i = 1; i < n; i++) {
