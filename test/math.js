@@ -154,6 +154,11 @@ describe('Math', function() {
 
   describe('#tanh()', function() {
     it('should be correct', function() {
+      expect(Number.isNaN(Math.tanh(NaN))).to.be.ok;
+      expect(isPositiveZero(Math.tanh(+0))).to.be.ok;
+      expect(isNegativeZero(Math.tanh(-0))).to.be.ok;
+      expect(Math.tanh(Infinity)).to.equal(1);
+      expect(Math.tanh(-Infinity)).to.equal(-1);
       expect(Math.tanh(90)).to.almostEqual(1);
       expect(Math.tanh(10)).to.almostEqual(0.9999999958776927);
     });

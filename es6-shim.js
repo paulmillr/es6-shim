@@ -365,6 +365,15 @@ var main = function() {
     },
 
     tanh: function(value) {
+      if (Number.isNaN(value)) {
+        return NaN;
+      } else if (value === 0) {
+        return value;
+      } else if (value === Infinity) {
+        return 1;
+      } else if (value === -Infinity) {
+        return -1;
+      }
       return (Math.exp(value) - Math.exp(-value)) / (Math.exp(value) + Math.exp(-value));
     },
 
