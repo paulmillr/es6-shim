@@ -7,6 +7,7 @@ var main = function() {
 
   var globals = (typeof global === 'undefined') ? window : global;
   var global_isFinite = globals.isFinite;
+  var isES5 = !!Object.defineProperty;
   var factorial = function(value) {
     var result = 1;
     for (var i = 2; i <= value; i++) {
@@ -21,12 +22,16 @@ var main = function() {
     Object.keys(map).forEach(function(name) {
       var method = map[name];
       if (!object[name]) {
-        Object.defineProperty(object, name, {
-          configurable: true,
-          enumerable: false,
-          writable: true,
-          value: method
-        });
+        if (!isES5) {
+          object[name] = method;
+        } else {
+          Object.defineProperty(object, name, {
+            configurable: true,
+            enumerable: false,
+            writable: true,
+            value: method
+          });
+        }
       }
     });
   };
