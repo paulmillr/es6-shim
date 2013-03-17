@@ -276,6 +276,13 @@ var main = function() {
     },
 
     cosh: function(value) {
+      if (value === 0) { // +0 or -0
+        return 1;
+      } else if (value === Infinity || value === -Infinity) {
+        return value;
+      } else if (Number.isNaN(value)) {
+        return NaN;
+      }
       if (value < 0) value = -value;
       if (value > 21) return Math.exp(value) / 2;
       return (Math.exp(value) + Math.exp(-value)) / 2;
