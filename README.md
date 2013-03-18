@@ -19,18 +19,53 @@ For node.js:
     npm install es6-shim
 
 ## Safe shims
-* Maps & Sets (only in a true ES5 environment)
-* String.prototype.repeat, String.prototype.startsWith,
-String.prototype.endsWith, String.prototype.contains
-* Array.from, Array.of
-* Number.MAX_INTEGER, Number.EPSILON, Number.parseInt, Number.parseFloat,
-Number.isNaN, Number.toInteger, Number.isInteger, Number.isFinite
-* Object.getOwnPropertyDescriptors, Object.getPropertyDescriptor,
-Object.getPropertyNames (only in a true ES5 environment)
-* Object.is, Object.isnt
-* Math.sign, Math.log10, Math.log2, Math.log1p, Math.expm1, Math.cosh,
-Math.sinh, Math.tanh, Math.acosh, Math.asinh, Math.atanh, Math.hypot,
-Math.trunc (accuracy is 1e-11).
+
+* `Map`, `Set` (ES5)
+* `String`:
+    * `fromCodePoint()`
+* `String.prototype`:
+    * `codePointAt()`
+    * `repeat()`
+    * `startsWith()`
+    * `endsWith()`
+    * `contains()`
+* `Number`:
+    * `MAX_INTEGER`
+    * `EPSILON`
+    * `parseInt()`
+    * `parseFloat()`
+    * `isNaN()`
+    * `toInteger()`
+    * `isInteger()`
+    * `isFinite()`
+* `Number.prototype`:
+    * `clz()`
+* `Array`:
+    * `from()`
+    * `of()`
+* `Object`:
+    * `getOwnPropertyDescriptors()` (ES5)
+    * `getPropertyDescriptor()` (ES5)
+    * `getPropertyNames()` (ES5)
+    * `is()`
+    * `assign()`
+    * `mixin()` (ES5)
+* `Math`:
+    * `sign()`
+    * `log10()`
+    * `log2()`
+    * `log1p()`
+    * `expm1()`
+    * `cosh()`
+    * `sinh()`
+    * `tanh()`
+    * `acosh()`
+    * `asinh()`
+    * `atanh()`
+    * `hypot()`
+    * `trunc()`
+
+Math functions accuracy is 1e-11.
 
 ## WeakMap shim
 It is not possible to implement WeakMap in pure javascript.
@@ -40,14 +75,6 @@ for the collection. es6-shim decided to not include an incorrect shim.
 
 WeakMap has a very unusual use-case so you probably won't need it at all
 (use simple `Map` instead).
-
-## IE8 support
-There are some shims that do not work in IE8, because it is simply not
-possible to implement them properly:
-
-* Object.getOwnPropertyDescriptors
-* Object.getPropertyDescriptor
-* Object.getPropertyNames
 
 ## Getting started
 
