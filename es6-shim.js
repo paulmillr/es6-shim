@@ -38,6 +38,30 @@ var main = function() {
     }
   };
 
+  defineProperties(String, {
+    fromCodePoint: function() {
+      var points = arguments;
+      var result = [];
+      var next;
+      for (var i = 0, length = points.length; i < length; i++) {
+        next = Number(points[i]);
+        if (!Object.is(next, Number.toInteger(next)) ||
+            next < 0 || next > 0x10FFFF) {
+          throw new RangeError('Invalid code point ' + next);
+        }
+
+        if (next < 0x10000) {
+          result.push(String.fromCharCode(next));
+        } else {
+          next -= 0x10000;
+          result.push(String.fromCharCode((next >> 10) + 0xD800));
+          result.push(String.fromCharCode((next % 0x400) + 0xDC00));
+        }
+      }
+      return result.join('');
+    }
+  });
+
   defineProperties(String.prototype, {
     // Fast repeat, uses the `Exponentiation by squaring` algorithm.
     repeat: function(times) {
@@ -49,77 +73,28 @@ var main = function() {
 
     startsWith: function(searchString) {
       var position = arguments[1];
-
-      // Let searchStr be ToString(searchString).
       var searchStr = searchString.toString();
-
-      // ReturnIfAbrupt(searchStr).
-
-      // Let S be the result of calling ToString,
-      // giving it the this value as its argument.
-      var s = this.toString();
-
-      // ReturnIfAbrupt(S).
-
-      // Let pos be ToInteger(position).
-      // (If position is undefined, this step produces the value 0).
+      var s = String(this);
       var pos = (position === undefined) ? 0 : Number.toInteger(position);
-      // ReturnIfAbrupt(pos).
-
-      // Let len be the number of elements in S.
       var len = s.length;
-
-      // Let start be min(max(pos, 0), len).
       var start = Math.min(Math.max(pos, 0), len);
-
-      // Let searchLength be the number of elements in searchString.
       var searchLength = searchString.length;
-
-      // If searchLength+start is greater than len, return false.
       if ((searchLength + start) > len) return false;
-
-      // If the searchLength sequence of elements of S starting at
-      // start is the same as the full element sequence of searchString,
-      // return true.
       var index = ''.indexOf.call(s, searchString, start);
       return index === start;
     },
 
     endsWith: function(searchString) {
       var endPosition = arguments[1];
-
-      // ReturnIfAbrupt(CheckObjectCoercible(this value)).
-      // Let S be the result of calling ToString, giving it the this value as its argument.
-      // ReturnIfAbrupt(S).
-      var s = this.toString();
-
-      // Let searchStr be ToString(searchString).
-      // ReturnIfAbrupt(searchStr).
+      var s = String(this);
       var searchStr = searchString.toString();
-
-      // Let len be the number of elements in S.
       var len = s.length;
-
-      // If endPosition is undefined, let pos be len, else let pos be ToInteger(endPosition).
-      // ReturnIfAbrupt(pos).
       var pos = (endPosition === undefined) ?
-        len :
-        Number.toInteger(endPosition);
-
-      // Let end be min(max(pos, 0), len).
+        len : Number.toInteger(endPosition);
       var end = Math.min(Math.max(pos, 0), len);
-
-      // Let searchLength be the number of elements in searchString.
       var searchLength = searchString.length;
-
-      // Let start be end - searchLength.
       var start = end - searchLength;
-
-      // If start is less than 0, return false.
       if (start < 0) return false;
-
-      // If the searchLength sequence of elements of S starting at start is the same as the full element sequence of searchString, return true.
-      // Otherwise, return false.
       var index = ''.indexOf.call(s, searchString, start);
       return index === start;
     },
@@ -129,6 +104,19 @@ var main = function() {
 
       // Somehow this trick makes method 100% compat with the spec.
       return ''.indexOf.call(this, searchString, position) !== -1;
+    },
+
+    codePointAt: function(pos) {
+      var s = String(this);
+      var position = Number.toInteger(pos);
+      var length = s.length;
+      if (position < 0 || position >= length) return undefined;
+      var first = s.charCodeAt(position);
+      var isEnd = (position + 1 === length);
+      if (first < 0xD800 || first > 0xDBFF || isEnd) return first;
+      var second = s.charCodeAt(position + 1);
+      if (second < 0xDC00 || second > 0xDFFF) return first;
+      return ((first - 0xD800) * 1024) + (second - 0xDC00) + 0x10000;
     }
   });
 
