@@ -337,9 +337,13 @@ var main = function() {
       var anyInfinity = false;
       var allZero = true;
       [x, y, z].some(function (num) {
-        if (Number.isNaN(num)) { anyNaN = true; }
-        else if (num === Infinity || num === -Infinity) { anyInfinity = true; }
-        else if (num !== 0) { allZero = false; }
+        if (Number.isNaN(num)) {
+          anyNaN = true;
+        } else if (num === Infinity || num === -Infinity) {
+          anyInfinity = true;
+        } else if (num !== 0) {
+          allZero = false;
+        }
         return anyInfinity || anyNaN;
       });
       if (anyInfinity) {
@@ -349,9 +353,9 @@ var main = function() {
       } else if (allZero) {
         return 0;
       }
-      if (x == null) { x = 0; }
-      if (y == null) { y = 0; }
-      if (z == null) { z = 0; }
+      if (x == null) x = 0;
+      if (y == null) y = 0;
+      if (z == null) z = 0;
       return Math.sqrt(x * x + y * y + z * z);
     },
 
