@@ -292,8 +292,11 @@ var main = function() {
     },
 
     cbrt: function (value) {
+      if (value === 0) {
+        return value;
+      }
       var negate = value < 0, result;
-      if (negate) { value = -value }
+      if (negate) { value = -value; }
       result = Math.pow(value, 1/3);
       return negate ? -result : result;
     },

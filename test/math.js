@@ -56,8 +56,8 @@ describe('Math', function() {
   describe('#cbrt()', function() {
     it('should be correct', function () {
       expect(isNaN(Math.cbrt(NaN))).to.be.ok;
-      expect(Math.cbrt(+0)).to.equal(+0);
-      expect(Math.cbrt(-0)).to.equal(-0);
+      expect(isPositiveZero(Math.cbrt(+0))).to.be.ok;
+      expect(isNegativeZero(Math.cbrt(-0))).to.be.ok;
       expect(Math.cbrt(Infinity)).to.equal(Infinity);
       expect(Math.cbrt(-Infinity)).to.equal(-Infinity);
       expect(Math.cbrt(-8)).to.almostEqual(-2);
