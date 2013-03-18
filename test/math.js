@@ -100,8 +100,12 @@ describe('Math', function() {
       expect(Math.hypot(-Infinity)).to.equal(Infinity);
       expect(Math.hypot(Infinity, NaN)).to.equal(Infinity);
       expect(Math.hypot(-Infinity, 'Hello')).to.equal(Infinity);
-      expect(isNaN(Math.hypot(NaN))).to.be.ok;
-      expect(Math.hypot()).to.equal(0);
+      expect(Math.hypot(1, 2, Infinity)).to.equal(Infinity);
+      expect(Number.isNaN(Math.hypot(NaN, 1))).to.be.ok;
+      expect(isPositiveZero(Math.hypot())).to.be.ok;
+      expect(isPositiveZero(Math.hypot(0, 0, 0))).to.be.ok;
+      expect(isPositiveZero(Math.hypot(0, -0, 0))).to.be.ok;
+      expect(isPositiveZero(Math.hypot(-0, -0, -0))).to.be.ok;
       expect(Math.hypot(66, 66)).to.almostEqual(93.33809511662427);
       expect(Math.hypot(0.1, 100)).to.almostEqual(100.0000499999875);
       });
