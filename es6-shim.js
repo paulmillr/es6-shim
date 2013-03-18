@@ -356,6 +356,15 @@ var main = function() {
     },
 
     log2: function(value) {
+      if (Number.isNaN(value) || value < 0) {
+        return NaN;
+      } else if (value === 0) {
+        return -Infinity;
+      } else if (value === 1) {
+        return 0;
+      } else if (value === Infinity) {
+        return Infinity;
+      }
       return Math.log(value) * (1 / Math.LN2);
     },
 

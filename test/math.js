@@ -113,6 +113,13 @@ describe('Math', function() {
   
   describe('#log2()', function() {
     it('should be correct', function() {
+      expect(Number.isNaN(Math.log2(NaN))).to.be.ok;
+      expect(Number.isNaN(Math.log2(-1e-50))).to.be.ok;
+      expect(Math.log2(+0)).to.equal(-Infinity);
+      expect(Math.log2(-0)).to.equal(-Infinity);
+      expect(isPositiveZero(Math.log2(1))).to.be.ok;
+      expect(Math.log2(Infinity)).to.equal(Infinity);
+
       expect(Math.log2(5)).to.almostEqual(2.321928094887362);
       expect(Math.log2(32)).to.almostEqual(5);
     });
