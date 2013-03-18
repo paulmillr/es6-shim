@@ -36,6 +36,16 @@ var main = function() {
     });
   };
 
+  var ES = {
+    toInt32: function(x) {
+      return x >> 0;
+    },
+
+    toUint32: function(x) {
+      return x >>> 0;
+    }
+  };
+
   defineProperties(String.prototype, {
     // Fast repeat, uses the `Exponentiation by squaring` algorithm.
     repeat: function(times) {
@@ -134,8 +144,9 @@ var main = function() {
     from: function(iterable) {
       var object = new Object(iterable);
       var array = [];
+      var length = ES.toUint32(object.length);
 
-      for (var key = 0, length = object.length >>> 0; key < length; key++) {
+      for (var key = 0; key < length; key++) {
         if (key in object) {
           array[key] = object[key];
         }
@@ -146,6 +157,38 @@ var main = function() {
 
     of: function() {
       return Array.prototype.slice.call(arguments);
+    }
+  });
+
+  defineProperties(Array.prototype, {
+    find: function(predicate) {
+      var list = Object(this);
+      var length = ES.toUint32(list.length);
+      if (length === 0) return undefined;
+      if (typeof predicate !== 'function') {
+        throw new TypeError('Array#find: predicate must be a function');
+      }
+      var thisArg = arguments[1];
+      for (var i = 0, value; i < length && i in list; i++) {
+        value = list[i];
+        if (predicate.call(thisArg, value, i, list)) return value;
+      }
+      return undefined;
+    },
+
+    findIndex: function(predicate) {
+      var list = Object(this);
+      var length = ES.toUint32(list.length);
+      if (length === 0) return -1;
+      if (typeof predicate !== 'function') {
+        throw new TypeError('Array#findIndex: predicate must be a function');
+      }
+      var thisArg = arguments[1];
+      for (var i = 0, value; i < length && i in list; i++) {
+        value = list[i];
+        if (predicate.call(thisArg, value, i, list)) return i;
+      }
+      return -1;
     }
   });
 
