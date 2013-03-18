@@ -37,11 +37,11 @@ var main = function() {
   };
 
   var ES = {
-    toInt32: function(x) {
+    ToInt32: function(x) {
       return x >> 0;
     },
 
-    toUint32: function(x) {
+    ToUint32: function(x) {
       return x >>> 0;
     }
   };
@@ -142,28 +142,32 @@ var main = function() {
 
   defineProperties(Array, {
     from: function(iterable) {
-      var object = new Object(iterable);
-      var array = [];
-      var length = ES.toUint32(object.length);
+      var mapFn = arguments[1];
+      var thisArg = arguments[2];
 
-      for (var key = 0; key < length; key++) {
-        if (key in object) {
-          array[key] = object[key];
-        }
+      var list = Object(iterable);
+      var length = ES.ToUint32(list.length);
+      var result = typeof this === 'function' ?
+        Object(new this(length)) : new Array(length);
+
+      for (var i = 0; i < length; i++) {
+        var value = list[i];
+        result[i] = mapFn ? mapFn.call(thisArg, value) : value;
       }
 
-      return array;
+      result.length = length;
+      return result;
     },
 
     of: function() {
-      return Array.prototype.slice.call(arguments);
+      return Array.from(arguments);
     }
   });
 
   defineProperties(Array.prototype, {
     find: function(predicate) {
       var list = Object(this);
-      var length = ES.toUint32(list.length);
+      var length = ES.ToUint32(list.length);
       if (length === 0) return undefined;
       if (typeof predicate !== 'function') {
         throw new TypeError('Array#find: predicate must be a function');
@@ -178,7 +182,7 @@ var main = function() {
 
     findIndex: function(predicate) {
       var list = Object(this);
-      var length = ES.toUint32(list.length);
+      var length = ES.ToUint32(list.length);
       if (length === 0) return -1;
       if (typeof predicate !== 'function') {
         throw new TypeError('Array#findIndex: predicate must be a function');
