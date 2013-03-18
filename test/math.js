@@ -174,6 +174,11 @@ describe('Math', function() {
 
   describe('#trunc()', function() {
     it('should be correct', function() {
+      expect(Number.isNaN(Math.trunc(NaN))).to.be.ok;
+      expect(isNegativeZero(Math.trunc(-0))).to.be.ok;
+      expect(isPositiveZero(Math.trunc(+0))).to.be.ok;
+      expect(Math.trunc(Infinity)).to.equal(Infinity);
+      expect(Math.trunc(-Infinity)).to.equal(-Infinity);
       expect(Math.trunc(1.01)).to.equal(1);
       expect(Math.trunc(1.99)).to.equal(1);
       expect(Math.trunc(-555.555)).to.equal(-555);
