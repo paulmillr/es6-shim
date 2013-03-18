@@ -257,20 +257,46 @@ var main = function() {
 
   defineProperties(Math, {
     acosh: function(value) {
+      if (Number.isNaN(value) || value < 1) {
+        return NaN;
+      } else if (value === 1) {
+        return +0;
+      } else if (value === Infinity) {
+        return Infinity;
+      }
       return Math.log(value + Math.sqrt(value * value - 1));
     },
 
     asinh: function(value) {
+      if (Number.isNaN(value)) {
+        return NaN;
+      } else if (value === 0) {
+        return value;
+      } else if (value === Infinity || value === -Infinity) {
+        return value;
+      }
       return Math.log(value + Math.sqrt(value * value + 1));
     },
 
     atanh: function(value) {
+      if (Number.isNaN(value) || value < -1 || value > 1) {
+        return NaN;
+      } else if (value === -1) {
+        return -Infinity;
+      } else if (value === 1) {
+        return Infinity;
+      } else if (value === 0) {
+        return value;
+      }
       return 0.5 * Math.log((1 + value) / (1 - value));
     },
 
     cbrt: function (value) {
+      if (value === 0) {
+        return value;
+      }
       var negate = value < 0, result;
-      if (negate) { value = -value }
+      if (negate) { value = -value; }
       result = Math.pow(value, 1/3);
       return negate ? -result : result;
     },
@@ -289,6 +315,15 @@ var main = function() {
     },
 
     expm1: function(value) {
+      if (Number.isNaN(value)) {
+        return NaN;
+      } else if (value === 0) {
+        return value;
+      } else if (value === Infinity) {
+        return Infinity;
+      } else if (value === -Infinity) {
+        return -1;
+      }
       var result = 0;
       var n = 50;
       for (var i = 1; i < n; i++) {
@@ -298,33 +333,67 @@ var main = function() {
     },
 
     hypot: function(x, y, z) {
-      if (z == null) { z = 0; }
-      return Math.sqrt(Math.hypot2(x, y, z));
-    },
-
-    hypot2: function (x, y, z) {
+      var anyNaN = false;
+      var anyInfinity = false;
+      var allZero = true;
+      [x, y, z].some(function (num) {
+        if (Number.isNaN(num)) { anyNaN = true; }
+        else if (num === Infinity || num === -Infinity) { anyInfinity = true; }
+        else if (num !== 0) { allZero = false; }
+        return anyInfinity || anyNaN;
+      });
+      if (anyInfinity) {
+        return Infinity;
+      } else if (anyNaN) {
+        return NaN;
+      } else if (allZero) {
+        return 0;
+      }
       if (x == null) { x = 0; }
       if (y == null) { y = 0; }
       if (z == null) { z = 0; }
-      var xSq = x * x, ySq = y * y, zSq = z * z, inf = Infinity;
-      if (xSq === inf || ySq === inf || zSq === inf) { return inf; }
-      else if (isNaN(xSq) || isNaN(ySq) || isNaN(zSq)) { return NaN }
-      return x * x + y * y + z * z || 0;
+      return Math.sqrt(x * x + y * y + z * z);
     },
 
     log2: function(value) {
+      if (Number.isNaN(value) || value < 0) {
+        return NaN;
+      } else if (value === 0) {
+        return -Infinity;
+      } else if (value === 1) {
+        return 0;
+      } else if (value === Infinity) {
+        return Infinity;
+      }
       return Math.log(value) * (1 / Math.LN2);
     },
 
     log10: function(value) {
+      if (Number.isNaN(value) || value < 0) {
+        return NaN;
+      } else if (value === 0) {
+        return -Infinity;
+      } else if (value === 1) {
+        return 0;
+      } else if (value === Infinity) {
+        return Infinity;
+      }
       return Math.log(value) * (1 / Math.LN10);
     },
 
     log1p: function(value) {
+      if (Number.isNaN(value) || value < -1) {
+        return NaN;
+      } else if (value === -1) {
+        return -Infinity;
+      } else if (value === 0) {
+        return value;
+      } else if (value === Infinity) {
+        return Infinity;
+      }
       var result = 0;
       var n = 50;
 
-      if (value <= -1) return -Infinity;
       if (value < 0 || value > 1) return Math.log(1 + value);
       for (var i = 1; i < n; i++) {
         if ((i % 2) === 0) {
@@ -345,14 +414,37 @@ var main = function() {
     },
 
     sinh: function(value) {
+      if (Number.isNaN(value)) {
+        return NaN;
+      } else if (value === 0) {
+        return value;
+      } else if (value === Infinity || value === -Infinity) {
+        return value;
+      }
       return (Math.exp(value) - Math.exp(-value)) / 2;
     },
 
     tanh: function(value) {
+      if (Number.isNaN(value)) {
+        return NaN;
+      } else if (value === 0) {
+        return value;
+      } else if (value === Infinity) {
+        return 1;
+      } else if (value === -Infinity) {
+        return -1;
+      }
       return (Math.exp(value) - Math.exp(-value)) / (Math.exp(value) + Math.exp(-value));
     },
 
     trunc: function(value) {
+      if (Number.isNaN(value)) {
+        return NaN;
+      } else if (value === Infinity || value === -Infinity) {
+        return value;
+      } else if (value === 0) {
+        return value;
+      }
       return ~~value;
     }
   });
