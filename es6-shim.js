@@ -7,24 +7,23 @@ var main = function() {
 
   var globals = (typeof global === 'undefined') ? window : global;
   var global_isFinite = globals.isFinite;
-  var isES5 = !!Object.defineProperty;
+  var supportsDescriptors = !!Object.defineProperty;
 
   // Define configurable, writable and non-enumerable props
   // if they don’t exist.
   var defineProperties = function(object, map) {
     Object.keys(map).forEach(function(name) {
       var method = map[name];
-      if (!object[name]) {
-        if (isES5) {
-          Object.defineProperty(object, name, {
-            configurable: true,
-            enumerable: false,
-            writable: true,
-            value: method
-          });
-        } else {
-          object[name] = method;
-        }
+      if (name in object) return;
+      if (supportsDescriptors) {
+        Object.defineProperty(object, name, {
+          configurable: true,
+          enumerable: false,
+          writable: true,
+          value: method
+        });
+      } else {
+        object[name] = method;
       }
     });
   };
@@ -228,7 +227,7 @@ var main = function() {
     }
   });
 
-  if (isES5) {
+  if (supportsDescriptors) {
     defineProperties(Object, {
       getOwnPropertyDescriptors: function(subject) {
         var descs = {};
@@ -510,7 +509,7 @@ var main = function() {
     }
   });
 
-  if (isES5) {
+  if (supportsDescriptors) {
     // Map and Set require a true ES5 environment
     defineProperties(globals, {
       Map: (function() {
