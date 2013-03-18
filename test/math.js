@@ -111,19 +111,6 @@ describe('Math', function() {
       });
   });
   
-  describe('#hypot2()', function() {
-    it('should be correct', function() {
-      expect(Math.hypot2(Infinity)).to.equal(Infinity);
-      expect(Math.hypot2(-Infinity)).to.equal(Infinity);
-      expect(Math.hypot2(Infinity, NaN)).to.equal(Infinity);
-      expect(Math.hypot2(-Infinity, 'Hello')).to.equal(Infinity);
-      expect(isNaN(Math.hypot2(NaN))).to.be.ok;
-      expect(Math.hypot2()).to.equal(0);
-      expect(Math.hypot2(66, 66)).to.almostEqual(8712);
-      expect(Math.hypot2(0.1, 100)).to.almostEqual(10000.01);
-    });
-  });
-
   describe('#log2()', function() {
     it('should be correct', function() {
       expect(Math.log2(5)).to.almostEqual(2.321928094887362);

@@ -352,16 +352,6 @@ var main = function() {
       return Math.sqrt(x * x + y * y + z * z);
     },
 
-    hypot2: function (x, y, z) {
-      if (x == null) { x = 0; }
-      if (y == null) { y = 0; }
-      if (z == null) { z = 0; }
-      var xSq = x * x, ySq = y * y, zSq = z * z, inf = Infinity;
-      if (xSq === inf || ySq === inf || zSq === inf) { return inf; }
-      else if (isNaN(xSq) || isNaN(ySq) || isNaN(zSq)) { return NaN }
-      return x * x + y * y + z * z || 0;
-    },
-
     log2: function(value) {
       return Math.log(value) * (1 / Math.LN2);
     },
