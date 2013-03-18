@@ -8,13 +8,6 @@ var main = function() {
   var globals = (typeof global === 'undefined') ? window : global;
   var global_isFinite = globals.isFinite;
   var isES5 = !!Object.defineProperty;
-  var factorial = function(value) {
-    var result = 1;
-    for (var i = 2; i <= value; i++) {
-      result *= i;
-    }
-    return result;
-  };
 
   // Define configurable, writable and non-enumerable props
   // if they don’t exist.
@@ -386,8 +379,12 @@ var main = function() {
       }
       var result = 0;
       var n = 50;
+      var factorial;
       for (var i = 1; i < n; i++) {
-        result += Math.pow(value, i) / factorial(i);
+        for (var j = 2, factorial = 1; j <= i; j++) {
+          factorial *= j;
+        }
+        result += Math.pow(value, i) / factorial;
       }
       return result;
     },
