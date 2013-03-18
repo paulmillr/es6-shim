@@ -17,24 +17,6 @@ describe('Object', function() {
     });
   });
 
-  describe('Object.isnt()', function() {
-    it('should compare regular objects correctly', function() {
-      [null, void 0, [0], 5, 'str', {a: null}].map(function(item) {
-        return Object.isnt(item, item)
-      }).forEach(function(result) {
-        expect(result).to.not.be.ok;
-      });
-    });
-
-    it('should compare 0 and -0 correctly', function() {
-      expect(Object.isnt(0, -0)).to.be.ok;
-    });
-
-    it('should compare NaNs correctly', function() {
-      expect(Object.isnt(NaN, NaN)).to.not.be.ok;
-    });
-  });
-
   describe('Object.getOwnPropertyDescriptors()', function() {
     it('should produce an array of properties', function() {
       expect(Object.getOwnPropertyDescriptors({a: 1, b: 2, c: 3})).to.eql({
