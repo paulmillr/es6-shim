@@ -127,6 +127,13 @@ describe('Math', function() {
 
   describe('#log1p', function() {
     it('should be correct', function() {
+      expect(Number.isNaN(Math.log1p(NaN))).to.be.ok;
+      expect(Number.isNaN(Math.log1p(-1.000000001))).to.be.ok;
+      expect(Math.log1p(-1)).to.equal(-Infinity);
+      expect(isPositiveZero(Math.log1p(+0))).to.be.ok;
+      expect(isNegativeZero(Math.log1p(-0))).to.be.ok;
+      expect(Math.log1p(Infinity)).to.equal(Infinity);
+
       expect(Math.log1p(5)).to.almostEqual(1.791759469228055);
       expect(Math.log1p(50)).to.almostEqual(3.9318256327243257);
     });

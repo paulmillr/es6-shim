@@ -364,10 +364,18 @@ var main = function() {
     },
 
     log1p: function(value) {
+      if (Number.isNaN(value) || value < -1) {
+        return NaN;
+      } else if (value === -1) {
+        return -Infinity;
+      } else if (value === 0) {
+        return value;
+      } else if (value === Infinity) {
+        return Infinity;
+      }
       var result = 0;
       var n = 50;
 
-      if (value <= -1) return -Infinity;
       if (value < 0 || value > 1) return Math.log(1 + value);
       for (var i = 1; i < n; i++) {
         if ((i % 2) === 0) {
