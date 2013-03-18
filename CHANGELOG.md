@@ -1,3 +1,9 @@
+# es6-shim 0.7.0 (unreleased)
+* Added `Array#find`, `Array#findIndex`, `Object.assign`, `Object.mixin`,
+  `Math.cbrt`, `String.fromCodePoint`, `String#codePointAt`
+* Removed `Object.is`
+* Made Math functions fully conform spec.
+
 # es6-shim 0.6.0 (January 15, 2013)
 * Added `Map#keys`, `Map#values`, `Map#size`, `Set#size`, `Set#clear`.
 
