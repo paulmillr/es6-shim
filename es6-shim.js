@@ -266,6 +266,23 @@ var main = function() {
           proto = Object.getPrototypeOf(proto);
         }
         return result;
+      },
+
+      // 15.2.3.17
+      assign: function(target, source) {
+        return Object.keys(source).reduce(function(target, key) {
+          target[key] = source[key];
+          return target;
+        }, target)
+      },
+
+      // 15.2.3.18
+      mixin: function(target, source) {
+        var props = Object.getOwnPropertyNames(source);
+        return props.reduce(function(target, property) {
+          var descriptor = Object.getOwnPropertyDescriptor(source, property);
+          return Object.defineProperty(target, property, descriptor);
+        }, target);
       }
     });
   }

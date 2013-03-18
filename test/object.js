@@ -56,4 +56,16 @@ describe('Object', function() {
       );
     });
   });
+
+  describe('Object.assign()', function() {
+    it('should merge two objects', function() {
+      expect(Object.assign({a: 1}, {b: 2})).to.eql({a: 1, b: 2});
+    });
+  });
+
+  describe('Object.mixin()', function() {
+    it('should merge descriptors of two objects', function() {
+      expect(Object.mixin({a: 1}, {b: 2})).to.eql({a: 1, b: 2});
+    });
+  });
 });
