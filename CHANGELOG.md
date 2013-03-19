@@ -1,7 +1,7 @@
-# es6-shim 0.7.0 (1 January 0000)
+# es6-shim 0.7.0 (unreleased)
 * Added `Array#find`, `Array#findIndex`, `Object.assign`, `Object.mixin`,
-  `Math.cbrt`, `String.fromCodePoint`, `String#codePointAt`
-* Removed `Object.is`
+  `Math.cbrt`, `String.fromCodePoint`, `String#codePointAt`.
+* Removed `Object.isnt`.
 * Made Math functions fully conform spec.
 
 # es6-shim 0.6.0 (15 January 2013)
