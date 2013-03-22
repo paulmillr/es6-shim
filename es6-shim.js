@@ -65,6 +65,10 @@ var main = function() {
   defineProperties(String.prototype, {
     // Fast repeat, uses the `Exponentiation by squaring` algorithm.
     repeat: function(times) {
+      times = Number.toInteger(times);
+      if (times < 0 || times === Infinity) {
+        throw new RangeError();
+      }
       if (times < 1) return '';
       if (times % 2) return this.repeat(times - 1) + this;
       var half = this.repeat(times / 2);
