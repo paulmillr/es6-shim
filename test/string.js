@@ -1,5 +1,18 @@
 describe('String', function() {
   describe('#repeat()', function() {
+    it('should throw a RangeError when negative or infinite', function() {
+      expect(function negativeOne() { return 'test'.repeat(-1); }).to.throw(RangeError);
+      expect(function infinite() { return 'test'.repeat(Infinity); }).to.throw(RangeError);
+    });
+    it('should coerce to an integer', function() {
+      expect('test'.repeat(null)).to.eql('');
+      expect('test'.repeat(false)).to.eql('');
+      expect('test'.repeat('')).to.eql('');
+      expect('test'.repeat(NaN)).to.eql('');
+      expect('test'.repeat({})).to.eql('');
+      expect('test'.repeat([])).to.eql('');
+      expect('test'.repeat({ valueOf: function() { return 2; } })).to.eql('testtest');
+    });
     it('should work', function() {
       expect('test'.repeat(3)).to.eql('testtesttest');
     });
