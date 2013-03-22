@@ -12,11 +12,11 @@ describe('Number', function() {
 
   describe('Number constants', function() {
     it('should has max integer', function() {
-      expect(Number.MAX_INTEGER).to.equal(9007199254740992);
+      expect(Number.MAX_INTEGER).to.equal(9007199254740991);
     });
 
     it('should has epsilon', function() {
-      expect(Number.EPSILON).to.equal(2.220446049250313e-16);
+      expect(Number.EPSILON).to.equal(2.2204460492503130808472633361816e-16);
     });
   });
 

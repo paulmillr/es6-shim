@@ -177,7 +177,7 @@ var main = function() {
   });
 
   defineProperties(Number, {
-    MAX_INTEGER: 9007199254740992,
+    MAX_INTEGER: 9007199254740991,
     EPSILON: 2.220446049250313e-16,
 
     parseInt: globals.parseInt,
