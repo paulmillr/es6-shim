@@ -2,7 +2,7 @@ var Assertion = expect().constructor;
 Assertion.prototype.almostEqual = function(obj, precision) {
   var allowedDiff = precision || 1e-11;
   return this.within(obj - allowedDiff, obj + allowedDiff);
-}
+};
 
 var isPositiveZero = function (zero) {
   return zero === 0 && 1 / zero === Infinity;
