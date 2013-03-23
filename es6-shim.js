@@ -370,7 +370,6 @@ var main = function() {
       }
       var result = 0;
       var n = 50;
-      var factorial;
       for (var i = 1; i < n; i++) {
         for (var j = 2, factorial = 1; j <= i; j++) {
           factorial *= j;
