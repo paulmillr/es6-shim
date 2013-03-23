@@ -25,8 +25,6 @@ describe('Array', function() {
     });
   });
 
-  var list = [5, 10, 15, 20];
-
   describe('Array#find', function() {
     it('should find item by predicate', function() {
       var result = list.find(function(item) {return item === 15;});
