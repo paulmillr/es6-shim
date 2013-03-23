@@ -261,7 +261,7 @@ var main = function() {
         return Object.keys(source).reduce(function(target, key) {
           target[key] = source[key];
           return target;
-        }, target)
+        }, target);
       },
 
       // 15.2.3.18
