@@ -232,6 +232,12 @@ describe('String', function() {
       }
       expect(String.fromCodePoint.apply(String, codePoints)).to.equal(chars);
     });
+
+    it('works with unicode', function() {
+      expect(String.fromCodePoint(0x2500)).to.equal("\u2500");
+      expect(String.fromCodePoint(0x010000)).to.equal("\ud800\udc00");
+      expect(String.fromCodePoint(0x10FFFF)).to.equal("\udbff\udfff");
+    });
   });
 
   describe('#codePointAt()', function() {
@@ -240,6 +246,15 @@ describe('String', function() {
       expect(str.codePointAt(0)).to.equal(97);
       expect(str.codePointAt(1)).to.equal(98);
       expect(str.codePointAt(2)).to.equal(99);
+    });
+
+    it('works with unicode', function() {
+      expect('\u2500'.codePointAt(0)).to.equal(0x2500);
+      expect('\ud800\udc00'.codePointAt(0)).to.equal(0x10000);
+      expect('\udbff\udfff'.codePointAt(0)).to.equal(0x10ffff);
+      expect('\ud800\udc00\udbff\udfff'.codePointAt(0)).to.equal(0x10000);
+      expect('\ud800\udc00\udbff\udfff'.codePointAt(1)).to.equal(0xdc00);
+      expect('\ud800\udc00\udbff\udfff'.codePointAt(2)).to.equal(0x10ffff);
     });
 
     it('returns undefined when pos is negative or too large', function() {
