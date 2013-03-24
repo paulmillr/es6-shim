@@ -201,4 +201,66 @@ describe('String', function() {
       expect('test'.contains('1290')).to.not.be.ok;
     });
   });
+
+  describe('.fromCodePoint()', function() {
+    it('throws a RangeError', function() {
+      var invalidValues = [
+        'abc',
+        {},
+        -1,
+        0x10FFFF + 1
+      ];
+      invalidValues.forEach(function(value) {
+        expect(function() { return String.fromCodePoint(value); }).to.throw(RangeError);
+      });
+    });
+
+    it('returns the empty string with no args', function() {
+      expect(String.fromCodePoint()).to.equal('');
+    });
+
+    it('has a length of zero', function() {
+      expect(String.fromCodePoint.length).to.equal(0);
+    });
+
+    it('works', function() {
+      var codePoints = [];
+      var chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789…?!';
+      for (var i = 0; i < chars.length; ++i) {
+        codePoints.push(chars.charCodeAt(i));
+        expect(String.fromCodePoint(chars.charCodeAt(i))).to.equal(chars[i]);
+      }
+      expect(String.fromCodePoint.apply(String, codePoints)).to.equal(chars);
+    });
+
+    it('works with unicode', function() {
+      expect(String.fromCodePoint(0x2500)).to.equal("\u2500");
+      expect(String.fromCodePoint(0x010000)).to.equal("\ud800\udc00");
+      expect(String.fromCodePoint(0x10FFFF)).to.equal("\udbff\udfff");
+    });
+  });
+
+  describe('#codePointAt()', function() {
+    it('works', function() {
+      var str = 'abc';
+      expect(str.codePointAt(0)).to.equal(97);
+      expect(str.codePointAt(1)).to.equal(98);
+      expect(str.codePointAt(2)).to.equal(99);
+    });
+
+    it('works with unicode', function() {
+      expect('\u2500'.codePointAt(0)).to.equal(0x2500);
+      expect('\ud800\udc00'.codePointAt(0)).to.equal(0x10000);
+      expect('\udbff\udfff'.codePointAt(0)).to.equal(0x10ffff);
+      expect('\ud800\udc00\udbff\udfff'.codePointAt(0)).to.equal(0x10000);
+      expect('\ud800\udc00\udbff\udfff'.codePointAt(1)).to.equal(0xdc00);
+      expect('\ud800\udc00\udbff\udfff'.codePointAt(2)).to.equal(0x10ffff);
+    });
+
+    it('returns undefined when pos is negative or too large', function() {
+      var str = 'abc';
+      expect(str.codePointAt(-1)).to.be.undefined;
+      expect(str.codePointAt(str.length)).to.be.undefined;
+    });
+  });
 });
