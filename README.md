@@ -77,16 +77,24 @@ WeakMap has a very unusual use-case so you probably won't need it at all
 ```javascript
 'abc'.startsWith('a') // true
 'abc'.endsWith('a') // false
-Object.is(NaN, NaN) // Fixes ===. 0 isnt -0, NaN is NaN
-'123'.repeat(2)     // '123123'
 'john alice'.contains('john') // true
+'123'.repeat(2)     // '123123'
+
+Object.is(NaN, NaN) // Fixes ===. 0 isnt -0, NaN is NaN
+Object.assign({a: 1}, {b: 2}) // {a: 1, b: 2}
+Object.mixin({a: 1}, {get b: function() {return 2}}) // {a: 1, b: getter}
+
 Number.isNaN('123') // false. isNaN('123') will give true.
+Number.isFinite('asd') // false. Global isFinite() will give true.
 Number.toInteger(2.4) // 2. converts values to IEEE754 double precision integers
 // Tests if value is a number, finite,
 // >= -9007199254740992 && <= 9007199254740992 and floor(value) === value
 Number.isInteger(2.4) // false.
-Number.isFinite('asd') // false. Global isFinite() will give true.
+
 Math.sign(400) // 1, 0 or -1 depending on sign. In this case 1.
+
+[5, 10, 15, 10].find(function(item) {return item / 2 === 5;}) // 10
+[5, 10, 15, 10].findIndex(function(item) {return item / 2 === 5;}) // 1
 
 // Replacement for `{}` key-value storage.
 // Keys can be anything.

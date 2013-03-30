@@ -12,9 +12,6 @@
   "scripts": {
     "test": "mocha --require test/test_helpers.js"
   },
-  "engines": {
-    "node": "~0.8.0 || ~0.9.0"
-  },
   "dependencies": {},
   "devDependencies": {
     "mocha": "1.8.1",
