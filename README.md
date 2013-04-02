@@ -3,6 +3,8 @@
 Provides compatibility shims so that legacy JavaScript engines behave as
 closely as possible to ECMAScript 6 (Harmony).
 
+[![browser support](https://ci.testling.com/paulmillr/es6-shim.png)](https://ci.testling.com/paulmillr/es6-shim)
+
 ## Installation
 If you want to use it in browser:
 
