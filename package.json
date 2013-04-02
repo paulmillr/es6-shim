@@ -12,6 +12,23 @@
   "scripts": {
     "test": "mocha --require test/test_helpers.js"
   },
+  "testling": {
+    "files": "es6-shim.js",
+    "browsers": [
+      "iexplore/6.0..latest",
+      "firefox/3.0",
+      "firefox/15.0..latest",
+      "firefox/nightly",
+      "chrome/4.0",
+      "chrome/23.0..latest",
+      "chrome/canary",
+      "opera/10.0..latest",
+      "opera/next",
+      "safari/5.0.5..latest",
+      "ipad/6.0..latest",
+      "iphone/6.0..latest"
+    ]
+  },
   "dependencies": {},
   "devDependencies": {
     "mocha": "1.8.1",
