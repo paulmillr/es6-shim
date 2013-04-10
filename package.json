@@ -14,6 +14,7 @@
   },
   "testling": {
     "files": "es6-shim.js",
+    "harness": "mocha",
     "browsers": [
       "iexplore/6.0..latest",
       "firefox/3.0",
