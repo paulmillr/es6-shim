@@ -41,6 +41,9 @@ For node.js:
 * `Array`:
     * `from()`
     * `of()`
+* `Array.prototype`:
+    * `find()`
+    * `findIndex()`
 * `Object`:
     * `getOwnPropertyDescriptors()` (ES5)
     * `getPropertyDescriptor()` (ES5)
