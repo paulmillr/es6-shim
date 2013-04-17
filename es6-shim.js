@@ -5,9 +5,22 @@
 var main = function() {
   'use strict';
 
+  // https://gist.github.com/padolsey/527683/raw/509bdb36183531eaf1b62acd3d5c3add75164a91/gistfile1.js
+  var ie = (function(){
+      var undef,
+          v = 3,
+          div = document.createElement('div'),
+          all = div.getElementsByTagName('i');
+      while (
+          div.innerHTML = '<!--[if gt IE ' + (++v) + ']><i></i><![endif]-->',
+          all[0]
+      );
+      return v > 4 ? v : undef;
+  }());
+
   var globals = (typeof global === 'undefined') ? window : global;
   var global_isFinite = globals.isFinite;
-  var supportsDescriptors = !!Object.defineProperty;
+  var supportsDescriptors = !!Object.defineProperty && !ie;
 
   // Define configurable, writable and non-enumerable props
   // if they don’t exist.
