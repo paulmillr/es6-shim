@@ -2,12 +2,24 @@
 // ES6-shim may be freely distributed under the MIT license.
 // For more details and documentation:
 // https://github.com/paulmillr/es6-shim/
+
+var arePropertyDescriptorsSupported = function () {
+  var attempt = function () {
+    Object.defineProperty({}, 'x', {});
+    return true;
+  };
+  var supported = false;
+  try { supported = attempt(); }
+  catch (e) { /* this is IE 8. */ }
+  return supported;
+};
+
 var main = function() {
   'use strict';
 
   var globals = (typeof global === 'undefined') ? window : global;
   var global_isFinite = globals.isFinite;
-  var supportsDescriptors = !!Object.defineProperty;
+  var supportsDescriptors = !!Object.defineProperty && arePropertyDescriptorsSupported();
 
   // Define configurable, writable and non-enumerable props
   // if they don’t exist.
