@@ -9,6 +9,7 @@ closely as possible to ECMAScript 6 (Harmony).
 If you want to use it in browser:
 
 * Just include es6-shim before your scripts.
+* Include [es5-shim](https://github.com/kriskowal/es5-shim) if your browser doesn't support ECMAScript 5.
 * `component install paulmillr/es6-shim` if you’re using [component(1)](https://github.com/component/component).
 * `bower install es6-shim` if you’re using [Twitter Bower](http://twitter.github.com/bower/).
 
