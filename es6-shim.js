@@ -590,26 +590,24 @@ var main = function() {
         defineProperties(Map.prototype, {
           get: function(key) {
             var map = this._map;
-            var i = map[getBucketKey(key)];
-            if (i) {
-              while ((i = i.nextEntry) !== null) {
-                if (Object.is(i.key, key)) {
-                  return i.value;
-                }
+            var i = map[getBucketKey(key)] || null;
+            while (i !== null) {
+              if (Object.is(i.key, key)) {
+                return i.value;
               }
+              i = i.nextEntry;
             }
             return undefined;
           },
 
           has: function(key) {
             var map = this._map;
-            var i = map[getBucketKey(key)];
-            if (i) {
-              while ((i = i.nextEntry) !== null) {
-                if (Object.is(i.key, key)) {
-                  return true;
-                }
+            var i = map[getBucketKey(key)] || null;
+            while (i !== null) {
+              if (Object.is(i.key, key)) {
+                return true;
               }
+              i = i.nextEntry;
             }
             return false;
           },
@@ -617,40 +615,47 @@ var main = function() {
           set: function(key, value) {
             var map = this._map;
             var bucketKey = getBucketKey(key);
-            var i = map[bucketKey];
-            if (!i) {
-              map[bucketKey] = i = new MapEntry(null, null);
-            }
-            var p = i;
-            while ((i = i.nextEntry) !== null) {
+            var i = map[bucketKey] || null;
+            var p = null;
+            while (i !== null) {
               if (Object.is(i.key, key)) {
                 i.value = value;
                 return;
               }
               p = i;
+              i = i.nextEntry;
             }
             var entry = new MapEntry(key, value);
             this._tail.previous.next = entry;
             entry.next = this._tail;
             entry.previous = this._tail.previous;
             this._tail.previous = entry;
-            p.nextEntry = entry;
+            if (p === null) {
+              map[bucketKey] = entry;
+            } else {
+              p.nextEntry = entry;
+            }
             this._size += 1;
           },
 
           'delete': function(key) {
             var map = this._map;
             var bucketKey = getBucketKey(key);
-            var i = map[bucketKey];
-            if (!i) {
-              return false;
-            }
-            var p = i;
-            while ((i = i.nextEntry) !== null) {
+            var i = map[bucketKey] || null;
+            var p = null;
+            while (i !== null) {
               if (Object.is(i.key, key)) {
                 i.next.previous = i.previous;
                 i.previous.next = i.next;
-                p.nextEntry = i.nextEntry;
+                if (p === null) {
+                  if (i.nextEntry === null) {
+                    delete map[bucketKey];
+                  } else {
+                    map[bucketKey] = i.nextEntry;
+                  }
+                } else {
+                  p.nextEntry = i.nextEntry;
+                }
                 i.nextEntry = null;
                 i.next = i.previous;
                 i.previous = i.previous;
@@ -659,9 +664,7 @@ var main = function() {
                 return true;
               }
               p = i;
-            }
-            if (map[bucketKey].nextEntry === null) {
-              delete map[bucketKey];
+              i = i.nextEntry;
             }
             return false;
           },
