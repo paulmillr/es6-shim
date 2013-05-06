@@ -516,19 +516,65 @@ var main = function() {
     // Map and Set require a true ES5 environment
     defineProperties(globals, {
       Map: (function() {
-        var indexOfIdentical = function(keys, key) {
-          for (var i = 0, length = keys.length; i < length; i++) {
-            if (Object.is(keys[i], key)) return i;
+
+        function MapEntry(key, value) {
+          this.key = key;
+          this.value = value;
+          this.nextEntry = null;
+          this.next = null;
+          this.previous = null;
+          this.removed = false;
+        }
+
+        function MapIterator(map, kind) {
+          this.i = map._head;
+          this.t = map._tail;
+          this.kind = kind;
+        }
+
+        MapIterator.prototype = {
+          next: function () {
+            var i = this.i;
+            if (i === null) {
+              throw new Error();
+            }
+            var kind = this.kind;
+            while (i.removed) {
+              i = i.next;
+            }
+            i = i.next;
+            if (i === this.t) {
+              i = null;
+            }
+            this.i = i;
+            if (i === null) {
+              throw new Error();
+            }
+            if (kind === "key") {
+              return i.key;
+            }
+            if (kind === "value") {
+              return i.value;
+            }
+            return [i.key, i.value];
           }
-          return -1;
         };
+
+        function getBucketKey(key) {
+          return "~" + (typeof key === "string" || typeof key === "number" ? key : "");
+        }
 
         function Map() {
           if (!(this instanceof Map)) return new Map();
+          var head = new MapEntry(null, null);
+          var tail = new MapEntry(null, null);
+          head.next = tail;
+          tail.previous = head;
 
           defineProperties(this, {
-            '_keys': [],
-            '_values': [],
+            '_map': Object.create(null),
+            '_head': head,
+            '_tail': tail,
             '_size': 0
           });
 
@@ -543,41 +589,96 @@ var main = function() {
 
         defineProperties(Map.prototype, {
           get: function(key) {
-            var index = indexOfIdentical(this._keys, key);
-            return index < 0 ? undefined : this._values[index];
+            var map = this._map;
+            var i = map[getBucketKey(key)] || null;
+            while (i !== null) {
+              if (Object.is(i.key, key)) {
+                return i.value;
+              }
+              i = i.nextEntry;
+            }
+            return undefined;
           },
 
           has: function(key) {
-            return indexOfIdentical(this._keys, key) >= 0;
+            var map = this._map;
+            var i = map[getBucketKey(key)] || null;
+            while (i !== null) {
+              if (Object.is(i.key, key)) {
+                return true;
+              }
+              i = i.nextEntry;
+            }
+            return false;
           },
 
           set: function(key, value) {
-            var keys = this._keys;
-            var values = this._values;
-            var index = indexOfIdentical(keys, key);
-            if (index < 0) index = keys.length;
-            keys[index] = key;
-            values[index] = value;
+            var map = this._map;
+            var bucketKey = getBucketKey(key);
+            var i = map[bucketKey] || null;
+            var p = null;
+            while (i !== null) {
+              if (Object.is(i.key, key)) {
+                i.value = value;
+                return;
+              }
+              p = i;
+              i = i.nextEntry;
+            }
+            var entry = new MapEntry(key, value);
+            this._tail.previous.next = entry;
+            entry.next = this._tail;
+            entry.previous = this._tail.previous;
+            this._tail.previous = entry;
+            if (p === null) {
+              map[bucketKey] = entry;
+            } else {
+              p.nextEntry = entry;
+            }
             this._size += 1;
           },
 
           'delete': function(key) {
-            var keys = this._keys;
-            var values = this._values;
-            var index = indexOfIdentical(keys, key);
-            if (index < 0) return false;
-            keys.splice(index, 1);
-            values.splice(index, 1);
-            this._size -= 1;
-            return true;
+            var map = this._map;
+            var bucketKey = getBucketKey(key);
+            var i = map[bucketKey] || null;
+            var p = null;
+            while (i !== null) {
+              if (Object.is(i.key, key)) {
+                i.next.previous = i.previous;
+                i.previous.next = i.next;
+                if (p === null) {
+                  if (i.nextEntry === null) {
+                    delete map[bucketKey];
+                  } else {
+                    map[bucketKey] = i.nextEntry;
+                  }
+                } else {
+                  p.nextEntry = i.nextEntry;
+                }
+                i.nextEntry = null;
+                i.next = i.previous;
+                i.previous = i.previous;
+                i.removed = true;
+                this._size -= 1;
+                return true;
+              }
+              p = i;
+              i = i.nextEntry;
+            }
+            return false;
           },
 
           keys: function() {
-            return this._keys;
+            return new MapIterator(this, "key");
           },
 
           values: function() {
-            return this._values;
+            return new MapIterator(this, "value");
+          },
+
+          entries: function() {
+            return new MapIterator(this, "key+value");
           }
         });
 
