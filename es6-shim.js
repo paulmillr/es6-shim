@@ -624,6 +624,7 @@ var main = function() {
             var p = i;
             while ((i = i.nextEntry) !== null) {
               if (Object.is(i.key, key)) {
+                i.value = value;
                 return;
               }
               p = i;
