@@ -512,20 +512,23 @@ var main = function() {
     }
   });
 
-  function MapEntry(key, value) {
-    this.key = key;
-    this.value = value;
-    this.next = null;
-    this.removed = false;
-  }
-
   if (supportsDescriptors) {
     // Map and Set require a true ES5 environment
     defineProperties(globals, {
       Map: (function() {
 
+        function MapEntry(key, value) {
+          this.key = key;
+          this.value = value;
+          this.nextEntry = null;
+          this.next = null;
+          this.previous = null;
+          this.removed = false;
+        }
+
         function MapIterator(map, kind) {
           this.i = map._head;
+          this.t = map._tail;
           this.kind = kind;
         }
 
@@ -540,6 +543,9 @@ var main = function() {
               i = i.next;
             }
             i = i.next;
+            if (i === this.t) {
+              i = null;
+            }
             this.i = i;
             if (i === null) {
               throw new Error();
@@ -554,11 +560,21 @@ var main = function() {
           }
         };
 
+        function getBucketKey(key) {
+          return "~" + (typeof key === "string" || typeof key === "number" ? key : "");
+        }
+
         function Map() {
           if (!(this instanceof Map)) return new Map();
+          var head = new MapEntry(null, null);
+          var tail = new MapEntry(null, null);
+          head.next = tail;
+          tail.previous = head;
 
           defineProperties(this, {
-            '_head': new MapEntry(null, null),
+            '_map': Object.create(null),
+            '_head': head,
+            '_tail': tail,
             '_size': 0
           });
 
@@ -573,45 +589,70 @@ var main = function() {
 
         defineProperties(Map.prototype, {
           get: function(key) {
-            var i = this._head;
-            while ((i = i.next) !== null) {
-              if (Object.is(i.key, key)) {
-                return i.value;
+            var map = this._map;
+            var i = map[getBucketKey(key)];
+            if (i) {
+              while ((i = i.nextEntry) !== null) {
+                if (Object.is(i.key, key)) {
+                  return i.value;
+                }
               }
             }
             return undefined;
           },
 
           has: function(key) {
-            var i = this._head;
-            while ((i = i.next) !== null) {
-              if (Object.is(i.key, key)) {
-                return true;
+            var map = this._map;
+            var i = map[getBucketKey(key)];
+            if (i) {
+              while ((i = i.nextEntry) !== null) {
+                if (Object.is(i.key, key)) {
+                  return true;
+                }
               }
             }
             return false;
           },
 
           set: function(key, value) {
-            var p = this._head;
-            var i = p;
-            while ((i = i.next) !== null) {
+            var map = this._map;
+            var bucketKey = getBucketKey(key);
+            var i = map[bucketKey];
+            if (!i) {
+              map[bucketKey] = i = new MapEntry(null, null);
+            }
+            var p = i;
+            while ((i = i.nextEntry) !== null) {
               if (Object.is(i.key, key)) {
                 return;
               }
               p = i;
             }
-            p.next = new MapEntry(key, value);
+            var entry = new MapEntry(key, value);
+            this._tail.previous.next = entry;
+            entry.next = this._tail;
+            entry.previous = this._tail.previous;
+            this._tail.previous = entry;
+            p.nextEntry = entry;
             this._size += 1;
           },
 
           'delete': function(key) {
-            var p = this._head;
-            var i = p;
-            while ((i = i.next) !== null) {
+            var map = this._map;
+            var bucketKey = getBucketKey(key);
+            var i = map[bucketKey];
+            if (!i) {
+              return false;
+            }
+            var p = i;
+            while ((i = i.nextEntry) !== null) {
               if (Object.is(i.key, key)) {
-                p.next = i.next;
-                i.next = p;
+                i.next.previous = i.previous;
+                i.previous.next = i.next;
+                p.nextEntry = i.nextEntry;
+                i.nextEntry = null;
+                i.next = i.previous;
+                i.previous = i.previous;
                 i.removed = true;
                 this._size -= 1;
                 return true;
