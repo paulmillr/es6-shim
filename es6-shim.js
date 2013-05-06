@@ -660,6 +660,9 @@ var main = function() {
               }
               p = i;
             }
+            if (map[bucketKey].nextEntry === null) {
+              delete map[bucketKey];
+            }
             return false;
           },
 
