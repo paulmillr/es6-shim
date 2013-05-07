@@ -101,12 +101,30 @@ describe('Collections', function() {
       map.set('c', 3);
       expect(map.keys).to.be.an.instanceof(Function);
       expect(map.values).to.be.an.instanceof(Function);
-      expect(map.keys()).to.eql(['a', 'b', 'c']);
-      expect(map.values()).to.eql([1, 2, 3]);
       expect(map.size).to.equal(3);
       map.delete('a');
       expect(map.size).to.equal(2);
     })
+  });
+
+  it('iteration', function () {
+    var map = new Map();
+    map.set('a', 1);
+    map.set('b', 2);
+    map.set('c', 3);
+    map.set('d', 4);
+
+    var keys = [];
+    var iterator = map.keys();
+    keys.push(iterator.next());
+    map["delete"]('a');
+    map["delete"]('b');
+    map["delete"]('c');
+    map.set('e');
+    keys.push(iterator.next());
+    keys.push(iterator.next());
+
+    expect(keys).to.eql(['a', 'd', 'e']);
   });
 
   describe('Set', function() {
