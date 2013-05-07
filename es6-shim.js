@@ -630,6 +630,20 @@ var main = function() {
             return false;
           },
 
+          clear: function () {
+            var p = this._head;
+            var i = p.next;
+            this._size = 0;
+            p.next = null;
+            while (i !== null) {
+              var x = i.next;
+              i.key = empty;
+              i.value = empty;
+              i.next = p;
+              i = x;
+            }
+          },
+
           keys: function() {
             return new MapIterator(this, "key");
           },
@@ -665,7 +679,7 @@ var main = function() {
           },
 
           add: function(key) {
-            this['[[SetData]]'].set(key, true);
+            return this['[[SetData]]'].set(key, key);
           },
 
           'delete': function(key) {
@@ -673,12 +687,19 @@ var main = function() {
           },
 
           clear: function() {
-            Object.defineProperty(this, '[[SetData]]', {
-              configurable: true,
-              enumerable: false,
-              writable: true,
-              value: new Map()
-            });
+            return this['[[SetData]]'].clear();
+          },
+
+          keys: function() {
+            return this['[[SetData]]'].keys();
+          },
+
+          values: function() {
+            return this['[[SetData]]'].values();
+          },
+
+          entries: function() {
+            return this['[[SetData]]'].entries();
           }
         });
 
