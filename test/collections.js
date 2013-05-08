@@ -38,7 +38,7 @@ describe('Collections', function() {
         expect(function() {
           map[method](new Object);
         }).to.not.throw();
-      })
+      });
     });
 
     it('should map values correctly', function() {
@@ -104,7 +104,40 @@ describe('Collections', function() {
       expect(map.size).to.equal(3);
       map.delete('a');
       expect(map.size).to.equal(2);
-    })
+    });
+
+    describe('#forEach', function() {
+      beforeEach(function() {
+        map.set('a', 1);
+        map.set('b', 2);
+        map.set('c', 3);
+      });
+
+      it('should be iterable via forEach', function() {
+        var expectedMap = {
+          a: 1,
+          b: 2,
+          c: 3
+        };
+        var foundMap = {};
+        map.forEach(function (value, key, entireMap) {
+          expect(entireMap).to.equal(map);
+          foundMap[key] = value;
+        });
+        expect(foundMap).to.eql(expectedMap);
+      });
+
+      it('should support the thisArg', function() {
+        var context = function () {};
+        map.forEach(function (value, key, entireMap) {
+          expect(this).to.equal(context);
+        }, context);
+      });
+
+      it('should have a length of 1', function() {
+        expect(Map.prototype.forEach.length).to.equal(1);
+      });
+    });
   });
 
   it('iteration', function () {
@@ -147,7 +180,7 @@ describe('Collections', function() {
         expect(function() {
           set[method](new Object);
         }).to.not.throw();
-      })
+      });
     });
 
     it('should work as expected', function() {
@@ -216,8 +249,37 @@ describe('Collections', function() {
       expect(Set.prototype).to.not.equal(Object.prototype);
     });
 
-    it.skip('should throw proper errors when user invokes methods with wrong types of receiver',
-      function() {
+    describe('#forEach', function() {
+      beforeEach(function() {
+        set.add('a');
+        set.add('b');
+        set.add('c');
+      });
+
+      it('should be iterable via forEach', function() {
+        var expectedSet = ['a', 'b', 'c'];
+        var foundSet = [];
+        set.forEach(function (value, alsoValue, entireSet) {
+          expect(entireSet).to.equal(set);
+          expect(value).to.equal(alsoValue);
+          foundSet.push(value);
+        });
+        expect(foundSet).to.eql(expectedSet);
+      });
+
+      it('should support the thisArg', function() {
+        var context = function () {};
+        set.forEach(function (value, alsoValue, entireMap) {
+          expect(this).to.equal(context);
+        }, context);
+      });
+
+      it('should have a length of 1', function() {
+        expect(Set.prototype.forEach.length).to.equal(1);
+      });
+    });
+
+    it.skip('should throw proper errors when user invokes methods with wrong types of receiver', function() {
 
     });
   });
