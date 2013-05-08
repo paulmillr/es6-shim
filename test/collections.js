@@ -137,6 +137,45 @@ describe('Collections', function() {
       it('should have a length of 1', function() {
         expect(Map.prototype.forEach.length).to.equal(1);
       });
+
+      it('should not revisit modified keys', function() {
+        var hasModifiedA = false;
+        map.forEach(function (value, key) {
+          if (!hasModifiedA && key === 'a') {
+            map.set('a', 4);
+            hasModifiedA = true;
+          } else {
+            expect(key).not.to.equal('a');
+          }
+        });
+      });
+
+      it('visits keys added in the iterator', function() {
+        var hasAdded = false;
+        var hasFoundD = false;
+        map.forEach(function (value, key) {
+          if (!hasAdded) {
+            map.set('d', 5);
+            hasAdded = true;
+          } else if (key === 'd') {
+            hasFoundD = true;
+          }
+        });
+        expect(hasFoundD).to.equal(true);
+      });
+
+      it('does not visit keys deleted before a visit', function() {
+        var hasVisitedC = false;
+        map.forEach(function (value, key) {
+          if (key === 'c') {
+            hasVisitedC = true;
+          }
+          if (!hasVisitedC) {
+            map['delete']('c');
+          }
+        });
+        expect(hasVisitedC).to.equal(false);
+      });
     });
   });
 
