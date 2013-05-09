@@ -53,6 +53,15 @@ describe('Collections', function() {
       });
     });
 
+    it('should map empty values correctly', function() {
+      testMapping({}, true);
+      testMapping(null, true);
+      testMapping(undefined, true);
+      testMapping('', true);
+      testMapping(NaN, true);
+      testMapping(0, true);
+    });
+
     it('should has correct querying behavior', function() {
       var key = {};
       testMapping(key, 'to-be-present');
