@@ -516,19 +516,55 @@ var main = function() {
     // Map and Set require a true ES5 environment
     defineProperties(globals, {
       Map: (function() {
-        var indexOfIdentical = function(keys, key) {
-          for (var i = 0, length = keys.length; i < length; i++) {
-            if (Object.is(keys[i], key)) return i;
+
+        var empty = {};
+
+        function MapEntry(key, value) {
+          this.key = key;
+          this.value = value;
+          this.next = null;
+        }
+
+        MapEntry.prototype.isRemoved = function () {
+          return this.key === empty;
+        };
+
+        function MapIterator(map, kind) {
+          this.i = map._head;
+          this.kind = kind;
+        }
+
+        MapIterator.prototype = {
+          next: function () {
+            var i = this.i;
+            if (i !== null) {
+              while (i.isRemoved()) {
+                i = i.next;
+              }
+              i = i.next;
+              this.i = i;
+            }
+            if (i === null) {
+              throw new Error();
+            }
+            var kind = this.kind;
+            if (kind === "key") {
+              return i.key;
+            }
+            if (kind === "value") {
+              return i.value;
+            }
+            return [i.key, i.value];
           }
-          return -1;
         };
 
         function Map() {
           if (!(this instanceof Map)) return new Map();
 
+          var head = new MapEntry(null, null);
+
           defineProperties(this, {
-            '_keys': [],
-            '_values': [],
+            '_head': head,
             '_size': 0
           });
 
@@ -543,41 +579,81 @@ var main = function() {
 
         defineProperties(Map.prototype, {
           get: function(key) {
-            var index = indexOfIdentical(this._keys, key);
-            return index < 0 ? undefined : this._values[index];
+            var i = this._head;
+            while ((i = i.next) !== null) {
+              if (Object.is(i.key, key)) {
+                return i.value;
+              }
+            }
+            return undefined;
           },
 
           has: function(key) {
-            return indexOfIdentical(this._keys, key) >= 0;
+            var i = this._head;
+            while ((i = i.next) !== null) {
+              if (Object.is(i.key, key)) {
+                return true;
+              }
+            }
+            return false;
           },
 
           set: function(key, value) {
-            var keys = this._keys;
-            var values = this._values;
-            var index = indexOfIdentical(keys, key);
-            if (index < 0) index = keys.length;
-            keys[index] = key;
-            values[index] = value;
+            var i = this._head;
+            var p = i;
+            while ((i = i.next) !== null) {
+              if (Object.is(i.key, key)) {
+                i.value = value;
+                return;
+              }
+              p = i;
+            }
+            var entry = new MapEntry(key, value);
+            p.next = entry;
             this._size += 1;
           },
 
           'delete': function(key) {
-            var keys = this._keys;
-            var values = this._values;
-            var index = indexOfIdentical(keys, key);
-            if (index < 0) return false;
-            keys.splice(index, 1);
-            values.splice(index, 1);
-            this._size -= 1;
-            return true;
+            var i = this._head;
+            var p = i;
+            while ((i = i.next) !== null) {
+              if (Object.is(i.key, key)) {
+                p.next = i.next;
+                i.key = empty;
+                i.value = empty;
+                i.next = p;
+                this._size -= 1;
+                return true;
+              }
+              p = i;
+            }
+            return false;
+          },
+
+          clear: function () {
+            var p = this._head;
+            var i = p.next;
+            this._size = 0;
+            p.next = null;
+            while (i !== null) {
+              var x = i.next;
+              i.key = empty;
+              i.value = empty;
+              i.next = p;
+              i = x;
+            }
           },
 
           keys: function() {
-            return this._keys;
+            return new MapIterator(this, "key");
           },
 
           values: function() {
-            return this._values;
+            return new MapIterator(this, "value");
+          },
+
+          entries: function() {
+            return new MapIterator(this, "key+value");
           }
         });
 
@@ -603,7 +679,7 @@ var main = function() {
           },
 
           add: function(key) {
-            this['[[SetData]]'].set(key, true);
+            return this['[[SetData]]'].set(key, key);
           },
 
           'delete': function(key) {
@@ -611,12 +687,19 @@ var main = function() {
           },
 
           clear: function() {
-            Object.defineProperty(this, '[[SetData]]', {
-              configurable: true,
-              enumerable: false,
-              writable: true,
-              value: new Map()
-            });
+            return this['[[SetData]]'].clear();
+          },
+
+          keys: function() {
+            return this['[[SetData]]'].keys();
+          },
+
+          values: function() {
+            return this['[[SetData]]'].values();
+          },
+
+          entries: function() {
+            return this['[[SetData]]'].entries();
           }
         });
 
