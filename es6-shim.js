@@ -514,7 +514,7 @@ var main = function() {
 
   if (supportsDescriptors) {
     // Map and Set require a true ES5 environment
-    defineProperties(globals, {
+    var collectionShims = {
       Map: (function() {
 
         var empty = {};
@@ -661,8 +661,8 @@ var main = function() {
       })(),
 
       Set: (function() {
-        function Set() {
-          if (!(this instanceof Set)) return new Set();
+        var SetShim = function Set() {
+          if (!(this instanceof SetShim)) return new SetShim();
           defineProperties(this, {'[[SetData]]': new Map()});
           Object.defineProperty(this, 'size', {
             configurable: true,
@@ -673,7 +673,7 @@ var main = function() {
           });
         }
 
-        defineProperties(Set.prototype, {
+        defineProperties(SetShim.prototype, {
           has: function(key) {
             return this['[[SetData]]'].has(key);
           },
@@ -703,9 +703,26 @@ var main = function() {
           }
         });
 
-        return Set;
+        return SetShim;
       })()
-    });
+    };
+    defineProperties(globals, collectionShims);
+
+    if (globals.Map || globals.Set) {
+      /*
+        - In Firefox < 23, Map#size is a function.
+        - In all current Firefox, Set#entries/keys/values & Map#clear do not exist
+          - https://bugzilla.mozilla.org/show_bug.cgi?id=869996
+      */
+      var hasNoMapClear = typeof globals.Map.prototype.clear !== 'function';
+      var setSizeIsFunc = typeof (new globals.Set()).size !== 0;
+      var mapSizeIsFunc = typeof (new globals.Map()).size !== 0;
+      var hasNoSetKeys = typeof Set.prototype.keys !== 'function';
+      if (hasNoMapClear || setSizeIsFunc || mapSizeIsFunc || hasNoSetKeys) {
+        globals.Map = collectionShims.Map;
+        globals.Set = collectionShims.Set;
+      }
+    }
   }
 };
 
@@ -714,3 +731,4 @@ if (typeof define === 'function' && typeof define.amd == 'object' && define.amd)
 } else {
   main(); // CommonJS and <script>
 }
+
