@@ -102,7 +102,7 @@ describe('Collections', function() {
       expect(map.keys).to.be.an.instanceof(Function);
       expect(map.values).to.be.an.instanceof(Function);
       expect(map.size).to.equal(3);
-      map.delete('a');
+      map['delete']('a');
       expect(map.size).to.equal(2);
     });
 
@@ -175,6 +175,20 @@ describe('Collections', function() {
           }
         });
         expect(hasVisitedC).to.equal(false);
+      });
+
+      it('should work after deletion of the current key', function() {
+        var expectedMap = {
+          a: 1,
+          b: 2,
+          c: 3
+        };
+        var foundMap = {};
+        map.forEach(function (value, key) {
+          foundMap[key] = value;
+          map['delete'](key);
+        });
+        expect(foundMap).to.eql(expectedMap);
       });
     });
   });

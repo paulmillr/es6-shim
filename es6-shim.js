@@ -663,6 +663,9 @@ var main = function() {
             var i = this._head;
             while ((i = i.next) !== null) {
               callback.call(context, i.value, i.key, entireMap);
+              while (i.isRemoved()) {
+                i = i.next;
+              }
             }
           }
         });
