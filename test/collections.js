@@ -136,6 +136,20 @@ describe('Collections', function() {
         expect(foundMap).to.eql(expectedMap);
       });
 
+      it('should iterate over empty keys', function() {
+        map.clear();
+        var expectedKeys = [{}, null, undefined, '', NaN, 0];
+        expectedKeys.forEach(function (key) {
+          map.set(key, true);
+        });
+        var foundKeys = [];
+        map.forEach(function (value, key, entireMap) {
+          expect(entireMap.get(key)).to.equal(value);
+          foundKeys.push(key);
+        });
+        expect(foundKeys).to.be.theSameSet(expectedKeys);
+      });
+
       it('should support the thisArg', function() {
         var context = function () {};
         map.forEach(function (value, key, entireMap) {
