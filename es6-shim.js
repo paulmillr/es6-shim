@@ -654,6 +654,19 @@ var main = function() {
 
           entries: function() {
             return new MapIterator(this, "key+value");
+          },
+
+          forEach: function(callback) {
+            var context = arguments.length > 1 ? arguments[1] : null;
+            var entireMap = this;
+
+            var i = this._head;
+            while ((i = i.next) !== null) {
+              callback.call(context, i.value, i.key, entireMap);
+              while (i.isRemoved()) {
+                i = i.next;
+              }
+            }
           }
         });
 
@@ -700,6 +713,14 @@ var main = function() {
 
           entries: function() {
             return this['[[SetData]]'].entries();
+          },
+
+          forEach: function (callback) {
+            var context = arguments.length > 1 ? arguments[1] : null;
+            var entireSet = this;
+            this['[[SetData]]'].forEach(function (value, key) {
+              callback.call(context, key, key, entireSet);
+            });
           }
         });
 
