@@ -39,6 +39,20 @@ describe('Array', function() {
     it('should throw TypeError when function was not passed', function() {
       expect(function() {list.find();}).to.throw(TypeError);
     });
+
+    it('should receive all three parameters', function() {
+      var index = list.find(function(value, index, arr) {
+        expect(list[index]).to.equal(value);
+        expect(list).to.eql(arr);
+        return false;
+      });
+      expect(index).to.equal(undefined);
+    });
+
+    it('should work with the context argument', function() {
+      var context = {};
+      [1].find(function() { expect(this).to.equal(context); }, context);
+    });
   });
 
   describe('Array#findIndex', function() {
@@ -55,5 +69,20 @@ describe('Array', function() {
     it('should throw TypeError when function was not passed', function() {
       expect(function() {list.findIndex();}).to.throw(TypeError);
     });
+
+    it('should receive all three parameters', function() {
+      var index = list.findIndex(function(value, index, arr) {
+        expect(list[index]).to.equal(value);
+        expect(list).to.eql(arr);
+        return false;
+      });
+      expect(index).to.equal(-1);
+    });
+
+    it('should work with the context argument', function() {
+      var context = {};
+      [1].findIndex(function() { expect(this).to.equal(context); }, context);
+    });
   });
 });
+
