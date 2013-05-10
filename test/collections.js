@@ -1,6 +1,28 @@
 // Big thanks to V8 folks for test ideas.
 // v8/test/mjsunit/harmony/collections.js
 
+var Assertion = expect().constructor;
+Assertion.addMethod('theSameSet', function (otherArray) {
+    var array = this._obj;
+
+    expect(Array.isArray(array)).to.equal(true);
+    expect(Array.isArray(otherArray)).to.equal(true);
+
+    var diff = array.filter(function (value) {
+        return !otherArray.some(function (otherValue) {
+            var areBothNaN = typeof value === 'number' && typeof otherValue === 'number' && value !== value && otherValue !== otherValue;
+            return areBothNaN || value === otherValue;
+        });
+    });
+
+    this.assert(
+        diff.length === 0,
+        "expected #{this} to be equal to #{exp} (as sets, i.e. no order)",
+        array,
+        otherArray
+    );
+});
+
 describe('Collections', function() {
   var range = function(from, to) {
     var result = [];
@@ -36,31 +58,40 @@ describe('Collections', function() {
     it('should has valid getter and setter calls', function() {
       ['get', 'set', 'has', 'delete'].forEach(function(method) {
         expect(function() {
-          map[method](new Object);
+          map[method]({});
         }).to.not.throw();
       });
     });
 
     it('should map values correctly', function() {
       range(1, 20).forEach(function(number) {
-        testMapping(number, new Object);
-        testMapping(number / 100, new Object);
-        testMapping('key-' + number, new Object);
+        testMapping(number, {});
+        testMapping(number / 100, {});
+        testMapping('key-' + number, {});
       });
 
       [+0, -0, Infinity, -Infinity, true, false, null, undefined].forEach(function(key) {
-        testMapping(key, new Object);
+        testMapping(key, {});
       });
     });
 
+    it('should map empty values correctly', function() {
+      testMapping({}, true);
+      testMapping(null, true);
+      testMapping(undefined, true);
+      testMapping('', true);
+      testMapping(NaN, true);
+      testMapping(0, true);
+    });
+
     it('should has correct querying behavior', function() {
-      var key = new Object;
+      var key = {};
       testMapping(key, 'to-be-present');
       expect(map.has(key)).to.be.true;
-      expect(map.has(new Object)).to.be.false;
+      expect(map.has({})).to.be.false;
       testMapping(key, void 0);
       expect(map.has(key)).to.be.true;
-      expect(map.has(new Object)).to.be.false;
+      expect(map.has({})).to.be.false;
     });
 
     it('should allow to be initialized directly', function() {
@@ -80,7 +111,7 @@ describe('Collections', function() {
     it('should not have [[Enumerable]] props', function() {
       expectNotEnumerable(Map);
       expectNotEnumerable(Map.prototype);
-      expectNotEnumerable(new Map);
+      expectNotEnumerable(new Map());
     });
 
     it('should allow common ecmascript idioms', function() {
@@ -125,6 +156,20 @@ describe('Collections', function() {
           foundMap[key] = value;
         });
         expect(foundMap).to.eql(expectedMap);
+      });
+
+      it('should iterate over empty keys', function() {
+        map.clear();
+        var expectedKeys = [{}, null, undefined, '', NaN, 0];
+        expectedKeys.forEach(function (key) {
+          map.set(key, true);
+        });
+        var foundKeys = [];
+        map.forEach(function (value, key, entireMap) {
+          expect(entireMap.get(key)).to.equal(value);
+          foundKeys.push(key);
+        });
+        expect(foundKeys).to.be.theSameSet(expectedKeys);
       });
 
       it('should support the thisArg', function() {
@@ -231,7 +276,7 @@ describe('Collections', function() {
     it('should has valid getter and setter calls', function() {
       ['add', 'has', 'delete'].forEach(function(method) {
         expect(function() {
-          set[method](new Object);
+          set[method]({});
         }).to.not.throw();
       });
     });
@@ -246,7 +291,7 @@ describe('Collections', function() {
       };
 
       range(1, 20).forEach(function(number) {
-        testSet(new Object);
+        testSet({});
         testSet(number);
         testSet(number / 100);
         testSet('key-' + number);
@@ -288,7 +333,7 @@ describe('Collections', function() {
     it('should not have [[Enumerable]] props', function() {
       expectNotEnumerable(Set);
       expectNotEnumerable(Set.prototype);
-      expectNotEnumerable(new Set);
+      expectNotEnumerable(new Set());
     });
 
     it('should allow common ecmascript idioms', function() {
