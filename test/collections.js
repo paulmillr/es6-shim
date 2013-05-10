@@ -1,6 +1,28 @@
 // Big thanks to V8 folks for test ideas.
 // v8/test/mjsunit/harmony/collections.js
 
+var Assertion = expect().constructor;
+Assertion.addMethod('theSameSet', function (otherArray) {
+    var array = this._obj;
+
+    expect(Array.isArray(array)).to.equal(true);
+    expect(Array.isArray(otherArray)).to.equal(true);
+
+    var diff = array.filter(function (value) {
+        return !otherArray.some(function (otherValue) {
+            var areBothNaN = typeof value === 'number' && typeof otherValue === 'number' && value !== value && otherValue !== otherValue;
+            return areBothNaN || value === otherValue;
+        });
+    });
+
+    this.assert(
+        diff.length === 0,
+        "expected #{this} to be equal to #{exp} (as sets, i.e. no order)",
+        array,
+        otherArray
+    );
+});
+
 describe('Collections', function() {
   var range = function(from, to) {
     var result = [];
