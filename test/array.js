@@ -55,5 +55,21 @@ describe('Array', function() {
     it('should throw TypeError when function was not passed', function() {
       expect(function() {list.findIndex();}).to.throw(TypeError);
     });
+
+    it('predicate receive 3 parameters ', function() {
+      var numbers = [1,2,2,4,5,6];
+      var f=function(kValue,k,O){
+        if ( kValue===2 && k===kValue && O.length===6) {
+          return true;
+        }else
+        { 
+          return false;
+        }
+      };
+      var result = numbers.findIndex(f,2);
+        expect(result).to.equal(2);
+    });
+
+
   });
 });
