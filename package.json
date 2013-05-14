@@ -34,7 +34,7 @@
   "devDependencies": {
     "mocha": "1.9.0",
     "chai": "1.6.0",
-    "es5-shim": "2.0.9"
+    "es5-shim": "2.0.11"
   }
 }
 
