@@ -13,7 +13,7 @@
     "test": "mocha --require test/test_helpers.js"
   },
   "testling": {
-    "files": "es6-shim.js",
+    "files": ["es6-shim.js", "test/*.js"],
     "harness": "mocha",
     "browsers": [
       "iexplore/6.0..latest",
