@@ -283,6 +283,19 @@ var main = function() {
           var descriptor = Object.getOwnPropertyDescriptor(source, property);
           return Object.defineProperty(target, property, descriptor);
         }, target);
+      },
+
+      // 15.2.3.2
+      setPrototypeOf: function(O, proto) {
+        if (typeof O !== 'object' || O === null) {
+          throw new TypeError('can not set prototype on a non-object');
+        }
+        if (typeof proto !== 'object' && proto !== null) {
+          throw new TypeError('can only set prototype to an object or null');
+        }
+        // TODO: handle all the weird __proto__ edge cases.
+        O.__proto__ = proto;
+        return O;
       }
     });
   }
