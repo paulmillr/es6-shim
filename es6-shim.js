@@ -295,6 +295,17 @@ var main = function() {
       else if (isNaN(xSq) || isNaN(ySq) || isNaN(zSq)) { return NaN }
       return x * x + y * y + z * z || 0;
     },
+    
+    imul: function (a, b) {
+        // from https://developer.mozilla.org/en-US/docs/JavaScript/Reference/Global_Objects/Math/imul
+        var ah  = (a >>> 16) & 0xffff;
+        var al = a & 0xffff;
+        var bh  = (b >>> 16) & 0xffff;
+        var bl = b & 0xffff;
+        // the shift by 0 fixes the sign on the high part
+        // the final |0 converts the unsigned value into a signed value
+        return ((al * bl) + (((ah * bl + al * bh) << 16) >>> 0)|0);
+    },
 
     log2: function(value) {
       return Math.log(value) * (1 / Math.LN2);
