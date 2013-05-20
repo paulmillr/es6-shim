@@ -298,6 +298,23 @@ var main = function() {
         return O;
       }
     });
+
+    if (!(Object.setPrototypeOf(Object.create(null), Object.prototype) instanceof Object)) {
+      Object.setPrototypeOf = function(O, proto) {
+        if (typeof O !== 'object' || O === null) {
+          throw new TypeError('can not set prototype on a non-object');
+        }
+        if (proto === null) {
+          throw new ArgumentError('this browser/environment does not support creating dictionaries');
+        }
+        if (typeof proto !== 'object' && proto !== null) {
+          throw new TypeError('can only set prototype to an object or null');
+        }
+        // TODO: handle all the weird __proto__ edge cases.
+        O.__proto__ = proto;
+        return O;
+      };
+    }
   }
 
   defineProperties(Object, {
