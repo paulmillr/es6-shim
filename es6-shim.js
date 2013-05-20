@@ -317,37 +317,60 @@ var main = function() {
           var descriptor = Object.getOwnPropertyDescriptor(source, property);
           return Object.defineProperty(target, property, descriptor);
         }, target);
-      },
-
-      // 15.2.3.2
-      setPrototypeOf: function(O, proto) {
-        if (typeof O !== 'object' || O === null) {
-          throw new TypeError('can not set prototype on a non-object');
-        }
-        if (typeof proto !== 'object' && proto !== null) {
-          throw new TypeError('can only set prototype to an object or null');
-        }
-        // TODO: handle all the weird __proto__ edge cases.
-        O.__proto__ = proto;
-        return O;
       }
     });
 
-    if (!(Object.setPrototypeOf(Object.create(null), Object.prototype) instanceof Object)) {
-      Object.setPrototypeOf = function(O, proto) {
-        if (typeof O !== 'object' || O === null) {
-          throw new TypeError('can not set prototype on a non-object');
+    // 15.2.3.2
+    // shim from https://gist.github.com/WebReflection/5593554
+    if (!Object.setPrototypeOf) {
+      Object.setPrototypeOf = (function(Object, magic) {
+        'use strict';
+        var set;
+        function checkArgs(O, proto) {
+          if (typeof O !== 'object' || O === null) {
+            throw new TypeError('can not set prototype on a non-object');
+          }
+          if (typeof proto !== 'object' && proto !== null) {
+            throw new TypeError('can only set prototype to an object or null');
+          }
         }
-        if (proto === null) {
-          throw new ArgumentError('this browser/environment does not support creating dictionaries');
+        function setPrototypeOf(O, proto) {
+          checkArgs(O, proto);
+          set.call(O, proto);
+          return O;
         }
-        if (typeof proto !== 'object' && proto !== null) {
-          throw new TypeError('can only set prototype to an object or null');
+        try {
+          // this works already in Firefox and Safari
+          set = Object.getOwnPropertyDescriptor(Object.prototype, magic).set;
+          set.call({}, null);
+        } catch (o_O) {
+          if (Object.prototype !== {}[magic]) {
+            // IE < 11 cannot be shimmed
+            return;
+          }
+          // probably Chrome or some old Mobile stock browser
+          set = function(proto) {
+            this[magic] = proto;
+          };
+          // please note that this will **not** work
+          // in those browsers that do not inherit
+          // __proto__ by mistake from Object.prototype
+          // in these cases we should probably throw an error
+          // or at least be informed about the issue
+          setPrototypeOf.polyfill = setPrototypeOf(
+            setPrototypeOf({}, null),
+            Object.prototype
+          ) instanceof Object;
+          // setPrototypeOf.polyfill === true means it works as meant
+          // setPrototypeOf.polyfill === false means it's not 100% reliable
+          // setPrototypeOf.polyfill === undefined
+          // or
+          // setPrototypeOf.polyfill ==  null means it's not a polyfill
+          // which means it works as expected
+          // we can even delete Object.prototype.__proto__;
         }
-        // TODO: handle all the weird __proto__ edge cases.
-        O.__proto__ = proto;
-        return O;
-      };
+        return setPrototypeOf;
+      }(Object, '__proto__'));
     }
   }
 
