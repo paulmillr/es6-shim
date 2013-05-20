@@ -68,4 +68,38 @@ describe('Object', function() {
       expect(Object.mixin({a: 1}, {b: 2})).to.eql({a: 1, b: 2});
     });
   });
+
+  describe('Object.setPrototypeOf()', function() {
+    describe('argument checking', function() {
+      it('should throw TypeError if first arg is not object', function() {
+        var nonObjects = [null, true, false, 1, 3, 'foo'];
+        nonObjects.forEach(function(value) {
+          expect(function() { Object.setPrototypeOf(value); }).to.throw(TypeError);
+        });
+      });
+
+      it('should throw TypeError if second arg is not object or null', function() {
+        expect(function() { Object.setPrototypeOf({}, null); }).not.to.throw(TypeError);
+        var invalidPrototypes = [true, false, 1, 3, 'foo'];
+        invalidPrototypes.forEach(function(proto) {
+          expect(function() { Object.setPrototypeOf({}, proto); }).to.throw(TypeError);
+        });
+      });
+    });
+
+    describe('set prototype', function() {
+      var Foo = function() {};
+      var Bar = {};
+      var foo = new Foo();
+      expect(Object.getPrototypeOf(foo)).to.equal(Foo.prototype);
+
+      var fooBar = Object.setPrototypeOf(foo, Bar);
+      expect(fooBar).to.equal(foo);
+      expect(Object.getPrototypeOf(foo)).to.equal(Bar);
+
+      var fooNull = Object.setPrototypeOf(foo, null);
+      expect(fooNull).to.equal(foo);
+      expect(Object.getPrototypeOf(foo)).to.equal(null);
+    });
+  });
 });
