@@ -9,33 +9,14 @@
   <script src="../node_modules/chai/chai.js"></script>
   <script src="../node_modules/es5-shim/es5-shim.min.js"></script>
   <script src="../es6-shim.js"></script>
-  <script>
-    window.expect = chai.expect;
-    mocha.setup('bdd');
-  </script>
+  <script src="browser-setup.js"></script>
   <script src="array.js"></script>
   <script src="collections.js"></script>
   <script src="math.js"></script>
   <script src="number.js"></script>
   <script src="object.js"></script>
   <script src="string.js"></script>
-  <script>
-    window.onload = function() {
-      window.testsPassed = null;
-      function handleResults(runner) {
-        if (runner.stats.end)
-          window.testsPassed = runner.stats.failures === 0;
-        runner.on('fail', function(test, err){
-          window.testsPassed = false;
-        });
-        runner.on('end', function(){
-          window.testsPassed = window.testsPassed == null;
-        });
-        return runner;
-      }
-      handleResults(mocha.run());
-    };
-  </script>
+  <script src="browser-onload.js"></script>
 </head>
 <body>
   <div id="mocha"></div>

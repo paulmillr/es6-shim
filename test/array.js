@@ -39,6 +39,20 @@ describe('Array', function() {
     it('should throw TypeError when function was not passed', function() {
       expect(function() {list.find();}).to.throw(TypeError);
     });
+
+    it('should receive all three parameters', function() {
+      var index = list.find(function(value, index, arr) {
+        expect(list[index]).to.equal(value);
+        expect(list).to.eql(arr);
+        return false;
+      });
+      expect(index).to.equal(undefined);
+    });
+
+    it('should work with the context argument', function() {
+      var context = {};
+      [1].find(function() { expect(this).to.equal(context); }, context);
+    });
   });
 
   describe('Array#findIndex', function() {
@@ -56,20 +70,19 @@ describe('Array', function() {
       expect(function() {list.findIndex();}).to.throw(TypeError);
     });
 
-    it('predicate receive 3 parameters ', function() {
-      var numbers = [1,2,2,4,5,6];
-      var f=function(kValue,k,O){
-        if ( kValue===2 && k===kValue && O.length===6) {
-          return true;
-        }else
-        { 
-          return false;
-        }
-      };
-      var result = numbers.findIndex(f,2);
-        expect(result).to.equal(2);
+    it('should receive all three parameters', function() {
+      var index = list.findIndex(function(value, index, arr) {
+        expect(list[index]).to.equal(value);
+        expect(list).to.eql(arr);
+        return false;
+      });
+      expect(index).to.equal(-1);
     });
 
-
+    it('should work with the context argument', function() {
+      var context = {};
+      [1].findIndex(function() { expect(this).to.equal(context); }, context);
+    });
   });
 });
+
