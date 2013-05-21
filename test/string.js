@@ -310,11 +310,7 @@ describe('String', function() {
      
     it('String.raw Empty objects', function() {
       var callSite = {};
-
-      callSite.raw = {};
       expect(String.raw(callSite,'{total}','{total * 1.01}')).to.eql('');
-
-      callSite.raw = {};
       expect(String.raw(callSite)).to.eql('');
     });
   });
