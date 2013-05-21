@@ -75,34 +75,34 @@ var main = function() {
 
     raw: function() {
       var callSite = arguments[0];
-      var substitutions =  Array.prototype.slice.call(arguments, 1);
+      var substitutions = Array.prototype.slice.call(arguments, 1);
       var cooked = Object(callSite);
       var rawValue = cooked.raw;
       var raw = Object(rawValue);
       var len = Object.keys(raw).length;
       var literalsegments = ES.ToUint32(len);
-
       if (literalsegments === 0) {
         return '';
       }
+
       var stringElements = [];
       var nextIndex = 0;
-      var nextKey , next, nextSeg, nextSub;
+      var nextKey, next, nextSeg, nextSub;
       while (nextIndex < literalsegments) {
-          nextKey = nextIndex.toString();
-          next = raw[nextKey];
-          nextSeg = next.toString();
-          stringElements.push(nextSeg);
-          if (nextIndex + 1 >= literalsegments) {
-            break;
-          }
-          next = substitutions[nextKey];
-          if (next === undefined) {
-            break;
-          }
-          nextSub = next.toString();
-          stringElements.push(nextSub);
-          nextIndex++;
+        nextKey = String(nextIndex);
+        next = raw[nextKey];
+        nextSeg = String(next);
+        stringElements.push(nextSeg);
+        if (nextIndex + 1 >= literalsegments) {
+          break;
+        }
+        next = substitutions[nextKey];
+        if (typeof next === 'undefined') {
+          break;
+        }
+        nextSub = String(next);
+        stringElements.push(nextSub);
+        nextIndex++;
       }
       return stringElements.join('');
     }

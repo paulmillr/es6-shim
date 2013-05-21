@@ -269,11 +269,11 @@ describe('String', function() {
       var callSite = {};
 
       var str = 'The total is 10 ($11 with tax)';
-      callSite.raw = [ "The total is ", " ($", " with tax)" ];
+      callSite.raw = ["The total is ", " ($", " with tax)"];
       expect(String.raw(callSite,10,11)).to.eql(str);
 
       str = 'The total is {total} (${total * 1.01} with tax)';
-      callSite.raw = [ "The total is ", " ($", " with tax)" ];
+      callSite.raw = ["The total is ", " ($", " with tax)"];
       expect(String.raw(callSite,'{total}','{total * 1.01}')).to.eql(str);
     });
 
@@ -281,11 +281,11 @@ describe('String', function() {
       var callSite = {};
 
       var str = 'The total is 10 ($11 with tax)';
-      callSite.raw = {0 : "The total is ", 1 : " ($", 2 : " with tax)" };
+      callSite.raw = {0 : "The total is ", 1 : " ($", 2 : " with tax)"};
       expect(String.raw(callSite,10,11)).to.eql(str);
 
       str = 'The total is {total} (${total * 1.01} with tax)';
-      callSite.raw = {0 : "The total is ", 1 : " ($", 2 : " with tax)" };
+      callSite.raw = {0 : "The total is ", 1 : " ($", 2 : " with tax)"};
       expect(String.raw(callSite,'{total}','{total * 1.01}')).to.eql(str);
     });
 
@@ -293,18 +293,18 @@ describe('String', function() {
       var callSite = {};
 
       var str = 'The total is 10 ($11 with tax)';
-      callSite.raw = {'0' : "The total is ", '1' : " ($", '2' : " with tax)" };
+      callSite.raw = {'0' : "The total is ", '1' : " ($", '2' : " with tax)"};
       expect(String.raw(callSite,10,11)).to.eql(str);
 
       str = 'The total is {total} (${total * 1.01} with tax)';
-      callSite.raw = {'0' : "The total is ", '1' : " ($", '2' : " with tax)" };
+      callSite.raw = {'0' : "The total is ", '1' : " ($", '2' : " with tax)"};
       expect(String.raw(callSite,'{total}','{total * 1.01}')).to.eql(str);
     });
 
     it('String.raw ReturnIfAbrupt - Less Substitutions', function() {
       var callSite = {};  
       var str = 'The total is 10 ($';
-      callSite.raw = {'0' : "The total is ", '1' : " ($", '2' : " with tax)" };
+      callSite.raw = {'0' : "The total is ", '1' : " ($", '2' : " with tax)"};
       expect(String.raw(callSite,10)).to.eql(str);
     });
      
