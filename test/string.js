@@ -24,7 +24,7 @@ describe('String', function() {
     });
     it('should work - Date type', function() {
       var d = new Date();
-      expect(String.prototype.repeat.call(d, 3)).to.eql(new Array(3+1).join(d));
+      expect(String.prototype.repeat.call(d, 3)).to.eql([d, d, d].join(''));
     });
   });
 
