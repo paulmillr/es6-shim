@@ -16,6 +16,16 @@ describe('String', function() {
     it('should work', function() {
       expect('test'.repeat(3)).to.eql('testtesttest');
     });
+    it('should work - integer , boolean etc', function() {
+      var k = 2;
+      expect(String.prototype.repeat.call(k,3)).to.eql('222');
+
+      k = true;
+      expect(String.prototype.repeat.call(k,3)).to.eql('truetruetrue');
+
+      k = new Date();
+      expect(String.prototype.repeat.call(k,3)).to.eql(new Array(3+1).join(k));
+    });
   });
 
   describe('#startsWith()', function() {
