@@ -322,58 +322,55 @@ var main = function() {
 
     // 15.2.3.2
     // shim from https://gist.github.com/WebReflection/5593554
-    if (!Object.setPrototypeOf) {
-      defineProperties(Object, {
-        setPrototypeOf: (function(Object, magic) {
-          'use strict';
-          var set;
-          function checkArgs(O, proto) {
-            if (typeof O !== 'object' || O === null) {
-              throw new TypeError('can not set prototype on a non-object');
-            }
-            if (typeof proto !== 'object' && proto !== null) {
-              throw new TypeError('can only set prototype to an object or null');
-            }
+    defineProperties(Object, {
+      setPrototypeOf: (function(Object, magic) {
+        var set;
+        function checkArgs(O, proto) {
+          if (typeof O !== 'object' || O === null) {
+            throw new TypeError('can not set prototype on a non-object');
           }
-          function setPrototypeOf(O, proto) {
-            checkArgs(O, proto);
-            set.call(O, proto);
-            return O;
+          if (typeof proto !== 'object' && proto !== null) {
+            throw new TypeError('can only set prototype to an object or null');
           }
-          try {
-            // this works already in Firefox and Safari
-            set = Object.getOwnPropertyDescriptor(Object.prototype, magic).set;
-            set.call({}, null);
-          } catch (o_O) {
-            if (Object.prototype !== {}[magic]) {
-              // IE < 11 cannot be shimmed
-              return;
-            }
-            // probably Chrome or some old Mobile stock browser
-            set = function(proto) {
-              this[magic] = proto;
-            };
-            // please note that this will **not** work
-            // in those browsers that do not inherit
-            // __proto__ by mistake from Object.prototype
-            // in these cases we should probably throw an error
-            // or at least be informed about the issue
-            setPrototypeOf.polyfill = setPrototypeOf(
-              setPrototypeOf({}, null),
-              Object.prototype
-            ) instanceof Object;
-            // setPrototypeOf.polyfill === true means it works as meant
-            // setPrototypeOf.polyfill === false means it's not 100% reliable
-            // setPrototypeOf.polyfill === undefined
-            // or
-            // setPrototypeOf.polyfill ==  null means it's not a polyfill
-            // which means it works as expected
-            // we can even delete Object.prototype.__proto__;
+        }
+        function setPrototypeOf(O, proto) {
+          checkArgs(O, proto);
+          set.call(O, proto);
+          return O;
+        }
+        try {
+          // this works already in Firefox and Safari
+          set = Object.getOwnPropertyDescriptor(Object.prototype, magic).set;
+          set.call({}, null);
+        } catch (o_O) {
+          if (Object.prototype !== {}[magic]) {
+            // IE < 11 cannot be shimmed
+            return;
           }
-          return setPrototypeOf;
-        }(Object, '__proto__'))
-      });
-    }
+          // probably Chrome or some old Mobile stock browser
+          set = function(proto) {
+            this[magic] = proto;
+          };
+          // please note that this will **not** work
+          // in those browsers that do not inherit
+          // __proto__ by mistake from Object.prototype
+          // in these cases we should probably throw an error
+          // or at least be informed about the issue
+          setPrototypeOf.polyfill = setPrototypeOf(
+            setPrototypeOf({}, null),
+            Object.prototype
+          ) instanceof Object;
+          // setPrototypeOf.polyfill === true means it works as meant
+          // setPrototypeOf.polyfill === false means it's not 100% reliable
+          // setPrototypeOf.polyfill === undefined
+          // or
+          // setPrototypeOf.polyfill ==  null means it's not a polyfill
+          // which means it works as expected
+          // we can even delete Object.prototype.__proto__;
+        }
+        return setPrototypeOf;
+      }(Object, '__proto__'))
+    });
   }
 
   defineProperties(Object, {
