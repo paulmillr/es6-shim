@@ -327,24 +327,27 @@ var main = function() {
     defineProperties(Object, {
       setPrototypeOf: (function(Object, magic) {
         var set;
-        function checkArgs(O, proto) {
+
+        var checkArgs = function(O, proto) {
           if (typeof O !== 'object' || O === null) {
             throw new TypeError('can not set prototype on a non-object');
           }
           if (typeof proto !== 'object' && proto !== null) {
             throw new TypeError('can only set prototype to an object or null');
           }
-        }
-        function setPrototypeOf(O, proto) {
+        };
+
+        var setPrototypeOf = function(O, proto) {
           checkArgs(O, proto);
           set.call(O, proto);
           return O;
-        }
+        };
+
         try {
           // this works already in Firefox and Safari
           set = Object.getOwnPropertyDescriptor(Object.prototype, magic).set;
           set.call({}, null);
-        } catch (o_O) {
+        } catch (e) {
           if (Object.prototype !== {}[magic]) {
             // IE < 11 cannot be shimmed
             return;
@@ -371,7 +374,7 @@ var main = function() {
           // we can even delete Object.prototype.__proto__;
         }
         return setPrototypeOf;
-      }(Object, '__proto__'))
+      })(Object, '__proto__')
     });
   }
 
