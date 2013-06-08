@@ -1,3 +1,7 @@
+# es6-shim 0.8.0 (8 June 2013)
+* Added `Object.setPrototypeOf`, `Set#keys`, `Set#values`, `Map#keys`, `Map#values`, `Map#entries`, `Set#entries`.
+* Fixed `String#repeat` according to spec.
+
 # es6-shim 0.7.0 (2 April 2013)
 * Added `Array#find`, `Array#findIndex`, `Object.assign`, `Object.mixin`,
   `Math.cbrt`, `String.fromCodePoint`, `String#codePointAt`.

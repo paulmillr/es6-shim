@@ -19,7 +19,7 @@ For node.js:
 
 ## Safe shims
 
-* `Map`, `Set` (ES5)
+* `Map`, `Set` (requires ES5)
 * `String`:
     * `fromCodePoint()`
 * `String.prototype`:
