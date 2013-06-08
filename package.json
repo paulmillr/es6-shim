@@ -2,7 +2,7 @@
   "author": "Paul Miller (http://paulmillr.com/)",
   "name": "es6-shim",
   "description": "ECMAScript 6 (Harmony) compatibility shims for legacy JavaScript engines",
-  "version": "0.7.0",
+  "version": "0.8.0",
   "homepage": "https://github.com/paulmillr/es6-shim/",
   "repository": {
     "type": "git",
