@@ -508,6 +508,17 @@ var main = function() {
       if (z == null) z = 0;
       return Math.sqrt(x * x + y * y + z * z);
     },
+    
+    imul: function (a, b) {
+        // from https://developer.mozilla.org/en-US/docs/JavaScript/Reference/Global_Objects/Math/imul
+        var ah  = (a >>> 16) & 0xffff;
+        var al = a & 0xffff;
+        var bh  = (b >>> 16) & 0xffff;
+        var bl = b & 0xffff;
+        // the shift by 0 fixes the sign on the high part
+        // the final |0 converts the unsigned value into a signed value
+        return ((al * bl) + (((ah * bl + al * bh) << 16) >>> 0)|0);
+    },
 
     log2: function(value) {
       if (Number.isNaN(value) || value < 0) {
