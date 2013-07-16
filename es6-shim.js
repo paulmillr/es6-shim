@@ -482,10 +482,11 @@ var main = function() {
       return result;
     },
 
-    hypot: function(x, y, z) {
+    hypot: function(x, y) {
       var anyNaN = false;
       var anyInfinity = false;
       var allZero = true;
+      var z = arguments.length > 2 ? arguments[2] : 0;
       [x, y, z].some(function (num) {
         if (Number.isNaN(num)) {
           anyNaN = true;
@@ -494,7 +495,7 @@ var main = function() {
         } else if (num !== 0) {
           allZero = false;
         }
-        return anyInfinity || anyNaN;
+        return anyInfinity;
       });
       if (anyInfinity) {
         return Infinity;
