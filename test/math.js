@@ -99,6 +99,7 @@ describe('Math', function() {
       expect(Math.hypot(Infinity)).to.equal(Infinity);
       expect(Math.hypot(-Infinity)).to.equal(Infinity);
       expect(Math.hypot(Infinity, NaN)).to.equal(Infinity);
+      expect(Math.hypot(NaN, Infinity)).to.equal(Infinity);
       expect(Math.hypot(-Infinity, 'Hello')).to.equal(Infinity);
       expect(Math.hypot(1, 2, Infinity)).to.equal(Infinity);
       expect(Number.isNaN(Math.hypot(NaN, 1))).to.be.ok;

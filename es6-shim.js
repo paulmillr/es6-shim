@@ -495,7 +495,7 @@ var main = function() {
         } else if (num !== 0) {
           allZero = false;
         }
-        return anyInfinity || anyNaN;
+        return anyInfinity;
       });
       if (anyInfinity) {
         return Infinity;
