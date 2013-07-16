@@ -108,7 +108,11 @@ describe('Math', function() {
       expect(isPositiveZero(Math.hypot(-0, -0, -0))).to.be.ok;
       expect(Math.hypot(66, 66)).to.almostEqual(93.33809511662427);
       expect(Math.hypot(0.1, 100)).to.almostEqual(100.0000499999875);
-      });
+    });
+
+    it('should have the right length', function() {
+      expect(Math.hypot.length).to.equal(2);
+    });
   });
   
   describe('#log2()', function() {
