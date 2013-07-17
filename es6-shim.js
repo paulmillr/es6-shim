@@ -20,6 +20,8 @@ var main = function() {
   var globals = (typeof global === 'undefined') ? window : global;
   var global_isFinite = globals.isFinite;
   var supportsDescriptors = !!Object.defineProperty && arePropertyDescriptorsSupported();
+  var _slice = Array.prototype.slice;
+  var _indexOf = String.prototype.indexOf;
 
   // Define configurable, writable and non-enumerable props
   // if they don’t exist.
@@ -75,7 +77,7 @@ var main = function() {
 
     raw: function() {
       var callSite = arguments[0];
-      var substitutions = [].slice.call(arguments, 1);
+      var substitutions = _slice.call(arguments, 1);
       var cooked = Object(callSite);
       var rawValue = cooked.raw;
       var raw = Object(rawValue);
@@ -132,7 +134,7 @@ var main = function() {
       var start = Math.min(Math.max(pos, 0), len);
       var searchLength = searchString.length;
       if ((searchLength + start) > len) return false;
-      var index = ''.indexOf.call(s, searchString, start);
+      var index = _indexOf.call(s, searchString, start);
       return index === start;
     },
 
@@ -147,7 +149,7 @@ var main = function() {
       var searchLength = searchString.length;
       var start = end - searchLength;
       if (start < 0) return false;
-      var index = ''.indexOf.call(s, searchString, start);
+      var index = _indexOf.call(s, searchString, start);
       return index === start;
     },
 
@@ -155,7 +157,7 @@ var main = function() {
       var position = arguments[1];
 
       // Somehow this trick makes method 100% compat with the spec.
-      return ''.indexOf.call(this, searchString, position) !== -1;
+      return _indexOf.call(this, searchString, position) !== -1;
     },
 
     codePointAt: function(pos) {
