@@ -75,7 +75,7 @@ var main = function() {
 
     raw: function() {
       var callSite = arguments[0];
-      var substitutions = Array.prototype.slice.call(arguments, 1);
+      var substitutions = [].slice.call(arguments, 1);
       var cooked = Object(callSite);
       var rawValue = cooked.raw;
       var raw = Object(rawValue);
