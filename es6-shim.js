@@ -410,6 +410,9 @@
       }
     });
 
+    var SQUARE_ROOT_EPSILON = Math.sqrt(0.0000000000000002);
+    var FOURTH_ROOT_EPSILON = Math.sqrt(SQUARE_ROOT_EPSILON);
+
     defineProperties(Math, {
       acosh: function(value) {
         value = Number(value);
