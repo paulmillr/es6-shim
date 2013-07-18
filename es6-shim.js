@@ -3,7 +3,7 @@
 // For more details and documentation:
 // https://github.com/paulmillr/es6-shim/
 
-(function (undefined) {
+(function(undefined) {
   var arePropertyDescriptorsSupported = function() {
     var attempt = function () {
       Object.defineProperty({}, 'x', {});
@@ -597,11 +597,8 @@
 
       trunc: function(value) {
         var number = Number(value);
-        if (Number.isNaN(number)) {
-          return NaN;
-        } else if (number === Infinity || number === -Infinity) {
-          return number;
-        } else if (number === 0) {
+        if (Number.isNaN(number) || number === Infinity ||
+            number === -Infinity || number === 0) {
           return number;
         }
         return ~~value;
