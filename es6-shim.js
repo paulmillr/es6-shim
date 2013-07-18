@@ -485,6 +485,10 @@
         } else if (value === -Infinity) {
           return -1;
         }
+        var point = 1e-5;
+        if (Math.abs(value) >= point) {
+          return Math.exp(value) - 1;
+        }
         var result = 0;
         var n = 50;
         for (var i = 1; i < n; i++) {
@@ -493,6 +497,8 @@
           }
           result += Math.pow(value, i) / factorial;
         }
+        result = Math.max(Math.expm1(-point), result);
+        result = Math.min(Math.expm1(+point), result);
         return result;
       },
 
