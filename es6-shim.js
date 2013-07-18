@@ -129,7 +129,7 @@
           }
           return repeat(String(this), times);
         };
-      })();
+      })(),
 
       startsWith: function(searchString) {
         var position = arguments[1];
