@@ -848,4 +848,5 @@
   } else {
     main(); // CommonJS and <script>
   }
-})();
+}());
+
