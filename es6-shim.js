@@ -113,18 +113,23 @@
 
     defineProperties(String.prototype, {
       // Fast repeat, uses the `Exponentiation by squaring` algorithm.
-      // alternative - return new Array(times + 1).join(s);
-      repeat: function(times) {
-        times = Number.toInteger(times);
-        if (times < 0 || times === Infinity) {
-          throw new RangeError();
-        }
-        var s = String(this);
-        if (times < 1) return '';
-        if (times % 2) return s.repeat(times - 1) + s;
-        var half = s.repeat(times / 2);
-        return half + half;
-      },
+      // Perf: http://jsperf.com/string-repeat2/2
+      repeat: (function() {
+        var repeat = function(s, times) {
+          if (times < 1) return '';
+          if (times % 2) return repeat(s, times - 1) + s;
+          var half = repeat(s, times / 2);
+          return half + half;
+        };
+
+        return function(times) {
+          times = Number.toInteger(times);
+          if (times < 0 || times === Infinity) {
+            throw new RangeError();
+          }
+          return repeat(String(this), times);
+        };
+      })(),
 
       startsWith: function(searchString) {
         var position = arguments[1];
