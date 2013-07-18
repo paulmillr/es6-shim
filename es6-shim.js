@@ -497,13 +497,10 @@
       },
 
       hypot: function(x, y) {
-        x = Number(x);
-        y = Number(y);
         var anyNaN = false;
         var anyInfinity = false;
         var allZero = true;
         var z = arguments.length > 2 ? arguments[2] : 0;
-        z = Number(z);
         [x, y, z].some(function (num) {
           if (Number.isNaN(num)) {
             anyNaN = true;
