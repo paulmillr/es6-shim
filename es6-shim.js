@@ -4,6 +4,8 @@
 // https://github.com/paulmillr/es6-shim/
 
 (function(global, undefined) {
+  'use strict';
+
   var arePropertyDescriptorsSupported = function() {
     var attempt = function () {
       Object.defineProperty({}, 'x', {});
@@ -16,8 +18,6 @@
   };
 
   var main = function() {
-    'use strict';
-
     var supportsDescriptors = !!Object.defineProperty && arePropertyDescriptorsSupported();
     var _slice = Array.prototype.slice;
     var _indexOf = String.prototype.indexOf;
