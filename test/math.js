@@ -105,7 +105,7 @@ describe('Math', function() {
       expect(Math.hypot(-Infinity, 'Hello')).to.equal(Infinity);
       expect(Math.hypot(1, 2, Infinity)).to.equal(Infinity);
       expect(Number.isNaN(Math.hypot(NaN, 1))).to.be.ok;
-      expect(isPositiveZero(Math.hypot())).to.be.ok;
+      expect(Number.isNaN(Math.hypot())).to.be.ok;
       expect(isPositiveZero(Math.hypot(0, 0, 0))).to.be.ok;
       expect(isPositiveZero(Math.hypot(0, -0, 0))).to.be.ok;
       expect(isPositiveZero(Math.hypot(-0, -0, -0))).to.be.ok;
