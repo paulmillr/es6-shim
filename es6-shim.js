@@ -3,7 +3,7 @@
 // For more details and documentation:
 // https://github.com/paulmillr/es6-shim/
 
-(function(undefined) {
+(function(global, undefined) {
   var arePropertyDescriptorsSupported = function() {
     var attempt = function () {
       Object.defineProperty({}, 'x', {});
@@ -18,8 +18,6 @@
   var main = function() {
     'use strict';
 
-    var globals = (typeof global === 'undefined') ? window : global;
-    var global_isFinite = globals.isFinite;
     var supportsDescriptors = !!Object.defineProperty && arePropertyDescriptorsSupported();
     var _slice = Array.prototype.slice;
     var _indexOf = String.prototype.indexOf;
@@ -240,11 +238,11 @@
       MAX_INTEGER: 9007199254740991,
       EPSILON: 2.220446049250313e-16,
 
-      parseInt: globals.parseInt,
-      parseFloat: globals.parseFloat,
+      parseInt: global.parseInt,
+      parseFloat: global.parseFloat,
 
       isFinite: function(value) {
-        return typeof value === 'number' && global_isFinite(value);
+        return typeof value === 'number' && global.isFinite(value);
       },
 
       isInteger: function(value) {
@@ -826,21 +824,21 @@
           return SetShim;
         })()
       };
-      defineProperties(globals, collectionShims);
+      defineProperties(global, collectionShims);
 
-      if (globals.Map || globals.Set) {
+      if (global.Map || global.Set) {
         /*
           - In Firefox < 23, Map#size is a function.
           - In all current Firefox, Set#entries/keys/values & Map#clear do not exist
             - https://bugzilla.mozilla.org/show_bug.cgi?id=869996
         */
-        var hasNoMapClear = typeof globals.Map.prototype.clear !== 'function';
-        var setSizeIsFunc = typeof (new globals.Set()).size !== 0;
-        var mapSizeIsFunc = typeof (new globals.Map()).size !== 0;
+        var hasNoMapClear = typeof global.Map.prototype.clear !== 'function';
+        var setSizeIsFunc = typeof (new global.Set()).size !== 0;
+        var mapSizeIsFunc = typeof (new global.Map()).size !== 0;
         var hasNoSetKeys = typeof Set.prototype.keys !== 'function';
         if (hasNoMapClear || setSizeIsFunc || mapSizeIsFunc || hasNoSetKeys) {
-          globals.Map = collectionShims.Map;
-          globals.Set = collectionShims.Set;
+          global.Map = collectionShims.Map;
+          global.Set = collectionShims.Set;
         }
       }
     }
@@ -851,5 +849,5 @@
   } else {
     main(); // CommonJS and <script>
   }
-}());
+})(this);
 
