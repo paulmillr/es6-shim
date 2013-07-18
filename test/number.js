@@ -36,7 +36,7 @@ describe('Number', function() {
     it('should work', function() {
       integers.map(Number.isFinite).forEach(expectToBeOk);
       infinities.map(Number.isFinite).forEach(expectToNotBeOk);
-      expect(Number.isFinite(Infinity)).to.not.be.ok
+      expect(Number.isFinite(Infinity)).to.not.be.ok;
       expect(Number.isFinite(-Infinity)).to.not.be.ok;
       expect(Number.isFinite(NaN)).to.not.be.ok;
       expect(Number.isFinite(4)).to.be.ok;

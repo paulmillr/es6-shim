@@ -2,7 +2,7 @@ describe('Object', function() {
   describe('Object.is()', function() {
     it('should compare regular objects correctly', function() {
       [null, void 0, [0], 5, 'str', {a: null}].map(function(item) {
-        return Object.is(item, item)
+        return Object.is(item, item);
       }).forEach(function(result) {
         expect(result).to.be.ok;
       });

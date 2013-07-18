@@ -119,7 +119,7 @@ describe('String', function() {
       expect('abc'.endsWith('bc', NaN)).to.not.be.ok;
 
       var myobj = {
-        toString: function() {return 'abc'},
+        toString: function() { return 'abc'; },
         endsWith: String.prototype.endsWith
       };
       expect(myobj.endsWith('abc')).to.be.ok;
@@ -132,7 +132,7 @@ describe('String', function() {
           gotStr = true;
           return 'xyz';
         },
-        endsWith : String.prototype.endsWith
+        endsWith: String.prototype.endsWith
       };
       var idx = {
         valueOf: function () {
@@ -291,11 +291,11 @@ describe('String', function() {
       var callSite = {};
 
       var str = 'The total is 10 ($11 with tax)';
-      callSite.raw = {0 : "The total is ", 1 : " ($", 2 : " with tax)"};
+      callSite.raw = {0: "The total is ", 1: " ($", 2: " with tax)"};
       expect(String.raw(callSite,10,11)).to.eql(str);
 
       str = 'The total is {total} (${total * 1.01} with tax)';
-      callSite.raw = {0 : "The total is ", 1 : " ($", 2 : " with tax)"};
+      callSite.raw = {0: "The total is ", 1: " ($", 2: " with tax)"};
       expect(String.raw(callSite,'{total}','{total * 1.01}')).to.eql(str);
     });
 
@@ -303,21 +303,21 @@ describe('String', function() {
       var callSite = {};
 
       var str = 'The total is 10 ($11 with tax)';
-      callSite.raw = {'0' : "The total is ", '1' : " ($", '2' : " with tax)"};
+      callSite.raw = {'0': "The total is ", '1': " ($", '2': " with tax)"};
       expect(String.raw(callSite,10,11)).to.eql(str);
 
       str = 'The total is {total} (${total * 1.01} with tax)';
-      callSite.raw = {'0' : "The total is ", '1' : " ($", '2' : " with tax)"};
+      callSite.raw = {'0': "The total is ", '1': " ($", '2': " with tax)"};
       expect(String.raw(callSite,'{total}','{total * 1.01}')).to.eql(str);
     });
 
     it('String.raw ReturnIfAbrupt - Less Substitutions', function() {
       var callSite = {};  
       var str = 'The total is 10 ($';
-      callSite.raw = {'0' : "The total is ", '1' : " ($", '2' : " with tax)"};
+      callSite.raw = {'0': "The total is ", '1': " ($", '2': " with tax)"};
       expect(String.raw(callSite,10)).to.eql(str);
     });
-     
+
     it('String.raw Empty objects', function() {
       var callSite = {};
       expect(String.raw(callSite,'{total}','{total * 1.01}')).to.eql('');
