@@ -602,6 +602,17 @@
           return number;
         }
         return ~~value;
+      },
+
+      imul: function(x, y) {
+        // taken from https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/imul
+        var ah  = (x >>> 16) & 0xffff;
+        var al = x & 0xffff;
+        var bh  = (y >>> 16) & 0xffff;
+        var bl = y & 0xffff;
+        // the shift by 0 fixes the sign on the high part
+        // the final |0 converts the unsigned value into a signed value
+        return ((al * bl) + (((ah * bl + al * bh) << 16) >>> 0)|0);
       }
     });
 
