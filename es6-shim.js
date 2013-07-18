@@ -412,6 +412,7 @@
 
     defineProperties(Math, {
       acosh: function(value) {
+        value = Number(value);
         if (Number.isNaN(value) || value < 1) {
           return NaN;
         } else if (value === 1) {
@@ -423,6 +424,7 @@
       },
 
       asinh: function(value) {
+        value = Number(value);
         if (Number.isNaN(value)) {
           return NaN;
         } else if (value === 0) {
@@ -434,6 +436,7 @@
       },
 
       atanh: function(value) {
+        value = Number(value);
         if (Number.isNaN(value) || value < -1 || value > 1) {
           return NaN;
         } else if (value === -1) {
@@ -447,6 +450,7 @@
       },
 
       cbrt: function (value) {
+        value = Number(value);
         if (value === 0) {
           return value;
         }
@@ -457,6 +461,7 @@
       },
 
       cosh: function(value) {
+        value = Number(value);
         if (value === 0) { // +0 or -0
           return 1;
         } else if (value === Infinity || value === -Infinity) {
@@ -470,6 +475,7 @@
       },
 
       expm1: function(value) {
+        value = Number(value);
         if (Number.isNaN(value)) {
           return NaN;
         } else if (value === 0) {
@@ -491,10 +497,13 @@
       },
 
       hypot: function(x, y) {
+        x = Number(x);
+        y = Number(y);
         var anyNaN = false;
         var anyInfinity = false;
         var allZero = true;
         var z = arguments.length > 2 ? arguments[2] : 0;
+        z = Number(z);
         [x, y, z].some(function (num) {
           if (Number.isNaN(num)) {
             anyNaN = true;
@@ -519,32 +528,15 @@
       },
 
       log2: function(value) {
-        if (Number.isNaN(value) || value < 0) {
-          return NaN;
-        } else if (value === 0) {
-          return -Infinity;
-        } else if (value === 1) {
-          return 0;
-        } else if (value === Infinity) {
-          return Infinity;
-        }
-        return Math.log(value) * (1 / Math.LN2);
+        return Math.log(value) * Math.LOG2E;
       },
 
       log10: function(value) {
-        if (Number.isNaN(value) || value < 0) {
-          return NaN;
-        } else if (value === 0) {
-          return -Infinity;
-        } else if (value === 1) {
-          return 0;
-        } else if (value === Infinity) {
-          return Infinity;
-        }
-        return Math.log(value) * (1 / Math.LN10);
+        return Math.log(value) * Math.LOG10E;
       },
 
       log1p: function(value) {
+        value = Number(value);
         if (Number.isNaN(value) || value < -1) {
           return NaN;
         } else if (value === -1) {
@@ -577,6 +569,7 @@
       },
 
       sinh: function(value) {
+        value = Number(value);
         if (Number.isNaN(value)) {
           return NaN;
         } else if (value === 0) {
@@ -588,6 +581,7 @@
       },
 
       tanh: function(value) {
+        value = Number(value);
         if (Number.isNaN(value)) {
           return NaN;
         } else if (value === 0) {
@@ -602,11 +596,7 @@
 
       trunc: function(value) {
         var number = Number(value);
-        if (Number.isNaN(number) || number === Infinity ||
-            number === -Infinity || number === 0) {
-          return number;
-        }
-        return ~~value;
+        return number < 0 ? -Math.floor(-number) : Math.floor(number);
       },
 
       imul: function(x, y) {
