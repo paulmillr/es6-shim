@@ -9,9 +9,9 @@ Assertion.addMethod('theSameSet', function (otherArray) {
   expect(Array.isArray(otherArray)).to.equal(true);
 
   var diff = array.filter(function (value) {
-    return !otherArray.some(function (otherValue) {
+    return otherArray.every(function (otherValue) {
       var areBothNaN = typeof value === 'number' && typeof otherValue === 'number' && value !== value && otherValue !== otherValue;
-      return areBothNaN || value === otherValue;
+      return !areBothNaN && value !== otherValue;
     });
   });
 
