@@ -134,13 +134,13 @@ describe('Number', function() {
   describe('Number.toInteger()', function() {
     it('should convert things to integer value', function() {
       expect(Number.toInteger(4)).to.equal(4);
-      expect(Number.toInteger(4.)).to.equal(4);
+      expect(Number.toInteger(4.0)).to.equal(4);
       expect(Number.toInteger(4.3)).to.equal(4);
       expect(Number.toInteger(-4)).to.equal(-4);
-      expect(Number.toInteger(-4.)).to.equal(-4);
+      expect(Number.toInteger(-4.0)).to.equal(-4);
       expect(Number.toInteger(-4.3)).to.equal(-4);
-      expect(Number.toInteger(0.)).to.equal(0.);
-      expect(Number.toInteger(-0.)).to.equal(-0.);
+      expect(Number.toInteger(0.0)).to.equal(0.0);
+      expect(Number.toInteger(-0.0)).to.equal(-0.0);
       expect(Number.toInteger(Infinity)).to.equal(Infinity);
       expect(Number.toInteger(-Infinity)).to.equal(-Infinity);
       expect(Number.toInteger(NaN)).to.equal(0);
@@ -173,7 +173,7 @@ describe('Number', function() {
         expect(item.clz()).to.be.within(0, 32);
       });
       expect(NaN.clz()).to.equal(32);
-      expect(0x100000000.clz()).to.equal(31);
+      expect((0x100000000).clz()).to.equal(31);
       expect((-1).clz()).to.equal(0);
     });
   });
