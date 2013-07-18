@@ -412,6 +412,12 @@
 
     var SQUARE_ROOT_EPSILON = Math.sqrt(2.220446049250313e-16);
     var FOURTH_ROOT_EPSILON = Math.sqrt(SQUARE_ROOT_EPSILON);
+    var sqrt1pm1 = function (x) {
+      if (Math.abs(x) > 0.75) {
+        return Math.sqrt(1 + x) - 1;
+      }
+      return Math.expm1(Math.log1p(x) / 2);
+    };
 
     defineProperties(Math, {
       acosh: function(value) {
