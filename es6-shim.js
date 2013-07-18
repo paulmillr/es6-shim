@@ -410,6 +410,17 @@
       }
     });
 
+    var EPSILON = (1 + Math.pow(2, -52)) - 1;
+    var SQUARE_ROOT_EPSILON = Math.sqrt(EPSILON);
+    var FOURTH_ROOT_EPSILON = Math.sqrt(SQUARE_ROOT_EPSILON);
+
+    var sqrt1pm1 = function (x) {
+      if (Math.abs(x) > 0.75) {
+        return Math.sqrt(1 + x) - 1;
+      }
+      return Math.expm1(Math.log1p(x) / 2);
+    };
+
     defineProperties(Math, {
       acosh: function(value) {
         value = Number(value);
@@ -423,30 +434,44 @@
         return Math.log(value + Math.sqrt(value * value - 1));
       },
 
-      asinh: function(value) {
-        value = Number(value);
-        if (Number.isNaN(value)) {
-          return NaN;
-        } else if (value === 0) {
-          return value;
-        } else if (value === Infinity || value === -Infinity) {
-          return value;
+      asinh: function(x) {
+        x = Number(x);
+        if (x >= FOURTH_ROOT_EPSILON) {
+          if (x > 1 / SQUARE_ROOT_EPSILON) {
+            return Math.LN2 + Math.log(x) + 1 / (4 * x * x);
+          }
+          if (x < 0.5) {
+            return Math.log1p(x + sqrt1pm1(x * x));
+          }
+          return Math.log(x + Math.sqrt(x * x + 1));
         }
-        return Math.log(value + Math.sqrt(value * value + 1));
+        if (x <= -FOURTH_ROOT_EPSILON) {
+          return -Math.asinh(-x);
+        }
+        var result = x;
+        if (Math.abs(x) >= SQUARE_ROOT_EPSILON) {
+          var x3 = x * x * x;
+          result -= x3 / 6;
+        }
+        return result;
       },
 
-      atanh: function(value) {
-        value = Number(value);
-        if (Number.isNaN(value) || value < -1 || value > 1) {
-          return NaN;
-        } else if (value === -1) {
-          return -Infinity;
-        } else if (value === 1) {
-          return Infinity;
-        } else if (value === 0) {
-          return value;
+      atanh: function(x) {
+        // very thatnks to mozilla devs
+        // https://github.com/mozilla/mozilla-central/blob/master/js/src/jsmath.cpp
+        x = Number(x);
+        if (Math.abs(x) >= FOURTH_ROOT_EPSILON) {
+          if (Math.abs(x) < 0.5) {
+            return (Math.log1p(x) - Math.log1p(-x)) / 2;
+          }
+          return Math.log((1 + x) / (1 - x)) / 2;
         }
-        return 0.5 * Math.log((1 + value) / (1 - value));
+        var result = x;
+        if (Math.abs(x) >= SQUARE_ROOT_EPSILON) {
+          var x3 = x * x * x;
+          result += x3 / 3;
+        }
+        return result;
       },
 
       cbrt: function (value) {
