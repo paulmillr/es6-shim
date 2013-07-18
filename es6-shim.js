@@ -410,7 +410,7 @@
       }
     });
 
-    var SQUARE_ROOT_EPSILON = Math.sqrt(0.0000000000000002);
+    var SQUARE_ROOT_EPSILON = Math.sqrt(2.220446049250313e-16);
     var FOURTH_ROOT_EPSILON = Math.sqrt(SQUARE_ROOT_EPSILON);
 
     defineProperties(Math, {
