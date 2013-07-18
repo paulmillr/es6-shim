@@ -218,5 +218,44 @@ describe('Math', function() {
       expect(Number.isNaN(Math.trunc(valueOfIsNaN))).to.be.ok;
     });
   });
+
+  describe('#imul()', function() {
+    var str = 'str';
+    var obj = {};
+    var arr = [];
+
+    it('should be correct', function() {
+      expect(Math.imul(2, 4)).to.equal(8);
+      expect(Math.imul(-1, 8)).to.equal(-8);
+      expect(Math.imul(-2, -2)).to.equal(4);
+      expect(Math.imul(0xffffffff, 5)).to.equal(-5);
+      expect(Math.imul(0xfffffffe, 5)).to.equal(-10);
+      expect(Math.imul(false, 7)).to.equal(0);
+      expect(Math.imul(7, false)).to.equal(0);
+      expect(Math.imul(false, false)).to.equal(0);
+      expect(Math.imul(true, 7)).to.equal(7);
+      expect(Math.imul(7, true)).to.equal(7);
+      expect(Math.imul(true, true)).to.equal(1);
+      expect(Math.imul(undefined, 7)).to.equal(0);
+      expect(Math.imul(7, undefined)).to.equal(0);
+      expect(Math.imul(undefined, undefined)).to.equal(0);
+      expect(Math.imul(-0, 7)).to.equal(0);
+      expect(Math.imul(7, -0)).to.equal(0);
+      expect(Math.imul(0.1, 7)).to.equal(0);
+      expect(Math.imul(7, 0.1)).to.equal(0);
+      expect(Math.imul(0.9, 7)).to.equal(0);
+      expect(Math.imul(7, 0.9)).to.equal(0);
+      expect(Math.imul(1.1, 7)).to.equal(7);
+      expect(Math.imul(7, 1.1)).to.equal(7);
+      expect(Math.imul(1.9, 7)).to.equal(7);
+      expect(Math.imul(7, 1.9)).to.equal(7);
+      expect(Math.imul(str, 7)).to.equal(0);
+      expect(Math.imul(7, str)).to.equal(0);
+      expect(Math.imul(obj, 7)).to.equal(0);
+      expect(Math.imul(7, obj)).to.equal(0);
+      expect(Math.imul(arr, 7)).to.equal(0);
+      expect(Math.imul(7, arr)).to.equal(0);
+    });
+  });
 });
 
