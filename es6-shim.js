@@ -248,9 +248,10 @@
       },
 
       isInteger: function(value) {
-        return Number.isFinite(value) &&
-          value >= -9007199254740992 && value <= Number.MAX_INTEGER &&
-          Math.floor(value) === value;
+        return typeof(value) === 'number' &&
+          !Number.isNaN(value) &&
+          Number.isFinite(value) &&
+          parseInt(value, 10) === value;
       },
 
       isNaN: function(value) {
