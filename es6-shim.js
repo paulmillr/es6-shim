@@ -523,31 +523,11 @@
       },
 
       log2: function(value) {
-        value = Number(value);
-        if (Number.isNaN(value) || value < 0) {
-          return NaN;
-        } else if (value === 0) {
-          return -Infinity;
-        } else if (value === 1) {
-          return 0;
-        } else if (value === Infinity) {
-          return Infinity;
-        }
-        return Math.log(value) * (1 / Math.LN2);
+        return Math.log(value) * Math.LOG2E;
       },
 
       log10: function(value) {
-        value = Number(value);
-        if (Number.isNaN(value) || value < 0) {
-          return NaN;
-        } else if (value === 0) {
-          return -Infinity;
-        } else if (value === 1) {
-          return 0;
-        } else if (value === Infinity) {
-          return Infinity;
-        }
-        return Math.log(value) * (1 / Math.LN10);
+        return Math.log(value) * Math.LOG10E;
       },
 
       log1p: function(value) {
