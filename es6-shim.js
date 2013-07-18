@@ -4,7 +4,7 @@
 // https://github.com/paulmillr/es6-shim/
 
 (function (undefined) {
-  function arePropertyDescriptorsSupported() {
+  var arePropertyDescriptorsSupported = function() {
     var attempt = function () {
       Object.defineProperty({}, 'x', {});
       return true;
