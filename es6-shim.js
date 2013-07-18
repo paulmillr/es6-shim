@@ -423,16 +423,26 @@
         return Math.log(value + Math.sqrt(value * value - 1));
       },
 
-      asinh: function(value) {
-        value = Number(value);
-        if (Number.isNaN(value)) {
-          return NaN;
-        } else if (value === 0) {
-          return value;
-        } else if (value === Infinity || value === -Infinity) {
-          return value;
+      asinh: function(x) {
+        x = Number(x);
+        if (x >= FOURTH_ROOT_EPSILON) {
+          if (x > 1 / SQUARE_ROOT_EPSILON) {
+            return Math.LN2 + Math.log(x) + 1 / (4 * x * x);
+          }
+          if (x < 0.5) {
+            return Math.log1p(x + sqrt1pm1(x * x));
+          }
+          return Math.log(x + Math.sqrt(x * x + 1));
         }
-        return Math.log(value + Math.sqrt(value * value + 1));
+        if (x <= -FOURTH_ROOT_EPSILON) {
+          return -Math.asinh(-x);
+        }
+        var result = x;
+        if (Math.abs(x) >= SQUARE_ROOT_EPSILON) {
+          var x3 = x * x * x;
+          result -= x3 / 6;
+        }
+        return result;
       },
 
       atanh: function(value) {
