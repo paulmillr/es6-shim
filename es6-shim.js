@@ -591,10 +591,6 @@
 
       trunc: function(value) {
         var number = Number(value);
-        if (Number.isNaN(number) || number === Infinity ||
-            number === -Infinity || number === 0) {
-          return number;
-        }
         return number < 0 ? -Math.floor(-number) : Math.floor(number);
       },
 
