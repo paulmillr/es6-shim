@@ -93,7 +93,7 @@ describe('Math', function() {
       expect(Math.expm1(-Infinity)).to.equal(-1);
       expect(Math.expm1(10)).to.almostEqual(22025.465794806718);
       expect(Math.expm1(-10)).to.almostEqual(-0.9999546000702375);
-      expect(Math.expm1(-38)).to.almostEqual(1, 1e-12);
+      expect(Math.expm1(-38)).to.almostEqual(-1, 1e-12);
       expect(Math.expm1(709)).to.almostEqual(8.218407461554972e+307, 8.218407461554972e+307 * 1e-12);
     });
   });
