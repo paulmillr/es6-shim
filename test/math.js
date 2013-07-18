@@ -11,6 +11,8 @@ var isPositiveZero = function (zero) {
 var isNegativeZero = function (zero) {
   return zero === 0 && 1 / zero === -Infinity;
 };
+var valueOfIsNaN = { valueOf: function () { return NaN; } };
+var valueOfIsInfinity = { valueOf: function () { return Infinity; } };
 
 describe('Math', function() {
   describe('#acosh()', function() {
@@ -52,7 +54,7 @@ describe('Math', function() {
       expect(Math.atanh(0.444)).to.almostEqual(0.47720201260109457);
     });
   });
-  
+
   describe('#cbrt()', function() {
     it('should be correct', function () {
       expect(isNaN(Math.cbrt(NaN))).to.be.ok;
@@ -115,7 +117,7 @@ describe('Math', function() {
       expect(Math.hypot.length).to.equal(2);
     });
   });
-  
+
   describe('#log2()', function() {
     it('should be correct', function() {
       expect(Number.isNaN(Math.log2(NaN))).to.be.ok;
@@ -210,5 +212,11 @@ describe('Math', function() {
       expect(Math.trunc(-555.555)).to.equal(-555);
       expect(Math.trunc(-1.99)).to.equal(-1);
     });
+
+    it('should coerce to a number immediately', function() {
+      expect(Math.trunc(valueOfIsInfinity)).to.equal(Infinity);
+      expect(Number.isNaN(Math.trunc(valueOfIsNaN))).to.be.ok;
+    });
   });
 });
+

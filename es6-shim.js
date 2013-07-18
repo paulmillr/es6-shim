@@ -596,12 +596,13 @@
       },
 
       trunc: function(value) {
-        if (Number.isNaN(value)) {
+        var number = Number(value);
+        if (Number.isNaN(number)) {
           return NaN;
-        } else if (value === Infinity || value === -Infinity) {
-          return value;
-        } else if (value === 0) {
-          return value;
+        } else if (number === Infinity || number === -Infinity) {
+          return number;
+        } else if (number === 0) {
+          return number;
         }
         return ~~value;
       }
@@ -847,4 +848,5 @@
   } else {
     main(); // CommonJS and <script>
   }
-})();
+}());
+
