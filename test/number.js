@@ -73,10 +73,12 @@ describe('Number', function() {
     it('should be truthy on integers', function() {
       integers.map(Number.isInteger).forEach(expectToBeOk);
       expect(Number.isInteger(4)).to.be.ok;
-      expect(Number.isInteger(4.)).to.be.ok;
+      expect(Number.isInteger(4.0)).to.be.ok;
+      expect(Number.isInteger(18014398509481984)).to.be.ok;
+    });
+
+    it('should be falsy on non-integers', function() {
       expect(Number.isInteger(4.2)).to.not.be.ok;
-      expect(Number.isInteger(0.)).to.be.ok;
-      expect(Number.isInteger(-0.)).to.be.ok;
       expect(Number.isInteger(Infinity)).to.not.be.ok;
       expect(Number.isInteger(-Infinity)).to.not.be.ok;
       expect(Number.isInteger(NaN)).to.not.be.ok;
