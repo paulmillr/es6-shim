@@ -133,7 +133,7 @@
 
       startsWith: function(searchString) {
         var position = arguments[1];
-        var searchStr = searchString.toString();
+        var searchString = searchString.toString();
         var s = String(this);
         var pos = (position === undefined) ? 0 : Number.toInteger(position);
         var len = s.length;
@@ -147,7 +147,7 @@
       endsWith: function(searchString) {
         var endPosition = arguments[1];
         var s = String(this);
-        var searchStr = searchString.toString();
+        var searchString = searchString.toString();
         var len = s.length;
         var pos = (endPosition === undefined) ?
           len : Number.toInteger(endPosition);
@@ -781,7 +781,7 @@
                 return this['[[SetData]]'].size;
               }).bind(this)
             });
-          }
+          };
 
           defineProperties(SetShim.prototype, {
             has: function(key) {
@@ -844,7 +844,7 @@
     }
   };
 
-  if (typeof define === 'function' && typeof define.amd == 'object' && define.amd) {
+  if (typeof define === 'function' && typeof define.amd === 'object' && define.amd) {
     define(main); // RequireJS
   } else {
     main(); // CommonJS and <script>
