@@ -85,6 +85,11 @@ describe('String', function() {
       myobj.startsWith('elephant', idx);
       expect(gotPos).to.be.ok;
     });
+
+    it('should coerce to a string', function() {
+      expect('abcd'.startsWith({ toString: function() { return 'ab'; } })).to.be.ok;
+      expect('abcd'.startsWith({ toString: function() { return 'foo'; } })).not.to.be.ok;
+    });
   });
 
   describe('#endsWith()', function() {
@@ -143,6 +148,11 @@ describe('String', function() {
       };
       myobj.endsWith('elephant', idx);
       expect(gotPos).to.be.ok;
+    });
+
+    it('should coerce to a string', function() {
+      expect('abcd'.endsWith({ toString: function() { return 'cd'; } })).to.be.ok;
+      expect('abcd'.endsWith({ toString: function() { return 'foo'; } })).not.to.be.ok;
     });
   });
 

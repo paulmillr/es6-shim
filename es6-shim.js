@@ -133,29 +133,29 @@
 
       startsWith: function(searchString) {
         var position = arguments[1];
-        var searchStr = searchString.toString();
+        var searchStr = String(searchString);
         var s = String(this);
         var pos = (position === undefined) ? 0 : Number.toInteger(position);
         var len = s.length;
         var start = Math.min(Math.max(pos, 0), len);
-        var searchLength = searchString.length;
+        var searchLength = searchStr.length;
         if ((searchLength + start) > len) return false;
-        var index = _indexOf.call(s, searchString, start);
+        var index = _indexOf.call(s, searchStr, start);
         return index === start;
       },
 
       endsWith: function(searchString) {
         var endPosition = arguments[1];
         var s = String(this);
-        var searchStr = searchString.toString();
+        var searchStr = String(searchString);
         var len = s.length;
         var pos = (endPosition === undefined) ?
           len : Number.toInteger(endPosition);
         var end = Math.min(Math.max(pos, 0), len);
-        var searchLength = searchString.length;
+        var searchLength = searchStr.length;
         var start = end - searchLength;
         if (start < 0) return false;
-        var index = _indexOf.call(s, searchString, start);
+        var index = _indexOf.call(s, searchStr, start);
         return index === start;
       },
 
