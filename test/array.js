@@ -57,6 +57,12 @@ describe('Array', function() {
       var context = {};
       [1].find(function() { expect(this).to.equal(context); }, context);
     });
+
+    it('should work with an array-like object', function() {
+      var obj = { '0': 1, '1': 2, '2': 3, length: 3 };
+      var found = Array.prototype.find.call(obj, function(item) { return item === 2; });
+      expect(found).to.equal(2);
+    });
   });
 
   describe('Array#findIndex', function() {
@@ -90,6 +96,12 @@ describe('Array', function() {
     it('should work with the context argument', function() {
       var context = {};
       [1].findIndex(function() { expect(this).to.equal(context); }, context);
+    });
+
+    it('should work with an array-like object', function() {
+      var obj = { '0': 1, '1': 2, '2': 3, length: 3 };
+      var foundIndex = Array.prototype.findIndex.call(obj, function(item) { return item === 2; });
+      expect(foundIndex).to.equal(1);
     });
   });
 });
