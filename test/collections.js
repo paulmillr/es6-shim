@@ -98,10 +98,6 @@ describe('Collections', function() {
       expect(map.has({})).to.be.false;
     });
 
-    it('should allow to be initialized directly', function() {
-      expect(Map()).to.be.an.instanceof(Map);
-    });
-
     it('should allow NaN values as keys', function() {
       expect(map.has(NaN)).to.be.false;
       expect(map.has(NaN + 1)).to.be.false;
@@ -322,10 +318,6 @@ describe('Collections', function() {
       set.clear();
       expect(set.size).to.equal(0);
       expect(set.has(5)).to.be.false;
-    });
-
-    it('should allow to be initialized directly', function() {
-      expect(Set()).to.be.an.instanceof(Set);
     });
 
     it('should allow NaN values as keys', function() {
