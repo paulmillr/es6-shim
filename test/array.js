@@ -26,18 +26,22 @@ describe('Array', function() {
   });
 
   describe('Array#find', function() {
+    it('should have a length of 1', function() {
+      expect(Array.prototype.find.length).to.equal(1);
+    });
+
     it('should find item by predicate', function() {
-      var result = list.find(function(item) {return item === 15;});
+      var result = list.find(function(item) { return item === 15; });
       expect(result).to.equal(15);
     });
 
     it('should return undefined when nothing matched', function() {
-      var result = list.find(function(item) {return item === 'a';});
+      var result = list.find(function(item) { return item === 'a'; });
       expect(result).to.equal(undefined);
     });
 
     it('should throw TypeError when function was not passed', function() {
-      expect(function() {list.find();}).to.throw(TypeError);
+      expect(function() { list.find(); }).to.throw(TypeError);
     });
 
     it('should receive all three parameters', function() {
@@ -56,18 +60,22 @@ describe('Array', function() {
   });
 
   describe('Array#findIndex', function() {
+    it('should have a length of 1', function() {
+      expect(Array.prototype.findIndex.length).to.equal(1);
+    });
+
     it('should find item key by predicate', function() {
-      var result = list.findIndex(function(item) {return item === 15;});
+      var result = list.findIndex(function(item) { return item === 15; });
       expect(result).to.equal(2);
     });
 
     it('should return -1 when nothing matched', function() {
-      var result = list.findIndex(function(item) {return item === 'a';});
+      var result = list.findIndex(function(item) { return item === 'a'; });
       expect(result).to.equal(-1);
     });
 
     it('should throw TypeError when function was not passed', function() {
-      expect(function() {list.findIndex();}).to.throw(TypeError);
+      expect(function() { list.findIndex(); }).to.throw(TypeError);
     });
 
     it('should receive all three parameters', function() {
