@@ -63,6 +63,10 @@ describe('Collections', function() {
       });
     });
 
+    it('should not be callable without "new"', function() {
+      expect(Map).to.throw(TypeError);
+    });
+
     it('should map values correctly', function() {
       range(1, 20).forEach(function(number) {
         testMapping(number, {});
@@ -271,6 +275,10 @@ describe('Collections', function() {
 
     it('should exist in global namespace', function() {
       expect(Set).to.be.ok;
+    });
+
+    it('should not be callable without "new"', function() {
+      expect(Set).to.throw(TypeError);
     });
 
     it('should has valid getter and setter calls', function() {
