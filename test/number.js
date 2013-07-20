@@ -1,8 +1,9 @@
 describe('Number', function() {
+  var undefined;
   var integers = [5295, -5295, -9007199254740991, 9007199254740991, 0, -0];
   var nonIntegers = [-9007199254741992, 9007199254741992, 5.9];
   var infinities = [Infinity, -Infinity];
-  var nonNumbers = [void 0, true, null, {}, [], 'str'];
+  var nonNumbers = [undefined, true, null, {}, [], 'str'];
   var expectToBeOk = function(item) {
     expect(item).to.be.ok;
   };
@@ -36,7 +37,7 @@ describe('Number', function() {
     it('should work', function() {
       integers.map(Number.isFinite).forEach(expectToBeOk);
       infinities.map(Number.isFinite).forEach(expectToNotBeOk);
-      expect(Number.isFinite(Infinity)).to.not.be.ok
+      expect(Number.isFinite(Infinity)).to.not.be.ok;
       expect(Number.isFinite(-Infinity)).to.not.be.ok;
       expect(Number.isFinite(NaN)).to.not.be.ok;
       expect(Number.isFinite(4)).to.be.ok;
@@ -133,13 +134,13 @@ describe('Number', function() {
   describe('Number.toInteger()', function() {
     it('should convert things to integer value', function() {
       expect(Number.toInteger(4)).to.equal(4);
-      expect(Number.toInteger(4.)).to.equal(4);
+      expect(Number.toInteger(4.0)).to.equal(4);
       expect(Number.toInteger(4.3)).to.equal(4);
       expect(Number.toInteger(-4)).to.equal(-4);
-      expect(Number.toInteger(-4.)).to.equal(-4);
+      expect(Number.toInteger(-4.0)).to.equal(-4);
       expect(Number.toInteger(-4.3)).to.equal(-4);
-      expect(Number.toInteger(0.)).to.equal(0.);
-      expect(Number.toInteger(-0.)).to.equal(-0.);
+      expect(Number.toInteger(0.0)).to.equal(0.0);
+      expect(Number.toInteger(-0.0)).to.equal(-0.0);
       expect(Number.toInteger(Infinity)).to.equal(Infinity);
       expect(Number.toInteger(-Infinity)).to.equal(-Infinity);
       expect(Number.toInteger(NaN)).to.equal(0);
@@ -172,7 +173,7 @@ describe('Number', function() {
         expect(item.clz()).to.be.within(0, 32);
       });
       expect(NaN.clz()).to.equal(32);
-      expect(0x100000000.clz()).to.equal(31);
+      expect((0x100000000).clz()).to.equal(31);
       expect((-1).clz()).to.equal(0);
     });
   });
