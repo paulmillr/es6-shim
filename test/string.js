@@ -58,6 +58,16 @@ describe('String', function() {
       expect('abc'.startsWith('ab', -Infinity)).to.be.ok;
       expect('abc'.startsWith('bc', -42)).to.not.be.ok;
       expect('abc'.startsWith('bc', -Infinity)).to.not.be.ok;
+      expect((function() {
+        try { ''.startsWith.call(null, 'nu'); }
+        catch(e) { return true; }
+        return false;
+      })()).to.be.ok;
+      expect((function() {
+        try { ''.startsWith.call(undefined, 'un'); }
+        catch(e) { return true; }
+        return false;
+      })()).to.be.ok;
       var myobj = {
         toString: function() {return 'abc';},
         startsWith: String.prototype.startsWith
@@ -122,6 +132,16 @@ describe('String', function() {
       expect('abc'.endsWith('bc', -43)).to.not.be.ok;
       expect('abc'.endsWith('bc', -Infinity)).to.not.be.ok;
       expect('abc'.endsWith('bc', NaN)).to.not.be.ok;
+      expect((function() {
+        try { ''.endsWith.call(null, 'ull'); }
+        catch(e) { return true; }
+        return false;
+      })()).to.be.ok;
+      expect((function() {
+        try { ''.endsWith.call(undefined, 'ned'); }
+        catch(e) { return true; }
+        return false;
+      })()).to.be.ok;
 
       var myobj = {
         toString: function() { return 'abc'; },
