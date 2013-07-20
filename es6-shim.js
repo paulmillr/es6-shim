@@ -656,7 +656,7 @@
           };
 
           function Map() {
-            if (!(this instanceof Map)) return new Map();
+            if (!(this instanceof Map)) throw new TypeError('Map must be called with "new"');
 
             var head = new MapEntry(null, null);
 
@@ -772,7 +772,7 @@
 
         Set: (function() {
           var SetShim = function Set() {
-            if (!(this instanceof SetShim)) return new SetShim();
+            if (!(this instanceof SetShim)) throw new TypeError('Set must be called with "new"');
             defineProperties(this, {'[[SetData]]': new Map()});
             Object.defineProperty(this, 'size', {
               configurable: true,
