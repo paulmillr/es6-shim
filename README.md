@@ -24,6 +24,7 @@ For node.js:
 * `Map`, `Set` (requires ES5)
 * `String`:
     * `fromCodePoint()`
+    * `raw()`
 * `String.prototype`:
     * `codePointAt()`
     * `repeat()`
