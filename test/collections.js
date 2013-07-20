@@ -63,6 +63,10 @@ describe('Collections', function() {
       });
     });
 
+    it('should not be callable without "new"', function() {
+      expect(Map).to.throw(TypeError);
+    });
+
     it('should map values correctly', function() {
       range(1, 20).forEach(function(number) {
         testMapping(number, {});
@@ -92,10 +96,6 @@ describe('Collections', function() {
       testMapping(key, void 0);
       expect(map.has(key)).to.be.true;
       expect(map.has({})).to.be.false;
-    });
-
-    it('should allow to be initialized directly', function() {
-      expect(Map()).to.be.an.instanceof(Map);
     });
 
     it('should allow NaN values as keys', function() {
@@ -273,6 +273,10 @@ describe('Collections', function() {
       expect(Set).to.be.ok;
     });
 
+    it('should not be callable without "new"', function() {
+      expect(Set).to.throw(TypeError);
+    });
+
     it('should has valid getter and setter calls', function() {
       ['add', 'has', 'delete'].forEach(function(method) {
         expect(function() {
@@ -314,10 +318,6 @@ describe('Collections', function() {
       set.clear();
       expect(set.size).to.equal(0);
       expect(set.has(5)).to.be.false;
-    });
-
-    it('should allow to be initialized directly', function() {
-      expect(Set()).to.be.an.instanceof(Set);
     });
 
     it('should allow NaN values as keys', function() {
