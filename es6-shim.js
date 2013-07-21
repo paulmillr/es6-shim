@@ -142,7 +142,7 @@
       },
 
       endsWith: function(searchStr) {
-        if (this == null) throw new TypeError("Cannot call method 'startsWith' of null or undefined");
+        if (this == null) throw new TypeError("Cannot call method 'endsWith' of null or undefined");
         searchStr = String(searchStr);
         var thisStr = String(this);
         var pos = (arguments[1] === undefined) ?
