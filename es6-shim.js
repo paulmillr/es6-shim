@@ -133,23 +133,21 @@
 
       startsWith: function(searchStr) {
         if (this == null) throw new TypeError("Cannot call method 'startsWith' of null or undefined");
-        searchStr = String(searchStr);
         var thisStr = String(this);
+        searchStr = String(searchStr);
         var start = Math.max(Number.toInteger(arguments[1]), 0);
-        if ((searchStr.length + start) > thisStr.length) return false;
-        var index = _indexOf.call(thisStr, searchStr, start);
-        return index === start;
+        return thisStr.slice(start, start + searchStr.length) === searchStr;
       },
 
       endsWith: function(searchStr) {
         if (this == null) throw new TypeError("Cannot call method 'endsWith' of null or undefined");
-        searchStr = String(searchStr);
         var thisStr = String(this);
+        searchStr = String(searchStr);
+        var thisLen = thisStr.length;
         var pos = (arguments[1] === undefined) ?
-          thisStr.length : Number.toInteger(arguments[1]);
-        var start = Math.min(pos, thisStr.length) - searchStr.length;
-        var index = _indexOf.call(thisStr, searchStr, start);
-        return index === start;
+          thisLen : Number.toInteger(arguments[1]);
+        var end = Math.min(pos, thisLen);
+        return thisStr.slice(end - searchStr.length, end) === searchStr;
       },
 
       contains: function(searchString) {
