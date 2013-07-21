@@ -4,6 +4,8 @@
 // https://github.com/paulmillr/es6-shim/
 
 (function(undefined) {
+  'use strict';
+
   var arePropertyDescriptorsSupported = function() {
     var attempt = function () {
       Object.defineProperty({}, 'x', {});
@@ -16,8 +18,6 @@
   };
 
   var main = function() {
-    'use strict';
-
     var globals = (typeof global === 'undefined') ? window : global;
     var global_isFinite = globals.isFinite;
     var supportsDescriptors = !!Object.defineProperty && arePropertyDescriptorsSupported();
