@@ -132,8 +132,7 @@
       })(),
 
       startsWith: function(searchStr) {
-        if (this === null) throw new TypeError("Cannot call method 'startsWith' of null");
-        if (this === undefined) throw new TypeError("Cannot call method 'startsWith' of undefined");
+        if (this == null) throw new TypeError("Cannot call method 'startsWith' of null or undefined");
         searchStr = String(searchStr);
         var thisStr = String(this);
         var start = Math.max(Number.toInteger(arguments[1]), 0);
@@ -143,8 +142,7 @@
       },
 
       endsWith: function(searchStr) {
-        if (this === null) throw new TypeError("Cannot call method 'endsWith' of null");
-        if (this === undefined) throw new TypeError("Cannot call method 'endsWith' of undefined");
+        if (this == null) throw new TypeError("Cannot call method 'startsWith' of null or undefined");
         searchStr = String(searchStr);
         var thisStr = String(this);
         var pos = (arguments[1] === undefined) ?
