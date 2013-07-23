@@ -260,7 +260,7 @@
 
       //9.1.4 - reverting to previous commit
       toInteger: function(value) {
-        var number = Number(value);
+        var number = +value;
         if (Object.is(number, NaN)) return +0;
         if (number === 0 || !Number.isFinite(number)) return number;
         return Math.sign(number) * Math.floor(Math.abs(number));
