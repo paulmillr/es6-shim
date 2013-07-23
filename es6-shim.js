@@ -131,32 +131,23 @@
         };
       })(),
 
-      startsWith: function(searchString) {
-        var position = arguments[1];
-        var searchStr = String(searchString);
-        var s = String(this);
-        var pos = (position === undefined) ? 0 : Number.toInteger(position);
-        var len = s.length;
-        var start = Math.min(Math.max(pos, 0), len);
-        var searchLength = searchStr.length;
-        if ((searchLength + start) > len) return false;
-        var index = _indexOf.call(s, searchStr, start);
-        return index === start;
+      startsWith: function(searchStr) {
+        if (this == null) throw new TypeError("Cannot call method 'startsWith' of null or undefined");
+        var thisStr = String(this);
+        searchStr = String(searchStr);
+        var start = Math.max(Number.toInteger(arguments[1]), 0);
+        return thisStr.slice(start, start + searchStr.length) === searchStr;
       },
 
-      endsWith: function(searchString) {
-        var endPosition = arguments[1];
-        var s = String(this);
-        var searchStr = String(searchString);
-        var len = s.length;
-        var pos = (endPosition === undefined) ?
-          len : Number.toInteger(endPosition);
-        var end = Math.min(Math.max(pos, 0), len);
-        var searchLength = searchStr.length;
-        var start = end - searchLength;
-        if (start < 0) return false;
-        var index = _indexOf.call(s, searchStr, start);
-        return index === start;
+      endsWith: function(searchStr) {
+        if (this == null) throw new TypeError("Cannot call method 'endsWith' of null or undefined");
+        var thisStr = String(this);
+        searchStr = String(searchStr);
+        var thisLen = thisStr.length;
+        var pos = (arguments[1] === undefined) ?
+          thisLen : Number.toInteger(arguments[1]);
+        var end = Math.min(pos, thisLen);
+        return thisStr.slice(end - searchStr.length, end) === searchStr;
       },
 
       contains: function(searchString) {
