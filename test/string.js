@@ -58,6 +58,12 @@ describe('String', function() {
       expect('abc'.startsWith('ab', -Infinity)).to.be.ok;
       expect('abc'.startsWith('bc', -42)).to.not.be.ok;
       expect('abc'.startsWith('bc', -Infinity)).to.not.be.ok;
+      expect(function() {
+        ''.startsWith.call(null, 'nu');
+      }).to.throw(TypeError);
+      expect(function() {
+        ''.startsWith.call(undefined, 'un');
+      }).to.throw(TypeError);
       var myobj = {
         toString: function() {return 'abc';},
         startsWith: String.prototype.startsWith
@@ -122,6 +128,12 @@ describe('String', function() {
       expect('abc'.endsWith('bc', -43)).to.not.be.ok;
       expect('abc'.endsWith('bc', -Infinity)).to.not.be.ok;
       expect('abc'.endsWith('bc', NaN)).to.not.be.ok;
+      expect(function() {
+        ''.endsWith.call(null, 'ull');
+      }).to.throw(TypeError);
+      expect(function() {
+        ''.endsWith.call(undefined, 'ned');
+      }).to.throw(TypeError);
 
       var myobj = {
         toString: function() { return 'abc'; },
