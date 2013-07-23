@@ -161,6 +161,10 @@ describe('Number', function() {
         valueOf: function() { return {};}
       })).to.equal(0);
       expect(Number.toInteger()).to.equal(0);
+      expect(Number.toInteger({
+        toString: function () { return Infinity; }
+      })).to.equal(Infinity);
+      expect(Number.toInteger(4294967296)).to.equal(4294967296);
     });
   });
 
