@@ -160,6 +160,9 @@ describe('Number', function() {
       expect(Number.toInteger({
         valueOf: function() { return {};}
       })).to.equal(0);
+      expect(Number.toInteger({
+       toString: function () { Infinity; }
+      })).to.equal(0);
       expect(Number.toInteger()).to.equal(0);
     });
   });
