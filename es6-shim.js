@@ -258,9 +258,12 @@
         return Object.is(value, NaN);
       },
 
+      //9.1.4 - reverting to previous commit
       toInteger: function(value) {
-        if (value === 0 || value === Infinity || value === -Infinity) return value;
-        return ~~value;
+        var number = +value;
+        if (Object.is(number, NaN)) return +0;
+        if (number === 0 || !Number.isFinite(number)) return number;
+        return Math.sign(number) * Math.floor(Math.abs(number));
       }
     });
 
