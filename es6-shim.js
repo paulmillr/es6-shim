@@ -100,7 +100,7 @@
             break;
           }
           next = substitutions[nextKey];
-          if (next === undefined) {
+          if (typeof next === 'undefined') {
             break;
           }
           nextSub = String(next);
@@ -144,7 +144,7 @@
         var thisStr = String(this);
         searchStr = String(searchStr);
         var thisLen = thisStr.length;
-        var pos = (arguments[1] === undefined) ?
+        var pos = (typeof arguments[1] === 'undefined') ?
           thisLen : Number.toInteger(arguments[1]);
         var end = Math.min(pos, thisLen);
         return thisStr.slice(end - searchStr.length, end) === searchStr;
@@ -286,7 +286,7 @@
         getPropertyDescriptor: function(subject, name) {
           var pd = Object.getOwnPropertyDescriptor(subject, name);
           var proto = Object.getPrototypeOf(subject);
-          while (pd === undefined && proto !== null) {
+          while (typeof pd === 'undefined' && proto !== null) {
             pd = Object.getOwnPropertyDescriptor(proto, name);
             proto = Object.getPrototypeOf(proto);
           }
