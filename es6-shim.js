@@ -480,12 +480,8 @@
           return NaN;
         } else if (value === 0) {
           return value;
-        } else if (value === Infinity) {
-          return Infinity;
-        } else if (value === -Infinity) {
-          return -1;
         }
-        var point = 1e-5;
+        var point = 1e-2;
         if (Math.abs(value) >= point) {
           return Math.exp(value) - 1;
         }
@@ -497,9 +493,7 @@
           }
           result += Math.pow(value, i) / factorial;
         }
-        result = Math.max(Math.expm1(-point), result);
-        result = Math.min(Math.expm1(+point), result);
-        return result;
+        return Math.min(expm1(+point), Math.max(expm1(-point), result));
       },
 
       hypot: function(x, y) {
