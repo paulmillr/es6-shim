@@ -100,7 +100,7 @@
             break;
           }
           next = substitutions[nextKey];
-          if (typeof next === 'undefined') {
+          if (next === undefined) {
             break;
           }
           nextSub = String(next);
@@ -239,7 +239,7 @@
       },
 
       isInteger: function(value) {
-        return typeof(value) === 'number' &&
+        return typeof value === 'number' &&
           !Number.isNaN(value) &&
           Number.isFinite(value) &&
           parseInt(value, 10) === value;
@@ -336,9 +336,9 @@
 
           var checkArgs = function(O, proto) {
             if (typeof O !== 'object' || O === null) {
-              throw new TypeError('can not set prototype on a non-object');
+              throw new TypeError('cannot set prototype on a non-object');
             }
-            if (typeof proto !== 'object' && proto !== null) {
+            if (typeof proto !== 'object') {
               throw new TypeError('can only set prototype to an object or null');
             }
           };
@@ -820,11 +820,12 @@
           - In all current Firefox, Set#entries/keys/values & Map#clear do not exist
             - https://bugzilla.mozilla.org/show_bug.cgi?id=869996
         */
-        var hasNoMapClear = typeof globals.Map.prototype.clear !== 'function';
-        var setSizeIsFunc = typeof (new globals.Set()).size !== 0;
-        var mapSizeIsFunc = typeof (new globals.Map()).size !== 0;
-        var hasNoSetKeys = typeof Set.prototype.keys !== 'function';
-        if (hasNoMapClear || setSizeIsFunc || mapSizeIsFunc || hasNoSetKeys) {
+        if (
+          typeof globals.Map.prototype.clear !== 'function' ||
+          new globals.Set().size !== 0 ||
+          new globals.Map().size !== 0 ||
+          typeof globals.Set.prototype.keys !== 'function'
+        ) {
           globals.Map = collectionShims.Map;
           globals.Set = collectionShims.Set;
         }
