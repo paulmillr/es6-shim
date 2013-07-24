@@ -486,31 +486,26 @@
       },
 
       hypot: function(x, y) {
-        var anyNaN = false;
-        var anyInfinity = false;
-        var allZero = true;
-        var z = arguments.length > 2 ? arguments[2] : 0;
-        [x, y, z].some(function (num) {
-          if (Number.isNaN(num)) {
-            anyNaN = true;
-          } else if (num === Infinity || num === -Infinity) {
-            anyInfinity = true;
-          } else if (num !== 0) {
-            allZero = false;
-          }
-          return anyInfinity;
-        });
-        if (anyInfinity) {
+        x = Number(x);
+        y = Number(y);
+        var z = arguments.length < 3 ? 0 : Number(arguments[2]);
+        x = Math.abs(x);
+        y = Math.abs(y);
+        z = Math.abs(z);
+        if (x === Infinity || y === Infinity || z === Infinity) {
           return Infinity;
-        } else if (anyNaN) {
+        }
+        if (x !== x || y !== y || z !== z) {
           return NaN;
-        } else if (allZero) {
+        }
+        var t = Math.max(x, y, z);
+        if (t === 0) {
           return 0;
         }
-        if (x == null) x = 0;
-        if (y == null) y = 0;
-        if (z == null) z = 0;
-        return Math.sqrt(x * x + y * y + z * z);
+        x /= t;
+        y /= t;
+        z /= t;
+        return t * Math.sqrt(z * z + y * y + x * x);
       },
 
       log2: function(value) {
