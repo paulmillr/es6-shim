@@ -246,7 +246,12 @@
       },
 
       isNaN: function(value) {
-        return Object.is(value, NaN);
+        // NaN !== NaN, but they are identical.
+        // NaNs are the only non-reflexive value, i.e., if x !== x,
+        // then x is NaN.
+        // isNaN is broken: it converts its argument to number, so
+        // isNaN('foo') => true
+        return value !== value;
       },
 
       //9.1.4 - reverting to previous commit
@@ -384,22 +389,13 @@
         return Object.keys(subject);
       },
 
-      is: function(x, y) {
-        if (x === y) {
+      is: function(a, b) {
+        if (a === b) {
           // 0 === -0, but they are not identical.
-          if (x === 0) {
-            return 1 / x === 1 / y;
-          } else {
-            return true;
-          }
+          if (a === 0) return 1 / a === 1 / b;
+          return true;
         }
-
-        // NaN !== NaN, but they are identical.
-        // NaNs are the only non-reflexive value, i.e., if x !== x,
-        // then x is a NaN.
-        // isNaN is broken: it converts its argument to number, so
-        // isNaN('foo') => true
-        return x !== x && y !== y;
+        return Number.isNaN(a) && Number.isNaN(b);
       }
     });
 
