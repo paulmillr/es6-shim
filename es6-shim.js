@@ -257,7 +257,7 @@
       //9.1.4 - reverting to previous commit
       toInteger: function(value) {
         var number = +value;
-        if (Object.is(number, NaN)) return +0;
+        if (Number.isNaN(number)) return 0;
         if (number === 0 || !Number.isFinite(number)) return number;
         return Math.sign(number) * Math.floor(Math.abs(number));
       }
@@ -405,7 +405,7 @@
         if (Number.isNaN(value) || value < 1) {
           return NaN;
         } else if (value === 1) {
-          return +0;
+          return 0;
         } else if (value === Infinity) {
           return Infinity;
         }
@@ -550,7 +550,7 @@
       sign: function(value) {
         var number = +value;
         if (number === 0) return number;
-        if (Object.is(number, NaN)) return number;
+        if (Number.isNaN(number)) return number;
         return (number < 0) ? -1 : 1;
       },
 
