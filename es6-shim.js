@@ -402,23 +402,15 @@
     defineProperties(Math, {
       acosh: function(value) {
         value = Number(value);
-        if (Number.isNaN(value) || value < 1) {
-          return NaN;
-        } else if (value === 1) {
-          return 0;
-        } else if (value === Infinity) {
-          return Infinity;
-        }
+        if (Number.isNaN(value) || value < 1) return NaN;
+        if (value === 1) return 0;
+        if (value === Infinity) return value;
         return Math.log(value + Math.sqrt(value * value - 1));
       },
 
       asinh: function(value) {
         value = Number(value);
-        if (Number.isNaN(value)) {
-          return NaN;
-        } else if (value === 0) {
-          return value;
-        } else if (value === Infinity || value === -Infinity) {
+        if (value === 0 || !global_isFinite(value)) {
           return value;
         }
         return Math.log(value + Math.sqrt(value * value + 1));
@@ -428,36 +420,26 @@
         value = Number(value);
         if (Number.isNaN(value) || value < -1 || value > 1) {
           return NaN;
-        } else if (value === -1) {
-          return -Infinity;
-        } else if (value === 1) {
-          return Infinity;
-        } else if (value === 0) {
-          return value;
         }
+        if (value === -1) return -Infinity;
+        if (value === 1) return Infinity;
+        if (value === 0) return value;
         return 0.5 * Math.log((1 + value) / (1 - value));
       },
 
       cbrt: function (value) {
         value = Number(value);
-        if (value === 0) {
-          return value;
-        }
+        if (value === 0) return value;
         var negate = value < 0, result;
-        if (negate) { value = -value; }
+        if (negate) value = -value;
         result = Math.pow(value, 1/3);
         return negate ? -result : result;
       },
 
       cosh: function(value) {
         value = Number(value);
-        if (value === 0) { // +0 or -0
-          return 1;
-        } else if (value === Infinity || value === -Infinity) {
-          return value;
-        } else if (Number.isNaN(value)) {
-          return NaN;
-        }
+        if (value === 0) return 1; // +0 or -0
+        if (!global_isFinite(value)) return value;
         if (value < 0) value = -value;
         if (value > 21) return Math.exp(value) / 2;
         return (Math.exp(value) + Math.exp(-value)) / 2;
@@ -465,15 +447,8 @@
 
       expm1: function(value) {
         value = Number(value);
-        if (Number.isNaN(value)) {
-          return NaN;
-        } else if (value === 0) {
-          return value;
-        } else if (value === Infinity) {
-          return Infinity;
-        } else if (value === -Infinity) {
-          return -1;
-        }
+        if (value === -Infinity) return -1;
+        if (!global_isFinite(value) || value === 0) return value;
         var result = 0;
         var n = 50;
         for (var i = 1; i < n; i++) {
@@ -487,26 +462,15 @@
 
       hypot: function(x, y) {
         var anyNaN = false;
-        var anyInfinity = false;
         var allZero = true;
         var z = arguments.length > 2 ? arguments[2] : 0;
-        [x, y, z].some(function (num) {
-          if (Number.isNaN(num)) {
-            anyNaN = true;
-          } else if (num === Infinity || num === -Infinity) {
-            anyInfinity = true;
-          } else if (num !== 0) {
-            allZero = false;
-          }
-          return anyInfinity;
-        });
-        if (anyInfinity) {
-          return Infinity;
-        } else if (anyNaN) {
-          return NaN;
-        } else if (allZero) {
-          return 0;
-        }
+        if ([x, y, z].some(function (num) {
+          if (Number.isNaN(num)) anyNaN = true;
+          else if (num === Infinity || num === -Infinity) return true;
+          else if (num !== 0) allZero = false;
+        })) return Infinity;
+        if (anyNaN) return NaN;
+        if (allZero) return 0;
         if (x == null) x = 0;
         if (y == null) y = 0;
         if (z == null) z = 0;
@@ -523,15 +487,9 @@
 
       log1p: function(value) {
         value = Number(value);
-        if (Number.isNaN(value) || value < -1) {
-          return NaN;
-        } else if (value === -1) {
-          return -Infinity;
-        } else if (value === 0) {
-          return value;
-        } else if (value === Infinity) {
-          return Infinity;
-        }
+        if (value < -1 || Number.isNaN(value)) return NaN;
+        if (value === 0 || value === Infinity) return value;
+        if (value === -1) return -Infinity;
         var result = 0;
         var n = 50;
 
@@ -551,32 +509,20 @@
         var number = +value;
         if (number === 0) return number;
         if (Number.isNaN(number)) return number;
-        return (number < 0) ? -1 : 1;
+        return number < 0 ? -1 : 1;
       },
 
       sinh: function(value) {
         value = Number(value);
-        if (Number.isNaN(value)) {
-          return NaN;
-        } else if (value === 0) {
-          return value;
-        } else if (value === Infinity || value === -Infinity) {
-          return value;
-        }
+        if (!global_isFinite(value) || value === 0) return value;
         return (Math.exp(value) - Math.exp(-value)) / 2;
       },
 
       tanh: function(value) {
         value = Number(value);
-        if (Number.isNaN(value)) {
-          return NaN;
-        } else if (value === 0) {
-          return value;
-        } else if (value === Infinity) {
-          return 1;
-        } else if (value === -Infinity) {
-          return -1;
-        }
+        if (Number.isNaN(value) || value === 0) return value;
+        if (value === Infinity) return 1;
+        if (value === -Infinity) return -1;
         return (Math.exp(value) - Math.exp(-value)) / (Math.exp(value) + Math.exp(-value));
       },
 
@@ -818,7 +764,7 @@
         /*
           - In Firefox < 23, Map#size is a function.
           - In all current Firefox, Set#entries/keys/values & Map#clear do not exist
-            - https://bugzilla.mozilla.org/show_bug.cgi?id=869996
+          - https://bugzilla.mozilla.org/show_bug.cgi?id=869996
         */
         if (
           typeof globals.Map.prototype.clear !== 'function' ||
@@ -839,3 +785,4 @@
     main(); // CommonJS and <script>
   }
 })();
+
