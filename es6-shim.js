@@ -55,7 +55,7 @@
 
     defineProperties(String, {
       fromCodePoint: function() {
-        var points = arguments;
+        var points = _slice.call(arguments, 0);
         var result = [];
         var next;
         for (var i = 0, length = points.length; i < length; i++) {
