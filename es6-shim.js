@@ -178,8 +178,7 @@
 
         var list = Object(iterable);
         var length = ES.ToUint32(list.length);
-        var result = typeof this === 'function' ?
-          Object(new this(length)) : new Array(length);
+        var result = typeof this === 'function' ? Object(new this(length)) : new Array(length);
 
         for (var i = 0; i < length; i++) {
           var value = list[i];
