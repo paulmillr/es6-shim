@@ -17,6 +17,18 @@ describe('Array', function() {
         expect(Array.from(arguments)).to.eql([]);
       })();
     });
+
+    it('should work with other constructors', function() {
+      var Foo = function (length, args) {
+        this.length = length;
+      };
+      var args = ['a', 'b', 'c'];
+      var expected = new Foo(args.length);
+      args.forEach(function (arg, index) {
+        expected[index] = arg;
+      });
+      expect(Array.from.call(Foo, args)).to.eql(expected);
+    });
   });
 
   describe('Array.of()', function() {
