@@ -7,7 +7,7 @@
   'use strict';
 
   var arePropertyDescriptorsSupported = function() {
-    var attempt = function () {
+    var attempt = function() {
       Object.defineProperty({}, 'x', {});
       return true;
     };
@@ -426,7 +426,7 @@
         return 0.5 * Math.log((1 + value) / (1 - value));
       },
 
-      cbrt: function (value) {
+      cbrt: function(value) {
         value = Number(value);
         if (value === 0) return value;
         var negate = value < 0, result;
@@ -463,7 +463,7 @@
         var anyNaN = false;
         var allZero = true;
         var z = arguments.length > 2 ? arguments[2] : 0;
-        if ([x, y, z].some(function (num) {
+        if ([x, y, z].some(function(num) {
           if (Number.isNaN(num)) anyNaN = true;
           else if (num === Infinity || num === -Infinity) return true;
           else if (num !== 0) allZero = false;
@@ -555,7 +555,7 @@
             this.next = null;
           }
 
-          MapEntry.prototype.isRemoved = function () {
+          MapEntry.prototype.isRemoved = function() {
             return this.key === empty;
           };
 
@@ -565,7 +565,7 @@
           }
 
           MapIterator.prototype = {
-            next: function () {
+            next: function() {
               var i = this.i;
               if (i !== null) {
                 while (i.isRemoved()) {
@@ -660,7 +660,7 @@
               return false;
             },
 
-            clear: function () {
+            clear: function() {
               var p = this._head;
               var i = p.next;
               this._size = 0;
@@ -745,10 +745,10 @@
               return this['[[SetData]]'].entries();
             },
 
-            forEach: function (callback) {
+            forEach: function(callback) {
               var context = arguments.length > 1 ? arguments[1] : null;
               var entireSet = this;
-              this['[[SetData]]'].forEach(function (value, key) {
+              this['[[SetData]]'].forEach(function(value, key) {
                 callback.call(context, key, key, entireSet);
               });
             }
