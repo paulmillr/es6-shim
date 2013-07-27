@@ -129,7 +129,7 @@
           }
           return repeat(String(this), times);
         };
-      })(),
+      }()),
 
       startsWith: function(searchStr) {
         if (this == null) throw new TypeError("Cannot call method 'startsWith' of " + this);
@@ -379,7 +379,7 @@
             // we can even delete Object.prototype.__proto__;
           }
           return setPrototypeOf;
-        })(Object, '__proto__')
+        }(Object, '__proto__'))
       });
     }
 
@@ -701,7 +701,7 @@
           });
 
           return Map;
-        })(),
+        }()),
 
         Set: (function() {
           var SetShim = function Set() {
@@ -755,7 +755,7 @@
           });
 
           return SetShim;
-        })()
+        }())
       };
       defineProperties(globals, collectionShims);
 
@@ -783,5 +783,5 @@
   } else {
     main(); // CommonJS and <script>
   }
-})();
+}());
 

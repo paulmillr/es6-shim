@@ -5,7 +5,7 @@ describe('Array', function() {
     it('should create correct array from iterable', function() {
       (function() {
         expect(Array.from(arguments)).to.eql([0, 1, 2]);
-      })(0, 1, 2);
+      }(0, 1, 2));
 
       expect(Array.from([null, undefined, 0.1248, -0, 0])).to.eql(
         [null, undefined, 0.1248, -0, 0]
@@ -15,7 +15,7 @@ describe('Array', function() {
     it('should handle empty iterables correctly', function() {
       (function() {
         expect(Array.from(arguments)).to.eql([]);
-      })();
+      }());
     });
 
     it('should work with other constructors', function() {
