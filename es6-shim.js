@@ -404,12 +404,13 @@
 
       asinh: function(value) {
         value = Number(value);
-        if (value === -Infinity) return value;
+        if (value === 0 || value === -Infinity) return value;
         return Math.log(value + Math.sqrt(value * value + 1));
       },
 
       atanh: function(value) {
         value = Number(value);
+        if (value === 0) return value;
         return 0.5 * Math.log((1 + value) / (1 - value));
       },
 
