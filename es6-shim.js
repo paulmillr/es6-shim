@@ -7,14 +7,13 @@
   'use strict';
 
   var arePropertyDescriptorsSupported = function() {
-    var attempt = function() {
+    try {
       Object.defineProperty({}, 'x', {});
-      return true;
-    };
-    var supported = false;
-    try { supported = attempt(); }
-    catch (e) { /* this is IE 8. */ }
-    return supported;
+    }
+    catch (e) { /* this is IE 8. */
+      return false;
+    }
+    return true;
   };
 
   var main = function() {
