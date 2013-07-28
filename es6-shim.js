@@ -9,11 +9,10 @@
   var arePropertyDescriptorsSupported = function() {
     try {
       Object.defineProperty({}, 'x', {});
-    }
-    catch (e) { /* this is IE 8. */
+      return true;
+    } catch (e) { /* this is IE 8. */
       return false;
     }
-    return true;
   };
 
   var main = function() {
