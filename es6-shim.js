@@ -399,28 +399,17 @@
     defineProperties(Math, {
       acosh: function(value) {
         value = Number(value);
-        if (Number.isNaN(value) || value < 1) return NaN;
-        if (value === 1) return 0;
-        if (value === Infinity) return value;
         return Math.log(value + Math.sqrt(value * value - 1));
       },
 
       asinh: function(value) {
         value = Number(value);
-        if (value === 0 || !global_isFinite(value)) {
-          return value;
-        }
+        if (value === -Infinity) return value;
         return Math.log(value + Math.sqrt(value * value + 1));
       },
 
       atanh: function(value) {
         value = Number(value);
-        if (Number.isNaN(value) || value < -1 || value > 1) {
-          return NaN;
-        }
-        if (value === -1) return -Infinity;
-        if (value === 1) return Infinity;
-        if (value === 0) return value;
         return 0.5 * Math.log((1 + value) / (1 - value));
       },
 
