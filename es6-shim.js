@@ -399,6 +399,7 @@
     defineProperties(Math, {
       acosh: function(value) {
         value = Number(value);
+        if (value < 1) return NaN;
         return Math.log(value + Math.sqrt(value * value - 1));
       },
 
@@ -410,6 +411,7 @@
 
       atanh: function(value) {
         value = Number(value);
+        if (value < -1 || value > 1) return NaN;
         if (value === 0) return value;
         return 0.5 * Math.log((1 + value) / (1 - value));
       },
