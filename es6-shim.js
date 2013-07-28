@@ -255,10 +255,10 @@
 
       //9.1.4 - reverting to previous commit
       toInteger: function(value) {
-        var number = +value;
-        if (Number.isNaN(number)) return 0;
-        if (number === 0 || !Number.isFinite(number)) return number;
-        return Math.sign(number) * Math.floor(Math.abs(number));
+        value = +value;
+        if (Number.isNaN(value)) return 0;
+        if (value === 0 || !Number.isFinite(value)) return value;
+        return Math.sign(value) * Math.floor(Math.abs(value));
       }
     });
 
@@ -505,10 +505,10 @@
       },
 
       sign: function(value) {
-        var number = +value;
-        if (number === 0) return number;
-        if (Number.isNaN(number)) return number;
-        return number < 0 ? -1 : 1;
+        value = +value;
+        if (value === 0) return value;
+        if (Number.isNaN(value)) return value;
+        return value < 0 ? -1 : 1;
       },
 
       sinh: function(value) {
@@ -526,8 +526,8 @@
       },
 
       trunc: function(value) {
-        var number = Number(value);
-        return number < 0 ? -Math.floor(-number) : Math.floor(number);
+        value = Number(value);
+        return value < 0 ? -Math.floor(-value) : Math.floor(value);
       },
 
       imul: function(x, y) {
