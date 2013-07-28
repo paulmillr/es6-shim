@@ -20,6 +20,8 @@ describe('Math', function() {
       expect(Number.isNaN(Math.acosh(NaN))).to.be.ok;
       expect(Number.isNaN(Math.acosh(0))).to.be.ok;
       expect(Number.isNaN(Math.acosh(0.9999999))).to.be.ok;
+      expect(Number.isNaN(Math.acosh(-1e300))).to.be.ok;
+      expect(Math.acosh(1e+99)).to.almostEqual(228.64907138697046);
       expect(isPositiveZero(Math.acosh(1))).to.be.ok;
       expect(Math.acosh(Infinity)).to.equal(Infinity);
       expect(Math.acosh(1234)).to.almostEqual(7.811163220849231);
@@ -36,6 +38,8 @@ describe('Math', function() {
       expect(Math.asinh(-Infinity)).to.equal(-Infinity);
       expect(Math.asinh(1234)).to.almostEqual(7.811163549201245);
       expect(Math.asinh(9.99)).to.almostEqual(2.997227420191335);
+      expect(Math.asinh(1e150)).to.almostEqual(346.0809111296668);
+      expect(Math.asinh(-1e7)).to.almostEqual(-16.805431370234086);
     });
   });
 
@@ -44,6 +48,8 @@ describe('Math', function() {
       expect(Number.isNaN(Math.atanh(NaN))).to.be.ok;
       expect(Number.isNaN(Math.atanh(-1.00000001))).to.be.ok;
       expect(Number.isNaN(Math.atanh(1.00000001))).to.be.ok;
+      expect(Number.isNaN(Math.atanh(-1e300))).to.be.ok;
+      expect(Number.isNaN(Math.atanh(1e300))).to.be.ok;
       expect(Math.atanh(-1)).to.equal(-Infinity);
       expect(Math.atanh(1)).to.equal(Infinity);
       expect(isPositiveZero(Math.atanh(+0))).to.be.ok;
