@@ -116,5 +116,69 @@ describe('Array', function() {
       expect(foundIndex).to.equal(1);
     });
   });
-});
 
+  describe('Array#keys', function() {
+    var keys = list.keys();
+    it('should return 0 on first object', function() {
+      expect(keys.next()).to.equal(0);
+    });
+    it('should return 1 on first object', function() {
+      expect(keys.next()).to.equal(1);
+    });
+    it('should return 2 on first object', function() {
+      expect(keys.next()).to.equal(2);
+    });
+    it('should return 3 on first object', function() {
+      expect(keys.next()).to.equal(3);
+    });
+    it('should throw Error on completing iteration', function() {
+      expect(function() { keys.next(); }).to.throw(Error);
+    });
+  });
+
+  describe('Array#values', function() {
+    var values = list.values();
+    it('should return 5 on first object', function() {
+      expect(values.next()).to.equal(5);
+    });
+    it('should return 10 on first object', function() {
+      expect(values.next()).to.equal(10);
+    });
+    it('should return 15 on first object', function() {
+      expect(values.next()).to.equal(15);
+    });
+    it('should return 20 on first object', function() {
+      expect(values.next()).to.equal(20);
+    });
+    it('should throw Error on completing iteration', function() {
+      expect(function() { values.next(); }).to.throw(Error);
+    });
+  });
+
+  describe('Array#entries', function() {
+    var entries = list.entries();
+    it('should return [0, 5] on first object', function() {
+      var val = entries.next();
+      expect(val[0]).to.equal(0);
+      expect(val[1]).to.equal(5);
+    });
+    it('should return [1, 10] on first object', function() {
+      var val = entries.next();
+      expect(val[0]).to.equal(1);
+      expect(val[1]).to.equal(10);
+    });
+    it('should return [2, 15] on first object', function() {
+      var val = entries.next();
+      expect(val[0]).to.equal(2);
+      expect(val[1]).to.equal(15);
+    });
+    it('should return [3, 20] on first object', function() {
+      var val = entries.next();
+      expect(val[0]).to.equal(3);
+      expect(val[1]).to.equal(20);
+    });
+    it('should throw Error on completing iteration', function() {
+      expect(function() { entries.next(); }).to.throw(Error);
+    });
+  });
+});
