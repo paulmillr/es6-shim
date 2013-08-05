@@ -712,7 +712,7 @@
                 return this['[[SetData]]'].size;
               }).bind(this)
             });
-          }
+          };
 
           defineProperties(SetShim.prototype, {
             has: function(key) {
@@ -776,7 +776,7 @@
     }
   };
 
-  if (typeof define === 'function' && typeof define.amd == 'object' && define.amd) {
+  if (typeof define === 'function' && typeof define.amd === 'object' && define.amd) {
     define(main); // RequireJS
   } else {
     main(); // CommonJS and <script>
