@@ -235,15 +235,12 @@
         return typeof value === 'number' && global_isFinite(value);
       },
 
-      isInteger: function(value) {
+      isSafeInteger: function(value) {
         return typeof value === 'number' &&
           !Number.isNaN(value) &&
           Number.isFinite(value) &&
-          parseInt(value, 10) === value;
-      },
-
-      isSafeInteger: function(value) {
-        return Number.isInteger(value) && Math.abs(value) <= Number.MAX_SAFE_INTEGER;
+          parseInt(value, 10) === value &&
+          Math.abs(value) <= Number.MAX_SAFE_INTEGER;
       },
 
       isNaN: function(value) {
