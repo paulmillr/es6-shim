@@ -243,6 +243,10 @@
           parseInt(value, 10) === value;
       },
 
+      isSafeInteger: function(value) {
+        return Number.isInteger(value) && Math.abs(value) <= Number.MAX_SAFE_INTEGER;
+      },
+
       isNaN: function(value) {
         // NaN !== NaN, but they are identical.
         // NaNs are the only non-reflexive value, i.e., if x !== x,

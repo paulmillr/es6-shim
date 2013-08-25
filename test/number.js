@@ -185,4 +185,50 @@ describe('Number', function() {
       expect((-1).clz()).to.equal(0);
     });
   });
+
+  describe('Number.isSafeInteger()', function() {
+    it('should be false when the type is not number', function() {
+      var nonNumbers = [
+        false,
+        true,
+        null,
+        undefined,
+        '',
+        function () {},
+        { valueOf: function () { return 3; } },
+        /a/g,
+        {}
+      ];
+      nonNumbers.forEach(function (thing) {
+        expect(Number.isSafeInteger(thing)).to.equal(false);
+      });
+    });
+
+    it('should be false when NaN', function() {
+      expect(Number.isSafeInteger(NaN)).to.equal(false);
+    });
+
+    it('should be false when ∞', function() {
+      expect(Number.isSafeInteger(Infinity)).to.equal(false);
+      expect(Number.isSafeInteger(-Infinity)).to.equal(false);
+    });
+
+    it('should be false when number is not integer', function() {
+      expect(Number.isSafeInteger(3.4)).to.equal(false);
+      expect(Number.isSafeInteger(-3.4)).to.equal(false);
+    });
+
+    it('should be false when abs(number) is 2^53 or larger', function() {
+      expect(Number.isSafeInteger(Math.pow(2, 53))).to.equal(false);
+      expect(Number.isSafeInteger(-Math.pow(2, 53))).to.equal(false);
+    });
+
+    it('should be true when abs(number) is less than 2^53', function() {
+      var safeIntegers = [0, 1, Math.pow(2, 53) - 1];
+      safeIntegers.forEach(function (int) {
+		expect(Number.isSafeInteger(int)).to.equal(true);
+        expect(Number.isSafeInteger(-int)).to.equal(true);
+      });
+    });
+  });
 });
