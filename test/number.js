@@ -175,43 +175,6 @@ describe('Number', function() {
     });
   });
 
-  describe('Number.toInteger()', function() {
-    it('should convert things to integer value', function() {
-      expect(Number.toInteger(4)).to.equal(4);
-      expect(Number.toInteger(4.0)).to.equal(4);
-      expect(Number.toInteger(4.3)).to.equal(4);
-      expect(Number.toInteger(-4)).to.equal(-4);
-      expect(Number.toInteger(-4.0)).to.equal(-4);
-      expect(Number.toInteger(-4.3)).to.equal(-4);
-      expect(Number.toInteger(0.0)).to.equal(0.0);
-      expect(Number.toInteger(-0.0)).to.equal(-0.0);
-      expect(Number.toInteger(Infinity)).to.equal(Infinity);
-      expect(Number.toInteger(-Infinity)).to.equal(-Infinity);
-      expect(Number.toInteger(NaN)).to.equal(0);
-      expect(Number.toInteger(null)).to.equal(0);
-      expect(Number.toInteger(undefined)).to.equal(0);
-      expect(Number.toInteger(true)).to.equal(1);
-      expect(Number.toInteger(false)).to.equal(0);
-      expect(Number.toInteger({
-        valueOf: function() { return 4; }
-      })).to.equal(4);
-      expect(Number.toInteger({
-        valueOf: function() { return 4.3; }
-      })).to.equal(4);
-      expect(Number.toInteger({
-        valueOf: function() { return '4'; }
-      })).to.equal(4);
-      expect(Number.toInteger({
-        valueOf: function() { return {};}
-      })).to.equal(0);
-      expect(Number.toInteger()).to.equal(0);
-      expect(Number.toInteger({
-        toString: function () { return Infinity; }
-      })).to.equal(Infinity);
-      expect(Number.toInteger(4294967296)).to.equal(4294967296);
-    });
-  });
-
   describe('#clz()', function() {
     it('should have proper uint32 conversion', function() {
       infinities.forEach(function(item) {
