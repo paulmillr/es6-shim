@@ -200,6 +200,19 @@
     });
 
     defineProperties(Array.prototype, {
+      fill: function(value) {
+        var len = this.length;
+        var start = arguments.length > 1 ? ES.toInteger(arguments[1]) : 0;
+        var end = arguments.length > 2 ? ES.toInteger(arguments[2]) : len;
+
+        var relativeStart = start < 0 ? Math.max(len + start, 0) : Math.min(start, len);
+
+        for (var i = relativeStart; i < len && i < end; ++i) {
+          this[i] = value;
+        }
+        return this;
+      },
+
       find: function(predicate) {
         var list = Object(this);
         var length = ES.ToUint32(list.length);
