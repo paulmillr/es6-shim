@@ -12,10 +12,6 @@ describe('Number', function() {
   };
 
   describe('Number constants', function() {
-    it('should has max integer', function() {
-      expect(Number.MAX_INTEGER).to.equal(9007199254740991);
-    });
-
     it('should have max safe integer', function() {
       expect(Number.MAX_SAFE_INTEGER).to.equal(Math.pow(2, 53) - 1);
     });

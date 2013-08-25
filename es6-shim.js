@@ -225,7 +225,6 @@
     });
 
     defineProperties(Number, {
-      MAX_INTEGER: 9007199254740991,
       MAX_SAFE_INTEGER: Math.pow(2, 53) - 1,
       EPSILON: 2.220446049250313e-16,
 
