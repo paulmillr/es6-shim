@@ -16,6 +16,10 @@ describe('Number', function() {
       expect(Number.MAX_INTEGER).to.equal(9007199254740991);
     });
 
+    it('should have max safe integer', function() {
+      expect(Number.MAX_SAFE_INTEGER).to.equal(Math.pow(2, 53) - 1);
+    });
+
     it('should has epsilon', function() {
       expect(Number.EPSILON).to.equal(2.2204460492503130808472633361816e-16);
     });
