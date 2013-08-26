@@ -21,6 +21,7 @@
     var supportsDescriptors = !!Object.defineProperty && arePropertyDescriptorsSupported();
     var _slice = Array.prototype.slice;
     var _indexOf = String.prototype.indexOf;
+    var _toString = Object.prototype.toString;
 
     // Define configurable, writable and non-enumerable props
     // if they don’t exist.
@@ -180,6 +181,10 @@
       from: function(iterable) {
         var mapFn = arguments[1];
         var thisArg = arguments[2];
+
+        if (typeof mapFn !== 'undefined' && _toString.call(mapFn) !== '[object Function]') {
+          throw new TypeError('when provided, the second argument must be a function');
+        }
 
         var list = Object(iterable);
         var length = ES.ToUint32(list.length);
