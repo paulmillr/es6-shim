@@ -116,5 +116,39 @@ describe('Array', function() {
       expect(foundIndex).to.equal(1);
     });
   });
+
+  describe('Array#fill', function() {
+    it('has the right length', function() {
+      expect(Array.prototype.fill.length).to.equal(1);
+    });
+
+    it('works with just a value', function() {
+      var original = [1, 2, 3, 4, 5, 6];
+      var filled = [-1, -1, -1, -1, -1, -1];
+
+      expect(original.fill(-1)).to.eql(filled);
+    });
+
+    it('accepts a positive start index', function() {
+      var original = [1, 2, 3, 4, 5, 6];
+      var filled = [1, 2, 3, -1, -1, -1];
+
+      expect(original.fill(-1, 3)).to.eql(filled);
+    });
+
+    it('accepts a negative start index', function() {
+      var original = [1, 2, 3, 4, 5, 6];
+      var filled = [1, 2, 3, -1, -1, -1];
+
+      expect(original.fill(-1, -3)).to.eql(filled);
+    });
+
+    it('accepts a large start index', function() {
+      var original = [1, 2, 3, 4, 5, 6];
+      var filled = [1, 2, 3, 4, 5, 6];
+
+      expect(original.fill(-1, 9)).to.eql(filled);
+    });
+  });
 });
 
