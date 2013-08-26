@@ -48,6 +48,13 @@
 
       ToUint32: function(x) {
         return x >>> 0;
+      },
+
+      toInteger: function(value) {
+        var number = +value;
+        if (Number.isNaN(number)) return 0;
+        if (number === 0 || !Number.isFinite(number)) return number;
+        return Math.sign(number) * Math.floor(Math.abs(number));
       }
     };
 
@@ -58,7 +65,7 @@
         var next;
         for (var i = 0, length = points.length; i < length; i++) {
           next = Number(points[i]);
-          if (!Object.is(next, Number.toInteger(next)) ||
+          if (!Object.is(next, ES.toInteger(next)) ||
               next < 0 || next > 0x10FFFF) {
             throw new RangeError('Invalid code point ' + next);
           }
@@ -121,7 +128,7 @@
         };
 
         return function(times) {
-          times = Number.toInteger(times);
+          times = ES.toInteger(times);
           if (times < 0 || times === Infinity) {
             throw new RangeError();
           }
@@ -133,7 +140,7 @@
         if (this == null) throw new TypeError("Cannot call method 'startsWith' of " + this);
         var thisStr = String(this);
         searchStr = String(searchStr);
-        var start = Math.max(Number.toInteger(arguments[1]), 0);
+        var start = Math.max(ES.toInteger(arguments[1]), 0);
         return thisStr.slice(start, start + searchStr.length) === searchStr;
       },
 
@@ -143,7 +150,7 @@
         searchStr = String(searchStr);
         var thisLen = thisStr.length;
         var pos = (arguments[1] === undefined) ?
-          thisLen : Number.toInteger(arguments[1]);
+          thisLen : ES.toInteger(arguments[1]);
         var end = Math.min(pos, thisLen);
         return thisStr.slice(end - searchStr.length, end) === searchStr;
       },
@@ -157,7 +164,7 @@
 
       codePointAt: function(pos) {
         var s = String(this);
-        var position = Number.toInteger(pos);
+        var position = ES.toInteger(pos);
         var length = s.length;
         if (position < 0 || position >= length) return undefined;
         var first = s.charCodeAt(position);
@@ -225,7 +232,7 @@
     });
 
     defineProperties(Number, {
-      MAX_INTEGER: 9007199254740991,
+      MAX_SAFE_INTEGER: Math.pow(2, 53) - 1,
       EPSILON: 2.220446049250313e-16,
 
       parseInt: globals.parseInt,
@@ -235,11 +242,12 @@
         return typeof value === 'number' && global_isFinite(value);
       },
 
-      isInteger: function(value) {
+      isSafeInteger: function(value) {
         return typeof value === 'number' &&
           !Number.isNaN(value) &&
           Number.isFinite(value) &&
-          parseInt(value, 10) === value;
+          parseInt(value, 10) === value &&
+          Math.abs(value) <= Number.MAX_SAFE_INTEGER;
       },
 
       isNaN: function(value) {
@@ -251,13 +259,6 @@
         return value !== value;
       },
 
-      //9.1.4 - reverting to previous commit
-      toInteger: function(value) {
-        var number = +value;
-        if (Number.isNaN(number)) return 0;
-        if (number === 0 || !Number.isFinite(number)) return number;
-        return Math.sign(number) * Math.floor(Math.abs(number));
-      }
     });
 
     defineProperties(Number.prototype, {
