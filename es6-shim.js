@@ -182,7 +182,7 @@
         var mapFn = arguments[1];
         var thisArg = arguments[2];
 
-        if (typeof mapFn !== 'undefined' && _toString.call(mapFn) !== '[object Function]') {
+        if (mapFn !== undefined && _toString.call(mapFn) !== '[object Function]') {
           throw new TypeError('when provided, the second argument must be a function');
         }
 
@@ -192,7 +192,7 @@
 
         for (var i = 0; i < length; i++) {
           var value = list[i];
-          if (typeof mapFn !== 'undefined') {
+          if (mapFn !== undefined) {
             result[i] = thisArg ? mapFn.call(thisArg, value) : mapFn(value);
           } else {
             result[i] = value;
