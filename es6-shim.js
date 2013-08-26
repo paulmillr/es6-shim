@@ -192,7 +192,11 @@
 
         for (var i = 0; i < length; i++) {
           var value = list[i];
-          result[i] = mapFn ? mapFn.call(thisArg, value) : value;
+          if (typeof mapFn !== 'undefined') {
+            result[i] = thisArg ? mapFn.call(thisArg, value) : mapFn(value);
+          } else {
+            result[i] = value;
+          }
         }
 
         result.length = length;
