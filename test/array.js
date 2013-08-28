@@ -2,6 +2,10 @@ describe('Array', function() {
   var list = [5, 10, 15, 20];
 
   describe('Array.from()', function() {
+    it('has a length of 1', function() {
+      expect(Array.from.length).to.equal(1);
+    });
+
     it('should create correct array from iterable', function() {
       (function() {
         expect(Array.from(arguments)).to.eql([0, 1, 2]);
@@ -28,6 +32,36 @@ describe('Array', function() {
         expected[index] = arg;
       });
       expect(Array.from.call(Foo, args)).to.eql(expected);
+    });
+
+    it('supports a map function', function() {
+      var original = [1, 2, 3];
+      var mapper = function (item) {
+        return item * 2;
+      };
+      var mapped = Array.from(original, mapper);
+      expect(mapped).to.eql([2, 4, 6]);
+    });
+
+    it('throws when provided a nonfunction second arg', function() {
+      expect(function () { Array.from([], false); }).to.throw(TypeError);
+      expect(function () { Array.from([], true); }).to.throw(TypeError);
+      expect(function () { Array.from([], /a/g); }).to.throw(TypeError);
+      expect(function () { Array.from([], {}); }).to.throw(TypeError);
+      expect(function () { Array.from([], []); }).to.throw(TypeError);
+      expect(function () { Array.from([], ''); }).to.throw(TypeError);
+      expect(function () { Array.from([], 3); }).to.throw(TypeError);
+    });
+
+    it('supports a this arg', function() {
+      var original = [1, 2, 3];
+      var context = {};
+      var mapper = function (item) {
+        expect(this).to.equal(context);
+        return item * 2;
+      };
+      var mapped = Array.from(original, mapper, context);
+      expect(mapped).to.eql([2, 4, 6]);
     });
   });
 
@@ -179,6 +213,40 @@ describe('Array', function() {
     });
     it('should throw Error on completing iteration', function() {
       expect(function() { entries.next(); }).to.throw(Error);
+    });
+  });
+
+  describe('Array#fill', function() {
+    it('has the right length', function() {
+      expect(Array.prototype.fill.length).to.equal(1);
+    });
+
+    it('works with just a value', function() {
+      var original = [1, 2, 3, 4, 5, 6];
+      var filled = [-1, -1, -1, -1, -1, -1];
+
+      expect(original.fill(-1)).to.eql(filled);
+    });
+
+    it('accepts a positive start index', function() {
+      var original = [1, 2, 3, 4, 5, 6];
+      var filled = [1, 2, 3, -1, -1, -1];
+
+      expect(original.fill(-1, 3)).to.eql(filled);
+    });
+
+    it('accepts a negative start index', function() {
+      var original = [1, 2, 3, 4, 5, 6];
+      var filled = [1, 2, 3, -1, -1, -1];
+
+      expect(original.fill(-1, -3)).to.eql(filled);
+    });
+
+    it('accepts a large start index', function() {
+      var original = [1, 2, 3, 4, 5, 6];
+      var filled = [1, 2, 3, 4, 5, 6];
+
+      expect(original.fill(-1, 9)).to.eql(filled);
     });
   });
 });

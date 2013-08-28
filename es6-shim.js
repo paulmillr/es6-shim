@@ -21,6 +21,7 @@
     var supportsDescriptors = !!Object.defineProperty && arePropertyDescriptorsSupported();
     var _slice = Array.prototype.slice;
     var _indexOf = String.prototype.indexOf;
+    var _toString = Object.prototype.toString;
 
     // Define configurable, writable and non-enumerable props
     // if they don’t exist.
@@ -48,6 +49,13 @@
 
       ToUint32: function(x) {
         return x >>> 0;
+      },
+
+      toInteger: function(value) {
+        var number = +value;
+        if (Number.isNaN(number)) return 0;
+        if (number === 0 || !Number.isFinite(number)) return number;
+        return Math.sign(number) * Math.floor(Math.abs(number));
       }
     };
 
@@ -58,7 +66,7 @@
         var next;
         for (var i = 0, length = points.length; i < length; i++) {
           next = Number(points[i]);
-          if (!Object.is(next, Number.toInteger(next)) ||
+          if (!Object.is(next, ES.toInteger(next)) ||
               next < 0 || next > 0x10FFFF) {
             throw new RangeError('Invalid code point ' + next);
           }
@@ -121,7 +129,7 @@
         };
 
         return function(times) {
-          times = Number.toInteger(times);
+          times = ES.toInteger(times);
           if (times < 0 || times === Infinity) {
             throw new RangeError();
           }
@@ -133,7 +141,7 @@
         if (this == null) throw new TypeError("Cannot call method 'startsWith' of " + this);
         var thisStr = String(this);
         searchStr = String(searchStr);
-        var start = Math.max(Number.toInteger(arguments[1]), 0);
+        var start = Math.max(ES.toInteger(arguments[1]), 0);
         return thisStr.slice(start, start + searchStr.length) === searchStr;
       },
 
@@ -143,7 +151,7 @@
         searchStr = String(searchStr);
         var thisLen = thisStr.length;
         var pos = (arguments[1] === undefined) ?
-          thisLen : Number.toInteger(arguments[1]);
+          thisLen : ES.toInteger(arguments[1]);
         var end = Math.min(pos, thisLen);
         return thisStr.slice(end - searchStr.length, end) === searchStr;
       },
@@ -157,7 +165,7 @@
 
       codePointAt: function(pos) {
         var s = String(this);
-        var position = Number.toInteger(pos);
+        var position = ES.toInteger(pos);
         var length = s.length;
         if (position < 0 || position >= length) return undefined;
         var first = s.charCodeAt(position);
@@ -174,13 +182,21 @@
         var mapFn = arguments[1];
         var thisArg = arguments[2];
 
+        if (mapFn !== undefined && _toString.call(mapFn) !== '[object Function]') {
+          throw new TypeError('when provided, the second argument must be a function');
+        }
+
         var list = Object(iterable);
         var length = ES.ToUint32(list.length);
         var result = typeof this === 'function' ? Object(new this(length)) : new Array(length);
 
         for (var i = 0; i < length; i++) {
           var value = list[i];
-          result[i] = mapFn ? mapFn.call(thisArg, value) : value;
+          if (mapFn !== undefined) {
+            result[i] = thisArg ? mapFn.call(thisArg, value) : mapFn(value);
+          } else {
+            result[i] = value;
+          }
         }
 
         result.length = length;
@@ -228,6 +244,19 @@
     });
 
     defineProperties(Array.prototype, {
+      fill: function(value) {
+        var len = this.length;
+        var start = arguments.length > 1 ? ES.toInteger(arguments[1]) : 0;
+        var end = arguments.length > 2 ? ES.toInteger(arguments[2]) : len;
+
+        var relativeStart = start < 0 ? Math.max(len + start, 0) : Math.min(start, len);
+
+        for (var i = relativeStart; i < len && i < end; ++i) {
+          this[i] = value;
+        }
+        return this;
+      },
+
       find: function(predicate) {
         var list = Object(this);
         var length = ES.ToUint32(list.length);
@@ -272,7 +301,7 @@
     });
 
     defineProperties(Number, {
-      MAX_INTEGER: 9007199254740991,
+      MAX_SAFE_INTEGER: Math.pow(2, 53) - 1,
       EPSILON: 2.220446049250313e-16,
 
       parseInt: globals.parseInt,
@@ -282,11 +311,12 @@
         return typeof value === 'number' && global_isFinite(value);
       },
 
-      isInteger: function(value) {
+      isSafeInteger: function(value) {
         return typeof value === 'number' &&
           !Number.isNaN(value) &&
           Number.isFinite(value) &&
-          parseInt(value, 10) === value;
+          parseInt(value, 10) === value &&
+          Math.abs(value) <= Number.MAX_SAFE_INTEGER;
       },
 
       isNaN: function(value) {
@@ -298,13 +328,6 @@
         return value !== value;
       },
 
-      //9.1.4 - reverting to previous commit
-      toInteger: function(value) {
-        var number = +value;
-        if (Number.isNaN(number)) return 0;
-        if (number === 0 || !Number.isFinite(number)) return number;
-        return Math.sign(number) * Math.floor(Math.abs(number));
-      }
     });
 
     defineProperties(Number.prototype, {
@@ -759,7 +782,7 @@
                 return this['[[SetData]]'].size;
               }).bind(this)
             });
-          }
+          };
 
           defineProperties(SetShim.prototype, {
             has: function(key) {
@@ -823,7 +846,7 @@
     }
   };
 
-  if (typeof define === 'function' && typeof define.amd == 'object' && define.amd) {
+  if (typeof define === 'function' && typeof define.amd === 'object' && define.amd) {
     define(main); // RequireJS
   } else {
     main(); // CommonJS and <script>
