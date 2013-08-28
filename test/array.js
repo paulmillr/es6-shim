@@ -151,7 +151,28 @@ describe('Array', function() {
     });
   });
 
+  describe('ArrayIterator', function() {
+    var arrayIterator = [1, 2, 3].values();
+
+    describe('ArrayIterator#next', function() {
+      it('should work when applied to an ArrayIterator', function() {
+        expect(arrayIterator.next.apply(arrayIterator)).to.equal(1);
+        expect(arrayIterator.next.apply(arrayIterator)).to.equal(2);
+        expect(arrayIterator.next.apply(arrayIterator)).to.equal(3);
+        expect(function () { arrayIterator.next.apply(arrayIterator); }).to.throw(Error);
+      });
+
+      it('throws when not applied to an ArrayIterator', function() {
+        expect(function () { arrayIterator.next.apply({}); }).to.throw(TypeError);
+      });
+    });
+  });
+
   describe('Array#keys', function() {
+    it('should have a length of zero', function() {
+      expect(Array.prototype.keys.length).to.equal(0);
+    });
+
     var keys = list.keys();
     it('should return 0 on first object', function() {
       expect(keys.next()).to.equal(0);
@@ -168,9 +189,22 @@ describe('Array', function() {
     it('should throw Error on completing iteration', function() {
       expect(function() { keys.next(); }).to.throw(Error);
     });
+
+    it('should skip sparse keys', function() {
+      var sparse = [1];
+      sparse[3] = 4;
+      var keys = sparse.keys();
+      expect(keys.next()).to.equal(0);
+      expect(keys.next()).to.equal(3);
+      expect(function() { keys.next(); }).to.throw(Error);
+    });
   });
 
   describe('Array#values', function() {
+    it('should have a length of zero', function() {
+      expect(Array.prototype.values.length).to.equal(0);
+    });
+
     var values = list.values();
     it('should return 5 on first object', function() {
       expect(values.next()).to.equal(5);
@@ -187,31 +221,49 @@ describe('Array', function() {
     it('should throw Error on completing iteration', function() {
       expect(function() { values.next(); }).to.throw(Error);
     });
+
+    it('should skip sparse values', function() {
+      var sparse = [1];
+      sparse[3] = 4;
+      var values = sparse.values();
+      expect(values.next()).to.equal(1);
+      expect(values.next()).to.equal(4);
+      expect(function() { values.next(); }).to.throw(Error);
+    });
   });
 
   describe('Array#entries', function() {
+    it('should have a length of zero', function() {
+      expect(Array.prototype.entries.length).to.equal(0);
+    });
+
     var entries = list.entries();
     it('should return [0, 5] on first object', function() {
       var val = entries.next();
-      expect(val[0]).to.equal(0);
-      expect(val[1]).to.equal(5);
+      expect(val).to.eql([0, 5]);
     });
     it('should return [1, 10] on first object', function() {
       var val = entries.next();
-      expect(val[0]).to.equal(1);
-      expect(val[1]).to.equal(10);
+      expect(val).to.eql([1, 10]);
     });
     it('should return [2, 15] on first object', function() {
       var val = entries.next();
-      expect(val[0]).to.equal(2);
-      expect(val[1]).to.equal(15);
+      expect(val).to.eql([2, 15]);
     });
     it('should return [3, 20] on first object', function() {
       var val = entries.next();
-      expect(val[0]).to.equal(3);
-      expect(val[1]).to.equal(20);
+      expect(val).to.eql([3, 20]);
     });
     it('should throw Error on completing iteration', function() {
+      expect(function() { entries.next(); }).to.throw(Error);
+    });
+
+    it('should skip sparse entries', function() {
+      var sparse = [1];
+      sparse[3] = 4;
+      var entries = sparse.entries();
+      expect(entries.next()).to.eql([0, 1]);
+      expect(entries.next()).to.eql([3, 4]);
       expect(function() { entries.next(); }).to.throw(Error);
     });
   });
