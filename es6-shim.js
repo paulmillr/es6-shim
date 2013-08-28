@@ -219,26 +219,28 @@
     defineProperties(ArrayIterator.prototype, {
       next: function() {
         var i = this.i;
+        this.i = i + 1;
         var array = this.array;
 
         if (i >= array.length) {
           throw new Error();
         }
 
-        var kind = this.kind;
-        var retval;
-        if (kind === "key") {
-          retval = i;
+        if (array.hasOwnProperty(i)) {
+          var kind = this.kind;
+          var retval;
+          if (kind === "key") {
+            retval = i;
+          }
+          if (kind === "value") {
+            retval = array[i];
+          }
+          if (kind === "entry") {
+            retval = [i, array[i]];
+          }
+        } else {
+          retval = this.next();
         }
-        if (kind === "value") {
-          retval = array[i];
-        }
-        if (kind === "entry") {
-          retval = [i, array[i]];
-        }
-
-        i++;
-        this.i = i;
         return retval;
       }
     });
