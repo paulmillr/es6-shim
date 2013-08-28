@@ -144,7 +144,7 @@ describe('Number', function() {
     it('should be true when abs(number) is less than 2^53', function() {
       var safeIntegers = [0, 1, Math.pow(2, 53) - 1];
       safeIntegers.forEach(function (int) {
-		expect(Number.isSafeInteger(int)).to.equal(true);
+        expect(Number.isSafeInteger(int)).to.equal(true);
         expect(Number.isSafeInteger(-int)).to.equal(true);
       });
     });
