@@ -151,6 +151,23 @@ describe('Array', function() {
     });
   });
 
+  describe('ArrayIterator', function() {
+    var arrayIterator = [1, 2, 3].values();
+
+    describe('ArrayIterator#next', function() {
+      it('should work when applied to an ArrayIterator', function() {
+        expect(arrayIterator.next.apply(arrayIterator)).to.equal(1);
+        expect(arrayIterator.next.apply(arrayIterator)).to.equal(2);
+        expect(arrayIterator.next.apply(arrayIterator)).to.equal(3);
+        expect(function () { arrayIterator.next.apply(arrayIterator); }).to.throw(Error);
+      });
+
+      it('throws when not applied to an ArrayIterator', function() {
+        expect(function () { arrayIterator.next.apply({}); }).to.throw(TypeError);
+      });
+    });
+  });
+
   describe('Array#keys', function() {
     it('should have a length of zero', function() {
       expect(Array.prototype.keys.length).to.equal(0);
