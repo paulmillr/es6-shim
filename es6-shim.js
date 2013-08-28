@@ -208,6 +208,41 @@
       }
     });
 
+    defineProperties(globals, {
+      ArrayIterator: function(array, kind) {
+        this.i = 0;
+        this.array = array;
+        this.kind = kind;
+      }
+    });
+
+    defineProperties(ArrayIterator.prototype, {
+      next: function() {
+        var i = this.i;
+        var array = this.array;
+
+        if (i >= array.length) {
+          throw new Error();
+        }
+
+        var kind = this.kind;
+        var retval;
+        if (kind === "key") {
+          retval = i;
+        }
+        if (kind === "value") {
+          retval = array[i];
+        }
+        if (kind === "entry") {
+          retval = [i, array[i]];
+        }
+
+        i++;
+        this.i = i;
+        return retval;
+      }
+    });
+
     defineProperties(Array.prototype, {
       fill: function(value) {
         var len = this.length;
@@ -250,6 +285,18 @@
           if (predicate.call(thisArg, value, i, list)) return i;
         }
         return -1;
+      },
+
+      keys: function() {
+        return new ArrayIterator(this, "key");
+      },
+
+      values: function() {
+        return new ArrayIterator(this, "value");
+      },
+
+      entries: function() {
+        return new ArrayIterator(this, "entry");
       }
     });
 
