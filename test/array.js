@@ -152,6 +152,10 @@ describe('Array', function() {
   });
 
   describe('Array#keys', function() {
+    it('should have a length of zero', function() {
+      expect(Array.prototype.keys.length).to.equal(0);
+    });
+
     var keys = list.keys();
     it('should return 0 on first object', function() {
       expect(keys.next()).to.equal(0);
@@ -171,6 +175,10 @@ describe('Array', function() {
   });
 
   describe('Array#values', function() {
+    it('should have a length of zero', function() {
+      expect(Array.prototype.values.length).to.equal(0);
+    });
+
     var values = list.values();
     it('should return 5 on first object', function() {
       expect(values.next()).to.equal(5);
@@ -190,6 +198,10 @@ describe('Array', function() {
   });
 
   describe('Array#entries', function() {
+    it('should have a length of zero', function() {
+      expect(Array.prototype.entries.length).to.equal(0);
+    });
+
     var entries = list.entries();
     it('should return [0, 5] on first object', function() {
       var val = entries.next();
