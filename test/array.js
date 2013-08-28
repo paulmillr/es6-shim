@@ -193,23 +193,19 @@ describe('Array', function() {
     var entries = list.entries();
     it('should return [0, 5] on first object', function() {
       var val = entries.next();
-      expect(val[0]).to.equal(0);
-      expect(val[1]).to.equal(5);
+      expect(val).to.eql([0, 5]);
     });
     it('should return [1, 10] on first object', function() {
       var val = entries.next();
-      expect(val[0]).to.equal(1);
-      expect(val[1]).to.equal(10);
+      expect(val).to.eql([1, 10]);
     });
     it('should return [2, 15] on first object', function() {
       var val = entries.next();
-      expect(val[0]).to.equal(2);
-      expect(val[1]).to.equal(15);
+      expect(val).to.eql([2, 15]);
     });
     it('should return [3, 20] on first object', function() {
       var val = entries.next();
-      expect(val[0]).to.equal(3);
-      expect(val[1]).to.equal(20);
+      expect(val).to.eql([3, 20]);
     });
     it('should throw Error on completing iteration', function() {
       expect(function() { entries.next(); }).to.throw(Error);
