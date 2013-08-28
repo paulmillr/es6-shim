@@ -189,6 +189,15 @@ describe('Array', function() {
     it('should throw Error on completing iteration', function() {
       expect(function() { keys.next(); }).to.throw(Error);
     });
+
+    it('should skip sparse keys', function() {
+      var sparse = [1];
+      sparse[3] = 4;
+      var keys = sparse.keys();
+      expect(keys.next()).to.equal(0);
+      expect(keys.next()).to.equal(3);
+      expect(function() { keys.next(); }).to.throw(Error);
+    });
   });
 
   describe('Array#values', function() {
@@ -210,6 +219,15 @@ describe('Array', function() {
       expect(values.next()).to.equal(20);
     });
     it('should throw Error on completing iteration', function() {
+      expect(function() { values.next(); }).to.throw(Error);
+    });
+
+    it('should skip sparse values', function() {
+      var sparse = [1];
+      sparse[3] = 4;
+      var values = sparse.values();
+      expect(values.next()).to.equal(1);
+      expect(values.next()).to.equal(4);
       expect(function() { values.next(); }).to.throw(Error);
     });
   });
@@ -237,6 +255,15 @@ describe('Array', function() {
       expect(val).to.eql([3, 20]);
     });
     it('should throw Error on completing iteration', function() {
+      expect(function() { entries.next(); }).to.throw(Error);
+    });
+
+    it('should skip sparse entries', function() {
+      var sparse = [1];
+      sparse[3] = 4;
+      var entries = sparse.entries();
+      expect(entries.next()).to.eql([0, 1]);
+      expect(entries.next()).to.eql([3, 4]);
       expect(function() { entries.next(); }).to.throw(Error);
     });
   });
