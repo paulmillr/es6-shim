@@ -32,13 +32,12 @@ For node.js:
     * `endsWith()`
     * `contains()`
 * `Number`:
-    * `MAX_INTEGER`
+    * `MAX_SAFE_INTEGER`
     * `EPSILON`
     * `parseInt()`
     * `parseFloat()`
     * `isNaN()`
-    * `toInteger()`
-    * `isInteger()`
+    * `isSafeInteger()`
     * `isFinite()`
 * `Number.prototype`:
     * `clz()`
@@ -48,6 +47,9 @@ For node.js:
 * `Array.prototype`:
     * `find()`
     * `findIndex()`
+    * `keys()` (note: keys/values/entries return an `ArrayIterator` object)
+    * `entries()`
+    * `values()`
 * `Object`:
     * `getOwnPropertyDescriptors()` (ES5)
     * `getPropertyDescriptor()` (ES5)
@@ -69,6 +71,7 @@ For node.js:
     * `atanh()`
     * `hypot()`
     * `trunc()`
+    * `imul()`
 
 Math functions accuracy is 1e-11.
 
