@@ -1,3 +1,10 @@
+# es6-shim 0.9.0 (30 August 2013)
+* Added Array iteration methods: `Array#keys`, `Array#values`, `Array#entries`, which return an `ArrayIterator`
+* Changed `Map` and `Set` constructors to conform to spec when called without `new`
+* Added `Math.imul`
+* Per spec, removed `Number.toInteger`, `Number.isInteger`, and `Number.MAX_INTEGER`; added `Number.isSafeInteger`, `Number.MAX_SAFE_INTEGER`
+* Added extensive additional tests for many methods
+
 # es6-shim 0.8.0 (8 June 2013)
 * Added `Object.setPrototypeOf`, `Set#keys`, `Set#values`, `Map#keys`, `Map#values`, `Map#entries`, `Set#entries`.
 * Fixed `String#repeat` according to spec.
