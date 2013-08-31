@@ -576,7 +576,7 @@
 
       sign: function(value) {
         var number = +value;
-        if (number === 0) return number;
+        if (number === 0) return value;
         if (Number.isNaN(number)) return number;
         return number < 0 ? -1 : 1;
       },
