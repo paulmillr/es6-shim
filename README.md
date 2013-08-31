@@ -3,7 +3,7 @@
 Provides compatibility shims so that legacy JavaScript engines behave as
 closely as possible to ECMAScript 6 (Harmony).
 
-[![Build Status][1]][2]
+[![Build Status][1]][2] [![dependency status][3]][4] [![dev dependency status][5]][6]
 
 [![browser support](https://ci.testling.com/paulmillr/es6-shim.png)](https://ci.testling.com/paulmillr/es6-shim)
 
@@ -161,3 +161,8 @@ SOFTWARE.
 
 [1]: https://travis-ci.org/paulmillr/es6-shim.png
 [2]: https://travis-ci.org/paulmillr/es6-shim
+[3]: https://david-dm.org/paulmillr/es6-shim.png
+[4]: https://david-dm.org/paulmillr/es6-shim
+[5]: https://david-dm.org/paulmillr/es6-shim/dev-status.png
+[6]: https://david-dm.org/paulmillr/es6-shim#info=devDependencies
+
