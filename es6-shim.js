@@ -209,9 +209,17 @@
       function unpackFloat32(b) { return unpackIEEE754(b, 8, 23); }
       function packFloat32(v) { return packIEEE754(v, 8, 23); }
 
-      return {
+      var conversions = {
         toFloat32: function (num) { return unpackFloat32(packFloat32(num)); }
       };
+      if (typeof Float32Array !== 'undefined') {
+        var float32array = new Float32Array(1);
+        conversions.toFloat32 = function (num) {
+          float32array[0] = num;
+          return float32array[0];
+        };
+      }
+      return conversions;
     }());
 
     defineProperties(String, {
