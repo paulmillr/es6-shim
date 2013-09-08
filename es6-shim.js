@@ -302,8 +302,10 @@
       }
     });
 
+	var maxSafeInteger = Math.pow(2, 53) - 1;
     defineProperties(Number, {
-      MAX_SAFE_INTEGER: Math.pow(2, 53) - 1,
+      MAX_SAFE_INTEGER: maxSafeInteger,
+      MIN_SAFE_INTEGER: -maxSafeInteger,
       EPSILON: 2.220446049250313e-16,
 
       parseInt: globals.parseInt,
