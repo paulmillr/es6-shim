@@ -379,7 +379,7 @@
           return result;
         },
 
-        // 15.2.3.17
+        // 19.1.3.1
         assign: function(target, source) {
           return Object.keys(source).reduce(function(target, key) {
             target[key] = source[key];
@@ -387,7 +387,7 @@
           }, target);
         },
 
-        // 15.2.3.18
+        // 19.1.3.15
         mixin: function(target, source) {
           var props = Object.getOwnPropertyNames(source);
           return props.reduce(function(target, property) {
@@ -397,7 +397,7 @@
         }
       });
 
-      // 15.2.3.2
+      // 19.1.3.9
       // shim from https://gist.github.com/WebReflection/5593554
       defineProperties(Object, {
         setPrototypeOf: (function(Object, magic) {
