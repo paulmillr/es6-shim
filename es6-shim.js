@@ -836,12 +836,15 @@
           - In Firefox < 23, Map#size is a function.
           - In all current Firefox, Set#entries/keys/values & Map#clear do not exist
           - https://bugzilla.mozilla.org/show_bug.cgi?id=869996
+          - In Firefox 24, Map and Set do not implement forEach
         */
         if (
           typeof globals.Map.prototype.clear !== 'function' ||
           new globals.Set().size !== 0 ||
           new globals.Map().size !== 0 ||
-          typeof globals.Set.prototype.keys !== 'function'
+          typeof globals.Set.prototype.keys !== 'function' ||
+          typeof globals.Map.prototype.forEach !== 'function' ||
+          typeof globals.Set.prototype.forEach !== 'function'
         ) {
           globals.Map = collectionShims.Map;
           globals.Set = collectionShims.Set;
