@@ -67,6 +67,14 @@ describe('Collections', function() {
       expect(Map).to.throw(TypeError);
     });
 
+    it('treats positive and negative zero differently', function() {
+      var value1 = {}, value2 = {};
+      testMapping(0, value1);
+      testMapping(-0, value2);
+      expect(map.get(0)).not.to.equal(value2);
+      expect(map.get(-0)).not.to.equal(value1);
+    });
+
     it('should map values correctly', function() {
       range(1, 20).forEach(function(number) {
         testMapping(number, {});
