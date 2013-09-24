@@ -821,7 +821,7 @@
         return ((al * bl) + (((ah * bl + al * bh) << 16) >>> 0)|0);
       },
 
-      roundFloat32: function(x) {
+      fround: function(x) {
         if (x === 0 || x === Infinity || x === -Infinity || Number.isNaN(x)) {
           return x;
         }
