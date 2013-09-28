@@ -119,6 +119,11 @@ describe('Math', function() {
       expect(Math.hypot(0.1, 100)).to.almostEqual(100.0000499999875);
     });
 
+    it('should take more than 3 arguments', function() {
+      expect(Math.hypot(66, 66, 66)).to.almostEqual(114.3153532995459);
+      expect(Math.hypot(66, 66, 66, 66)).to.equal(132);
+    });
+
     it('should have the right length', function() {
       expect(Math.hypot.length).to.equal(2);
     });

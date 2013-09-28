@@ -561,18 +561,24 @@
       hypot: function(x, y) {
         var anyNaN = false;
         var allZero = true;
-        var z = arguments.length > 2 ? arguments[2] : 0;
-        if ([x, y, z].some(function(num) {
+        var anyInfinity = false;
+        var sumOfSquares = 0;
+        Array.prototype.every.call(arguments, function(num) {
           if (Number.isNaN(num)) anyNaN = true;
-          else if (num === Infinity || num === -Infinity) return true;
+          else if (num === Infinity || num === -Infinity) anyInfinity = true;
           else if (num !== 0) allZero = false;
-        })) return Infinity;
+          if (anyInfinity) {
+            return false;
+          } else if (!anyNaN) {
+            var number = num == null ? 0 : num;
+            sumOfSquares += number * number;
+          }
+          return true;
+        });
+        if (anyInfinity) return Infinity;
         if (anyNaN) return NaN;
         if (allZero) return 0;
-        if (x == null) x = 0;
-        if (y == null) y = 0;
-        if (z == null) z = 0;
-        return Math.sqrt(x * x + y * y + z * z);
+        return Math.sqrt(sumOfSquares);
       },
 
       log2: function(value) {
