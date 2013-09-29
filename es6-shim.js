@@ -22,6 +22,7 @@
     var _slice = Array.prototype.slice;
     var _indexOf = String.prototype.indexOf;
     var _toString = Object.prototype.toString;
+    var _hasOwnProperty = Object.prototype.hasOwnProperty;
 
     // Define configurable, writable and non-enumerable props
     // if they don’t exist.
@@ -246,6 +247,32 @@
     });
 
     defineProperties(Array.prototype, {
+      copyWithin: function(target, start) {
+        var o = Object(this);
+        var len = Math.max(ES.toInteger(o.length), 0);
+        var to = target < 0 ? Math.max(len + target, 0) : Math.min(target, len);
+        var from = start < 0 ? Math.max(len + start, 0) : Math.min(start, len);
+        var end = arguments.length > 2 ? arguments[2] : len;
+        var final = end < 0 ? Math.max(len + end, 0) : Math.min(end, len);
+        var count = Math.min(final - from, len - to);
+        var direction = 1;
+        if (from < to && to < (from + count)) {
+          direction = -1;
+          from += count - 1;
+          to += count - 1;
+        }
+        while (count > 0) {
+          if (_hasOwnProperty.call(o, from)) {
+            o[to] = o[from];
+          } else {
+            delete o[from];
+          }
+          from += direction;
+          to += direction;
+          count -= 1;
+        }
+        return o;
+      },
       fill: function(value) {
         var len = this.length;
         var start = arguments.length > 1 ? ES.toInteger(arguments[1]) : 0;

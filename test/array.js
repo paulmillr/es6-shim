@@ -71,6 +71,43 @@ describe('Array', function() {
     });
   });
 
+  describe('Array#copyWithin', function() {
+    it('has the right arity', function() {
+      expect(Array.prototype.copyWithin.length).to.equal(2);
+    });
+
+    it('works with 2 args', function() {
+      expect([1, 2, 3, 4, 5].copyWithin(0, 3)).to.eql([4, 5, 3, 4, 5]);
+      expect([1, 2, 3, 4, 5].copyWithin(1, 3)).to.eql([1, 4, 5, 4, 5]);
+      expect([1, 2, 3, 4, 5].copyWithin(1, 2)).to.eql([1, 3, 4, 5, 5]);
+      expect([1, 2, 3, 4, 5].copyWithin(2, 2)).to.eql([1, 2, 3, 4, 5]);
+    });
+
+    it('works with 3 args', function() {
+      expect([1, 2, 3, 4, 5].copyWithin(0, 3, 4)).to.eql([4, 2, 3, 4, 5]);
+      expect([1, 2, 3, 4, 5].copyWithin(1, 3, 4)).to.eql([1, 4, 3, 4, 5]);
+      expect([1, 2, 3, 4, 5].copyWithin(1, 2, 4)).to.eql([1, 3, 4, 4, 5]);
+    });
+
+    it('works with negative args', function() {
+      expect([1, 2, 3, 4, 5].copyWithin(0, -2)).to.eql([4, 5, 3, 4, 5]);
+      expect([1, 2, 3, 4, 5].copyWithin(0, -2, -1)).to.eql([4, 2, 3, 4, 5]);
+      expect([1, 2, 3, 4, 5].copyWithin(-4, -3, -2)).to.eql([1, 3, 3, 4, 5]);
+      expect([1, 2, 3, 4, 5].copyWithin(-4, -3, -1)).to.eql([1, 3, 4, 4, 5]);
+      expect([1, 2, 3, 4, 5].copyWithin(-4, -3)).to.eql([1, 3, 4, 5, 5]);
+    });
+
+    it('works with arraylike objects', function() {
+      var args = (function () { return arguments; }(1, 2, 3));
+      expect(Array.isArray(args)).not.to.be.ok;
+      var argsClass = Object.prototype.toString.call(args);
+      expect(args).to.eql([1, 2, 3]);
+      Array.prototype.copyWithin.call(args, -2, 0);
+      expect(args).to.eql([1, 1, 2]);
+      expect(Object.prototype.toString.call(args)).to.equal(argsClass);
+    });
+  });
+
   describe('Array#find', function() {
     it('should have a length of 1', function() {
       expect(Array.prototype.find.length).to.equal(1);
