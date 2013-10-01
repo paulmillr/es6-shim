@@ -58,6 +58,10 @@ describe('Collections', function() {
       expect(Map).to.be.ok;
     });
 
+    it('should have the right arity', function() {
+      expect(Map.length).to.equal(0);
+    });
+
     it('should has valid getter and setter calls', function() {
       ['get', 'set', 'has', 'delete'].forEach(function(method) {
         expect(function() {
@@ -332,6 +336,10 @@ describe('Collections', function() {
 
     it('should exist in global namespace', function() {
       expect(Set).to.be.ok;
+    });
+
+    it('should have the right arity', function() {
+      expect(Set.length).to.equal(0);
     });
 
     it('should not be callable without "new"', function() {
