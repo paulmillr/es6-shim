@@ -60,8 +60,27 @@ describe('Object', function() {
   });
 
   describe('Object.assign()', function() {
+    it('returns the modified target object', function() {
+      var target = {};
+      var returned = Object.assign(target, { a: 1 });
+      expect(returned).to.equal(returned);
+    });
+
     it('should merge two objects', function() {
-      expect(Object.assign({a: 1}, {b: 2})).to.eql({a: 1, b: 2});
+      var target = { a: 1 };
+      var returned = Object.assign(target, { b: 2 });
+      expect(returned).to.eql({ a: 1, b: 2 });
+    });
+
+    it('only iterates over own keys', function() {
+      var Foo = function () {};
+      Foo.prototype.bar = true;
+      var foo = new Foo();
+      foo.baz = true;
+      var target = { a: 1 };
+      var returned = Object.assign(target, foo);
+      expect(returned).to.equal(target);
+      expect(target).to.eql({ baz: true, a: 1 });
     });
   });
 
