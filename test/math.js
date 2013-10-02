@@ -127,6 +127,12 @@ describe('Math', function() {
     it('should have the right length', function() {
       expect(Math.hypot.length).to.equal(2);
     });
+
+    it('works for very large or small numbers', function() {
+      expect(Math.hypot(1e+300, 1e+300)).to.almostEqual(1.4142135623730952e+300);
+      expect(Math.hypot(1e-300, 1e-300)).to.almostEqual(1.4142135623730952e-300);
+      expect(Math.hypot(1e+300, 1e+300, 2, 3)).to.almostEqual(1.4142135623730952e+300);
+    });
   });
 
   describe('#log2()', function() {
