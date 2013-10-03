@@ -563,7 +563,8 @@
         var allZero = true;
         var anyInfinity = false;
         var numbers = [];
-        Array.prototype.every.call(arguments, function(num) {
+        Array.prototype.every.call(arguments, function(arg) {
+          var num = Number(arg);
           if (Number.isNaN(num)) anyNaN = true;
           else if (num === Infinity || num === -Infinity) anyInfinity = true;
           else if (num !== 0) allZero = false;
