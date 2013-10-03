@@ -823,11 +823,11 @@
           }
         }
 
-        function updateSize(func) {
+        var updateSize = function(func) {
           if (supportsDescriptors) {
             return func;
           } else {
-            return function () {
+            return function() {
               try {
                 return func.apply(this, _slice.call(arguments));
               } finally {
@@ -835,7 +835,7 @@
               }
             };
           }
-        }
+        };
 
         defineProperties(Set.prototype, {
           has: function(key) {
