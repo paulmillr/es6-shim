@@ -641,62 +641,65 @@
       }
     });
 
-    if (supportsDescriptors) {
-      // Map and Set require a true ES5 environment
-      var collectionShims = {
-        Map: (function() {
+    var collectionShims = {
+      Map: (function() {
 
-          var empty = {};
+        var empty = {};
 
-          function MapEntry(key, value) {
-            this.key = key;
-            this.value = value;
-            this.next = null;
-          }
+        function MapEntry(key, value) {
+          this.key = key;
+          this.value = value;
+          this.next = null;
+        }
 
-          MapEntry.prototype.isRemoved = function() {
-            return this.key === empty;
-          };
+        MapEntry.prototype.isRemoved = function() {
+          return this.key === empty;
+        };
 
-          function MapIterator(map, kind) {
-            this.i = map._head;
-            this.kind = kind;
-          }
+        function MapIterator(map, kind) {
+          this.i = map._head;
+          this.kind = kind;
+        }
 
-          MapIterator.prototype = {
-            next: function() {
-              var i = this.i;
-              if (i !== null) {
-                while (i.isRemoved()) {
-                  i = i.next;
-                }
+        MapIterator.prototype = {
+          next: function() {
+            var i = this.i;
+            if (i !== null) {
+              while (i.isRemoved()) {
                 i = i.next;
-                this.i = i;
               }
-              if (i === null) {
-                throw new Error();
-              }
-              var kind = this.kind;
-              if (kind === "key") {
-                return i.key;
-              }
-              if (kind === "value") {
-                return i.value;
-              }
-              return [i.key, i.value];
+              i = i.next;
+              this.i = i;
             }
-          };
+            if (i === null) {
+              throw new Error();
+            }
+            var kind = this.kind;
+            if (kind === "key") {
+              return i.key;
+            }
+            if (kind === "value") {
+              return i.value;
+            }
+            return [i.key, i.value];
+          }
+        };
 
-          function Map() {
-            if (!(this instanceof Map)) throw new TypeError('Map must be called with "new"');
+        var sizeKey = supportsDescriptors ? '_size' : 'size';
 
-            var head = new MapEntry(null, null);
+        function Map() {
+          if (!(this instanceof Map)) throw new TypeError('Map must be called with "new"');
 
+          var head = new MapEntry(null, null);
+
+          defineProperties(this, {
+            '_head': head
+          });
+
+          if (supportsDescriptors) {
             defineProperties(this, {
-              '_head': head,
               '_size': 0
             });
-
             Object.defineProperty(this, 'size', {
               configurable: true,
               enumerable: false,
@@ -704,108 +707,112 @@
                 return this._size;
               }).bind(this)
             });
+          } else {
+            this.size = 0;
           }
+        }
 
-          defineProperties(Map.prototype, {
-            get: function(key) {
-              var i = this._head;
-              while ((i = i.next) !== null) {
-                if (Object.is(i.key, key)) {
-                  return i.value;
-                }
+        defineProperties(Map.prototype, {
+          get: function(key) {
+            var i = this._head;
+            while ((i = i.next) !== null) {
+              if (Object.is(i.key, key)) {
+                return i.value;
               }
-              return undefined;
-            },
+            }
+            return undefined;
+          },
 
-            has: function(key) {
-              var i = this._head;
-              while ((i = i.next) !== null) {
-                if (Object.is(i.key, key)) {
-                  return true;
-                }
+          has: function(key) {
+            var i = this._head;
+            while ((i = i.next) !== null) {
+              if (Object.is(i.key, key)) {
+                return true;
               }
-              return false;
-            },
+            }
+            return false;
+          },
 
-            set: function(key, value) {
-              var i = this._head;
-              var p = i;
-              while ((i = i.next) !== null) {
-                if (Object.is(i.key, key)) {
-                  i.value = value;
-                  return;
-                }
-                p = i;
+          set: function(key, value) {
+            var i = this._head;
+            var p = i;
+            while ((i = i.next) !== null) {
+              if (Object.is(i.key, key)) {
+                i.value = value;
+                return;
               }
-              var entry = new MapEntry(key, value);
-              p.next = entry;
-              this._size += 1;
-            },
+              p = i;
+            }
+            var entry = new MapEntry(key, value);
+            p.next = entry;
+            this[sizeKey] += 1;
+          },
 
-            'delete': function(key) {
-              var i = this._head;
-              var p = i;
-              while ((i = i.next) !== null) {
-                if (Object.is(i.key, key)) {
-                  p.next = i.next;
-                  i.key = empty;
-                  i.value = empty;
-                  i.next = p;
-                  this._size -= 1;
-                  return true;
-                }
-                p = i;
-              }
-              return false;
-            },
-
-            clear: function() {
-              var p = this._head;
-              var i = p.next;
-              this._size = 0;
-              p.next = null;
-              while (i !== null) {
-                var x = i.next;
+          'delete': function(key) {
+            var i = this._head;
+            var p = i;
+            while ((i = i.next) !== null) {
+              if (Object.is(i.key, key)) {
+                p.next = i.next;
                 i.key = empty;
                 i.value = empty;
                 i.next = p;
-                i = x;
+                this[sizeKey] -= 1;
+                return true;
               }
-            },
+              p = i;
+            }
+            return false;
+          },
 
-            keys: function() {
-              return new MapIterator(this, "key");
-            },
+          clear: function() {
+            var p = this._head;
+            var i = p.next;
+            this[sizeKey] = 0;
+            p.next = null;
+            while (i !== null) {
+              var x = i.next;
+              i.key = empty;
+              i.value = empty;
+              i.next = p;
+              i = x;
+            }
+          },
 
-            values: function() {
-              return new MapIterator(this, "value");
-            },
+          keys: function() {
+            return new MapIterator(this, "key");
+          },
 
-            entries: function() {
-              return new MapIterator(this, "key+value");
-            },
+          values: function() {
+            return new MapIterator(this, "value");
+          },
 
-            forEach: function(callback) {
-              var context = arguments.length > 1 ? arguments[1] : null;
-              var entireMap = this;
+          entries: function() {
+            return new MapIterator(this, "key+value");
+          },
 
-              var i = this._head;
-              while ((i = i.next) !== null) {
-                callback.call(context, i.value, i.key, entireMap);
-                while (i.isRemoved()) {
-                  i = i.next;
-                }
+          forEach: function(callback) {
+            var context = arguments.length > 1 ? arguments[1] : null;
+            var entireMap = this;
+
+            var i = this._head;
+            while ((i = i.next) !== null) {
+              callback.call(context, i.value, i.key, entireMap);
+              while (i.isRemoved()) {
+                i = i.next;
               }
             }
-          });
+          }
+        });
 
-          return Map;
-        })(),
+        return Map;
+      })(),
 
-        Set: (function() {
-          var SetShim = function Set() {
-            if (!(this instanceof SetShim)) throw new TypeError('Set must be called with "new"');
-            defineProperties(this, {'[[SetData]]': new Map()});
+      Set: (function() {
+        function Set() {
+          if (!(this instanceof Set)) throw new TypeError('Set must be called with "new"');
+          defineProperties(this, {'[[SetData]]': new Map()});
+          if (supportsDescriptors) {
             Object.defineProperty(this, 'size', {
               configurable: true,
               enumerable: false,
@@ -813,69 +820,83 @@
                 return this['[[SetData]]'].size;
               }).bind(this)
             });
-          };
-
-          defineProperties(SetShim.prototype, {
-            has: function(key) {
-              return this['[[SetData]]'].has(key);
-            },
-
-            add: function(key) {
-              return this['[[SetData]]'].set(key, key);
-            },
-
-            'delete': function(key) {
-              return this['[[SetData]]']['delete'](key);
-            },
-
-            clear: function() {
-              return this['[[SetData]]'].clear();
-            },
-
-            keys: function() {
-              return this['[[SetData]]'].keys();
-            },
-
-            values: function() {
-              return this['[[SetData]]'].values();
-            },
-
-            entries: function() {
-              return this['[[SetData]]'].entries();
-            },
-
-            forEach: function(callback) {
-              var context = arguments.length > 1 ? arguments[1] : null;
-              var entireSet = this;
-              this['[[SetData]]'].forEach(function(value, key) {
-                callback.call(context, key, key, entireSet);
-              });
-            }
-          });
-
-          return SetShim;
-        })()
-      };
-      defineProperties(globals, collectionShims);
-
-      if (globals.Map || globals.Set) {
-        /*
-          - In Firefox < 23, Map#size is a function.
-          - In all current Firefox, Set#entries/keys/values & Map#clear do not exist
-          - https://bugzilla.mozilla.org/show_bug.cgi?id=869996
-          - In Firefox 24, Map and Set do not implement forEach
-        */
-        if (
-          typeof globals.Map.prototype.clear !== 'function' ||
-          new globals.Set().size !== 0 ||
-          new globals.Map().size !== 0 ||
-          typeof globals.Set.prototype.keys !== 'function' ||
-          typeof globals.Map.prototype.forEach !== 'function' ||
-          typeof globals.Set.prototype.forEach !== 'function'
-        ) {
-          globals.Map = collectionShims.Map;
-          globals.Set = collectionShims.Set;
+          }
         }
+
+        function updateSize(func) {
+          if (supportsDescriptors) {
+            return func;
+          } else {
+            return function () {
+              try {
+                return func.apply(this, _slice.call(arguments));
+              } finally {
+                this.size = this['[[SetData]]'].size;
+              }
+            };
+          }
+        }
+
+        defineProperties(Set.prototype, {
+          has: function(key) {
+            return this['[[SetData]]'].has(key);
+          },
+
+          add: updateSize(function(key) {
+            return this['[[SetData]]'].set(key, key);
+          }),
+
+          'delete': updateSize(function(key) {
+            return this['[[SetData]]']['delete'](key);
+          }),
+
+          clear: updateSize(function() {
+            return this['[[SetData]]'].clear();
+          }),
+
+          keys: function() {
+            return this['[[SetData]]'].keys();
+          },
+
+          values: function() {
+            return this['[[SetData]]'].values();
+          },
+
+          entries: function() {
+            return this['[[SetData]]'].entries();
+          },
+
+          forEach: function(callback) {
+            var context = arguments.length > 1 ? arguments[1] : null;
+            var entireSet = this;
+            this['[[SetData]]'].forEach(function(value, key) {
+              callback.call(context, key, key, entireSet);
+            });
+          }
+        });
+
+        return Set;
+      })()
+    };
+    defineProperties(globals, collectionShims);
+
+    if (globals.Map || globals.Set) {
+      /*
+        - In Firefox < 23, Map#size is a function.
+        - In all current Firefox, Set#entries/keys/values & Map#clear do not exist
+        - https://bugzilla.mozilla.org/show_bug.cgi?id=869996
+        - In Firefox 24, Map and Set do not implement forEach
+      */
+      if (
+        typeof globals.Map.prototype.clear !== 'function' ||
+        new globals.Set().size !== 0 ||
+        new globals.Map().size !== 0 ||
+        typeof globals.Set.prototype.keys !== 'function' ||
+        typeof globals.Map.prototype.forEach !== 'function' ||
+        typeof globals.Set.prototype.forEach !== 'function'
+      ) {
+        globals.Map = collectionShims.Map;
+        globals.Set = collectionShims.Set;
       }
     }
   };
