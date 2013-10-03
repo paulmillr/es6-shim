@@ -21,7 +21,7 @@ For node.js:
 
 ## Safe shims
 
-* `Map`, `Set` (requires ES5)
+* `Map`, `Set`
 * `String`:
     * `fromCodePoint()`
     * `raw()`
