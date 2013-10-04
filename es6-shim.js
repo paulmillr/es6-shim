@@ -571,7 +571,6 @@
           if (anyInfinity) {
             return false;
           } else if (!anyNaN) {
-            var number = num == null ? 0 : num;
             numbers.push(Math.abs(num));
           }
           return true;
