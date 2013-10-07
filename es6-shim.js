@@ -652,6 +652,7 @@
             this.key = key;
             this.value = value;
             this.next = null;
+            this.prev = null;
           }
 
           MapEntry.prototype.isRemoved = function() {
@@ -659,31 +660,29 @@
           };
 
           function MapIterator(map, kind) {
-            this.i = map._head;
+            this.head = map._head;
+            this.i = this.head.next;
             this.kind = kind;
           }
 
           MapIterator.prototype = {
             next: function() {
-              var i = this.i;
-              if (i !== null) {
-                while (i.isRemoved()) {
-                  i = i.next;
+              var i = this.i, kind = this.kind, head = this.head, result;
+              while (i !== head) {
+                this.i = i.next;
+                if (!i.isRemoved()) {
+                  if (kind === "key") {
+                    result = i.key;
+                  } else if (kind === "value") {
+                    result = i.value;
+                  } else {
+                    result = [i.key, i.value];
+                  }
+                  return { value: result, done: false };
                 }
-                i = i.next;
-                this.i = i;
+                i = this.i;
               }
-              if (i === null) {
-                throw new Error();
-              }
-              var kind = this.kind;
-              if (kind === "key") {
-                return i.key;
-              }
-              if (kind === "value") {
-                return i.value;
-              }
-              return [i.key, i.value];
+              return { value: undefined, done: true };
             }
           };
 
@@ -691,9 +690,12 @@
             if (!(this instanceof Map)) throw new TypeError('Map must be called with "new"');
 
             var head = new MapEntry(null, null);
+            // circular doubly-linked list.
+            head.next = head.prev = head;
 
             defineProperties(this, {
               '_head': head,
+              '_storage': Object.create(null),
               '_size': 0
             });
 
@@ -708,8 +710,13 @@
 
           defineProperties(Map.prototype, {
             get: function(key) {
-              var i = this._head;
-              while ((i = i.next) !== null) {
+              if (typeof key === 'string' && key !== '__proto__') {
+                // fast O(1) path
+                var entry = this._storage[key];
+                return entry ? entry.value : undefined;
+              }
+              var head = this._head, i = head;
+              while ((i = i.next) !== head) {
                 if (Object.is(i.key, key)) {
                   return i.value;
                 }
@@ -718,8 +725,12 @@
             },
 
             has: function(key) {
-              var i = this._head;
-              while ((i = i.next) !== null) {
+              if (typeof key === 'string' && key !== '__proto__') {
+                // fast O(1) path
+                return key in this._storage;
+              }
+              var head = this._head, i = head;
+              while ((i = i.next) !== head) {
                 if (Object.is(i.key, key)) {
                   return true;
                 }
@@ -728,49 +739,65 @@
             },
 
             set: function(key, value) {
-              var i = this._head;
-              var p = i;
-              while ((i = i.next) !== null) {
+              var head = this._head, i = head, entry;
+              if (typeof key === 'string' && key !== '__proto__') {
+                // fast O(1) path
+                if (key in this._storage) {
+                  this._storage[key].value = value;
+                  return;
+                } else {
+                  entry = this._storage[key] = new MapEntry(key, value);
+                  i = head.prev;
+                  // fall through
+                }
+              }
+              while ((i = i.next) !== head) {
                 if (Object.is(i.key, key)) {
                   i.value = value;
                   return;
                 }
-                p = i;
               }
-              var entry = new MapEntry(key, value);
-              p.next = entry;
+              entry = entry ? entry : new MapEntry(key, value);
+              entry.next = this._head;
+              entry.prev = this._head.prev;
+              entry.prev.next = entry;
+              entry.next.prev = entry;
               this._size += 1;
             },
 
             'delete': function(key) {
-              var i = this._head;
-              var p = i;
-              while ((i = i.next) !== null) {
+              var head = this._head, i = head;
+              if (typeof key === 'string' && key !== '__proto__') {
+                // fast O(1) path
+                if (!(key in this._storage)) {
+                  return false;
+                }
+                i = this._storage[key].prev;
+                delete this._storage[key];
+                // fall through
+              }
+              while ((i = i.next) !== head) {
                 if (Object.is(i.key, key)) {
-                  p.next = i.next;
-                  i.key = empty;
-                  i.value = empty;
-                  i.next = p;
+                  i.key = i.value = empty;
+                  i.prev.next = i.next;
+                  i.next.prev = i.prev;
                   this._size -= 1;
                   return true;
                 }
-                p = i;
               }
               return false;
             },
 
             clear: function() {
-              var p = this._head;
-              var i = p.next;
               this._size = 0;
-              p.next = null;
-              while (i !== null) {
-                var x = i.next;
-                i.key = empty;
-                i.value = empty;
-                i.next = p;
-                i = x;
+              this._storage = Object.create(null);
+              var head = this._head, i = head, p = i.next;
+              while ((i = p) !== head) {
+                i.key = i.value = empty;
+                p = i.next;
+                i.next = i.prev = head;
               }
+              head.next = head.prev = head;
             },
 
             keys: function() {
@@ -789,11 +816,10 @@
               var context = arguments.length > 1 ? arguments[1] : null;
               var entireMap = this;
 
-              var i = this._head;
-              while ((i = i.next) !== null) {
-                callback.call(context, i.value, i.key, entireMap);
-                while (i.isRemoved()) {
-                  i = i.next;
+              var head = this._head, i = head;
+              while ((i = i.next) !== head) {
+                if (!i.isRemoved()) {
+                  callback.call(context, i.value, i.key, entireMap);
                 }
               }
             }
@@ -886,4 +912,3 @@
     main(); // CommonJS and <script>
   }
 })();
-
