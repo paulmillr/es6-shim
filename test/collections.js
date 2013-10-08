@@ -255,14 +255,15 @@ describe('Collections', function() {
 
     var keys = [];
     var iterator = map.keys();
-    keys.push(iterator.next());
+    keys.push(iterator.next().value);
     map["delete"]('a');
     map["delete"]('b');
     map["delete"]('c');
     map.set('e');
-    keys.push(iterator.next());
-    keys.push(iterator.next());
+    keys.push(iterator.next().value);
+    keys.push(iterator.next().value);
 
+    expect(iterator.next().done).to.equal(true);
     expect(keys).to.eql(['a', 'd', 'e']);
   });
 
