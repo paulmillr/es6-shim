@@ -641,8 +641,19 @@
       }
     });
 
+    // Map and Set require a true ES5 environment
     if (supportsDescriptors) {
-      // Map and Set require a true ES5 environment
+
+      var fastkey = function fastkey(key) {
+        var type = typeof key;
+        if (type === 'string') {
+          return '$' + key;
+        } else if (type === 'number' && !Object.is(key, -0)) {
+          return key;
+        }
+        return null;
+      };
+
       var collectionShims = {
         Map: (function() {
 
@@ -698,21 +709,22 @@
               '_storage': Object.create(null),
               '_size': 0
             });
-
-            Object.defineProperty(this, 'size', {
-              configurable: true,
-              enumerable: false,
-              get: (function() {
-                return this._size;
-              }).bind(this)
-            });
           }
+
+          Object.defineProperty(Map.prototype, 'size', {
+            configurable: true,
+            enumerable: false,
+            get: function() {
+              return this._size;
+            }
+          });
 
           defineProperties(Map.prototype, {
             get: function(key) {
-              if (typeof key === 'string' && key !== '__proto__') {
+              var fkey = fastkey(key);
+              if (fkey !== null) {
                 // fast O(1) path
-                var entry = this._storage[key];
+                var entry = this._storage[fkey];
                 return entry ? entry.value : undefined;
               }
               var head = this._head, i = head;
@@ -725,9 +737,10 @@
             },
 
             has: function(key) {
-              if (typeof key === 'string' && key !== '__proto__') {
+              var fkey = fastkey(key);
+              if (fkey !== null) {
                 // fast O(1) path
-                return key in this._storage;
+                return fkey in this._storage;
               }
               var head = this._head, i = head;
               while ((i = i.next) !== head) {
@@ -740,13 +753,14 @@
 
             set: function(key, value) {
               var head = this._head, i = head, entry;
-              if (typeof key === 'string' && key !== '__proto__') {
+              var fkey = fastkey(key);
+              if (fkey !== null) {
                 // fast O(1) path
-                if (key in this._storage) {
-                  this._storage[key].value = value;
+                if (fkey in this._storage) {
+                  this._storage[fkey].value = value;
                   return;
                 } else {
-                  entry = this._storage[key] = new MapEntry(key, value);
+                  entry = this._storage[fkey] = new MapEntry(key, value);
                   i = head.prev;
                   // fall through
                 }
@@ -767,13 +781,14 @@
 
             'delete': function(key) {
               var head = this._head, i = head;
-              if (typeof key === 'string' && key !== '__proto__') {
+              var fkey = fastkey(key);
+              if (fkey !== null) {
                 // fast O(1) path
-                if (!(key in this._storage)) {
+                if (!(fkey in this._storage)) {
                   return false;
                 }
-                i = this._storage[key].prev;
-                delete this._storage[key];
+                i = this._storage[fkey].prev;
+                delete this._storage[fkey];
                 // fall through
               }
               while ((i = i.next) !== head) {
@@ -831,15 +846,18 @@
         Set: (function() {
           var SetShim = function Set() {
             if (!(this instanceof SetShim)) throw new TypeError('Set must be called with "new"');
-            defineProperties(this, {'[[SetData]]': new Map()});
-            Object.defineProperty(this, 'size', {
-              configurable: true,
-              enumerable: false,
-              get: (function() {
-                return this['[[SetData]]'].size;
-              }).bind(this)
+            defineProperties(this, {
+              '[[SetData]]': new collectionShims.Map()
             });
           };
+
+          Object.defineProperty(SetShim.prototype, 'size', {
+            configurable: true,
+            enumerable: false,
+            get: function() {
+              return this['[[SetData]]'].size;
+            }
+          });
 
           defineProperties(SetShim.prototype, {
             has: function(key) {
