@@ -844,53 +844,101 @@
         })(),
 
         Set: (function() {
+          // Creating a Map is expensive.  To speed up the common case of
+          // Sets containing only string or numeric keys, we use an object
+          // as backing storage and lazily create a full Map only when
+          // required.
           var SetShim = function Set() {
             if (!(this instanceof SetShim)) throw new TypeError('Set must be called with "new"');
             defineProperties(this, {
-              '[[SetData]]': new collectionShims.Map()
+              '[[SetData]]': null,
+              '_storage': Object.create(null)
             });
+          };
+
+          // Switch from the object backing storage to a full Map.
+          var ensureMap = function ensureMap(set) {
+            if (!set['[[SetData]]']) {
+              var m = set['[[SetData]]'] = new collectionShims.Map();
+              Object.keys(set._storage).forEach(function(k) {
+                // fast check for leading '$'
+                if (k.charCodeAt(0) === 36) {
+                  k = k.substring(1);
+                } else {
+                  k = +k;
+                }
+                m.set(k, k);
+              });
+              set._storage = null; // free old backing storage
+            }
           };
 
           Object.defineProperty(SetShim.prototype, 'size', {
             configurable: true,
             enumerable: false,
             get: function() {
+              ensureMap(this);
               return this['[[SetData]]'].size;
             }
           });
 
           defineProperties(SetShim.prototype, {
             has: function(key) {
+              var fkey;
+              if (this._storage && (fkey = fastkey(key)) !== null) {
+                return !!this._storage[fkey];
+              }
+              ensureMap(this);
               return this['[[SetData]]'].has(key);
             },
 
             add: function(key) {
+              var fkey;
+              if (this._storage && (fkey = fastkey(key)) !== null) {
+                this._storage[fkey]=true;
+                return;
+              }
+              ensureMap(this);
               return this['[[SetData]]'].set(key, key);
             },
 
             'delete': function(key) {
+              var fkey;
+              if (this._storage && (fkey = fastkey(key)) !== null) {
+                delete this._storage[fkey];
+                return;
+              }
+              ensureMap(this);
               return this['[[SetData]]']['delete'](key);
             },
 
             clear: function() {
+              if (this._storage) {
+                this._storage = Object.create(null);
+                return;
+              }
               return this['[[SetData]]'].clear();
             },
 
             keys: function() {
+              ensureMap(this);
               return this['[[SetData]]'].keys();
             },
 
             values: function() {
+              ensureMap(this);
               return this['[[SetData]]'].values();
             },
 
             entries: function() {
+              ensureMap(this);
               return this['[[SetData]]'].entries();
             },
 
             forEach: function(callback) {
               var context = arguments.length > 1 ? arguments[1] : null;
               var entireSet = this;
+              ensureMap(this);
               this['[[SetData]]'].forEach(function(value, key) {
                 callback.call(context, key, key, entireSet);
               });
