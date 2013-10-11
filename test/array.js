@@ -101,9 +101,9 @@ describe('Array', function() {
       var args = (function () { return arguments; }(1, 2, 3));
       expect(Array.isArray(args)).not.to.be.ok;
       var argsClass = Object.prototype.toString.call(args);
-      expect(args).to.eql([1, 2, 3]);
+      expect(Array.prototype.slice.call(args)).to.eql([1, 2, 3]);
       Array.prototype.copyWithin.call(args, -2, 0);
-      expect(args).to.eql([1, 1, 2]);
+      expect(Array.prototype.slice.call(args)).to.eql([1, 1, 2]);
       expect(Object.prototype.toString.call(args)).to.equal(argsClass);
     });
   });
