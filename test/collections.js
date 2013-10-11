@@ -39,8 +39,11 @@ describe('Collections', function() {
   describe('Map', function() {
     var map;
     var testMapping = function(key, value) {
+      expect(map.has(key)).to.be.false;
+      expect(map.get(key)).to.equal(undefined);
       map.set(key, value);
       expect(map.get(key)).to.equal(value);
+      expect(map.has(key)).to.be.true;
     };
 
     beforeEach(function() {
@@ -76,15 +79,27 @@ describe('Collections', function() {
     });
 
     it('should map values correctly', function() {
-      range(1, 20).forEach(function(number) {
-        testMapping(number, {});
-        testMapping(number / 100, {});
-        testMapping('key-' + number, {});
-      });
+      // Run this test twice, one with the "fast" implementation (which only
+      // allows string and numeric keys) and once with the "slow" impl.
+      for (i = 0; i < 2; i++) {
+        var slowkeys = (i !== 0);
+        map = new Map();
 
-      [+0, -0, Infinity, -Infinity, true, false, null, undefined].forEach(function(key) {
-        testMapping(key, {});
-      });
+        range(1, 20).forEach(function(number) {
+          if (slowkeys) testMapping(number, {});
+          testMapping(number / 100, {});
+          testMapping('key-' + number, {});
+          testMapping('' + number, {});
+          if (slowkeys) testMapping(new String(number), {});
+        });
+
+        [+0, NaN, Infinity, -Infinity, true, false, null, undefined].forEach(function(key) {
+          testMapping(key, {});
+          testMapping('' + key, {});
+        });
+        if (slowkeys) testMapping(-0, {});
+        testMapping('', {});
+      }
     });
 
     it('should map empty values correctly', function() {
@@ -101,7 +116,8 @@ describe('Collections', function() {
       testMapping(key, 'to-be-present');
       expect(map.has(key)).to.be.true;
       expect(map.has({})).to.be.false;
-      testMapping(key, void 0);
+      map.set(key, void 0);
+      expect(map.get(key)).to.equal(undefined);
       expect(map.has(key)).to.be.true;
       expect(map.has({})).to.be.false;
     });
@@ -301,16 +317,31 @@ describe('Collections', function() {
         expect(set.has(key)).to.be.true;
         set['delete'](key);
         expect(set.has(key)).to.be.false;
+        set.add(key); // add it back
       };
 
-      range(1, 20).forEach(function(number) {
-        testSet({});
-        testSet(number);
-        testSet(number / 100);
-        testSet('key-' + number);
-      });
+      // Run this test twice, one with the "fast" implementation (which only
+      // allows string and numeric keys) and once with the "slow" impl.
+      for (i = 0; i < 2; i++) {
+        var slowkeys = (i !== 0);
+        set = new Set();
 
-      [+0, -0, Infinity, -Infinity, true, false, null, undefined].forEach(testSet);
+        range(1, 20).forEach(function(number) {
+          if (slowkeys) testSet({});
+          testSet(number);
+          testSet(number / 100);
+          testSet('key-' + number);
+          testSet('' + number);
+          if (slowkeys) testSet(new String(number));
+        });
+
+        [+0, Infinity, -Infinity, true, false, null, undefined].forEach(function(number) {
+          testSet(number);
+          testSet('' + number);
+        });
+        if (slowkeys) testSet(-0);
+        testSet('');
+      }
     });
 
     it('should has #size', function() {
