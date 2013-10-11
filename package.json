@@ -10,11 +10,10 @@
   },
   "main": "es6-shim",
   "scripts": {
-    "test": "mocha --require test/test_helpers.js"
+    "test": "mocha"
   },
   "testling": {
-    "files": ["es6-shim.js", "test/*.js"],
-    "harness": "mocha",
+    "html": "testling.html",
     "browsers": [
       "iexplore/6.0..latest",
       "firefox/3.0..6.0",
