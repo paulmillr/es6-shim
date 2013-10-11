@@ -99,6 +99,11 @@ describe('Collections', function() {
         });
         if (slowkeys) testMapping(-0, {});
         testMapping('', {});
+        // verify that properties of Object don't peek through.
+        ['hasOwnProperty', 'constructor', 'toString', 'isPrototypeOf',
+         '__proto__', '__parent__', '__count__'].forEach(function(key) {
+           testMapping(key, {});
+         });
       }
     });
 
@@ -341,6 +346,9 @@ describe('Collections', function() {
         });
         if (slowkeys) testSet(-0);
         testSet('');
+        // verify that properties of Object don't peek through.
+        ['hasOwnProperty', 'constructor', 'toString', 'isPrototypeOf',
+         '__proto__', '__parent__', '__count__'].forEach(testSet);
       }
     });
 

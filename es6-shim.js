@@ -654,6 +654,11 @@
         return null;
       };
 
+      var emptyObject = function emptyObject() {
+        // accomodate some older not-quite-ES5 browsers
+        return Object.create ? Object.create(null) : {};
+      };
+
       var collectionShims = {
         Map: (function() {
 
@@ -706,7 +711,7 @@
 
             defineProperties(this, {
               '_head': head,
-              '_storage': Object.create(null),
+              '_storage': emptyObject(),
               '_size': 0
             });
           }
@@ -805,7 +810,7 @@
 
             clear: function() {
               this._size = 0;
-              this._storage = Object.create(null);
+              this._storage = emptyObject();
               var head = this._head, i = head, p = i.next;
               while ((i = p) !== head) {
                 i.key = i.value = empty;
@@ -852,7 +857,7 @@
             if (!(this instanceof SetShim)) throw new TypeError('Set must be called with "new"');
             defineProperties(this, {
               '[[SetData]]': null,
-              '_storage': Object.create(null)
+              '_storage': emptyObject()
             });
           };
 
@@ -914,7 +919,7 @@
 
             clear: function() {
               if (this._storage) {
-                this._storage = Object.create(null);
+                this._storage = emptyObject();
                 return;
               }
               return this['[[SetData]]'].clear();
