@@ -168,17 +168,30 @@ describe('Math', function() {
 
   describe('#sign()', function() {
     it('should be correct', function() {
+      // we also verify that [[ToNumber]] is being called
       [Infinity, 1].forEach(function(value) {
         expect(Math.sign(value)).to.equal(1);
+        expect(Math.sign(''+value)).to.equal(1);
       });
+      expect(Math.sign(true)).to.equal(1);
 
       [-Infinity, -1].forEach(function(value) {
         expect(Math.sign(value)).to.equal(-1);
+        expect(Math.sign(''+value)).to.equal(-1);
       });
 
       expect(isPositiveZero(Math.sign(+0))).to.be.ok;
+      expect(isPositiveZero(Math.sign('0'))).to.be.ok;
+      expect(isPositiveZero(Math.sign('+0'))).to.be.ok;
+      expect(isPositiveZero(Math.sign(''))).to.be.ok;
+      expect(isPositiveZero(Math.sign(' '))).to.be.ok;
+      expect(isPositiveZero(Math.sign(null))).to.be.ok;
+      expect(isPositiveZero(Math.sign(false))).to.be.ok;
       expect(isNegativeZero(Math.sign(-0))).to.be.ok;
+      expect(isNegativeZero(Math.sign('-0'))).to.be.ok;
       expect(Number.isNaN(Math.sign(NaN))).to.be.ok;
+      expect(Number.isNaN(Math.sign('NaN'))).to.be.ok;
+      expect(Number.isNaN(Math.sign(undefined))).to.be.ok;
     });
   });
 
