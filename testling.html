@@ -7,7 +7,7 @@
   <script src="node_modules/chai/chai.js"></script>
   <script src="node_modules/es5-shim/es5-shim.min.js"></script>
   <script src="es6-shim.js"></script>
-  <script>window.expect=chai.expect; mocha.setup({ui:'bdd',reporter:'tap'});</script>
+  <script>chai.Assertion.includeStack=true; window.expect=chai.expect; mocha.setup({ui:'bdd',reporter:'tap'});</script>
   <script src="test/array.js"></script>
   <script src="test/collections.js"></script>
   <script src="test/math.js"></script>
