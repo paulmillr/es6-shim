@@ -32,9 +32,8 @@
   },
   "dependencies": {},
   "devDependencies": {
-    "mocha": "~1.12.1",
-    "chai": "~1.7.2",
+    "mocha": "~1.13.0",
+    "chai": "~1.8.1",
     "es5-shim": "~2.1.0"
   }
 }
-
