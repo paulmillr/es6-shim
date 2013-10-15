@@ -140,6 +140,7 @@
 
       startsWith: function(searchStr) {
         if (this == null) throw new TypeError("Cannot call method 'startsWith' of " + this);
+        if (this === globals) throw new TypeError("Invalid this arg in pre-strict mode browser");
         var thisStr = String(this);
         searchStr = String(searchStr);
         var start = Math.max(ES.toInteger(arguments[1]), 0);
@@ -148,6 +149,7 @@
 
       endsWith: function(searchStr) {
         if (this == null) throw new TypeError("Cannot call method 'endsWith' of " + this);
+        if (this === globals) throw new TypeError("Invalid this arg in pre-strict mode browser");
         var thisStr = String(this);
         searchStr = String(searchStr);
         var thisLen = thisStr.length;
