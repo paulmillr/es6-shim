@@ -22,10 +22,11 @@
       "firefox/nightly",
       "chrome/25.0..latest",
       "chrome/canary",
-      "safari/5.0..latest",
+      "safari/5.0.5..latest",
       "ipad/6.0..latest",
       "iphone/6.0..latest",
-      "opera/12.0"
+      "opera/12.0..latest",
+      "android-browser/4.2..latest"
     ]
   },
   "dependencies": {},
