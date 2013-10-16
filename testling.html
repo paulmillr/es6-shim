@@ -3,9 +3,11 @@
 <head>
   <meta charset="utf-8">
   <title>es6-shim tests</title>
+  <script src="node_modules/es5-shim/es5-shim.js"></script>
+  <script src="node_modules/es5-shim/es5-sham.js"></script>
   <script src="node_modules/mocha/mocha.js"></script>
+  <!-- note that chai uses Object.create() so needs es5-sham to be loaded -->
   <script src="node_modules/chai/chai.js"></script>
-  <script src="node_modules/es5-shim/es5-shim.min.js"></script>
   <script src="es6-shim.js"></script>
   <script>chai.Assertion.includeStack=true; window.expect=chai.expect; mocha.setup({ui:'bdd',reporter:'tap'});</script>
   <script src="test/array.js"></script>
