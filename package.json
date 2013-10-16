@@ -15,7 +15,7 @@
   "testling": {
     "html": "testling.html",
     "browsers": [
-      "iexplore/6.0..latest",
+      "iexplore/9.0..latest",
       "firefox/10.0",
       "firefox/17.0",
       "firefox/22.0..latest",
