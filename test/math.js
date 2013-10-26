@@ -119,8 +119,24 @@ describe('Math', function() {
       expect(Math.hypot(0.1, 100)).to.almostEqual(100.0000499999875);
     });
 
+    it('should coerce to a number', function() {
+      expect(Math.hypot('Infinity', 0)).to.equal(Infinity);
+      expect(Math.hypot('3', '3', '3', '3')).to.equal(6);
+    });
+
+    it('should take more than 3 arguments', function() {
+      expect(Math.hypot(66, 66, 66)).to.almostEqual(114.3153532995459);
+      expect(Math.hypot(66, 66, 66, 66)).to.equal(132);
+    });
+
     it('should have the right length', function() {
       expect(Math.hypot.length).to.equal(2);
+    });
+
+    it('works for very large or small numbers', function() {
+      expect(Math.hypot(1e+300, 1e+300)).to.almostEqual(1.4142135623730952e+300);
+      expect(Math.hypot(1e-300, 1e-300)).to.almostEqual(1.4142135623730952e-300);
+      expect(Math.hypot(1e+300, 1e+300, 2, 3)).to.almostEqual(1.4142135623730952e+300);
     });
   });
 

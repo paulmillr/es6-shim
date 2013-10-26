@@ -329,7 +329,7 @@
       }
     });
 
-	var maxSafeInteger = Math.pow(2, 53) - 1;
+    var maxSafeInteger = Math.pow(2, 53) - 1;
     defineProperties(Number, {
       MAX_SAFE_INTEGER: maxSafeInteger,
       MIN_SAFE_INTEGER: -maxSafeInteger,
@@ -561,18 +561,29 @@
       hypot: function(x, y) {
         var anyNaN = false;
         var allZero = true;
-        var z = arguments.length > 2 ? arguments[2] : 0;
-        if ([x, y, z].some(function(num) {
+        var anyInfinity = false;
+        var numbers = [];
+        Array.prototype.every.call(arguments, function(arg) {
+          var num = Number(arg);
           if (Number.isNaN(num)) anyNaN = true;
-          else if (num === Infinity || num === -Infinity) return true;
+          else if (num === Infinity || num === -Infinity) anyInfinity = true;
           else if (num !== 0) allZero = false;
-        })) return Infinity;
+          if (anyInfinity) {
+            return false;
+          } else if (!anyNaN) {
+            numbers.push(Math.abs(num));
+          }
+          return true;
+        });
+        if (anyInfinity) return Infinity;
         if (anyNaN) return NaN;
         if (allZero) return 0;
-        if (x == null) x = 0;
-        if (y == null) y = 0;
-        if (z == null) z = 0;
-        return Math.sqrt(x * x + y * y + z * z);
+
+        numbers.sort(function (a, b) { return b - a; });
+        var largest = numbers[0];
+        var divided = numbers.map(function (number) { return number / largest; });
+        var sum = divided.reduce(function (sum, number) { return sum += number * number; }, 0);
+        return largest * Math.sqrt(sum);
       },
 
       log2: function(value) {
