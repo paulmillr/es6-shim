@@ -1,3 +1,10 @@
+# es6-shim 0.9.1 (28 October 2013)
+* Added `Array#copyWithin` and `Number.MIN_SAFE_INTEGER`
+* Big speed-up of Maps / Sets for string / number keys:
+  they are O(1) now.
+* Changed `Math.hypot` according to spec.
+* Other small fixes.
+
 # es6-shim 0.9.0 (30 August 2013)
 * Added Array iteration methods: `Array#keys`, `Array#values`, `Array#entries`, which return an `ArrayIterator`
 * Changed `Map` and `Set` constructors to conform to spec when called without `new`
