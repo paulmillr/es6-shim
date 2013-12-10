@@ -44,6 +44,13 @@
     };
 
     var ES = {
+      CheckObjectCoercible: function(x) {
+        if (x == null) { // `null` or `undefined`
+          throw TypeError();
+        }
+        return x;
+      },
+
       ToInt32: function(x) {
         return x >> 0;
       },
@@ -134,7 +141,7 @@
           if (times < 0 || times === Infinity) {
             throw new RangeError();
           }
-          return repeat(String(this), times);
+          return repeat(String(ES.CheckObjectCoercible(this)), times);
         };
       })(),
 

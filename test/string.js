@@ -4,6 +4,12 @@ describe('String', function() {
       expect(function negativeOne() { return 'test'.repeat(-1); }).to.throw(RangeError);
       expect(function infinite() { return 'test'.repeat(Infinity); }).to.throw(RangeError);
     });
+    it('should throw a TypeError when called on null or undefined', function() {
+      expect(function callOnUndefined() { return String.prototype.repeat.call(undefined); }).to.throw(TypeError);
+      expect(function callOnNull() { return String.prototype.repeat.call(null); }).to.throw(TypeError);
+      expect(function callOnUndefined() { return String.prototype.repeat.apply(undefined); }).to.throw(TypeError);
+      expect(function callOnNull() { return String.prototype.repeat.apply(null); }).to.throw(TypeError);
+    });
     it('should coerce to an integer', function() {
       expect('test'.repeat(null)).to.eql('');
       expect('test'.repeat(false)).to.eql('');
@@ -334,7 +340,7 @@ describe('String', function() {
     });
 
     it('String.raw ReturnIfAbrupt - Less Substitutions', function() {
-      var callSite = {};  
+      var callSite = {};
       var str = 'The total is 10 ($';
       callSite.raw = {'0': "The total is ", '1': " ($", '2': " with tax)"};
       expect(String.raw(callSite,10)).to.eql(str);
