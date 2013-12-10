@@ -150,7 +150,7 @@
         var thisStr = String(this);
         searchStr = String(searchStr);
         var start = Math.max(ES.toInteger(arguments[1]), 0);
-        return thisStr.substr(start, searchStr.length) === searchStr;
+        return thisStr.slice(start, start + searchStr.length) === searchStr;
       },
 
       endsWith: function(searchStr) {
