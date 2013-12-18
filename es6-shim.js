@@ -521,7 +521,7 @@
         if (value === 0 || !global_isFinite(value)) {
           return value;
         }
-        return Math.log(value + Math.sqrt(value * value + 1));
+        return value < 0 ? -Math.asinh(-value) : Math.log(value + Math.sqrt(value * value + 1));
       },
 
       atanh: function(value) {
