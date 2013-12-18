@@ -160,9 +160,8 @@
         var thisStr = String(this);
         searchStr = String(searchStr);
         var thisLen = thisStr.length;
-        var pos = (arguments[1] === undefined) ?
-          thisLen : ES.toInteger(arguments[1]);
-        var end = Math.min(pos, thisLen);
+        var pos = arguments[1] === undefined ? thisLen : ES.toInteger(arguments[1]);
+        var end = Math.min(Math.max(pos, 0), thisLen);
         return thisStr.slice(end - searchStr.length, end) === searchStr;
       },
 
