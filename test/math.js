@@ -48,7 +48,8 @@ describe('Math', function() {
       expect(Math.asinh(1234)).to.almostEqual(7.811163549201245);
       expect(Math.asinh(9.99)).to.almostEqual(2.997227420191335);
       expect(Math.asinh(1e150)).to.almostEqual(346.0809111296668);
-      expect(Math.asinh(-1e7)).to.almostEqual(-16.805431370234086);
+      expect(Math.asinh(1e7)).to.almostEqual(16.811242831518268);
+      expect(Math.asinh(-1e7)).to.almostEqual(-16.811242831518268);
     });
   });
 
