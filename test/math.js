@@ -30,12 +30,21 @@ describe('Math', function() {
   });
 
   describe('#asinh()', function() {
-    it('should be correct', function() {
+    it('should be correct for NaN', function() {
       expect(Number.isNaN(Math.asinh(NaN))).to.be.ok;
+    });
+
+    it('should be correct for zeroes', function() {
       expect(isPositiveZero(Math.asinh(+0))).to.be.ok;
       expect(isNegativeZero(Math.asinh(-0))).to.be.ok;
+    });
+
+    it('should be correct for Infinities', function() {
       expect(Math.asinh(Infinity)).to.equal(Infinity);
       expect(Math.asinh(-Infinity)).to.equal(-Infinity);
+    });
+
+    it('should be correct', function() {
       expect(Math.asinh(1234)).to.almostEqual(7.811163549201245);
       expect(Math.asinh(9.99)).to.almostEqual(2.997227420191335);
       expect(Math.asinh(1e150)).to.almostEqual(346.0809111296668);
@@ -76,12 +85,21 @@ describe('Math', function() {
   });
 
   describe('#cosh()', function() {
-    it('should be correct', function() {
+    it('should be correct for NaN', function() {
       expect(Number.isNaN(Math.cosh(NaN))).to.be.ok;
-      expect(Math.cosh(-0)).to.equal(1);
-      expect(Math.cosh(+0)).to.equal(1);
+    });
+
+    it('should be correct for Infinities', function() {
       expect(Math.cosh(Infinity)).to.equal(Infinity);
       expect(Math.cosh(-Infinity)).to.equal(-Infinity);
+    });
+
+    it('should be correct for zeroes', function() {
+      expect(Math.cosh(-0)).to.equal(1);
+      expect(Math.cosh(+0)).to.equal(1);
+    });
+
+    it('should be correct', function() {
       // Overridden precision values here are for Chrome, as of v25.0.1364.172
       expect(Math.cosh(12)).to.almostEqual(81377.39571257407, 3e-11);
       expect(Math.cosh(22)).to.almostEqual(1792456423.065795780980053377, 1e-5);
@@ -259,12 +277,7 @@ describe('Math', function() {
     var obj = {};
     var arr = [];
 
-    it('should be correct', function() {
-      expect(Math.imul(2, 4)).to.equal(8);
-      expect(Math.imul(-1, 8)).to.equal(-8);
-      expect(Math.imul(-2, -2)).to.equal(4);
-      expect(Math.imul(0xffffffff, 5)).to.equal(-5);
-      expect(Math.imul(0xfffffffe, 5)).to.equal(-10);
+    it('should be correct for non-numbers', function() {
       expect(Math.imul(false, 7)).to.equal(0);
       expect(Math.imul(7, false)).to.equal(0);
       expect(Math.imul(false, false)).to.equal(0);
@@ -274,6 +287,23 @@ describe('Math', function() {
       expect(Math.imul(undefined, 7)).to.equal(0);
       expect(Math.imul(7, undefined)).to.equal(0);
       expect(Math.imul(undefined, undefined)).to.equal(0);
+      expect(Math.imul(str, 7)).to.equal(0);
+      expect(Math.imul(7, str)).to.equal(0);
+      expect(Math.imul(obj, 7)).to.equal(0);
+      expect(Math.imul(7, obj)).to.equal(0);
+      expect(Math.imul(arr, 7)).to.equal(0);
+      expect(Math.imul(7, arr)).to.equal(0);
+    });
+
+    it('should be correct for hex values', function() {
+      expect(Math.imul(0xffffffff, 5)).to.equal(-5);
+      expect(Math.imul(0xfffffffe, 5)).to.equal(-10);
+    });
+
+    it('should be correct', function() {
+      expect(Math.imul(2, 4)).to.equal(8);
+      expect(Math.imul(-1, 8)).to.equal(-8);
+      expect(Math.imul(-2, -2)).to.equal(4);
       expect(Math.imul(-0, 7)).to.equal(0);
       expect(Math.imul(7, -0)).to.equal(0);
       expect(Math.imul(0.1, 7)).to.equal(0);
@@ -284,12 +314,6 @@ describe('Math', function() {
       expect(Math.imul(7, 1.1)).to.equal(7);
       expect(Math.imul(1.9, 7)).to.equal(7);
       expect(Math.imul(7, 1.9)).to.equal(7);
-      expect(Math.imul(str, 7)).to.equal(0);
-      expect(Math.imul(7, str)).to.equal(0);
-      expect(Math.imul(obj, 7)).to.equal(0);
-      expect(Math.imul(7, obj)).to.equal(0);
-      expect(Math.imul(arr, 7)).to.equal(0);
-      expect(Math.imul(7, arr)).to.equal(0);
     });
   });
 });
