@@ -147,6 +147,7 @@
 
       startsWith: function(searchStr) {
         if (this == null) throw new TypeError("Cannot call method 'startsWith' of " + this);
+        if (_toString.call(searchStr) === '[object RegExp]') throw new TypeError('Cannot call method "startsWith" with a regex');
         var thisStr = String(this);
         searchStr = String(searchStr);
         var start = Math.max(ES.toInteger(arguments[1]), 0);
@@ -155,6 +156,7 @@
 
       endsWith: function(searchStr) {
         if (this == null) throw new TypeError("Cannot call method 'endsWith' of " + this);
+        if (_toString.call(searchStr) === '[object RegExp]') throw new TypeError('Cannot call method "endsWith" with a regex');
         var thisStr = String(this);
         searchStr = String(searchStr);
         var thisLen = thisStr.length;
