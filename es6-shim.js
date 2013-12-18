@@ -6,6 +6,12 @@
 (function(undefined) {
   'use strict';
 
+  var isCallableWithoutNew = function (func) {
+    try { func(); }
+    catch (e) { return false; }
+    return true;
+  };
+
   var arePropertyDescriptorsSupported = function() {
     try {
       Object.defineProperty({}, 'x', {});
@@ -976,6 +982,7 @@
           - In all current Firefox, Set#entries/keys/values & Map#clear do not exist
           - https://bugzilla.mozilla.org/show_bug.cgi?id=869996
           - In Firefox 24, Map and Set do not implement forEach
+          - In Firefox 25 at least, Map and Set are callable without "new"
         */
         if (
           typeof globals.Map.prototype.clear !== 'function' ||
@@ -983,7 +990,9 @@
           new globals.Map().size !== 0 ||
           typeof globals.Set.prototype.keys !== 'function' ||
           typeof globals.Map.prototype.forEach !== 'function' ||
-          typeof globals.Set.prototype.forEach !== 'function'
+          typeof globals.Set.prototype.forEach !== 'function' ||
+          isCallableWithoutNew(globals.Map) ||
+          isCallableWithoutNew(globals.Set)
         ) {
           globals.Map = collectionShims.Map;
           globals.Set = collectionShims.Set;
