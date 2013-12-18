@@ -102,6 +102,11 @@ describe('String', function() {
       expect('abcd'.startsWith({ toString: function() { return 'ab'; } })).to.be.ok;
       expect('abcd'.startsWith({ toString: function() { return 'foo'; } })).not.to.be.ok;
     });
+
+    it('should not allow a regex', function() {
+      expect(function() { return 'abcd'.startsWith(/abc/); }).to.throw(TypeError);
+      expect(function() { return 'abcd'.startsWith(new RegExp('abc')); }).to.throw(TypeError);
+    });
   });
 
   describe('#endsWith()', function() {
@@ -171,6 +176,11 @@ describe('String', function() {
     it('should coerce to a string', function() {
       expect('abcd'.endsWith({ toString: function() { return 'cd'; } })).to.be.ok;
       expect('abcd'.endsWith({ toString: function() { return 'foo'; } })).not.to.be.ok;
+    });
+
+    it('should not allow a regex', function() {
+      expect(function() { return 'abcd'.endsWith(/abc/); }).to.throw(TypeError);
+      expect(function() { return 'abcd'.endsWith(new RegExp('abc')); }).to.throw(TypeError);
     });
   });
 
