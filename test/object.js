@@ -74,7 +74,7 @@ describe('Object', function() {
   describe('Object.setPrototypeOf()', function() {
     describe('argument checking', function() {
       it('should throw TypeError if first arg is not object', function() {
-        var nonObjects = [null, true, false, 1, 3, 'foo'];
+        var nonObjects = [null, undefined, true, false, 1, 3, 'foo'];
         nonObjects.forEach(function(value) {
           expect(function() { Object.setPrototypeOf(value); }).to.throw(TypeError);
         });

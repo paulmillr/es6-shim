@@ -45,9 +45,7 @@
 
     var ES = {
       CheckObjectCoercible: function(x) {
-        if (x == null) { // `null` or `undefined`
-          throw TypeError();
-        }
+        if (x == null) throw TypeError('Cannot call method on ' + x);
         return x;
       },
 
@@ -137,27 +135,26 @@
         };
 
         return function(times) {
+          var thisStr = String(ES.CheckObjectCoercible(this));
           times = ES.toInteger(times);
           if (times < 0 || times === Infinity) {
-            throw new RangeError();
+            throw new RangeError('Invalid String#repeat value');
           }
-          return repeat(String(ES.CheckObjectCoercible(this)), times);
+          return repeat(thisStr, times);
         };
       })(),
 
       startsWith: function(searchStr) {
-        if (this == null) throw new TypeError("Cannot call method 'startsWith' of " + this);
+        var thisStr = String(ES.CheckObjectCoercible(this));
         if (_toString.call(searchStr) === '[object RegExp]') throw new TypeError('Cannot call method "startsWith" with a regex');
-        var thisStr = String(this);
         searchStr = String(searchStr);
         var start = Math.max(ES.toInteger(arguments[1]), 0);
         return thisStr.slice(start, start + searchStr.length) === searchStr;
       },
 
       endsWith: function(searchStr) {
-        if (this == null) throw new TypeError("Cannot call method 'endsWith' of " + this);
+        var thisStr = String(ES.CheckObjectCoercible(this));
         if (_toString.call(searchStr) === '[object RegExp]') throw new TypeError('Cannot call method "endsWith" with a regex');
-        var thisStr = String(this);
         searchStr = String(searchStr);
         var thisLen = thisStr.length;
         var pos = arguments[1] === undefined ? thisLen : ES.toInteger(arguments[1]);
@@ -167,20 +164,19 @@
 
       contains: function(searchString) {
         var position = arguments[1];
-
         // Somehow this trick makes method 100% compat with the spec.
         return _indexOf.call(this, searchString, position) !== -1;
       },
 
       codePointAt: function(pos) {
-        var s = String(this);
+        var thisStr = String(ES.CheckObjectCoercible(this));
         var position = ES.toInteger(pos);
-        var length = s.length;
+        var length = thisStr.length;
         if (position < 0 || position >= length) return undefined;
-        var first = s.charCodeAt(position);
+        var first = thisStr.charCodeAt(position);
         var isEnd = (position + 1 === length);
         if (first < 0xD800 || first > 0xDBFF || isEnd) return first;
-        var second = s.charCodeAt(position + 1);
+        var second = thisStr.charCodeAt(position + 1);
         if (second < 0xDC00 || second > 0xDFFF) return first;
         return ((first - 0xD800) * 1024) + (second - 0xDC00) + 0x10000;
       }
@@ -192,7 +188,7 @@
         var thisArg = arguments[2];
 
         if (mapFn !== undefined && _toString.call(mapFn) !== '[object Function]') {
-          throw new TypeError('when provided, the second argument must be a function');
+          throw new TypeError('Array.from: when provided, the second argument must be a function');
         }
 
         var list = Object(iterable);

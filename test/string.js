@@ -1,15 +1,21 @@
 describe('String', function() {
+  var testObjectCoercible = function(methodName) {
+    var fn = String.prototype[methodName];
+    expect(function() { return fn.call(undefined); }).to.throw(TypeError);
+    expect(function() { return fn.call(null); }).to.throw(TypeError);
+    expect(function() { return fn.apply(undefined); }).to.throw(TypeError);
+    expect(function() { return fn.apply(null); }).to.throw(TypeError);
+  };
   describe('#repeat()', function() {
+    it('should throw a TypeError when called on null or undefined', function() {
+      testObjectCoercible('repeat');
+    });
+
     it('should throw a RangeError when negative or infinite', function() {
       expect(function negativeOne() { return 'test'.repeat(-1); }).to.throw(RangeError);
       expect(function infinite() { return 'test'.repeat(Infinity); }).to.throw(RangeError);
     });
-    it('should throw a TypeError when called on null or undefined', function() {
-      expect(function callOnUndefined() { return String.prototype.repeat.call(undefined); }).to.throw(TypeError);
-      expect(function callOnNull() { return String.prototype.repeat.call(null); }).to.throw(TypeError);
-      expect(function callOnUndefined() { return String.prototype.repeat.apply(undefined); }).to.throw(TypeError);
-      expect(function callOnNull() { return String.prototype.repeat.apply(null); }).to.throw(TypeError);
-    });
+
     it('should coerce to an integer', function() {
       expect('test'.repeat(null)).to.eql('');
       expect('test'.repeat(false)).to.eql('');
@@ -22,19 +28,23 @@ describe('String', function() {
     it('should work', function() {
       expect('test'.repeat(3)).to.eql('testtesttest');
     });
-    it('should work - integer type', function() {
+    it('should work on integers', function() {
       expect(String.prototype.repeat.call(2, 3)).to.eql('222');
     });
-    it('should work - boolean type', function() {
+    it('should work on booleans', function() {
       expect(String.prototype.repeat.call(true, 3)).to.eql('truetruetrue');
     });
-    it('should work - Date type', function() {
+    it('should work on dates', function() {
       var d = new Date();
       expect(String.prototype.repeat.call(d, 3)).to.eql([d, d, d].join(''));
     });
   });
 
   describe('#startsWith()', function() {
+    it('should throw a TypeError when called on null or undefined', function() {
+      testObjectCoercible('startsWith');
+    });
+
     it('should be truthy on correct results', function() {
       expect('test'.startsWith('te')).to.be.ok;
       expect('test'.startsWith('st')).to.not.be.ok;
@@ -110,6 +120,10 @@ describe('String', function() {
   });
 
   describe('#endsWith()', function() {
+    it('should throw a TypeError when called on null or undefined', function() {
+      testObjectCoercible('endsWith');
+    });
+
     it('should be truthy on correct results', function() {
       expect('test'.endsWith('st')).to.be.ok;
       expect('test'.endsWith('te')).to.not.be.ok;
@@ -192,6 +206,10 @@ describe('String', function() {
   });
 
   describe('#contains()', function() {
+    it('should throw a TypeError when called on null or undefined', function() {
+      testObjectCoercible('contains');
+    });
+
     it('should be truthy on correct results', function() {
       expect('test'.contains('es')).to.be.ok;
       expect('abc'.contains('a')).to.be.ok;
@@ -296,14 +314,18 @@ describe('String', function() {
   });
 
   describe('#codePointAt()', function() {
-    it('works', function() {
+    it('should throw a TypeError when called on null or undefined', function() {
+      testObjectCoercible('codePointAt');
+    });
+
+    it('should work', function() {
       var str = 'abc';
       expect(str.codePointAt(0)).to.equal(97);
       expect(str.codePointAt(1)).to.equal(98);
       expect(str.codePointAt(2)).to.equal(99);
     });
 
-    it('works with unicode', function() {
+    it('should work with unicode', function() {
       expect('\u2500'.codePointAt(0)).to.equal(0x2500);
       expect('\ud800\udc00'.codePointAt(0)).to.equal(0x10000);
       expect('\udbff\udfff'.codePointAt(0)).to.equal(0x10ffff);
@@ -312,7 +334,7 @@ describe('String', function() {
       expect('\ud800\udc00\udbff\udfff'.codePointAt(2)).to.equal(0x10ffff);
     });
 
-    it('returns undefined when pos is negative or too large', function() {
+    it('should return undefined when pos is negative or too large', function() {
       var str = 'abc';
       expect(str.codePointAt(-1)).to.be.undefined;
       expect(str.codePointAt(str.length)).to.be.undefined;
