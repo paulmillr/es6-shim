@@ -567,7 +567,8 @@
       cosh: function(value) {
         value = Number(value);
         if (value === 0) return 1; // +0 or -0
-        if (!global_isFinite(value)) return value;
+        if (Number.isNaN(value)) return NaN;
+        if (!global_isFinite(value)) return Infinity;
         if (value < 0) value = -value;
         if (value > 21) return Math.exp(value) / 2;
         return (Math.exp(value) + Math.exp(-value)) / 2;
@@ -683,10 +684,6 @@
     };
     defineProperties(Math, MathShims);
 
-    if (Math.cosh(-Infinity) > 0) {
-      // Firefox 25, at least, returns positive Infinity instead of negative
-      Math.cosh = MathShims.cosh;
-    }
     if (Math.imul(0xffffffff, 5) !== -5) {
       // Safari 6.1, at least, reports "0" for this value
       Math.imul = MathShims.imul;

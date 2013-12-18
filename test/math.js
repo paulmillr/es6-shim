@@ -92,7 +92,7 @@ describe('Math', function() {
 
     it('should be correct for Infinities', function() {
       expect(Math.cosh(Infinity)).to.equal(Infinity);
-      expect(Math.cosh(-Infinity)).to.equal(-Infinity);
+      expect(Math.cosh(-Infinity)).to.equal(Infinity);
     });
 
     it('should be correct for zeroes', function() {
