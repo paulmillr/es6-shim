@@ -1,3 +1,8 @@
+# es6-shim 0.9.2 (18 December 2013)
+* Negative `String#endsWith` position is now handled properly.
+* `TypeError` is now thrown when string methods are called
+  on `null` / `undefined`.
+
 # es6-shim 0.9.1 (28 October 2013)
 * Added `Array#copyWithin` and `Number.MIN_SAFE_INTEGER`
 * Big speed-up of Maps / Sets for string / number keys:
