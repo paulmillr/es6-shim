@@ -507,7 +507,7 @@
       }
     });
 
-    defineProperties(Math, {
+    var MathShims = {
       acosh: function(value) {
         value = Number(value);
         if (Number.isNaN(value) || value < 1) return NaN;
@@ -660,7 +660,13 @@
         // the final |0 converts the unsigned value into a signed value
         return ((al * bl) + (((ah * bl + al * bh) << 16) >>> 0)|0);
       }
-    });
+    };
+    defineProperties(Math, MathShims);
+
+    if (Math.cosh(-Infinity) > 0) {
+      // Firefox 25, at least, returns positive Infinity instead of negative
+      Math.cosh = MathShims.cosh;
+    }
 
     // Map and Set require a true ES5 environment
     if (supportsDescriptors) {
