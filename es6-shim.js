@@ -667,6 +667,10 @@
       // Firefox 25, at least, returns positive Infinity instead of negative
       Math.cosh = MathShims.cosh;
     }
+    if (Math.imul(0xffffffff, 5) !== -5) {
+      // Safari 6.1, at least, reports "0" for this value
+      Math.imul = MathShims.imul;
+    }
 
     // Map and Set require a true ES5 environment
     if (supportsDescriptors) {
