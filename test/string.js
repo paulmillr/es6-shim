@@ -182,6 +182,13 @@ describe('String', function() {
       expect(function() { return 'abcd'.endsWith(/abc/); }).to.throw(TypeError);
       expect(function() { return 'abcd'.endsWith(new RegExp('abc')); }).to.throw(TypeError);
     });
+
+    it('should handle negative and zero positions properly', function() {
+      expect('abcd'.endsWith('bcd', 0)).not.to.be.ok;
+      expect('abcd'.endsWith('bcd', -2)).not.to.be.ok;
+      expect('abcd'.endsWith('b', -2)).not.to.be.ok;
+      expect('abcd'.endsWith('ab', -2)).not.to.be.ok;
+    });
   });
 
   describe('#contains()', function() {
