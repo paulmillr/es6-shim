@@ -15,10 +15,23 @@
     }
   };
 
+  var startsWithRejectsRegex = function() {
+    var rejectsRegex = false;
+    if (String.prototype.startsWith) {
+      try {
+        '/a/'.startsWith(/a/);
+      } catch (e) { /* this is spec compliant */
+        rejectsRegex = true;
+      }
+    }
+    return rejectsRegex;
+  };
+
   var main = function() {
     var globals = (typeof global === 'undefined') ? window : global;
     var global_isFinite = globals.isFinite;
     var supportsDescriptors = !!Object.defineProperty && arePropertyDescriptorsSupported();
+    var startsWithIsCompliant = startsWithRejectsRegex();
     var _slice = Array.prototype.slice;
     var _indexOf = String.prototype.indexOf;
     var _toString = Object.prototype.toString;
@@ -123,7 +136,7 @@
       }
     });
 
-    defineProperties(String.prototype, {
+    var StringShims = {
       // Fast repeat, uses the `Exponentiation by squaring` algorithm.
       // Perf: http://jsperf.com/string-repeat2/2
       repeat: (function() {
@@ -180,7 +193,14 @@
         if (second < 0xDC00 || second > 0xDFFF) return first;
         return ((first - 0xD800) * 1024) + (second - 0xDC00) + 0x10000;
       }
-    });
+    };
+    defineProperties(String.prototype, StringShims);
+
+    if (!startsWithIsCompliant) {
+      // Firefox has a noncompliant startsWith implementation
+      String.prototype.startsWith = StringShims.startsWith;
+      String.prototype.endsWith = StringShims.endsWith;
+    }
 
     defineProperties(Array, {
       from: function(iterable) {
