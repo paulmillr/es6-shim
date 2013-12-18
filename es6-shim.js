@@ -6,6 +6,12 @@
 (function(undefined) {
   'use strict';
 
+  var isCallableWithoutNew = function (func) {
+    try { func(); }
+    catch (e) { return false; }
+    return true;
+  };
+
   var arePropertyDescriptorsSupported = function() {
     try {
       Object.defineProperty({}, 'x', {});
@@ -521,7 +527,7 @@
       }
     });
 
-    defineProperties(Math, {
+    var MathShims = {
       acosh: function(value) {
         value = Number(value);
         if (Number.isNaN(value) || value < 1) return NaN;
@@ -535,7 +541,7 @@
         if (value === 0 || !global_isFinite(value)) {
           return value;
         }
-        return Math.log(value + Math.sqrt(value * value + 1));
+        return value < 0 ? -Math.asinh(-value) : Math.log(value + Math.sqrt(value * value + 1));
       },
 
       atanh: function(value) {
@@ -674,7 +680,17 @@
         // the final |0 converts the unsigned value into a signed value
         return ((al * bl) + (((ah * bl + al * bh) << 16) >>> 0)|0);
       }
-    });
+    };
+    defineProperties(Math, MathShims);
+
+    if (Math.cosh(-Infinity) > 0) {
+      // Firefox 25, at least, returns positive Infinity instead of negative
+      Math.cosh = MathShims.cosh;
+    }
+    if (Math.imul(0xffffffff, 5) !== -5) {
+      // Safari 6.1, at least, reports "0" for this value
+      Math.imul = MathShims.imul;
+    }
 
     // Map and Set require a true ES5 environment
     if (supportsDescriptors) {
@@ -996,6 +1012,7 @@
           - In all current Firefox, Set#entries/keys/values & Map#clear do not exist
           - https://bugzilla.mozilla.org/show_bug.cgi?id=869996
           - In Firefox 24, Map and Set do not implement forEach
+          - In Firefox 25 at least, Map and Set are callable without "new"
         */
         if (
           typeof globals.Map.prototype.clear !== 'function' ||
@@ -1003,7 +1020,9 @@
           new globals.Map().size !== 0 ||
           typeof globals.Set.prototype.keys !== 'function' ||
           typeof globals.Map.prototype.forEach !== 'function' ||
-          typeof globals.Set.prototype.forEach !== 'function'
+          typeof globals.Set.prototype.forEach !== 'function' ||
+          isCallableWithoutNew(globals.Map) ||
+          isCallableWithoutNew(globals.Set)
         ) {
           globals.Map = collectionShims.Map;
           globals.Set = collectionShims.Set;
