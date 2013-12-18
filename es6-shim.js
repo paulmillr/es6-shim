@@ -6,7 +6,7 @@
 (function(undefined) {
   'use strict';
 
-  var isCallableWithoutNew = function (func) {
+  var isCallableWithoutNew = function(func) {
     try { func(); }
     catch (e) { return false; }
     return true;
