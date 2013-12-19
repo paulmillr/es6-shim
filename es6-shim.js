@@ -86,7 +86,7 @@
 
     defineProperties(String, {
       fromCodePoint: function() {
-        var points = _slice.call(arguments, 0);
+        var points = _slice.call(arguments, 0, arguments.length);
         var result = [];
         var next;
         for (var i = 0, length = points.length; i < length; i++) {
@@ -108,8 +108,8 @@
       },
 
       raw: function() {
-        var callSite = arguments[0];
-        var substitutions = _slice.call(arguments, 1);
+        var callSite = arguments.length > 0 ? arguments[0] : undefined;
+        var substitutions = _slice.call(arguments, 1, arguments.length);
         var cooked = Object(callSite);
         var rawValue = cooked.raw;
         var raw = Object(rawValue);
@@ -167,7 +167,8 @@
         var thisStr = String(ES.CheckObjectCoercible(this));
         if (_toString.call(searchStr) === '[object RegExp]') throw new TypeError('Cannot call method "startsWith" with a regex');
         searchStr = String(searchStr);
-        var start = Math.max(ES.toInteger(arguments[1]), 0);
+        var startArg = arguments.length > 1 ? arguments[1] : undefined;
+        var start = Math.max(ES.toInteger(startArg), 0);
         return thisStr.slice(start, start + searchStr.length) === searchStr;
       },
 
@@ -176,13 +177,14 @@
         if (_toString.call(searchStr) === '[object RegExp]') throw new TypeError('Cannot call method "endsWith" with a regex');
         searchStr = String(searchStr);
         var thisLen = thisStr.length;
-        var pos = arguments[1] === undefined ? thisLen : ES.toInteger(arguments[1]);
+        var posArg = arguments.length > 1 ? arguments[1] : undefined;
+        var pos = posArg === undefined ? thisLen : ES.toInteger(posArg);
         var end = Math.min(Math.max(pos, 0), thisLen);
         return thisStr.slice(end - searchStr.length, end) === searchStr;
       },
 
       contains: function(searchString) {
-        var position = arguments[1];
+        var position = arguments.length > 1 ? arguments[1] : undefined;
         // Somehow this trick makes method 100% compat with the spec.
         return _indexOf.call(this, searchString, position) !== -1;
       },
@@ -210,8 +212,8 @@
 
     defineProperties(Array, {
       from: function(iterable) {
-        var mapFn = arguments[1];
-        var thisArg = arguments[2];
+        var mapFn = arguments.length > 1 ? arguments[1] : undefined;
+        var thisArg = arguments.length > 2 ? arguments[2] : undefined;
 
         if (mapFn !== undefined && _toString.call(mapFn) !== '[object Function]') {
           throw new TypeError('Array.from: when provided, the second argument must be a function');
@@ -323,7 +325,7 @@
         if (typeof predicate !== 'function') {
           throw new TypeError('Array#find: predicate must be a function');
         }
-        var thisArg = arguments[1];
+        var thisArg = arguments.length > 1 ? arguments[1] : undefined;
         for (var i = 0, value; i < length && i in list; i++) {
           value = list[i];
           if (predicate.call(thisArg, value, i, list)) return value;
@@ -338,7 +340,7 @@
         if (typeof predicate !== 'function') {
           throw new TypeError('Array#findIndex: predicate must be a function');
         }
-        var thisArg = arguments[1];
+        var thisArg = arguments.length > 1 ? arguments[1] : undefined;
         for (var i = 0, value; i < length && i in list; i++) {
           value = list[i];
           if (predicate.call(thisArg, value, i, list)) return i;
