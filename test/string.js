@@ -1,3 +1,5 @@
+Object.prototype[1] = 42;
+
 describe('String', function() {
   var testObjectCoercible = function(methodName) {
     var fn = String.prototype[methodName];
@@ -392,3 +394,5 @@ describe('String', function() {
     });
   });
 });
+
+delete Object.prototype[1];
