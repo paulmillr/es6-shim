@@ -1,3 +1,5 @@
+Object.prototype[1] = 42;
+
 describe('Array', function() {
   var list = [5, 10, 15, 20];
 
@@ -339,3 +341,5 @@ describe('Array', function() {
     });
   });
 });
+
+delete Object.prototype[1];
