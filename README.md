@@ -44,8 +44,8 @@ For node.js:
     * `from()`
     * `of()`
 * `Array.prototype`:
-    * `find()`
-    * `findIndex()`
+    * `find()` ([a standalone shim is also available](https://github.com/paulmillr/Array.prototype.find))
+    * `findIndex()` ([a standalone shim is also available](https://github.com/paulmillr/Array.prototype.findIndex))
     * `keys()` (note: keys/values/entries return an `ArrayIterator` object)
     * `entries()`
     * `values()`
