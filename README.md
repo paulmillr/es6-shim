@@ -22,14 +22,14 @@ For node.js:
 
 * `Map`, `Set` (requires ES5)
 * `String`:
-    * `fromCodePoint()`
+    * `fromCodePoint()` ([a standalone shim is also available](http://mths.be/fromcodepoint))
     * `raw()`
 * `String.prototype`:
-    * `codePointAt()`
-    * `repeat()`
-    * `startsWith()`
-    * `endsWith()`
-    * `contains()`
+    * `codePointAt()` ([a standalone shim is also available](http://mths.be/codepointat))
+    * `repeat()` ([a standalone shim is also available](http://mths.be/repeat))
+    * `startsWith()` ([a standalone shim is also available](http://mths.be/startswith))
+    * `endsWith()` ([a standalone shim is also available](http://mths.be/endswith))
+    * `contains()` ([a standalone shim is also available](http://mths.be/contains))
 * `Number`:
     * `MAX_SAFE_INTEGER`
     * `EPSILON`
