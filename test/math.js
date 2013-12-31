@@ -317,5 +317,57 @@ describe('Math', function() {
       expect(Math.imul(7, 1.9)).to.equal(7);
     });
   });
+
+  describe('Math.fround', function() {
+    // Mozilla's reference tests: https://bug900125.bugzilla.mozilla.org/attachment.cgi?id=793163
+    it('returns NaN for undefined', function() {
+      expect(Number.isNaN(Math.fround())).to.be.ok;
+    });
+
+    it('returns NaN for NaN', function() {
+      expect(Number.isNaN(Math.fround(NaN))).to.be.ok;
+    });
+
+    it('works for zeroes and infinities', function() {
+      expect(isPositiveZero(Math.fround(0))).to.be.ok;
+      expect(isNegativeZero(Math.fround(-0))).to.be.ok;
+      expect(Math.fround(Infinity)).to.equal(Infinity);
+      expect(Math.fround(-Infinity)).to.equal(-Infinity);
+    });
+
+    it('returns infinity for large numbers', function() {
+      expect(Math.fround(1.7976931348623157e+308)).to.equal(Infinity);
+      expect(Math.fround(-1.7976931348623157e+308)).to.equal(-Infinity);
+      expect(Math.fround(3.4028235677973366e+38)).to.equal(Infinity);
+    });
+
+    it('returns zero for really small numbers', function() {
+      expect(Number.MIN_VALUE).to.equal(Math.pow(2, -1074)); // sanity check
+      expect(Math.fround(Number.MIN_VALUE)).to.equal(0);
+      expect(Math.fround(-Number.MIN_VALUE)).to.equal(0);
+    });
+
+    it('rounds properly', function() {
+      expect(Math.fround(3)).to.equal(3);
+      expect(Math.fround(-3)).to.equal(-3);
+    });
+
+    it('rounds properly with the max float 32', function() {
+      var maxFloat32 = 3.4028234663852886e+38;
+      expect(Math.fround(maxFloat32)).to.equal(maxFloat32);
+      expect(Math.fround(-maxFloat32)).to.equal(-maxFloat32);
+      expect(Math.fround(maxFloat32 + Math.pow(2, Math.pow(2, 8 - 1) - 1 - 23 - 2))).to.equal(maxFloat32); // round-nearest rounds down to maxFloat32
+    });
+
+    it('rounds properly with the min float 32', function() {
+      var minFloat32 = 1.401298464324817e-45;
+      expect(Math.fround(minFloat32)).to.equal(minFloat32);
+      expect(Math.fround(-minFloat32)).to.equal(-minFloat32);
+      expect(Math.fround(minFloat32 / 2)).to.equal(0);
+      expect(Math.fround(-minFloat32 / 2)).to.equal(0);
+      expect(Math.fround(minFloat32 / 2 + Math.pow(2, -202))).to.equal(minFloat32);
+      expect(Math.fround(-minFloat32 / 2 - Math.pow(2, -202))).to.equal(-minFloat32);
+    });
+  });
 });
 
