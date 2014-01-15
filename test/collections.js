@@ -238,6 +238,21 @@ describe('Collections', function() {
         expect(hasFoundD).to.equal(true);
       });
 
+      it('visits keys added in the iterator when there is a deletion', function() {
+        var hasSeenFour = false;;
+        var map = new Map();
+        map.set('0', 42);
+        map.forEach(function (value, key) {
+          if (key === '0') {
+            map.delete('0');
+            map.set('4', 'a value');
+          } else if (key === '4') {
+            hasSeenFour = true;
+          }
+        });
+        expect(hasSeenFour).to.equal(true);
+      });
+
       it('does not visit keys deleted before a visit', function() {
         var hasVisitedC = false;
         map.forEach(function (value, key) {
