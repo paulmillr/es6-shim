@@ -244,7 +244,7 @@ describe('Collections', function() {
         map.set('0', 42);
         map.forEach(function (value, key) {
           if (key === '0') {
-            map.delete('0');
+            map['delete']('0');
             map.set('4', 'a value');
           } else if (key === '4') {
             hasSeenFour = true;
@@ -428,15 +428,114 @@ describe('Collections', function() {
         expect(foundSet).to.eql(expectedSet);
       });
 
+      it('should iterate over empty keys', function() {
+        set.clear();
+        var expectedKeys = [{}, null, undefined, '', NaN, 0];
+        expectedKeys.forEach(function (key) {
+          set.add(key);
+        });
+        var foundKeys = [];
+        set.forEach(function (value, key, entireSet) {
+          expect([key]).to.be.theSameSet([value]); // handles NaN correctly
+          expect(entireSet.has(key)).to.equal(true);
+          foundKeys.push(key);
+        });
+        expect(foundKeys).to.be.theSameSet(expectedKeys);
+      });
+
       it('should support the thisArg', function() {
         var context = function () {};
-        set.forEach(function (value, alsoValue, entireMap) {
+        set.forEach(function (value, alsoValue, entireSet) {
           expect(this).to.equal(context);
         }, context);
       });
 
       it('should have a length of 1', function() {
         expect(Set.prototype.forEach.length).to.equal(1);
+      });
+
+      it('should not revisit modified keys', function() {
+        var hasModifiedA = false;
+        set.forEach(function (value, key) {
+          if (!hasModifiedA && key === 'a') {
+            set.add('a');
+            hasModifiedA = true;
+          } else {
+            expect(key).not.to.equal('a');
+          }
+        });
+      });
+
+      it('visits keys added in the iterator', function() {
+        var hasAdded = false;
+        var hasFoundD = false;
+        set.forEach(function (value, key) {
+          if (!hasAdded) {
+            set.add('d');
+            hasAdded = true;
+          } else if (key === 'd') {
+            hasFoundD = true;
+          }
+        });
+        expect(hasFoundD).to.equal(true);
+      });
+
+      it('visits keys added in the iterator when there is a deletion (slow path)', function() {
+        var hasSeenFour = false;;
+        var set = new Set();
+        set.add({}); // force use of the slow O(N) implementation
+        set.add('0');
+        set.forEach(function (value, key) {
+          if (key === '0') {
+            set['delete']('0');
+            set.add('4');
+          } else if (key === '4') {
+            hasSeenFour = true;
+          }
+        });
+        expect(hasSeenFour).to.equal(true);
+      });
+
+      it('visits keys added in the iterator when there is a deletion (fast path)', function() {
+        var hasSeenFour = false;;
+        var set = new Set();
+        set.add('0');
+        set.forEach(function (value, key) {
+          if (key === '0') {
+            set['delete']('0');
+            set.add('4');
+          } else if (key === '4') {
+            hasSeenFour = true;
+          }
+        });
+        expect(hasSeenFour).to.equal(true);
+      });
+
+      it('does not visit keys deleted before a visit', function() {
+        var hasVisitedC = false;
+        set.forEach(function (value, key) {
+          if (key === 'c') {
+            hasVisitedC = true;
+          }
+          if (!hasVisitedC) {
+            set['delete']('c');
+          }
+        });
+        expect(hasVisitedC).to.equal(false);
+      });
+
+      it('should work after deletion of the current key', function() {
+        var expectedSet = {
+          a: 'a',
+          b: 'b',
+          c: 'c'
+        };
+        var foundSet = {};
+        set.forEach(function (value, key) {
+          foundSet[key] = value;
+          set['delete'](key);
+        });
+        expect(foundSet).to.eql(expectedSet);
       });
     });
 

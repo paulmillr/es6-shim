@@ -872,15 +872,20 @@
 
           function MapIterator(map, kind) {
             this.head = map._head;
-            this.i = this.head.next;
+            this.i = this.head;
             this.kind = kind;
           }
 
           MapIterator.prototype = {
             next: function() {
               var i = this.i, kind = this.kind, head = this.head, result;
-              while (i !== head) {
-                this.i = i.next;
+              while (i.isRemoved() && i !== head) {
+                // back up off of removed entries
+                i = i.prev;
+              }
+              // advance to next unreturned element.
+              while (i.next !== head) {
+                i = i.next;
                 if (!i.isRemoved()) {
                   if (kind === "key") {
                     result = i.key;
@@ -889,10 +894,11 @@
                   } else {
                     result = [i.key, i.value];
                   }
+                  this.i = i;
                   return { value: result, done: false };
                 }
-                i = this.i;
               }
+              this.i = i;
               return { value: undefined, done: true };
             }
           };
@@ -1029,13 +1035,9 @@
 
             forEach: function(callback) {
               var context = arguments.length > 1 ? arguments[1] : null;
-              var entireMap = this;
-
-              var head = this._head, i = head;
-              while ((i = i.next) !== head) {
-                if (!i.isRemoved()) {
-                  callback.call(context, i.value, i.key, entireMap);
-                }
+              var it = this.entries();
+              for (var entry = it.next(); !entry.done; entry = it.next()) {
+                callback.call(context, entry.value[1], entry.value[0], this);
               }
             }
           });
