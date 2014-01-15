@@ -172,6 +172,16 @@ describe('Collections', function() {
       expect(map.size).to.equal(2);
     });
 
+    it('should have an iterator that works with Array.from', function() {
+      map.set('a', 1);
+      map.set('b', NaN);
+      map.set('c', false);
+      expect(Array.from(map)).to.eql([['a',1], ['b',NaN], ['c',false]]);
+      expect(Array.from(map.keys())).to.eql(['a', 'b', 'c']);
+      expect(Array.from(map.values())).to.eql([1, NaN, false]);
+      expect(Array.from(map.entries())).to.eql(Array.from(map));
+    });
+
     describe('#forEach', function() {
       beforeEach(function() {
         map.set('a', 1);
@@ -414,6 +424,16 @@ describe('Collections', function() {
 
     it('should has unique constructor', function() {
       expect(Set.prototype).to.not.equal(Object.prototype);
+    });
+
+    it('should have an iterator that works with Array.from', function() {
+      set.add(1);
+      set.add(NaN);
+      set.add(false);
+      expect(Array.from(set)).to.eql([1, NaN, false]);
+      expect(Array.from(set.keys())).to.eql(Array.from(set));
+      expect(Array.from(set.values())).to.eql(Array.from(set));
+      expect(Array.from(set.entries())).to.eql([[1,1],[NaN,NaN],[false,false]]);
     });
 
     describe('#forEach', function() {
