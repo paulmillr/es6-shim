@@ -155,6 +155,12 @@ describe('Collections', function() {
       expect(Map.prototype).to.not.equal(Object.prototype);
     });
 
+    it('Map.prototype.size should throw TypeError', function() {
+      // see https://github.com/paulmillr/es6-shim/issues/176
+      expect(function() { Map.prototype.size }).to.throw(TypeError);
+      expect(function() { Map.prototype.size }).to.throw(TypeError);
+    });
+
     it('should have keys, values and size props', function() {
       map.set('a', 1);
       map.set('b', 2);
@@ -537,6 +543,12 @@ describe('Collections', function() {
         });
         expect(foundSet).to.eql(expectedSet);
       });
+    });
+
+    it('Set.prototype.size should throw TypeError', function() {
+      // see https://github.com/paulmillr/es6-shim/issues/176
+      expect(function() { Set.prototype.size }).to.throw(TypeError);
+      expect(function() { Set.prototype.size }).to.throw(TypeError);
     });
 
     it.skip('should throw proper errors when user invokes methods with wrong types of receiver', function() {
