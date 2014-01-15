@@ -915,6 +915,9 @@
             configurable: true,
             enumerable: false,
             get: function() {
+              if (!('_size' in this)) {
+                throw new TypeError('size method called on incompatible Map');
+              }
               return this._size;
             }
           });
@@ -1077,6 +1080,10 @@
             configurable: true,
             enumerable: false,
             get: function() {
+              if (!('_storage' in this)) {
+                // https://github.com/paulmillr/es6-shim/issues/176
+                throw new TypeError('size method called on incompatible Set');
+              }
               ensureMap(this);
               return this['[[SetData]]'].size;
             }
