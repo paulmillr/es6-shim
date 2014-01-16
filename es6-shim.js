@@ -921,7 +921,7 @@
             configurable: true,
             enumerable: false,
             get: function() {
-              if (!('_size' in this)) {
+              if (typeof this._size === 'undefined') {
                 throw new TypeError('size method called on incompatible Map');
               }
               return this._size;
@@ -949,7 +949,7 @@
               var fkey = fastkey(key);
               if (fkey !== null) {
                 // fast O(1) path
-                return fkey in this._storage;
+                return typeof this._storage[fkey] !== 'undefined';
               }
               var head = this._head, i = head;
               while ((i = i.next) !== head) {
@@ -965,7 +965,7 @@
               var fkey = fastkey(key);
               if (fkey !== null) {
                 // fast O(1) path
-                if (fkey in this._storage) {
+                if (typeof this._storage[fkey] !== 'undefined') {
                   this._storage[fkey].value = value;
                   return;
                 } else {
@@ -993,7 +993,7 @@
               var fkey = fastkey(key);
               if (fkey !== null) {
                 // fast O(1) path
-                if (!(fkey in this._storage)) {
+                if (typeof this._storage[fkey] === 'undefined') {
                   return false;
                 }
                 i = this._storage[fkey].prev;
@@ -1082,7 +1082,7 @@
             configurable: true,
             enumerable: false,
             get: function() {
-              if (!('_storage' in this)) {
+              if (typeof this._storage === 'undefined') {
                 // https://github.com/paulmillr/es6-shim/issues/176
                 throw new TypeError('size method called on incompatible Set');
               }
