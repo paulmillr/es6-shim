@@ -62,6 +62,19 @@
       });
     };
 
+    // this is a private name in the es6 spec, equal to '[Symbol.iterator]'
+    // we're going to use an arbitrary __-prefixed name to make our shims
+    // work properly with each other, even though we don't have full Iterator
+    // support.  That is, `Array.from(map.keys())` will work, but we don't
+    // pretend to export a "real" Iterator interface.
+    var $iterator$ = '_@@iterator';
+    var addIterator = function(prototype, impl) {
+      if (!impl) { impl = function iterator() { return this; }; }
+      var o = {};
+      o[$iterator$] = impl;
+      defineProperties(prototype, o);
+    };
+
     var ES = {
       CheckObjectCoercible: function(x) {
         if (x == null) throw TypeError('Cannot call method on ' + x);
@@ -342,6 +355,33 @@
     };
     defineProperties(String.prototype, StringShims);
 
+    // see https://people.mozilla.org/~jorendorff/es6-draft.html#sec-string.prototype-@@iterator
+    var StringIterator = function(s) {
+      if (s==null) { throw new TypeError('StringIterator: given null'); }
+      this._s = String(s);
+      this._i = 0;
+    };
+    StringIterator.prototype.next = function() {
+      var s = this._s, i = this._i;
+      if (s===undefined || i >= s.length) {
+        this._s = undefined;
+        return { value: undefined, done: true };
+      }
+      var first = s.charCodeAt(i), second, len;
+      if (first < 0xD800 || first > 0xDBFF || (i+1) == s.length) {
+        len = 1;
+      } else {
+        second = s.charCodeAt(i+1);
+        len = (second < 0xDC00 || second > 0xDFFF) ? 1 : 2;
+      }
+      this._i = i + len;
+      return { value: s.substr(i, len), done: false };
+    };
+    addIterator(StringIterator.prototype);
+    addIterator(String.prototype, function() {
+      return new StringIterator(this);
+    });
+
     if (!startsWithIsCompliant) {
       // Firefox has a noncompliant startsWith implementation
       String.prototype.startsWith = StringShims.startsWith;
@@ -358,11 +398,29 @@
         }
 
         var list = Object(iterable);
-        var length = ES.ToUint32(list.length);
-        var result = typeof this === 'function' ? Object(new this(length)) : new Array(length);
+        var usingIterator = ($iterator$ in list);
+        // does the spec really mean that Arrays should use ArrayIterator?
+        // https://bugs.ecmascript.org/show_bug.cgi?id=2416
+        //if (Array.isArray(list)) { usingIterator=false; }
+        var length = usingIterator ? 0 : ES.ToUint32(list.length);
+        var result = typeof this === 'function' ? Object(usingIterator ? new this() : new this(length)) : new Array(length);
+        var it = usingIterator ? list[$iterator$]() : null;
+        var value;
 
-        for (var i = 0; i < length; i++) {
-          var value = list[i];
+        for (var i = 0; usingIterator || (i < length); i++) {
+          if (usingIterator) {
+            value = it.next();
+            if (value == null || typeof value !== 'object') {
+              throw new TypeError("Bad iterator");
+            }
+            if (value.done) {
+              length = i;
+              break;
+            }
+            value = value.value;
+          } else {
+            value = list[i];
+          }
           if (mapFn !== undefined) {
             result[i] = thisArg ? mapFn.call(thisArg, value) : mapFn(value);
           } else {
@@ -389,32 +447,34 @@
 
     defineProperties(ArrayIterator.prototype, {
       next: function() {
-        var i = this.i;
-        this.i = i + 1;
-        var array = this.array;
-
-        if (i >= array.length) {
-          throw new Error();
+        var i = this.i, array = this.array;
+        if (i===undefined || this.kind===undefined) {
+          throw new TypeError('Not an ArrayIterator');
         }
-
-        if (array.hasOwnProperty(i)) {
-          var kind = this.kind;
-          var retval;
-          if (kind === "key") {
-            retval = i;
+        if (array!==undefined) {
+          for (; i < array.length; i++) {
+            if (array.hasOwnProperty(i)) {
+              var kind = this.kind;
+              var retval;
+              if (kind === "key") {
+                retval = i;
+              }
+              if (kind === "value") {
+                retval = array[i];
+              }
+              if (kind === "entry") {
+                retval = [i, array[i]];
+              }
+              this.i = i + 1;
+              return { value: retval, done: false };
+            }
           }
-          if (kind === "value") {
-            retval = array[i];
-          }
-          if (kind === "entry") {
-            retval = [i, array[i]];
-          }
-        } else {
-          retval = this.next();
         }
-        return retval;
+        this.array = undefined;
+        return { value: undefined, done: true };
       }
     });
+    addIterator(ArrayIterator.prototype);
 
     defineProperties(Array.prototype, {
       copyWithin: function(target, start) {
@@ -497,6 +557,7 @@
         return new ArrayIterator(this, "entry");
       }
     });
+    addIterator(Array.prototype, function() { return this.values(); });
 
     var maxSafeInteger = Math.pow(2, 53) - 1;
     defineProperties(Number, {
@@ -902,6 +963,7 @@
               return { value: undefined, done: true };
             }
           };
+          addIterator(MapIterator.prototype);
 
           function Map() {
             if (!(this instanceof Map)) throw new TypeError('Map must be called with "new"');
@@ -1044,6 +1106,7 @@
               }
             }
           });
+          addIterator(Map.prototype, function() { return this.entries(); });
 
           return Map;
         })(),
@@ -1153,6 +1216,7 @@
               });
             }
           });
+          addIterator(SetShim.prototype, function() { return this.values(); });
 
           return SetShim;
         })()

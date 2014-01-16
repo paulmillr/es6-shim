@@ -333,12 +333,27 @@ var runStringTests = function() {
         expect('\ud800\udc00\udbff\udfff'.codePointAt(0)).to.equal(0x10000);
         expect('\ud800\udc00\udbff\udfff'.codePointAt(1)).to.equal(0xdc00);
         expect('\ud800\udc00\udbff\udfff'.codePointAt(2)).to.equal(0x10ffff);
+        expect('\ud800\udc00\udbff\udfff'.codePointAt(3)).to.equal(0xdfff);
       });
 
       it('should return undefined when pos is negative or too large', function() {
         var str = 'abc';
         expect(str.codePointAt(-1)).to.be.undefined;
         expect(str.codePointAt(str.length)).to.be.undefined;
+      });
+    });
+
+    describe('#iterator()', function() {
+      it('should work with plain strings', function() {
+        var str = 'abc';
+        expect(Array.from(str)).to.eql(['a','b','c']);
+      });
+
+      it('should work with surrogate characters', function() {
+        var str = '\u2500\ud800\udc00\udbff\udfff\ud800';
+        expect(Array.from(str)).to.eql(
+          [ '\u2500', '\ud800\udc00', '\udbff\udfff', '\ud800' ]
+        );
       });
     });
 

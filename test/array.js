@@ -15,6 +15,10 @@ var runArrayTests = function() {
         expect(Array.from([null, undefined, 0.1248, -0, 0])).to.eql(
           [null, undefined, 0.1248, -0, 0]
         );
+
+        expect(Array.from([null, undefined, 0.1248, -0, 0].values())).to.eql(
+          [null, undefined, 0.1248, -0, 0]
+        );
       });
 
       it('should handle empty iterables correctly', function() {
@@ -194,10 +198,10 @@ var runArrayTests = function() {
 
       describe('ArrayIterator#next', function() {
         it('should work when applied to an ArrayIterator', function() {
-          expect(arrayIterator.next.apply(arrayIterator)).to.equal(1);
-          expect(arrayIterator.next.apply(arrayIterator)).to.equal(2);
-          expect(arrayIterator.next.apply(arrayIterator)).to.equal(3);
-          expect(function () { arrayIterator.next.apply(arrayIterator); }).to.throw(Error);
+          expect(arrayIterator.next.apply(arrayIterator)).to.eql({value:1,done:false});
+          expect(arrayIterator.next.apply(arrayIterator)).to.eql({value:2,done:false});
+          expect(arrayIterator.next.apply(arrayIterator)).to.eql({value:3,done:false});
+          expect(arrayIterator.next.apply(arrayIterator)).to.eql({value:undefined,done:true});
         });
 
         it('throws when not applied to an ArrayIterator', function() {
@@ -213,28 +217,28 @@ var runArrayTests = function() {
 
       var keys = list.keys();
       it('should return 0 on first object', function() {
-        expect(keys.next()).to.equal(0);
+        expect(keys.next()).to.eql({value: 0, done: false});
       });
-      it('should return 1 on first object', function() {
-        expect(keys.next()).to.equal(1);
+      it('should return 1 on second object', function() {
+        expect(keys.next()).to.eql({value: 1, done: false});
       });
-      it('should return 2 on first object', function() {
-        expect(keys.next()).to.equal(2);
+      it('should return 2 on third object', function() {
+        expect(keys.next()).to.eql({value: 2, done: false});
       });
-      it('should return 3 on first object', function() {
-        expect(keys.next()).to.equal(3);
+      it('should return 3 on fourth object', function() {
+        expect(keys.next()).to.eql({value: 3, done: false});
       });
-      it('should throw Error on completing iteration', function() {
-        expect(function() { keys.next(); }).to.throw(Error);
+      it('should set done on completing iteration', function() {
+        expect(keys.next()).to.eql({value: undefined, done: true});
       });
 
       it('should skip sparse keys', function() {
         var sparse = [1];
         sparse[3] = 4;
         var keys = sparse.keys();
-        expect(keys.next()).to.equal(0);
-        expect(keys.next()).to.equal(3);
-        expect(function() { keys.next(); }).to.throw(Error);
+        expect(keys.next()).to.eql({value: 0, done: false});
+        expect(keys.next()).to.eql({value: 3, done: false});
+        expect(keys.next()).to.eql({value: undefined, done: true});
       });
     });
 
@@ -245,28 +249,28 @@ var runArrayTests = function() {
 
       var values = list.values();
       it('should return 5 on first object', function() {
-        expect(values.next()).to.equal(5);
+        expect(values.next()).to.eql({value: 5, done: false});
       });
-      it('should return 10 on first object', function() {
-        expect(values.next()).to.equal(10);
+      it('should return 10 on second object', function() {
+        expect(values.next()).to.eql({value: 10, done: false});
       });
-      it('should return 15 on first object', function() {
-        expect(values.next()).to.equal(15);
+      it('should return 15 on third object', function() {
+        expect(values.next()).to.eql({value: 15, done: false});
       });
-      it('should return 20 on first object', function() {
-        expect(values.next()).to.equal(20);
+      it('should return 20 on fourth object', function() {
+        expect(values.next()).to.eql({value: 20, done: false});
       });
-      it('should throw Error on completing iteration', function() {
-        expect(function() { values.next(); }).to.throw(Error);
+      it('should set done on completing iteration', function() {
+        expect(values.next()).to.eql({value: undefined, done: true});
       });
 
       it('should skip sparse values', function() {
         var sparse = [1];
         sparse[3] = 4;
         var values = sparse.values();
-        expect(values.next()).to.equal(1);
-        expect(values.next()).to.equal(4);
-        expect(function() { values.next(); }).to.throw(Error);
+        expect(values.next()).to.eql({value: 1, done: false});
+        expect(values.next()).to.eql({value: 4, done: false});
+        expect(values.next()).to.eql({value: undefined, done: true});
       });
     });
 
@@ -278,31 +282,32 @@ var runArrayTests = function() {
       var entries = list.entries();
       it('should return [0, 5] on first object', function() {
         var val = entries.next();
-        expect(val).to.eql([0, 5]);
+        expect(val).to.eql({value: [0, 5], done: false});
       });
       it('should return [1, 10] on first object', function() {
         var val = entries.next();
-        expect(val).to.eql([1, 10]);
+        expect(val).to.eql({value: [1, 10], done: false});
       });
       it('should return [2, 15] on first object', function() {
         var val = entries.next();
-        expect(val).to.eql([2, 15]);
+        expect(val).to.eql({value: [2, 15], done: false});
       });
       it('should return [3, 20] on first object', function() {
         var val = entries.next();
-        expect(val).to.eql([3, 20]);
+        expect(val).to.eql({value: [3, 20], done: false});
       });
-      it('should throw Error on completing iteration', function() {
-        expect(function() { entries.next(); }).to.throw(Error);
+      it('should set done on completing iteration', function() {
+        var val = entries.next();
+        expect(val).to.eql({value: undefined, done: true});
       });
 
       it('should skip sparse entries', function() {
         var sparse = [1];
         sparse[3] = 4;
         var entries = sparse.entries();
-        expect(entries.next()).to.eql([0, 1]);
-        expect(entries.next()).to.eql([3, 4]);
-        expect(function() { entries.next(); }).to.throw(Error);
+        expect(entries.next()).to.eql({value: [0, 1], done: false});
+        expect(entries.next()).to.eql({value: [3, 4], done: false});
+        expect(entries.next()).to.eql({value: undefined, done: true});
       });
     });
 
