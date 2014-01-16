@@ -298,7 +298,7 @@ describe('Collections', function() {
     });
   });
 
-  it('iteration', function () {
+  it('map iteration', function () {
     var map = new Map();
     map.set('a', 1);
     map.set('b', 2);
@@ -315,6 +315,31 @@ describe('Collections', function() {
     keys.push(iterator.next().value);
     keys.push(iterator.next().value);
 
+    expect(iterator.next().done).to.equal(true);
+    map.set('f');
+    expect(iterator.next().done).to.equal(true);
+    expect(keys).to.eql(['a', 'd', 'e']);
+  });
+
+  it('set iteration', function () {
+    var set = new Set();
+    set.add('a');
+    set.add('b');
+    set.add('c');
+    set.add('d');
+
+    var keys = [];
+    var iterator = set.keys();
+    keys.push(iterator.next().value);
+    set["delete"]('a');
+    set["delete"]('b');
+    set["delete"]('c');
+    set.add('e');
+    keys.push(iterator.next().value);
+    keys.push(iterator.next().value);
+
+    expect(iterator.next().done).to.equal(true);
+    set.add('f');
     expect(iterator.next().done).to.equal(true);
     expect(keys).to.eql(['a', 'd', 'e']);
   });

@@ -62,12 +62,19 @@
       });
     };
 
-    // this is a private name in the es6 spec, equal to '[Symbol.iterator]'
-    // we're going to use an arbitrary __-prefixed name to make our shims
+    // This is a private name in the es6 spec, equal to '[Symbol.iterator]'
+    // we're going to use an arbitrary _-prefixed name to make our shims
     // work properly with each other, even though we don't have full Iterator
     // support.  That is, `Array.from(map.keys())` will work, but we don't
     // pretend to export a "real" Iterator interface.
-    var $iterator$ = '_@@iterator';
+    var $iterator$ = (typeof Symbol === 'object' && Symbol['iterator']) ||
+      '_es6shim_iterator_';
+    // Firefox ships a partial implementation using the name @@iterator.
+    // https://bugzilla.mozilla.org/show_bug.cgi?id=907077#c14
+    // So use that name if we detect it.
+    if (globals.Set && typeof new globals.Set()['@@iterator'] === 'function') {
+      $iterator$ = '@@iterator';
+    }
     var addIterator = function(prototype, impl) {
       if (!impl) { impl = function iterator() { return this; }; }
       var o = {};
@@ -453,21 +460,19 @@
         }
         if (array!==undefined) {
           for (; i < array.length; i++) {
-            if (array.hasOwnProperty(i)) {
-              var kind = this.kind;
-              var retval;
-              if (kind === "key") {
-                retval = i;
-              }
-              if (kind === "value") {
-                retval = array[i];
-              }
-              if (kind === "entry") {
-                retval = [i, array[i]];
-              }
-              this.i = i + 1;
-              return { value: retval, done: false };
+            var kind = this.kind;
+            var retval;
+            if (kind === "key") {
+              retval = i;
             }
+            if (kind === "value") {
+              retval = array[i];
+            }
+            if (kind === "entry") {
+              retval = [i, array[i]];
+            }
+            this.i = i + 1;
+            return { value: retval, done: false };
           }
         }
         this.array = undefined;
@@ -558,6 +563,9 @@
       }
     });
     addIterator(Array.prototype, function() { return this.values(); });
+    // Chrome defines keys/values/entries on Array, but doesn't give us
+    // any way to identify its iterator.  So add our own shimmed field.
+    addIterator(Object.getPrototypeOf([].values()));
 
     var maxSafeInteger = Math.pow(2, 53) - 1;
     defineProperties(Number, {
@@ -940,6 +948,9 @@
           MapIterator.prototype = {
             next: function() {
               var i = this.i, kind = this.kind, head = this.head, result;
+              if (this.i === undefined) {
+                return { value: undefined, done: true };
+              }
               while (i.isRemoved() && i !== head) {
                 // back up off of removed entries
                 i = i.prev;
@@ -959,7 +970,8 @@
                   return { value: result, done: false };
                 }
               }
-              this.i = i;
+              // once the iterator is done, it is done forever.
+              this.i = undefined;
               return { value: undefined, done: true };
             }
           };
@@ -1245,6 +1257,9 @@
           globals.Set = collectionShims.Set;
         }
       }
+      // Shim incomplete iterator implementations.
+      addIterator(Object.getPrototypeOf((new globals.Map()).keys()));
+      addIterator(Object.getPrototypeOf((new globals.Set()).keys()));
     }
   };
 
