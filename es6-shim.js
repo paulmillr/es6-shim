@@ -63,11 +63,12 @@
     };
 
     // this is a private name in the es6 spec, equal to '[Symbol.iterator]'
-    // we're going to use an arbitrary __-prefixed name to make our shims
+    // we're going to use an '@@iterator' name to make our shims
     // work properly with each other, even though we don't have full Iterator
     // support.  That is, `Array.from(map.keys())` will work, but we don't
     // pretend to export a "real" Iterator interface.
-    var $iterator$ = '_@@iterator';
+    // FireFox 27+ also has '@@iterator' support see https://bugzilla.mozilla.org/show_bug.cgi?id=907077#c14
+    var $iterator$ = (typeof Symbol === 'object' && Symbol['iterator']) || '@@iterator';
     var addIterator = function(prototype, impl) {
       if (!impl) { impl = function iterator() { return this; }; }
       var o = {};
