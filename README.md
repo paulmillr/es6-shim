@@ -35,7 +35,7 @@ For node.js:
     * `EPSILON`
     * `parseInt()`
     * `parseFloat()`
-    * `isNaN()`
+    * `isNaN()`([a standalone shim is also available](https://npmjs.org/package/is-nan))
     * `isSafeInteger()`
     * `isFinite()`
 * `Number.prototype`:
