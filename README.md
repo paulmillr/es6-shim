@@ -55,7 +55,6 @@ For node.js:
     * `getPropertyNames()` (ES5)
     * `is()`
     * `assign()`
-    * `mixin()` (ES5)
 * `Math`:
     * `sign()`
     * `log10()`
@@ -93,7 +92,6 @@ WeakMap has a very unusual use-case so you probably won't need it at all
 
 Object.is(NaN, NaN) // Fixes ===. 0 isnt -0, NaN is NaN
 Object.assign({a: 1}, {b: 2}) // {a: 1, b: 2}
-Object.mixin({a: 1}, {get b: function() {return 2}}) // {a: 1, b: getter}
 
 Number.isNaN('123') // false. isNaN('123') will give true.
 Number.isFinite('asd') // false. Global isFinite() will give true.
