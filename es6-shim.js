@@ -644,15 +644,6 @@
             target[key] = source[key];
             return target;
           }, target);
-        },
-
-        // 19.1.3.15
-        mixin: function(target, source) {
-          var props = Object.getOwnPropertyNames(source);
-          return props.reduce(function(target, property) {
-            var descriptor = Object.getOwnPropertyDescriptor(source, property);
-            return Object.defineProperty(target, property, descriptor);
-          }, target);
         }
       });
 
