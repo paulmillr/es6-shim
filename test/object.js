@@ -65,12 +65,6 @@ describe('Object', function() {
     });
   });
 
-  describe('Object.mixin()', function() {
-    it('should merge descriptors of two objects', function() {
-      expect(Object.mixin({a: 1}, {b: 2})).to.eql({a: 1, b: 2});
-    });
-  });
-
   describe('Object.setPrototypeOf()', function() {
     describe('argument checking', function() {
       it('should throw TypeError if first arg is not object', function() {
