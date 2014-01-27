@@ -188,8 +188,14 @@ describe('Number', function() {
         expect(item.clz()).to.be.within(0, 32);
       });
       expect(NaN.clz()).to.equal(32);
-      expect((0x100000000).clz()).to.equal(31);
+      expect((0x100000000).clz()).to.equal(32);
+      expect((0.1).clz()).to.equal(32);
       expect((-1).clz()).to.equal(0);
+      expect((0).clz()).to.equal(32);
+      expect((0xFFFFFFFF).clz()).to.equal(0);
+      expect((0x1FFFFFFFF).clz()).to.equal(0);
+      expect((0x111111111).clz()).to.equal(3);
+      expect((0x11111111).clz()).to.equal(3);
     });
   });
 });

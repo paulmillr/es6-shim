@@ -604,7 +604,10 @@
         var number = +this;
         if (!number || !Number.isFinite(number)) return 32;
         number = number < 0 ? Math.ceil(number) : Math.floor(number);
-        number = number - Math.floor(number / 0x100000000) * 0x100000000;
+        number = number >>> 0;
+        if (number === 0) {
+          return 32;
+        }
         return 32 - (number).toString(2).length;
       }
     });
