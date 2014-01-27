@@ -605,7 +605,7 @@
         if (!number || !Number.isFinite(number)) return 32;
         number = number < 0 ? Math.ceil(number) : Math.floor(number);
         number = number - Math.floor(number / 0x100000000) * 0x100000000;
-        return 32 - (number).toString(2).length;
+        return (number === 0) ? 0 : (32 - (number).toString(2).length);
       }
     });
 
