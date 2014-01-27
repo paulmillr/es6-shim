@@ -601,10 +601,7 @@
 
     defineProperties(Number.prototype, {
       clz: function() {
-        var number = +this;
-        if (!number || !Number.isFinite(number)) return 32;
-        number = number < 0 ? Math.ceil(number) : Math.floor(number);
-        number = number >>> 0;
+        var number = Number.prototype.valueOf.call(this) >>> 0;
         if (number === 0) {
           return 32;
         }

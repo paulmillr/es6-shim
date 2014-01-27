@@ -187,6 +187,9 @@ describe('Number', function() {
       nonIntegers.forEach(function(item) {
         expect(item.clz()).to.be.within(0, 32);
       });
+      nonNumbers.forEach(function(item) {
+        expect(function() { Number.prototype.clz.call(item) }).to.throw(TypeError);
+      });
       expect(NaN.clz()).to.equal(32);
       expect((0x100000000).clz()).to.equal(32);
       expect((0.1).clz()).to.equal(32);
