@@ -68,6 +68,12 @@ var runArrayTests = function() {
         var mapped = Array.from(original, mapper, context);
         expect(mapped).to.eql([2, 4, 6]);
       });
+
+      it('throws when provided null or undefined', function() {
+        expect(function () { Array.from(); }).to.throw(TypeError);
+		expect(function () { Array.from(undefined); }).to.throw(TypeError);
+        expect(function () { Array.from(null); }).to.throw(TypeError);
+      });
     });
 
     describe('Array.of()', function() {
