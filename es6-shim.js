@@ -101,6 +101,20 @@
         if (Number.isNaN(number)) return 0;
         if (number === 0 || !Number.isFinite(number)) return number;
         return Math.sign(number) * Math.floor(Math.abs(number));
+      },
+
+      SameValue: function(a, b) {
+        if (a === b) {
+          // 0 === -0, but they are not identical.
+          if (a === 0) return 1 / a === 1 / b;
+          return true;
+        }
+        return Number.isNaN(a) && Number.isNaN(b);
+      },
+
+      SameValueZero: function(a, b) {
+        // same as SameValue except for SameValueZero(+0, -0) == true
+        return (a === b) || (Number.isNaN(a) && Number.isNaN(b));
       }
     };
 
@@ -249,7 +263,7 @@
         var next;
         for (var i = 0, length = points.length; i < length; i++) {
           next = Number(points[i]);
-          if (!Object.is(next, ES.toInteger(next)) ||
+          if (!ES.SameValue(next, ES.toInteger(next)) ||
               next < 0 || next > 0x10FFFF) {
             throw new RangeError('Invalid code point ' + next);
           }
@@ -719,12 +733,7 @@
       },
 
       is: function(a, b) {
-        if (a === b) {
-          // 0 === -0, but they are not identical.
-          if (a === 0) return 1 / a === 1 / b;
-          return true;
-        }
-        return Number.isNaN(a) && Number.isNaN(b);
+        return ES.SameValue(a, b);
       }
     });
 
@@ -905,7 +914,7 @@
         var type = typeof key;
         if (type === 'string') {
           return '$' + key;
-        } else if (type === 'number' && !Object.is(key, -0)) {
+        } else if (type === 'number') {
           return key;
         }
         return null;
@@ -1005,7 +1014,7 @@
               }
               var head = this._head, i = head;
               while ((i = i.next) !== head) {
-                if (Object.is(i.key, key)) {
+                if (ES.SameValueZero(i.key, key)) {
                   return i.value;
                 }
               }
@@ -1020,7 +1029,7 @@
               }
               var head = this._head, i = head;
               while ((i = i.next) !== head) {
-                if (Object.is(i.key, key)) {
+                if (ES.SameValueZero(i.key, key)) {
                   return true;
                 }
               }
@@ -1042,7 +1051,7 @@
                 }
               }
               while ((i = i.next) !== head) {
-                if (Object.is(i.key, key)) {
+                if (ES.SameValueZero(i.key, key)) {
                   i.value = value;
                   return;
                 }
@@ -1068,7 +1077,7 @@
                 // fall through
               }
               while ((i = i.next) !== head) {
-                if (Object.is(i.key, key)) {
+                if (ES.SameValueZero(i.key, key)) {
                   i.key = i.value = empty;
                   i.prev.next = i.next;
                   i.next.prev = i.prev;

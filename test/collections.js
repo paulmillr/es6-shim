@@ -74,12 +74,14 @@ describe('Collections', function() {
       expect(Map).to.throw(TypeError);
     });
 
-    it('treats positive and negative zero differently', function() {
+    it('treats positive and negative zero the same', function() {
       var value1 = {}, value2 = {};
-      testMapping(0, value1);
-      testMapping(-0, value2);
-      expect(map.get(0)).not.to.equal(value2);
-      expect(map.get(-0)).not.to.equal(value1);
+      testMapping(+0, value1);
+      expect(map.has(-0)).to.be.true;
+      expect(map.get(-0)).to.equal(value1);
+      map.set(-0, value2);
+      expect(map.get(-0)).to.equal(value2);
+      expect(map.get(+0)).to.equal(value2);
     });
 
     it('should map values correctly', function() {
@@ -97,12 +99,22 @@ describe('Collections', function() {
           if (slowkeys) testMapping(new String(number), {});
         });
 
-        [+0, NaN, Infinity, -Infinity, true, false, null, undefined].forEach(function(key) {
+        var testkeys = [+0, Infinity, -Infinity, NaN];
+        if (slowkeys) {
+          testkeys.push(true, false, null, undefined);
+        }
+        testkeys.forEach(function(key) {
           testMapping(key, {});
           testMapping('' + key, {});
         });
-        if (slowkeys) testMapping(-0, {});
         testMapping('', {});
+
+        // -0 and +0 should be the same key (Map uses SameValueZero)
+        expect(map.has(-0)).to.be.true;
+        map['delete'](+0);
+        testMapping(-0, {});
+        expect(map.has(+0)).to.be.true;
+
         // verify that properties of Object don't peek through.
         ['hasOwnProperty', 'constructor', 'toString', 'isPrototypeOf',
          '__proto__', '__parent__', '__count__'].forEach(function(key) {
@@ -404,12 +416,22 @@ describe('Collections', function() {
           if (slowkeys) testSet(new String(number));
         });
 
-        [+0, Infinity, -Infinity, true, false, null, undefined].forEach(function(number) {
+        var testkeys = [+0, Infinity, -Infinity, NaN];
+        if (slowkeys) {
+          testkeys.push(true, false, null, undefined);
+        }
+        testkeys.forEach(function(number) {
           testSet(number);
           testSet('' + number);
         });
-        if (slowkeys) testSet(-0);
         testSet('');
+
+        // -0 and +0 should be the same key (Set uses SameValueZero)
+        expect(set.has(-0)).to.be.true;
+        set['delete'](+0);
+        testSet(-0);
+        expect(set.has(+0)).to.be.true;
+
         // verify that properties of Object don't peek through.
         ['hasOwnProperty', 'constructor', 'toString', 'isPrototypeOf',
          '__proto__', '__parent__', '__count__'].forEach(testSet);
