@@ -400,7 +400,9 @@
         var mapFn = arguments.length > 1 ? arguments[1] : undefined;
         var thisArg = arguments.length > 2 ? arguments[2] : undefined;
 
-        if (mapFn !== undefined && _toString.call(mapFn) !== '[object Function]') {
+        if (iterable === null || iterable === undefined) {
+          throw new TypeError('Array.from: null or undefined are not valid values. Use []');
+        } else if (mapFn !== undefined && _toString.call(mapFn) !== '[object Function]') {
           throw new TypeError('Array.from: when provided, the second argument must be a function');
         }
 
