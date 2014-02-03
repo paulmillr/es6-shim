@@ -1245,6 +1245,10 @@
           - In Firefox 24, Map and Set do not implement forEach
           - In Firefox 25 at least, Map and Set are callable without "new"
         */
+        var mapFromGlobal = new globals.Map();
+        mapFromGlobal.set(-0, 42);
+        var setFromGlobal = new globals.Set();
+        setFromGlobal.add(-0);
         if (
           typeof globals.Map.prototype.clear !== 'function' ||
           new globals.Set().size !== 0 ||
@@ -1253,7 +1257,9 @@
           typeof globals.Map.prototype.forEach !== 'function' ||
           typeof globals.Set.prototype.forEach !== 'function' ||
           isCallableWithoutNew(globals.Map) ||
-          isCallableWithoutNew(globals.Set)
+          isCallableWithoutNew(globals.Set) ||
+          mapFromGlobal.get(0) === mapFromGlobal.get(-0) ||
+          setFromGlobal.has(0)
         ) {
           globals.Map = collectionShims.Map;
           globals.Set = collectionShims.Set;
