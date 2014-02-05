@@ -915,6 +915,7 @@
         if (type === 'string') {
           return '$' + key;
         } else if (type === 'number') {
+          // note that -0 will get coerced to "0" when used as a property key
           return key;
         }
         return null;
@@ -1057,6 +1058,9 @@
                 }
               }
               entry = entry ? entry : new MapEntry(key, value);
+              if (ES.SameValue(-0, key)) {
+                entry.key = +0; // coerce -0 to +0 in entry
+              }
               entry.next = this._head;
               entry.prev = this._head.prev;
               entry.prev.next = entry;
@@ -1180,11 +1184,7 @@
 
             add: function(key) {
               var fkey;
-              if (this._storage && (fkey = fastkey(key)) !== null &&
-                  // Force '-0' to use the slow path, since it will be
-                  // silently coerced to "0" when used as a property key
-                  // gh #202
-                  !(key === 0 && 1/key === -Infinity)) {
+              if (this._storage && (fkey = fastkey(key)) !== null) {
                 this._storage[fkey]=true;
                 return;
               }
