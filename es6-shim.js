@@ -1180,7 +1180,11 @@
 
             add: function(key) {
               var fkey;
-              if (this._storage && (fkey = fastkey(key)) !== null) {
+              if (this._storage && (fkey = fastkey(key)) !== null &&
+                  // Force '-0' to use the slow path, since it will be
+                  // silently coerced to "0" when used as a property key
+                  // gh #202
+                  !(key === 0 && 1/key === -Infinity)) {
                 this._storage[fkey]=true;
                 return;
               }
