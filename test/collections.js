@@ -312,19 +312,19 @@ describe('Collections', function() {
         expect(foundMap).to.eql(expectedMap);
       });
 
-      it('should store -0 as the key', function() {
+      it('should convert key -0 to +0', function() {
         var map = new Map(), result = [];
         map.set(-0, 'a');
         map.forEach(function(value, key) {
           result.push(String(1/key) + ' ' + value);
         });
         map.set(1, 'b');
-        map.set(0, 'c');
+        map.set(0, 'c'); // shouldn't cause reordering
         map.forEach(function(value, key) {
           result.push(String(1/key) + ' ' + value);
         });
         expect(result.join(', ')).to.equal(
-          "-Infinity a, -Infinity c, 1 b"
+          "Infinity a, Infinity c, 1 b"
         );
       });
     });
@@ -445,12 +445,8 @@ describe('Collections', function() {
         // -0 and +0 should be the same key (Set uses SameValueZero)
         expect(set.has(-0)).to.be.true;
         set['delete'](+0);
-        expect(set.has(-0)).to.be.false;
-        if (slowkeys) {
-          // adding -0 will cause the set to use the slower implementation
-          testSet(-0);
-          expect(set.has(+0)).to.be.true;
-        }
+        testSet(-0);
+        expect(set.has(+0)).to.be.true;
 
         // verify that properties of Object don't peek through.
         ['hasOwnProperty', 'constructor', 'toString', 'isPrototypeOf',
@@ -639,19 +635,19 @@ describe('Collections', function() {
         expect(foundSet).to.eql(expectedSet);
       });
 
-      it('should store -0 as the key', function() {
+      it('should convert key -0 to +0', function() {
         var set = new Set(), result = [];
         set.add(-0);
         set.forEach(function(key) {
           result.push(String(1/key));
         });
         set.add(1);
-        set.add(0);
+        set.add(0); // shouldn't cause reordering
         set.forEach(function(key) {
           result.push(String(1/key));
         });
         expect(result.join(', ')).to.equal(
-          "-Infinity, -Infinity, 1"
+          "Infinity, Infinity, 1"
         );
       });
     });
