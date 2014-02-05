@@ -1057,7 +1057,7 @@
                   return;
                 }
               }
-              entry = entry ? entry : new MapEntry(key, value);
+              entry = entry || new MapEntry(key, value);
               if (ES.SameValue(-0, key)) {
                 entry.key = +0; // coerce -0 to +0 in entry
               }
