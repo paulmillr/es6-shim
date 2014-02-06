@@ -134,6 +134,8 @@ Other stuff:
 ## License
 The project was initially based on [es6-shim by Axel Rauschmayer](https://github.com/rauschma/es6-shim).
 
+Current maintainers are: [Paul Miller](http://paulmillr.com), [Jordan Harband](https://github.com/ljharb) and [C. Scott Ananian](http://cscott.net).
+
 The MIT License (MIT)
 
 Copyright (c) 2013 Paul Miller (http://paulmillr.com)
