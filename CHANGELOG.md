@@ -1,3 +1,15 @@
+# es6-shim 0.9.3 (5 February 2014)
+* Per spec, removed `Object.mixin` (#192)
+* Per spec, treat -0 and +0 keys as identical in Map/Set (#129, #204)
+* Per spec, `ArrayIterator`/`Array#values()` skips sparse indexes now. (#189)
+* Added `Array.from`, supporting Map/Set/Array/String iterators (the String iterator iterates over codepoints, not indexes) (#182)
+* Bug fixes to Map/Set iteration after concurrent delete. (#183)
+* Bug fixes to `Number.clz`: 0 and 0x100000000 are handled correctly now. (#196)
+* Added `Math.fround` to truncate to a 32-bit floating point number. (#140)
+* Bug fix for `Math.cosh` (#178)
+* Work around Firefox bugs in `String#startsWith` and `String#endsWith` (#172)
+* Work around Safari bug in `Math.imul`
+
 # es6-shim 0.9.2 (18 December 2013)
 * Negative `String#endsWith` position is now handled properly.
 * `TypeError` is now thrown when string methods are called
