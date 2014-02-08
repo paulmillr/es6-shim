@@ -84,7 +84,7 @@
 
     var ES = {
       CheckObjectCoercible: function(x) {
-        if (x == null) throw TypeError('Cannot call method on ' + x);
+        if (x == null) throw new TypeError('Cannot call method on ' + x);
         return x;
       },
 
@@ -378,8 +378,7 @@
 
     // see https://people.mozilla.org/~jorendorff/es6-draft.html#sec-string.prototype-@@iterator
     var StringIterator = function(s) {
-      if (s==null) { throw new TypeError('StringIterator: given null'); }
-      this._s = String(s);
+      this._s = String(ES.CheckObjectCoercible(s));
       this._i = 0;
     };
     StringIterator.prototype.next = function() {
@@ -433,7 +432,7 @@
         for (var i = 0; usingIterator || (i < length); i++) {
           if (usingIterator) {
             value = it.next();
-            if (value == null || typeof value !== 'object') {
+            if (value === null || typeof value !== 'object') {
               throw new TypeError("Bad iterator");
             }
             if (value.done) {
