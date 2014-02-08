@@ -11,7 +11,7 @@
   },
   "main": "es6-shim",
   "scripts": {
-    "test": "mocha"
+    "test": "mocha test/*.js test/*/*.js"
   },
   "testling": {
     "html": "testling.html",
@@ -34,6 +34,7 @@
   "devDependencies": {
     "mocha": "~1.17.1",
     "chai": "~1.9.0",
-    "es5-shim": "~2.3.0"
+    "es5-shim": "~2.3.0",
+    "promises-aplus-tests": "~2.0.3"
   }
 }
