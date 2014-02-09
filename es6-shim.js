@@ -113,7 +113,7 @@
         return x >>> 0;
       },
 
-      toInteger: function(value) {
+      ToInteger: function(value) {
         var number = +value;
         if (Number.isNaN(number)) return 0;
         if (number === 0 || !Number.isFinite(number)) return number;
@@ -300,7 +300,7 @@
         var next;
         for (var i = 0, length = points.length; i < length; i++) {
           next = Number(points[i]);
-          if (!ES.SameValue(next, ES.toInteger(next)) ||
+          if (!ES.SameValue(next, ES.ToInteger(next)) ||
               next < 0 || next > 0x10FFFF) {
             throw new RangeError('Invalid code point ' + next);
           }
@@ -363,7 +363,7 @@
 
         return function(times) {
           var thisStr = String(ES.CheckObjectCoercible(this));
-          times = ES.toInteger(times);
+          times = ES.ToInteger(times);
           if (times < 0 || times === Infinity) {
             throw new RangeError('Invalid String#repeat value');
           }
@@ -376,7 +376,7 @@
         if (_toString.call(searchStr) === '[object RegExp]') throw new TypeError('Cannot call method "startsWith" with a regex');
         searchStr = String(searchStr);
         var startArg = arguments.length > 1 ? arguments[1] : undefined;
-        var start = Math.max(ES.toInteger(startArg), 0);
+        var start = Math.max(ES.ToInteger(startArg), 0);
         return thisStr.slice(start, start + searchStr.length) === searchStr;
       },
 
@@ -386,7 +386,7 @@
         searchStr = String(searchStr);
         var thisLen = thisStr.length;
         var posArg = arguments.length > 1 ? arguments[1] : undefined;
-        var pos = posArg === undefined ? thisLen : ES.toInteger(posArg);
+        var pos = posArg === undefined ? thisLen : ES.ToInteger(posArg);
         var end = Math.min(Math.max(pos, 0), thisLen);
         return thisStr.slice(end - searchStr.length, end) === searchStr;
       },
@@ -399,7 +399,7 @@
 
       codePointAt: function(pos) {
         var thisStr = String(ES.CheckObjectCoercible(this));
-        var position = ES.toInteger(pos);
+        var position = ES.ToInteger(pos);
         var length = thisStr.length;
         if (position < 0 || position >= length) return undefined;
         var first = thisStr.charCodeAt(position);
@@ -530,7 +530,7 @@
     defineProperties(Array.prototype, {
       copyWithin: function(target, start) {
         var o = ES.ToObject(this);
-        var len = Math.max(ES.toInteger(o.length), 0);
+        var len = Math.max(ES.ToInteger(o.length), 0);
         var to = target < 0 ? Math.max(len + target, 0) : Math.min(target, len);
         var from = start < 0 ? Math.max(len + start, 0) : Math.min(start, len);
         var end = arguments.length > 2 ? arguments[2] : len;
@@ -556,8 +556,8 @@
       },
       fill: function(value) {
         var len = this.length;
-        var start = arguments.length > 1 ? ES.toInteger(arguments[1]) : 0;
-        var end = arguments.length > 2 ? ES.toInteger(arguments[2]) : len;
+        var start = arguments.length > 1 ? ES.ToInteger(arguments[1]) : 0;
+        var end = arguments.length > 2 ? ES.ToInteger(arguments[2]) : len;
 
         var relativeStart = start < 0 ? Math.max(len + start, 0) : Math.min(start, len);
 
@@ -626,11 +626,15 @@
         return typeof value === 'number' && global_isFinite(value);
       },
 
-      isSafeInteger: function(value) {
+      isInteger: function(value) {
         return typeof value === 'number' &&
           !Number.isNaN(value) &&
           Number.isFinite(value) &&
-          parseInt(value, 10) === value &&
+          ES.ToInteger(value) === value;
+      },
+
+      isSafeInteger: function(value) {
+        return Number.isInteger(value) &&
           Math.abs(value) <= Number.MAX_SAFE_INTEGER;
       },
 
