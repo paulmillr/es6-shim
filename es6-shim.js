@@ -67,7 +67,7 @@
     // work properly with each other, even though we don't have full Iterator
     // support.  That is, `Array.from(map.keys())` will work, but we don't
     // pretend to export a "real" Iterator interface.
-    var $iterator$ = (typeof Symbol === 'object' && Symbol['iterator']) ||
+    var $iterator$ = (typeof Symbol === 'object' && Symbol.iterator) ||
       '_es6shim_iterator_';
     // Firefox ships a partial implementation using the name @@iterator.
     // https://bugzilla.mozilla.org/show_bug.cgi?id=907077#c14
@@ -84,12 +84,14 @@
 
     var ES = {
       CheckObjectCoercible: function(x, optMessage) {
+        /* jshint eqnull:true */
         if (x == null)
           throw new TypeError(optMessage || ('Cannot call method on ' + x));
         return x;
       },
 
       TypeIsObject: function(x) {
+        /* jshint eqnull:true */
         // this is expensive when it returns false; use this function
         // when you expect it to return true in the common case.
         return x != null && Object(x) === x;
