@@ -132,6 +132,26 @@
       SameValueZero: function(a, b) {
         // same as SameValue except for SameValueZero(+0, -0) == true
         return (a === b) || (Number.isNaN(a) && Number.isNaN(b));
+      },
+
+      IsIterable: function(o) {
+        return ES.TypeIsObject(o) && ES.IsCallable(o[$iterator$]);
+      },
+
+      GetIterator: function(o) {
+        var it = o[$iterator$]();
+        if (!ES.TypeIsObject(it)) {
+          throw new TypeError('bad iterator');
+        }
+        return it;
+      },
+
+      IteratorNext: function(it) {
+        var result = (arguments.length > 1) ? it.next(arguments[1]) : it.next();
+        if (!ES.TypeIsObject(result)) {
+          throw new TypeError('bad iterator');
+        }
+        return result;
       }
     };
 
@@ -434,21 +454,18 @@
           throw new TypeError('Array.from: when provided, the second argument must be a function');
         }
 
-        var usingIterator = ($iterator$ in list);
+        var usingIterator = ES.IsIterable(list);
         // does the spec really mean that Arrays should use ArrayIterator?
         // https://bugs.ecmascript.org/show_bug.cgi?id=2416
         //if (Array.isArray(list)) { usingIterator=false; }
         var length = usingIterator ? 0 : ES.ToUint32(list.length);
         var result = ES.IsCallable(this) ? Object(usingIterator ? new this() : new this(length)) : new Array(length);
-        var it = usingIterator ? list[$iterator$]() : null;
+        var it = usingIterator ? ES.GetIterator(list) : null;
         var value;
 
         for (var i = 0; usingIterator || (i < length); i++) {
           if (usingIterator) {
-            value = it.next();
-            if (!ES.TypeIsObject(value)) {
-              throw new TypeError('bad iterator');
-            }
+            value = ES.IteratorNext(it);
             if (value.done) {
               length = i;
               break;
@@ -1125,18 +1142,13 @@
         var resolve = capability.resolve;
         var reject = capability.reject;
         try {
-          var it = ES.TypeIsObject(iterable) &&
-            ES.IsCallable(iterable[$iterator$]) &&
-            iterable[$iterator$]();
-          if (!(ES.TypeIsObject(it) && ES.IsCallable(it.next))) {
+          if (!ES.IsIterable(iterable)) {
             throw new TypeError('bad iterable');
           }
+          var it = ES.GetIterator(iterable);
           var values = [], remaining = { count: 1 };
           for (var index = 0; ; index++) {
-            var next = it.next();
-            if (!ES.TypeIsObject(next)) {
-              throw new TypeError('bad iterator');
-            }
+            var next = ES.IteratorNext(it);
             if (next.done) {
               break;
             }
@@ -1174,17 +1186,12 @@
         var resolve = capability.resolve;
         var reject = capability.reject;
         try {
-          var it = ES.TypeIsObject(iterable) &&
-            ES.IsCallable(iterable[$iterator$]) &&
-            iterable[$iterator$]();
-          if (!(ES.TypeIsObject(it) && ES.IsCallable(it.next))) {
+          if (!ES.IsIterable(iterable)) {
             throw new TypeError('bad iterable');
           }
+          var it = ES.GetIterator(iterable);
           while (true) {
-            var next = it.next();
-            if (!ES.TypeIsObject(next)) {
-              throw new TypeError('bad iterator');
-            }
+            var next = ES.IteratorNext(it);
             if (next.done) {
               // If iterable has no items, resulting promise will never
               // resolve; see:
