@@ -357,7 +357,11 @@ var runStringTests = function() {
       });
     });
 
-    describe('#raw()', function() {
+    describe('.raw()', function() {
+      it('should have a length of 1', function() {
+        expect(String.raw.length).to.equal(1);
+      });
+
       it('String.raw Works with Array', function() {
         var callSite = {};
 

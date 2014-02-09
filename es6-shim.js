@@ -296,8 +296,7 @@
         return result.join('');
       },
 
-      raw: function() {
-        var callSite = arguments.length > 0 ? arguments[0] : undefined;
+      raw: function(callSite) { // raw.length===1
         var substitutions = _slice.call(arguments, 1, arguments.length);
         var cooked = ES.ToObject(callSite, 'bad callSite');
         var rawValue = cooked.raw;
