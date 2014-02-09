@@ -1170,21 +1170,19 @@
               typeof it.next !== 'function') {
             throw new TypeError('bad iterable');
           }
-          var seen = false;
           while (true) {
             var next = it.next();
             if (next === null || typeof next !== 'object') {
               throw new TypeError('bad iterator');
             }
             if (next.done) {
-              if (!seen) {
-                throw new TypeError('zero-length array');
-              }
+              // If iterable has no items, resulting promise will never
+              // resolve; see:
+              // https://github.com/domenic/promises-unwrapping/issues/75
               break;
             }
             var nextPromise = C.cast(next.value);
             nextPromise.then(resolve, reject);
-            seen = true;
           }
         } catch (e) {
           reject(e);

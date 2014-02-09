@@ -45,8 +45,8 @@ describe("Promise.race", function () {
     });
   });
 
-  // see https://bugs.ecmascript.org/show_bug.cgi?id=2515
-  it.skip("should never settle when given an empty iterable", function (done) {
+  // see https://github.com/domenic/promises-unwrapping/issues/75
+  it("should never settle when given an empty iterable", function (done) {
     var iterable = [];
     var settled = false;
 
