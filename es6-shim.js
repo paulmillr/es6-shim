@@ -610,9 +610,11 @@
           throw new TypeError('Array#find: predicate must be a function');
         }
         var thisArg = arguments[1];
-        for (var i = 0, value; i < length && i in list; i++) {
-          value = list[i];
-          if (predicate.call(thisArg, value, i, list)) return value;
+        for (var i = 0, value; i < length; i++) {
+          if (i in list) {
+            value = list[i];
+            if (predicate.call(thisArg, value, i, list)) return value;
+          }
         }
         return undefined;
       },
@@ -624,8 +626,10 @@
           throw new TypeError('Array#findIndex: predicate must be a function');
         }
         var thisArg = arguments[1];
-        for (var i = 0; i < length && i in list; i++) {
-          if (predicate.call(thisArg, list[i], i, list)) return i;
+        for (var i = 0; i < length; i++) {
+          if (i in list) {
+            if (predicate.call(thisArg, list[i], i, list)) return i;
+          }
         }
         return -1;
       },
