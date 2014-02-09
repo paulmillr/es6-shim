@@ -402,7 +402,7 @@ var runStringTests = function() {
       });
 
       it('String.raw Empty objects', function() {
-        var callSite = {};
+        var callSite = {raw:{}};
         expect(String.raw(callSite,'{total}','{total * 1.01}')).to.eql('');
         expect(String.raw(callSite)).to.eql('');
       });
