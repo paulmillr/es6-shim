@@ -120,6 +120,13 @@
         return Math.sign(number) * Math.floor(Math.abs(number));
       },
 
+      ToLength: function(value) {
+        var len = ES.ToInteger(value);
+        if (len <= 0) return 0; // includes converting -0 to +0
+        if (len > Number.MAX_SAFE_INTEGER) return Number.MAX_SAFE_INTEGER;
+        return len;
+      },
+
       SameValue: function(a, b) {
         if (a === b) {
           // 0 === -0, but they are not identical.
@@ -322,7 +329,7 @@
         var rawValue = cooked.raw;
         var raw = ES.ToObject(rawValue, 'bad raw value');
         var len = Object.keys(raw).length;
-        var literalsegments = ES.ToUint32(len);
+        var literalsegments = ES.ToLength(len);
         if (literalsegments === 0) {
           return '';
         }
@@ -458,7 +465,7 @@
         // does the spec really mean that Arrays should use ArrayIterator?
         // https://bugs.ecmascript.org/show_bug.cgi?id=2416
         //if (Array.isArray(list)) { usingIterator=false; }
-        var length = usingIterator ? 0 : ES.ToUint32(list.length);
+        var length = usingIterator ? 0 : ES.ToLength(list.length);
         var result = ES.IsCallable(this) ? Object(usingIterator ? new this() : new this(length)) : new Array(length);
         var it = usingIterator ? ES.GetIterator(list) : null;
         var value;
@@ -505,7 +512,8 @@
           throw new TypeError('Not an ArrayIterator');
         }
         if (array!==undefined) {
-          for (; i < array.length; i++) {
+          var len = ES.ToLength(array.length);
+          for (; i < len; i++) {
             var kind = this.kind;
             var retval;
             if (kind === "key") {
@@ -529,11 +537,14 @@
 
     defineProperties(Array.prototype, {
       copyWithin: function(target, start) {
+        var end = arguments[2]; // copyWithin.length must be 2
         var o = ES.ToObject(this);
-        var len = Math.max(ES.ToInteger(o.length), 0);
+        var len = ES.ToLength(o.length);
+        target = ES.ToInteger(target);
+        start = ES.ToInteger(start);
         var to = target < 0 ? Math.max(len + target, 0) : Math.min(target, len);
         var from = start < 0 ? Math.max(len + start, 0) : Math.min(start, len);
-        var end = arguments.length > 2 ? arguments[2] : len;
+        end = (end===undefined) ? len : ES.ToInteger(end);
         var fin = end < 0 ? Math.max(len + end, 0) : Math.min(end, len);
         var count = Math.min(fin - from, len - to);
         var direction = 1;
@@ -555,26 +566,27 @@
         return o;
       },
       fill: function(value) {
-        var len = this.length;
-        var start = arguments.length > 1 ? ES.ToInteger(arguments[1]) : 0;
-        var end = arguments.length > 2 ? ES.ToInteger(arguments[2]) : len;
+        var start = arguments[1], end = arguments[2]; // fill.length===1
+        var O = ES.ToObject(this);
+        var len = ES.ToLength(O.length);
+        start = ES.ToInteger(start===undefined ? 0 : start);
+        end = ES.ToInteger(end===undefined ? len : end);
 
         var relativeStart = start < 0 ? Math.max(len + start, 0) : Math.min(start, len);
 
         for (var i = relativeStart; i < len && i < end; ++i) {
-          this[i] = value;
+          O[i] = value;
         }
-        return this;
+        return O;
       },
 
       find: function(predicate) {
         var list = ES.ToObject(this);
-        var length = ES.ToUint32(list.length);
-        if (length === 0) return undefined;
+        var length = ES.ToLength(list.length);
         if (!ES.IsCallable(predicate)) {
           throw new TypeError('Array#find: predicate must be a function');
         }
-        var thisArg = arguments.length > 1 ? arguments[1] : undefined;
+        var thisArg = arguments[1];
         for (var i = 0, value; i < length && i in list; i++) {
           value = list[i];
           if (predicate.call(thisArg, value, i, list)) return value;
@@ -584,12 +596,11 @@
 
       findIndex: function(predicate) {
         var list = ES.ToObject(this);
-        var length = ES.ToUint32(list.length);
-        if (length === 0) return -1;
+        var length = ES.ToLength(list.length);
         if (!ES.IsCallable(predicate)) {
           throw new TypeError('Array#findIndex: predicate must be a function');
         }
-        var thisArg = arguments.length > 1 ? arguments[1] : undefined;
+        var thisArg = arguments[1];
         for (var i = 0; i < length && i in list; i++) {
           if (predicate.call(thisArg, list[i], i, list)) return i;
         }
