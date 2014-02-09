@@ -89,4 +89,100 @@ describe("Promise.all", function () {
       }
     );
   });
+
+  // test cases from
+  // https://github.com/domenic/promises-unwrapping/issues/89#issuecomment-33110203
+  var tamper = function(p) {
+    return Object.assign(p, {
+      then: function(fulfill, reject) {
+        fulfill('tampered');
+        return Promise.prototype.then.call(this, fulfill, reject);
+      }
+    });
+  };
+  var failIfThrows = function(done) {
+    return function(e) { done(e); };
+  };
+
+  it("should be robust against tampering (1)", function(done) {
+    var g = [ tamper(Promise.resolve(0)) ];
+    // Prevent countdownHolder.[[Countdown]] from ever reaching zero
+    Promise.all(g).
+      then(function() { done(); }, failIfThrows(done));
+  });
+
+  it("should be robust against tampering (2)", function(done) {
+    var g = [
+      Promise.resolve(0),
+      tamper(Promise.resolve(1)),
+      Promise.resolve(2).then(function() {
+        assert(!fulfillCalled, 'should be resolved before all()');
+      }).then(function() {
+        assert(!fulfillCalled, 'should be resolved before all()');
+      })['catch'](failIfThrows(done))
+    ];
+    // Promise from Promise.all resolved before arguments
+    var fulfillCalled = false;
+    Promise.all(g).
+      then(function() {
+        assert(!fulfillCalled, 'should be resolved last');
+        fulfillCalled = true;
+      }).
+      then(done, failIfThrows(done));
+  });
+
+  it("should be robust against tampering (3)", function(done) {
+    var g = [
+      Promise.resolve(0),
+      tamper(Promise.resolve(1)),
+      Promise.reject(2)
+    ];
+    // Promise from Promise.all resolved despite rejected promise in arguments
+    Promise.all(g).
+      then(function(v) {
+        throw new Error('should not reach here!');
+      }, function(e) {
+        assert.strictEqual(e, 2);
+      }).then(done, failIfThrows(done));
+  });
+
+  it("should be robust against tampering (4)", function(done) {
+    var hijack = true;
+    var actualArguments = [];
+    var P = function(resolver) {
+      if (hijack) {
+        hijack = false;
+        Promise.call(this, function(resolve, reject) {
+          return resolver(function(values) {
+            // record arguments & # of times resolve function is called
+            actualArguments.push(values.slice());
+            return resolve(values);
+          }, reject);
+        });
+      } else {
+        Promise.call(this, resolver);
+      }
+    };
+    if (!P.__proto__) { return done(); } // skip test if on IE < 11
+    P.__proto__ = Promise;
+    P.prototype = Object.create(Promise.prototype);
+    P.prototype.constructor = P;
+    P.cast = function(p) { return p; };
+
+    var g = [
+      Promise.resolve(0),
+      tamper(Promise.resolve(1)),
+      Promise.resolve(2)
+    ];
+
+    // Promise.all calls resolver twice
+    P.all(g)['catch'](failIfThrows(done));
+    Promise.
+      resolve().
+      then(function() {
+        assert.deepEqual(actualArguments, [ [ 0, 'tampered', 2 ] ]);
+      }).
+      then(done, failIfThrows(done));
+  });
+
 });

@@ -1095,7 +1095,10 @@
       });
 
       var _promiseAllResolver = function(index, values, capability, remaining) {
+        var done = false;
         return function(x) {
+          if (done) { return; } // protect against being called multiple times
+          done = true;
           values[index] = x;
           if ((--remaining.count) === 0) {
             var resolve = capability.resolve;
@@ -1117,16 +1120,13 @@
               typeof it.next !== 'function') {
             throw new TypeError('bad iterable');
           }
-          var values = [], remaining = { count: 0 };
+          var values = [], remaining = { count: 1 };
           for (var index = 0; ; index++) {
             var next = it.next();
             if (next === null || typeof next !== 'object') {
               throw new TypeError('bad iterator');
             }
             if (next.done) {
-              if (index === 0) {
-                resolve(values);
-              }
               break;
             }
             var nextPromise = C.cast(next.value);
@@ -1135,6 +1135,9 @@
             );
             remaining.count++;
             nextPromise.then(resolveElement, capability.reject);
+          }
+          if ((--remaining.count) === 0) {
+            resolve(values); // call w/ this===undefined
           }
         } catch (e) {
           reject(e);
