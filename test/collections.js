@@ -70,8 +70,29 @@ describe('Collections', function() {
       });
     });
 
+    it('should accept an iterable as argument', function() {
+      testMapping('a','b');
+      testMapping('c','d');
+      var map2 = new Map(map);
+      expect(map2.has('a')).to.be.true;
+      expect(map2.has('c')).to.be.true;
+      expect(Array.from(map2.entries())).to.be.eql([['a','b'],['c','d']]);
+    });
+
     it('should not be callable without "new"', function() {
       expect(Map).to.throw(TypeError);
+    });
+
+    it('should be subclassable', function() {
+      var MyMap = function() { Map.call(this, [['a','b']]); }
+      if (!MyMap.__proto__) { return; } // skip test if on IE < 11
+      MyMap.__proto__ = Map;
+      MyMap.prototype = Object.create(Map.prototype);
+      MyMap.prototype.constructor = MyMap;
+
+      map = new MyMap();
+      testMapping('c', 'd');
+      expect(Array.from(map)).to.be.eql([['a','b'],['c','d']]);
     });
 
     it('treats positive and negative zero the same', function() {
@@ -378,6 +399,14 @@ describe('Collections', function() {
 
   describe('Set', function() {
     var set;
+    var testSet = function(key) {
+      expect(set.has(key)).to.be.false;
+      set.add(key);
+      expect(set.has(key)).to.be.true;
+      set['delete'](key);
+      expect(set.has(key)).to.be.false;
+      set.add(key); // add it back
+    };
 
     beforeEach(function() {
       set = new Set();
@@ -395,8 +424,29 @@ describe('Collections', function() {
       expect(Set.length).to.equal(0);
     });
 
+    it('should accept an iterable as argument', function() {
+      testSet('a');
+      testSet('b');
+      var set2 = new Set(set);
+      expect(set2.has('a')).to.be.true;
+      expect(set2.has('b')).to.be.true;
+      expect(Array.from(set2.entries())).to.be.eql([['a','a'],['b','b']]);
+    });
+
     it('should not be callable without "new"', function() {
       expect(Set).to.throw(TypeError);
+    });
+
+    it('should be subclassable', function() {
+      var MySet = function() { Set.call(this, ['a', 'b']); }
+      if (!MySet.__proto__) { return; } // skip test if on IE < 11
+      MySet.__proto__ = Set;
+      MySet.prototype = Object.create(Set.prototype);
+      MySet.prototype.constructor = MySet;
+
+      set = new MySet();
+      testSet('c'); testSet('d');
+      expect(Array.from(set)).to.be.eql(['a','b','c','d']);
     });
 
     it('should has valid getter and setter calls', function() {
@@ -408,15 +458,6 @@ describe('Collections', function() {
     });
 
     it('should work as expected', function() {
-      var testSet = function(key) {
-        expect(set.has(key)).to.be.false;
-        set.add(key);
-        expect(set.has(key)).to.be.true;
-        set['delete'](key);
-        expect(set.has(key)).to.be.false;
-        set.add(key); // add it back
-      };
-
       // Run this test twice, one with the "fast" implementation (which only
       // allows string and numeric keys) and once with the "slow" impl.
       for (i = 0; i < 2; i++) {
