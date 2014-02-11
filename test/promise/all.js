@@ -3,6 +3,10 @@ require('../../'); // import Promise from es6-shim
 
 var assert = require("assert");
 
+var failIfThrows = function(done) {
+  return function(e) { done(e); };
+};
+
 describe("Promise.all", function () {
   it("fulfills if passed an empty array", function (done) {
     var iterable = [];
@@ -11,7 +15,18 @@ describe("Promise.all", function () {
       assert(Array.isArray(value));
       assert.deepEqual(value, []);
       done();
-    });
+    }, failIfThrows(done));
+  });
+
+  it("fulfills if passed an empty array-like", function (done) {
+    var f = function() {
+      Promise.all(arguments).then(function (value) {
+        assert(Array.isArray(value));
+        assert.deepEqual(value, []);
+        done();
+      }, failIfThrows(done));
+    };
+    f();
   });
 
   it("fulfills if passed an array of mixed fulfilled promises and values", function (done) {
@@ -21,7 +36,7 @@ describe("Promise.all", function () {
       assert(Array.isArray(value));
       assert.deepEqual(value, [0, 1, 2, 3]);
       done();
-    });
+    }, failIfThrows(done));
   });
 
   it("rejects if any passed promise is rejected", function (done) {
@@ -52,7 +67,7 @@ describe("Promise.all", function () {
     Promise.all(iterable).then(function (value) {
       assert.deepEqual(value, [1, 2]);
       done();
-    });
+    }, failIfThrows(done));
   });
 
   it("fulfills when passed an sparse array, giving `undefined` for the omitted values", function (done) {
@@ -61,7 +76,7 @@ describe("Promise.all", function () {
     Promise.all(iterable).then(function (value) {
       assert.deepEqual(value, [0, undefined, undefined, 1]);
       done();
-    });
+    }, failIfThrows(done));
   });
 
   it("does not modify the input array", function (done) {
@@ -71,7 +86,7 @@ describe("Promise.all", function () {
     Promise.all(iterable).then(function (value) {
       assert.notStrictEqual(input, value);
       done();
-    });
+    }, failIfThrows(done));
   });
 
 
@@ -99,9 +114,6 @@ describe("Promise.all", function () {
         return Promise.prototype.then.call(this, fulfill, reject);
       }
     });
-  };
-  var failIfThrows = function(done) {
-    return function(e) { done(e); };
   };
 
   it("should be robust against tampering (1)", function(done) {
