@@ -160,10 +160,15 @@
       },
 
       IsIterable: function(o) {
-        return ES.TypeIsObject(o) && ES.IsCallable(o[$iterator$]);
+        return ES.TypeIsObject(o) &&
+          (ES.IsCallable(o[$iterator$]) || isArguments(o));
       },
 
       GetIterator: function(o) {
+        if (isArguments(o)) {
+          // special case support for `arguments`
+          return new ArrayIterator(o, "value");
+        }
         var it = o[$iterator$]();
         if (!ES.TypeIsObject(it)) {
           throw new TypeError('bad iterator');
