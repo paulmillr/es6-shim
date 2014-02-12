@@ -503,8 +503,8 @@
         var to = target < 0 ? Math.max(len + target, 0) : Math.min(target, len);
         var from = start < 0 ? Math.max(len + start, 0) : Math.min(start, len);
         var end = arguments.length > 2 ? arguments[2] : len;
-        var final = end < 0 ? Math.max(len + end, 0) : Math.min(end, len);
-        var count = Math.min(final - from, len - to);
+        var fin = end < 0 ? Math.max(len + end, 0) : Math.min(end, len);
+        var count = Math.min(fin - from, len - to);
         var direction = 1;
         if (from < to && to < (from + count)) {
           direction = -1;
@@ -610,7 +610,7 @@
         // isNaN is broken: it converts its argument to number, so
         // isNaN('foo') => true
         return value !== value;
-      },
+      }
 
     });
 
