@@ -906,6 +906,351 @@
       Math.imul = MathShims.imul;
     }
 
+    // Promises
+    // Simplest possible implementation; use a 3rd-party library if you
+    // want the best possible speed and/or long stack traces.
+    (function() {
+
+      var Promise, Promise$prototype;
+
+      ES.IsPromise = function(promise) {
+        if (promise === null || typeof promise !== 'object') {
+          return false;
+        }
+        if (!promise._promiseConstructor) {
+          // _promiseConstructor is a bit more unique than _status, so we'll
+          // check that instead of the [[PromiseStatus]] internal field.
+          return false;
+        }
+        if (promise._status === undefined) {
+          return false; // uninitialized
+        }
+        return true;
+      };
+
+      // "PromiseCapability" in the spec is what most promise implementations
+      // call a "deferred".
+      var PromiseCapability = function(C) {
+        if (typeof C !== 'function') {
+          throw new TypeError('bad promise constructor');
+        }
+        var capability = this;
+        var resolver = function(resolve, reject) {
+          capability.resolve = resolve;
+          capability.reject = reject;
+        };
+        // this is es6 'CreateFromConstructor'
+        if (typeof C['@@create'] === 'function') {
+          capability.promise = C['@@create']();
+        } else {
+          capability.promise = Object.create(C.prototype || null);
+        }
+        var cr = C.call(capability.promise, resolver);
+        if (typeof capability.resolve !== 'function' ||
+            typeof capability.reject !== 'function') {
+          throw new TypeError('bad promise constructor');
+        }
+        if ((typeof cr === 'object' || typeof cr === 'function') &&
+            cr !== capability.promise) {
+          throw new TypeError('bad promise constructor');
+        }
+      };
+
+      // find an appropriate setImmediate-alike
+      var setTimeout = globals.setTimeout;
+      var enqueue = typeof globals.setImmediate === 'function' ?
+        globals.setImmediate.bind(globals) :
+        typeof process === 'object' && process.nextTick ? process.nextTick :
+        function(task) { setTimeout(task, 0); }; // fallback
+
+      var triggerPromiseReactions = function(reactions, x) {
+        reactions.forEach(function(reaction) {
+          enqueue(function() {
+            // PromiseReactionTask
+            var handler = reaction.handler;
+            var capability = reaction.capability;
+            var resolve = capability.resolve;
+            var reject = capability.reject;
+            try {
+              var result = handler(x);
+              if (result === capability.promise) {
+                throw new TypeError('self resolution');
+              }
+              var updateResult =
+                updatePromiseFromPotentialThenable(result, capability);
+              if (!updateResult) {
+                resolve(result);
+              }
+            } catch (e) {
+              reject(e);
+            }
+          });
+        });
+      };
+
+      var updatePromiseFromPotentialThenable = function(x, capability) {
+        if (x === null || // is Type(x) not Object?
+            (typeof x !== 'function' && typeof x !== 'object'))  {
+          return false;
+        }
+        var resolve = capability.resolve;
+        var reject = capability.reject;
+        try {
+          var then = x.then; // only one invocation of accessor
+          if (typeof then !== 'function') { return false; }
+          then.call(x, resolve, reject);
+        } catch(e) {
+          reject(e);
+        }
+        return true;
+      };
+
+      var promiseResolutionHandler = function(promise, onFulfilled, onRejected){
+        return function(x) {
+          if (x === promise) {
+            return onRejected(new TypeError('self resolution'));
+          }
+          var C = promise._promiseConstructor;
+          var capability = new PromiseCapability(C);
+          var updateResult = updatePromiseFromPotentialThenable(x, capability);
+          if (updateResult) {
+            return capability.promise.then(onFulfilled, onRejected);
+          } else {
+            return onFulfilled(x);
+          }
+        };
+      };
+
+      Promise = function(resolver) {
+        var promise = this;
+        if (promise === null || typeof promise !== 'object') {
+          throw new TypeError('bad promise');
+        }
+        // es5 approximation to es6 subclass semantics: in es6, 'new Promise'
+        // would invoke Promise.@@create to initialize the new object.
+        // In es5 we just get the plain object.  So if we detect an
+        // uninitialized promise, invoke promise.contructor.@@create
+        if (!promise._promiseConstructor) {
+          if (typeof promise.constructor !== 'function' ||
+              typeof promise.constructor['@@create'] !== 'function') {
+            throw new TypeError('bad promise constructor');
+          }
+          promise = promise.constructor['@@create'](promise);
+        }
+        if (promise._status !== undefined) {
+          throw new TypeError('promise already initialized');
+        }
+        // see https://bugs.ecmascript.org/show_bug.cgi?id=2482
+        if (typeof resolver !== 'function') {
+          throw new TypeError('not a valid resolver');
+        }
+        promise._status = 'unresolved';
+        promise._resolveReactions = [];
+        promise._rejectReactions = [];
+
+        var resolve = function(resolution) {
+          if (promise._status !== 'unresolved') { return; }
+          var reactions = promise._resolveReactions;
+          promise._result = resolution;
+          promise._resolveReactions = undefined;
+          promise._rejectReactions = undefined;
+          promise._status = 'has-resolution';
+          triggerPromiseReactions(reactions, resolution);
+        };
+        var reject = function(reason) {
+          if (promise._status !== 'unresolved') { return; }
+          var reactions = promise._rejectReactions;
+          promise._result = reason;
+          promise._resolveReactions = undefined;
+          promise._rejectReactions = undefined;
+          promise._status = 'has-rejection';
+          triggerPromiseReactions(reactions, reason);
+        };
+        try {
+          resolver(resolve, reject);
+        } catch (e) {
+          reject(e);
+        }
+        return promise;
+      };
+      Promise$prototype = Promise.prototype;
+      defineProperties(Promise, {
+        '@@create': function(obj) {
+          var constructor = this;
+          // AllocatePromise
+          // The `obj` parameter is a hack we use for es5
+          // compatibility.
+          var prototype = constructor.prototype || Promise$prototype;
+          obj = obj || Object.create(prototype);
+          defineProperties(obj, {
+            _status: undefined,
+            _result: undefined,
+            _resolveReactions: undefined,
+            _rejectReactions: undefined,
+            _promiseConstructor: undefined
+          });
+          obj._promiseConstructor = constructor;
+          return obj;
+        }
+      });
+
+      var _promiseAllResolver = function(index, values, capability, remaining) {
+        var done = false;
+        return function(x) {
+          if (done) { return; } // protect against being called multiple times
+          done = true;
+          values[index] = x;
+          if ((--remaining.count) === 0) {
+            var resolve = capability.resolve;
+            resolve(values); // call w/ this===undefined
+          }
+        };
+      };
+
+      Promise.all = function(iterable) {
+        var C = this;
+        var capability = new PromiseCapability(C);
+        var resolve = capability.resolve;
+        var reject = capability.reject;
+        try {
+          var it = typeof iterable === 'object' && iterable !== null &&
+            typeof iterable[$iterator$] === 'function' &&
+            iterable[$iterator$]();
+          if (it === null || typeof it !== 'object' ||
+              typeof it.next !== 'function') {
+            throw new TypeError('bad iterable');
+          }
+          var values = [], remaining = { count: 1 };
+          for (var index = 0; ; index++) {
+            var next = it.next();
+            if (next === null || typeof next !== 'object') {
+              throw new TypeError('bad iterator');
+            }
+            if (next.done) {
+              break;
+            }
+            var nextPromise = C.cast(next.value);
+            var resolveElement = _promiseAllResolver(
+              index, values, capability, remaining
+            );
+            remaining.count++;
+            nextPromise.then(resolveElement, capability.reject);
+          }
+          if ((--remaining.count) === 0) {
+            resolve(values); // call w/ this===undefined
+          }
+        } catch (e) {
+          reject(e);
+        }
+        return capability.promise;
+      };
+
+      Promise.cast = function(x) {
+        var C = this;
+        if (ES.IsPromise(x)) {
+          var constructor = x._promiseConstructor;
+          if (constructor === C) { return x; }
+        }
+        var capability = new PromiseCapability(C);
+        var resolve = capability.resolve;
+        resolve(x); // call with this===undefined
+        return capability.promise;
+      };
+
+      Promise.race = function(iterable) {
+        var C = this;
+        var capability = new PromiseCapability(C);
+        var resolve = capability.resolve;
+        var reject = capability.reject;
+        try {
+          var it = typeof iterable === 'object' && iterable !== null &&
+            typeof iterable[$iterator$] === 'function' &&
+            iterable[$iterator$]();
+          if (it === null || typeof it !== 'object' ||
+              typeof it.next !== 'function') {
+            throw new TypeError('bad iterable');
+          }
+          while (true) {
+            var next = it.next();
+            if (next === null || typeof next !== 'object') {
+              throw new TypeError('bad iterator');
+            }
+            if (next.done) {
+              // If iterable has no items, resulting promise will never
+              // resolve; see:
+              // https://github.com/domenic/promises-unwrapping/issues/75
+              break;
+            }
+            var nextPromise = C.cast(next.value);
+            nextPromise.then(resolve, reject);
+          }
+        } catch (e) {
+          reject(e);
+        }
+        return capability.promise;
+      };
+
+      Promise.reject = function(reason) {
+        var C = this;
+        var capability = new PromiseCapability(C);
+        var reject = capability.reject;
+        reject(reason); // call with this===undefined
+        return capability.promise;
+      };
+
+      Promise.resolve = function(v) {
+        var C = this;
+        var capability = new PromiseCapability(C);
+        var resolve = capability.resolve;
+        resolve(v); // call with this===undefined
+        return capability.promise;
+      };
+
+      Promise.prototype['catch'] = function( onRejected ) {
+        return this.then(undefined, onRejected);
+      };
+
+      Promise.prototype.then = function( onFulfilled, onRejected ) {
+        var promise = this;
+        if (!ES.IsPromise(promise)) { throw new TypeError('not a promise'); }
+        var C = this._promiseConstructor;
+        var capability = new PromiseCapability(C);
+        if (typeof onRejected !== 'function') {
+          onRejected = function(e) { throw e; };
+        }
+        if (typeof onFulfilled !== 'function') {
+          onFulfilled = function(x) { return x; };
+        }
+        var resolutionHandler =
+          promiseResolutionHandler(promise, onFulfilled, onRejected);
+        var resolveReaction =
+          { capability: capability, handler: resolutionHandler };
+        var rejectReaction =
+          { capability: capability, handler: onRejected };
+        switch (promise._status) {
+        case 'unresolved':
+          promise._resolveReactions.push(resolveReaction);
+          promise._rejectReactions.push(rejectReaction);
+          break;
+        case 'has-resolution':
+          triggerPromiseReactions([resolveReaction], promise._result);
+          break;
+        case 'has-rejection':
+          triggerPromiseReactions([rejectReaction], promise._result);
+          break;
+        default:
+          throw new TypeError('unexpected');
+        }
+        return capability.promise;
+      };
+
+      // export the Promise constructor.
+      // we might test here whether an existing Promise impl is broken.
+      defineProperties(globals, {
+        Promise: Promise
+      });
+    })();
+
     // Map and Set require a true ES5 environment
     if (supportsDescriptors) {
 
