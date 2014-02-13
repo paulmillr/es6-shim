@@ -1234,6 +1234,7 @@
               // If iterable has no items, resulting promise will never
               // resolve; see:
               // https://github.com/domenic/promises-unwrapping/issues/75
+              // https://bugs.ecmascript.org/show_bug.cgi?id=2515
               break;
             }
             var nextPromise = C.cast(next.value);
@@ -1268,7 +1269,9 @@
       Promise.prototype.then = function( onFulfilled, onRejected ) {
         var promise = this;
         if (!ES.IsPromise(promise)) { throw new TypeError('not a promise'); }
-        var C = this._promiseConstructor;
+        // this.constructor not this._promiseConstructor; see
+        // https://bugs.ecmascript.org/show_bug.cgi?id=2513
+        var C = this.constructor;
         var capability = new PromiseCapability(C);
         if (!ES.IsCallable(onRejected)) {
           onRejected = function(e) { throw e; };
