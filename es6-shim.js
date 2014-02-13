@@ -83,9 +83,26 @@
     };
 
     var ES = {
-      CheckObjectCoercible: function(x) {
-        if (x == null) throw new TypeError('Cannot call method on ' + x);
+      CheckObjectCoercible: function(x, optMessage) {
+        if (x == null)
+          throw new TypeError(optMessage || ('Cannot call method on ' + x));
         return x;
+      },
+
+      TypeIsObject: function(x) {
+        // this is expensive when it returns false; use this function
+        // when you expect it to return true in the common case.
+        return x != null && Object(x) === x;
+      },
+
+      ToObject: function(o, optMessage) {
+        return Object(ES.CheckObjectCoercible(o, optMessage));
+      },
+
+      IsCallable: function(x) {
+        return typeof x === 'function' &&
+          // some versions of IE say that typeof /abc/ === 'function'
+          _toString.call(x) === '[object Function]';
       },
 
       ToInt32: function(x) {
@@ -96,11 +113,18 @@
         return x >>> 0;
       },
 
-      toInteger: function(value) {
+      ToInteger: function(value) {
         var number = +value;
         if (Number.isNaN(number)) return 0;
         if (number === 0 || !Number.isFinite(number)) return number;
         return Math.sign(number) * Math.floor(Math.abs(number));
+      },
+
+      ToLength: function(value) {
+        var len = ES.ToInteger(value);
+        if (len <= 0) return 0; // includes converting -0 to +0
+        if (len > Number.MAX_SAFE_INTEGER) return Number.MAX_SAFE_INTEGER;
+        return len;
       },
 
       SameValue: function(a, b) {
@@ -115,6 +139,26 @@
       SameValueZero: function(a, b) {
         // same as SameValue except for SameValueZero(+0, -0) == true
         return (a === b) || (Number.isNaN(a) && Number.isNaN(b));
+      },
+
+      IsIterable: function(o) {
+        return ES.TypeIsObject(o) && ES.IsCallable(o[$iterator$]);
+      },
+
+      GetIterator: function(o) {
+        var it = o[$iterator$]();
+        if (!ES.TypeIsObject(it)) {
+          throw new TypeError('bad iterator');
+        }
+        return it;
+      },
+
+      IteratorNext: function(it) {
+        var result = (arguments.length > 1) ? it.next(arguments[1]) : it.next();
+        if (!ES.TypeIsObject(result)) {
+          throw new TypeError('bad iterator');
+        }
+        return result;
       }
     };
 
@@ -263,7 +307,7 @@
         var next;
         for (var i = 0, length = points.length; i < length; i++) {
           next = Number(points[i]);
-          if (!ES.SameValue(next, ES.toInteger(next)) ||
+          if (!ES.SameValue(next, ES.ToInteger(next)) ||
               next < 0 || next > 0x10FFFF) {
             throw new RangeError('Invalid code point ' + next);
           }
@@ -279,14 +323,13 @@
         return result.join('');
       },
 
-      raw: function() {
-        var callSite = arguments.length > 0 ? arguments[0] : undefined;
+      raw: function(callSite) { // raw.length===1
         var substitutions = _slice.call(arguments, 1, arguments.length);
-        var cooked = Object(callSite);
+        var cooked = ES.ToObject(callSite, 'bad callSite');
         var rawValue = cooked.raw;
-        var raw = Object(rawValue);
+        var raw = ES.ToObject(rawValue, 'bad raw value');
         var len = Object.keys(raw).length;
-        var literalsegments = ES.ToUint32(len);
+        var literalsegments = ES.ToLength(len);
         if (literalsegments === 0) {
           return '';
         }
@@ -327,7 +370,7 @@
 
         return function(times) {
           var thisStr = String(ES.CheckObjectCoercible(this));
-          times = ES.toInteger(times);
+          times = ES.ToInteger(times);
           if (times < 0 || times === Infinity) {
             throw new RangeError('Invalid String#repeat value');
           }
@@ -340,7 +383,7 @@
         if (_toString.call(searchStr) === '[object RegExp]') throw new TypeError('Cannot call method "startsWith" with a regex');
         searchStr = String(searchStr);
         var startArg = arguments.length > 1 ? arguments[1] : undefined;
-        var start = Math.max(ES.toInteger(startArg), 0);
+        var start = Math.max(ES.ToInteger(startArg), 0);
         return thisStr.slice(start, start + searchStr.length) === searchStr;
       },
 
@@ -350,7 +393,7 @@
         searchStr = String(searchStr);
         var thisLen = thisStr.length;
         var posArg = arguments.length > 1 ? arguments[1] : undefined;
-        var pos = posArg === undefined ? thisLen : ES.toInteger(posArg);
+        var pos = posArg === undefined ? thisLen : ES.ToInteger(posArg);
         var end = Math.min(Math.max(pos, 0), thisLen);
         return thisStr.slice(end - searchStr.length, end) === searchStr;
       },
@@ -363,7 +406,7 @@
 
       codePointAt: function(pos) {
         var thisStr = String(ES.CheckObjectCoercible(this));
-        var position = ES.toInteger(pos);
+        var position = ES.ToInteger(pos);
         var length = thisStr.length;
         if (position < 0 || position >= length) return undefined;
         var first = thisStr.charCodeAt(position);
@@ -413,28 +456,23 @@
         var mapFn = arguments.length > 1 ? arguments[1] : undefined;
         var thisArg = arguments.length > 2 ? arguments[2] : undefined;
 
-        if (iterable === null || iterable === undefined) {
-          throw new TypeError('Array.from: null or undefined are not valid values. Use []');
-        } else if (mapFn !== undefined && _toString.call(mapFn) !== '[object Function]') {
+        var list = ES.ToObject(iterable, 'bad iterable');
+        if (mapFn !== undefined && !ES.IsCallable(mapFn)) {
           throw new TypeError('Array.from: when provided, the second argument must be a function');
         }
 
-        var list = Object(iterable);
-        var usingIterator = ($iterator$ in list);
+        var usingIterator = ES.IsIterable(list);
         // does the spec really mean that Arrays should use ArrayIterator?
         // https://bugs.ecmascript.org/show_bug.cgi?id=2416
         //if (Array.isArray(list)) { usingIterator=false; }
-        var length = usingIterator ? 0 : ES.ToUint32(list.length);
-        var result = typeof this === 'function' ? Object(usingIterator ? new this() : new this(length)) : new Array(length);
-        var it = usingIterator ? list[$iterator$]() : null;
+        var length = usingIterator ? 0 : ES.ToLength(list.length);
+        var result = ES.IsCallable(this) ? Object(usingIterator ? new this() : new this(length)) : new Array(length);
+        var it = usingIterator ? ES.GetIterator(list) : null;
         var value;
 
         for (var i = 0; usingIterator || (i < length); i++) {
           if (usingIterator) {
-            value = it.next();
-            if (value === null || typeof value !== 'object') {
-              throw new TypeError("Bad iterator");
-            }
+            value = ES.IteratorNext(it);
             if (value.done) {
               length = i;
               break;
@@ -474,7 +512,8 @@
           throw new TypeError('Not an ArrayIterator');
         }
         if (array!==undefined) {
-          for (; i < array.length; i++) {
+          var len = ES.ToLength(array.length);
+          for (; i < len; i++) {
             var kind = this.kind;
             var retval;
             if (kind === "key") {
@@ -498,11 +537,14 @@
 
     defineProperties(Array.prototype, {
       copyWithin: function(target, start) {
-        var o = Object(this);
-        var len = Math.max(ES.toInteger(o.length), 0);
+        var end = arguments[2]; // copyWithin.length must be 2
+        var o = ES.ToObject(this);
+        var len = ES.ToLength(o.length);
+        target = ES.ToInteger(target);
+        start = ES.ToInteger(start);
         var to = target < 0 ? Math.max(len + target, 0) : Math.min(target, len);
         var from = start < 0 ? Math.max(len + start, 0) : Math.min(start, len);
-        var end = arguments.length > 2 ? arguments[2] : len;
+        end = (end===undefined) ? len : ES.ToInteger(end);
         var fin = end < 0 ? Math.max(len + end, 0) : Math.min(end, len);
         var count = Math.min(fin - from, len - to);
         var direction = 1;
@@ -524,26 +566,27 @@
         return o;
       },
       fill: function(value) {
-        var len = this.length;
-        var start = arguments.length > 1 ? ES.toInteger(arguments[1]) : 0;
-        var end = arguments.length > 2 ? ES.toInteger(arguments[2]) : len;
+        var start = arguments[1], end = arguments[2]; // fill.length===1
+        var O = ES.ToObject(this);
+        var len = ES.ToLength(O.length);
+        start = ES.ToInteger(start===undefined ? 0 : start);
+        end = ES.ToInteger(end===undefined ? len : end);
 
         var relativeStart = start < 0 ? Math.max(len + start, 0) : Math.min(start, len);
 
         for (var i = relativeStart; i < len && i < end; ++i) {
-          this[i] = value;
+          O[i] = value;
         }
-        return this;
+        return O;
       },
 
       find: function(predicate) {
-        var list = Object(this);
-        var length = ES.ToUint32(list.length);
-        if (length === 0) return undefined;
-        if (typeof predicate !== 'function') {
+        var list = ES.ToObject(this);
+        var length = ES.ToLength(list.length);
+        if (!ES.IsCallable(predicate)) {
           throw new TypeError('Array#find: predicate must be a function');
         }
-        var thisArg = arguments.length > 1 ? arguments[1] : undefined;
+        var thisArg = arguments[1];
         for (var i = 0, value; i < length && i in list; i++) {
           value = list[i];
           if (predicate.call(thisArg, value, i, list)) return value;
@@ -552,13 +595,12 @@
       },
 
       findIndex: function(predicate) {
-        var list = Object(this);
-        var length = ES.ToUint32(list.length);
-        if (length === 0) return -1;
-        if (typeof predicate !== 'function') {
+        var list = ES.ToObject(this);
+        var length = ES.ToLength(list.length);
+        if (!ES.IsCallable(predicate)) {
           throw new TypeError('Array#findIndex: predicate must be a function');
         }
-        var thisArg = arguments.length > 1 ? arguments[1] : undefined;
+        var thisArg = arguments[1];
         for (var i = 0; i < length && i in list; i++) {
           if (predicate.call(thisArg, list[i], i, list)) return i;
         }
@@ -595,11 +637,15 @@
         return typeof value === 'number' && global_isFinite(value);
       },
 
-      isSafeInteger: function(value) {
+      isInteger: function(value) {
         return typeof value === 'number' &&
           !Number.isNaN(value) &&
           Number.isFinite(value) &&
-          parseInt(value, 10) === value &&
+          ES.ToInteger(value) === value;
+      },
+
+      isSafeInteger: function(value) {
+        return Number.isInteger(value) &&
           Math.abs(value) <= Number.MAX_SAFE_INTEGER;
       },
 
@@ -616,7 +662,7 @@
 
     defineProperties(Number.prototype, {
       clz: function() {
-        var number = Number.prototype.valueOf.call(this) >>> 0;
+        var number = ES.ToUint32(Number.prototype.valueOf.call(this));
         if (number === 0) {
           return 32;
         }
@@ -677,11 +723,11 @@
           var set;
 
           var checkArgs = function(O, proto) {
-            if (typeof O !== 'object' || O === null) {
+            if (!ES.TypeIsObject(O)) {
               throw new TypeError('cannot set prototype on a non-object');
             }
-            if (typeof proto !== 'object') {
-              throw new TypeError('can only set prototype to an object or null');
+            if (!(proto===null || ES.TypeIsObject(proto))) {
+              throw new TypeError('can only set prototype to an object or null'+proto);
             }
           };
 
@@ -914,7 +960,7 @@
       var Promise, Promise$prototype;
 
       ES.IsPromise = function(promise) {
-        if (promise === null || typeof promise !== 'object') {
+        if (!ES.TypeIsObject(promise)) {
           return false;
         }
         if (!promise._promiseConstructor) {
@@ -931,7 +977,7 @@
       // "PromiseCapability" in the spec is what most promise implementations
       // call a "deferred".
       var PromiseCapability = function(C) {
-        if (typeof C !== 'function') {
+        if (!ES.IsCallable(C)) {
           throw new TypeError('bad promise constructor');
         }
         var capability = this;
@@ -940,25 +986,24 @@
           capability.reject = reject;
         };
         // this is es6 'CreateFromConstructor'
-        if (typeof C['@@create'] === 'function') {
+        if (ES.IsCallable(C['@@create'])) {
           capability.promise = C['@@create']();
         } else {
           capability.promise = Object.create(C.prototype || null);
         }
         var cr = C.call(capability.promise, resolver);
-        if (typeof capability.resolve !== 'function' ||
-            typeof capability.reject !== 'function') {
+        if (!(ES.IsCallable(capability.resolve) &&
+              ES.IsCallable(capability.reject))) {
           throw new TypeError('bad promise constructor');
         }
-        if ((typeof cr === 'object' || typeof cr === 'function') &&
-            cr !== capability.promise) {
+        if (ES.TypeIsObject(cr) && cr !== capability.promise) {
           throw new TypeError('bad promise constructor');
         }
       };
 
       // find an appropriate setImmediate-alike
       var setTimeout = globals.setTimeout;
-      var enqueue = typeof globals.setImmediate === 'function' ?
+      var enqueue = ES.IsCallable(globals.setImmediate) ?
         globals.setImmediate.bind(globals) :
         typeof process === 'object' && process.nextTick ? process.nextTick :
         function(task) { setTimeout(task, 0); }; // fallback
@@ -989,15 +1034,14 @@
       };
 
       var updatePromiseFromPotentialThenable = function(x, capability) {
-        if (x === null || // is Type(x) not Object?
-            (typeof x !== 'function' && typeof x !== 'object'))  {
+        if (!ES.TypeIsObject(x)) {
           return false;
         }
         var resolve = capability.resolve;
         var reject = capability.reject;
         try {
           var then = x.then; // only one invocation of accessor
-          if (typeof then !== 'function') { return false; }
+          if (!ES.IsCallable(then)) { return false; }
           then.call(x, resolve, reject);
         } catch(e) {
           reject(e);
@@ -1023,7 +1067,7 @@
 
       Promise = function(resolver) {
         var promise = this;
-        if (promise === null || typeof promise !== 'object') {
+        if (!ES.TypeIsObject(promise)) {
           throw new TypeError('bad promise');
         }
         // es5 approximation to es6 subclass semantics: in es6, 'new Promise'
@@ -1031,8 +1075,8 @@
         // In es5 we just get the plain object.  So if we detect an
         // uninitialized promise, invoke promise.contructor.@@create
         if (!promise._promiseConstructor) {
-          if (typeof promise.constructor !== 'function' ||
-              typeof promise.constructor['@@create'] !== 'function') {
+          if (!(ES.IsCallable(promise.constructor) &&
+                ES.IsCallable(promise.constructor['@@create']))) {
             throw new TypeError('bad promise constructor');
           }
           promise = promise.constructor['@@create'](promise);
@@ -1041,7 +1085,7 @@
           throw new TypeError('promise already initialized');
         }
         // see https://bugs.ecmascript.org/show_bug.cgi?id=2482
-        if (typeof resolver !== 'function') {
+        if (!ES.IsCallable(resolver)) {
           throw new TypeError('not a valid resolver');
         }
         promise._status = 'unresolved';
@@ -1113,19 +1157,13 @@
         var resolve = capability.resolve;
         var reject = capability.reject;
         try {
-          var it = typeof iterable === 'object' && iterable !== null &&
-            typeof iterable[$iterator$] === 'function' &&
-            iterable[$iterator$]();
-          if (it === null || typeof it !== 'object' ||
-              typeof it.next !== 'function') {
+          if (!ES.IsIterable(iterable)) {
             throw new TypeError('bad iterable');
           }
+          var it = ES.GetIterator(iterable);
           var values = [], remaining = { count: 1 };
           for (var index = 0; ; index++) {
-            var next = it.next();
-            if (next === null || typeof next !== 'object') {
-              throw new TypeError('bad iterator');
-            }
+            var next = ES.IteratorNext(it);
             if (next.done) {
               break;
             }
@@ -1163,18 +1201,12 @@
         var resolve = capability.resolve;
         var reject = capability.reject;
         try {
-          var it = typeof iterable === 'object' && iterable !== null &&
-            typeof iterable[$iterator$] === 'function' &&
-            iterable[$iterator$]();
-          if (it === null || typeof it !== 'object' ||
-              typeof it.next !== 'function') {
+          if (!ES.IsIterable(iterable)) {
             throw new TypeError('bad iterable');
           }
+          var it = ES.GetIterator(iterable);
           while (true) {
-            var next = it.next();
-            if (next === null || typeof next !== 'object') {
-              throw new TypeError('bad iterator');
-            }
+            var next = ES.IteratorNext(it);
             if (next.done) {
               // If iterable has no items, resulting promise will never
               // resolve; see:
@@ -1215,10 +1247,10 @@
         if (!ES.IsPromise(promise)) { throw new TypeError('not a promise'); }
         var C = this._promiseConstructor;
         var capability = new PromiseCapability(C);
-        if (typeof onRejected !== 'function') {
+        if (!ES.IsCallable(onRejected)) {
           onRejected = function(e) { throw e; };
         }
-        if (typeof onFulfilled !== 'function') {
+        if (!ES.IsCallable(onFulfilled)) {
           onFulfilled = function(x) { return x; };
         }
         var resolutionHandler =

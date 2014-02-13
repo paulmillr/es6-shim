@@ -74,40 +74,13 @@ describe('Number', function() {
     });
   });
 
-  describe('Number.isSafeInteger()', function() {
+  describe('Number.isInteger()', function() {
     it('should be truthy on integers', function() {
-      integers.map(Number.isSafeInteger).forEach(expectToBeOk);
-      expect(Number.isSafeInteger(4)).to.be.ok;
-      expect(Number.isSafeInteger(4.0)).to.be.ok;
-      expect(Number.isSafeInteger(1801439850948)).to.be.ok;
+      integers.map(Number.isInteger).forEach(expectToBeOk);
+      expect(Number.isInteger(4)).to.be.ok;
+      expect(Number.isInteger(4.0)).to.be.ok;
+      expect(Number.isInteger(1801439850948)).to.be.ok;
     });
-
-    it('should be falsy on non-integers', function() {
-      expect(Number.isSafeInteger(4.2)).to.not.be.ok;
-      expect(Number.isSafeInteger(Infinity)).to.not.be.ok;
-      expect(Number.isSafeInteger(-Infinity)).to.not.be.ok;
-      expect(Number.isSafeInteger(NaN)).to.not.be.ok;
-      expect(Number.isSafeInteger(true)).to.not.be.ok;
-      expect(Number.isSafeInteger(false)).to.not.be.ok;
-      expect(Number.isSafeInteger('str')).to.not.be.ok;
-      expect(Number.isSafeInteger({})).to.not.be.ok;
-      expect(Number.isSafeInteger({
-        valueOf: function() { return 3; }
-      })).to.not.be.ok;
-      expect(Number.isSafeInteger({
-        valueOf: function() { return 0/0; }
-      })).to.not.be.ok;
-      expect(Number.isSafeInteger({
-        valueOf: function() { throw 17; }
-      })).to.not.be.ok;
-      expect(Number.isSafeInteger({
-        toString: function() { throw 17; }
-      })).to.not.be.ok;
-      expect(Number.isSafeInteger({
-        valueOf: function() { throw 17; },
-        toString: function() { throw 42; }
-      })).to.not.be.ok;
-   });
 
     it('should be false when the type is not number', function() {
       var nonNumbers = [
@@ -116,8 +89,75 @@ describe('Number', function() {
         null,
         undefined,
         '',
+        'str',
         function () {},
         { valueOf: function () { return 3; } },
+        { valueOf: function () { return 0/0; } },
+        { valueOf: function () { throw 17; } },
+        { toString: function () { throw 17; } },
+        { valueOf: function () { throw 17; },
+          toString: function () { throw 42; } },
+        /a/g,
+        {}
+      ];
+      nonNumbers.forEach(function (thing) {
+        expect(Number.isInteger(thing)).to.equal(false);
+      });
+    });
+
+    it('should be false when NaN', function() {
+      expect(Number.isInteger(NaN)).to.equal(false);
+    });
+
+    it('should be false when ∞', function() {
+      expect(Number.isInteger(Infinity)).to.equal(false);
+      expect(Number.isInteger(-Infinity)).to.equal(false);
+    });
+
+    it('should be false when number is not integer', function() {
+      expect(Number.isInteger(3.4)).to.equal(false);
+      expect(Number.isInteger(-3.4)).to.equal(false);
+    });
+
+    it('should be true when abs(number) is 2^53 or larger', function() {
+      expect(Number.isInteger(Math.pow(2, 53))).to.equal(true);
+      expect(Number.isInteger(Math.pow(2, 54))).to.equal(true);
+      expect(Number.isInteger(-Math.pow(2, 53))).to.equal(true);
+      expect(Number.isInteger(-Math.pow(2, 54))).to.equal(true);
+    });
+
+    it('should be true when abs(number) is less than 2^53', function() {
+      var safeIntegers = [0, 1, Math.pow(2, 53) - 1];
+      safeIntegers.forEach(function (int) {
+        expect(Number.isInteger(int)).to.equal(true);
+        expect(Number.isInteger(-int)).to.equal(true);
+      });
+    });
+  });
+
+  describe('Number.isSafeInteger()', function() {
+    it('should be truthy on integers', function() {
+      integers.map(Number.isSafeInteger).forEach(expectToBeOk);
+      expect(Number.isSafeInteger(4)).to.be.ok;
+      expect(Number.isSafeInteger(4.0)).to.be.ok;
+      expect(Number.isSafeInteger(1801439850948)).to.be.ok;
+    });
+
+    it('should be false when the type is not number', function() {
+      var nonNumbers = [
+        false,
+        true,
+        null,
+        undefined,
+        '',
+        'str',
+        function () {},
+        { valueOf: function () { return 3; } },
+        { valueOf: function () { return 0/0; } },
+        { valueOf: function () { throw 17; } },
+        { toString: function () { throw 17; } },
+        { valueOf: function () { throw 17; },
+          toString: function () { throw 42; } },
         /a/g,
         {}
       ];
@@ -142,7 +182,9 @@ describe('Number', function() {
 
     it('should be false when abs(number) is 2^53 or larger', function() {
       expect(Number.isSafeInteger(Math.pow(2, 53))).to.equal(false);
+      expect(Number.isSafeInteger(Math.pow(2, 54))).to.equal(false);
       expect(Number.isSafeInteger(-Math.pow(2, 53))).to.equal(false);
+      expect(Number.isSafeInteger(-Math.pow(2, 54))).to.equal(false);
     });
 
     it('should be true when abs(number) is less than 2^53', function() {
