@@ -1190,7 +1190,7 @@
             if (next.done) {
               break;
             }
-            var nextPromise = C.cast(next.value);
+            var nextPromise = C.resolve(next.value);
             var resolveElement = _promiseAllResolver(
               index, values, capability, remaining
             );
@@ -1203,18 +1203,6 @@
         } catch (e) {
           reject(e);
         }
-        return capability.promise;
-      };
-
-      Promise.cast = function(x) {
-        var C = this;
-        if (ES.IsPromise(x)) {
-          var constructor = x._promiseConstructor;
-          if (constructor === C) { return x; }
-        }
-        var capability = new PromiseCapability(C);
-        var resolve = capability.resolve;
-        resolve(x); // call with this===undefined
         return capability.promise;
       };
 
@@ -1237,7 +1225,7 @@
               // https://bugs.ecmascript.org/show_bug.cgi?id=2515
               break;
             }
-            var nextPromise = C.cast(next.value);
+            var nextPromise = C.resolve(next.value);
             nextPromise.then(resolve, reject);
           }
         } catch (e) {
@@ -1256,6 +1244,10 @@
 
       Promise.resolve = function(v) {
         var C = this;
+        if (ES.IsPromise(v)) {
+          var constructor = v._promiseConstructor;
+          if (constructor === C) { return v; }
+        }
         var capability = new PromiseCapability(C);
         var resolve = capability.resolve;
         resolve(v); // call with this===undefined

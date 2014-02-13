@@ -179,7 +179,7 @@ describe("Promise.all", function () {
     P.__proto__ = Promise;
     P.prototype = Object.create(Promise.prototype);
     P.prototype.constructor = P;
-    P.cast = function(p) { return p; };
+    P.resolve = function(p) { return p; };
 
     var g = [
       Promise.resolve(0),
