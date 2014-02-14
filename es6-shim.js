@@ -720,13 +720,6 @@
     });
 
     defineProperties(Number.prototype, {
-      clz: function() {
-        var number = ES.ToUint32(Number.prototype.valueOf.call(this));
-        if (number === 0) {
-          return 32;
-        }
-        return 32 - (number).toString(2).length;
-      }
     });
 
     if (supportsDescriptors) {
@@ -876,6 +869,17 @@
         if (negate) value = -value;
         result = Math.pow(value, 1/3);
         return negate ? -result : result;
+      },
+
+      clz32: function(value) {
+        // See https://bugs.ecmascript.org/show_bug.cgi?id=2465
+        value = Number(value);
+        if (Number.isNaN(value)) return NaN;
+        var number = ES.ToUint32(value);
+        if (number === 0) {
+          return 32;
+        }
+        return 32 - (number).toString(2).length;
       },
 
       cosh: function(value) {

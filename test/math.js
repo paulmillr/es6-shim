@@ -85,6 +85,44 @@ describe('Math', function() {
     });
   });
 
+  describe('.clz32()', function() {
+    it('should have proper uint32 conversion', function() {
+      var integers = [5295, -5295, -9007199254740991, 9007199254740991, 0, -0];
+      var infinities = [Infinity, -Infinity];
+      var nonNumbers = [undefined, true, null, {}, [], 'str'];
+      var nonIntegers = [-9007199254741992, 9007199254741992, 5.9];
+
+      infinities.forEach(function(item) {
+        expect(Math.clz32(item)).to.equal(32);
+      });
+      integers.forEach(function(item) {
+        expect(Math.clz32(item)).to.be.within(0, 32);
+      });
+      nonIntegers.forEach(function(item) {
+        expect(Math.clz32(item)).to.be.within(0, 32);
+      });
+      expect(Number.isNaN(Math.clz32(undefined))).to.be.ok;
+      expect(Math.clz32(null)).to.equal(Math.clz32(0));
+      expect(Math.clz32(false)).to.equal(Math.clz32(0));
+      expect(Math.clz32(true)).to.equal(Math.clz32(1));
+      expect(Math.clz32('')).to.equal(Math.clz32(0));
+      expect(Math.clz32('10')).to.equal(Math.clz32(10));
+      expect(Math.clz32([])).to.equal(Math.clz32(''));
+      expect(Number.isNaN(Math.clz32('str'))).to.be.ok;
+      expect(Number.isNaN(Math.clz32({}))).to.be.ok;
+      expect(Number.isNaN(Math.clz32(0/0))).to.be.ok;
+      expect(Math.clz32(0x100000000)).to.equal(32);
+      expect(Math.clz32(0.1)).to.equal(32);
+      expect(Math.clz32(-1)).to.equal(0);
+      expect(Math.clz32(0)).to.equal(32);
+      expect(Math.clz32(1)).to.equal(31);
+      expect(Math.clz32(0xFFFFFFFF)).to.equal(0);
+      expect(Math.clz32(0x1FFFFFFFF)).to.equal(0);
+      expect(Math.clz32(0x111111111)).to.equal(3);
+      expect(Math.clz32(0x11111111)).to.equal(3);
+    });
+  });
+
   describe('#cosh()', function() {
     it('should be correct for NaN', function() {
       expect(Number.isNaN(Math.cosh(NaN))).to.be.ok;
