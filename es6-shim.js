@@ -86,16 +86,16 @@
     // can be replaced with require('is-arguments') if we ever use a build process instead
     var isArguments = function isArguments(value) {
       var str = _toString.call(value);
-      var isArguments = str === '[object Arguments]';
-      if (!isArguments) {
-        isArguments = str !== '[object Array]'
-          && value !== null
-          && typeof value === 'object'
-          && typeof value.length === 'number'
-          && value.length >= 0
-          && toString.call(value.callee) === '[object Function]';
+      var result = str === '[object Arguments]';
+      if (!result) {
+        result = str !== '[object Array]' &&
+          value !== null &&
+          typeof value === 'object' &&
+          typeof value.length === 'number' &&
+          value.length >= 0 &&
+          _toString.call(value.callee) === '[object Function]';
       }
-      return isArguments;
+      return result;
     };
 
     var ES = {
