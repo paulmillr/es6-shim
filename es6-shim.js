@@ -86,16 +86,16 @@
     // can be replaced with require('is-arguments') if we ever use a build process instead
     var isArguments = function isArguments(value) {
       var str = _toString.call(value);
-      var isArguments = str === '[object Arguments]';
-      if (!isArguments) {
-        isArguments = str !== '[object Array]'
-          && value !== null
-          && typeof value === 'object'
-          && typeof value.length === 'number'
-          && value.length >= 0
-          && toString.call(value.callee) === '[object Function]';
+      var result = str === '[object Arguments]';
+      if (!result) {
+        result = str !== '[object Array]' &&
+          value !== null &&
+          typeof value === 'object' &&
+          typeof value.length === 'number' &&
+          value.length >= 0 &&
+          _toString.call(value.callee) === '[object Function]';
       }
-      return isArguments;
+      return result;
     };
 
     var ES = {
@@ -160,10 +160,15 @@
       },
 
       IsIterable: function(o) {
-        return ES.TypeIsObject(o) && ES.IsCallable(o[$iterator$]);
+        return ES.TypeIsObject(o) &&
+          (ES.IsCallable(o[$iterator$]) || isArguments(o));
       },
 
       GetIterator: function(o) {
+        if (isArguments(o)) {
+          // special case support for `arguments`
+          return new ArrayIterator(o, "value");
+        }
         var it = o[$iterator$]();
         if (!ES.TypeIsObject(it)) {
           throw new TypeError('bad iterator');
@@ -1185,7 +1190,7 @@
             if (next.done) {
               break;
             }
-            var nextPromise = C.cast(next.value);
+            var nextPromise = C.resolve(next.value);
             var resolveElement = _promiseAllResolver(
               index, values, capability, remaining
             );
@@ -1198,18 +1203,6 @@
         } catch (e) {
           reject(e);
         }
-        return capability.promise;
-      };
-
-      Promise.cast = function(x) {
-        var C = this;
-        if (ES.IsPromise(x)) {
-          var constructor = x._promiseConstructor;
-          if (constructor === C) { return x; }
-        }
-        var capability = new PromiseCapability(C);
-        var resolve = capability.resolve;
-        resolve(x); // call with this===undefined
         return capability.promise;
       };
 
@@ -1229,9 +1222,10 @@
               // If iterable has no items, resulting promise will never
               // resolve; see:
               // https://github.com/domenic/promises-unwrapping/issues/75
+              // https://bugs.ecmascript.org/show_bug.cgi?id=2515
               break;
             }
-            var nextPromise = C.cast(next.value);
+            var nextPromise = C.resolve(next.value);
             nextPromise.then(resolve, reject);
           }
         } catch (e) {
@@ -1250,6 +1244,10 @@
 
       Promise.resolve = function(v) {
         var C = this;
+        if (ES.IsPromise(v)) {
+          var constructor = v._promiseConstructor;
+          if (constructor === C) { return v; }
+        }
         var capability = new PromiseCapability(C);
         var resolve = capability.resolve;
         resolve(v); // call with this===undefined
@@ -1263,7 +1261,9 @@
       Promise.prototype.then = function( onFulfilled, onRejected ) {
         var promise = this;
         if (!ES.IsPromise(promise)) { throw new TypeError('not a promise'); }
-        var C = this._promiseConstructor;
+        // this.constructor not this._promiseConstructor; see
+        // https://bugs.ecmascript.org/show_bug.cgi?id=2513
+        var C = this.constructor;
         var capability = new PromiseCapability(C);
         if (!ES.IsCallable(onRejected)) {
           onRejected = function(e) { throw e; };
