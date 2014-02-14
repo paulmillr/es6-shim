@@ -71,8 +71,20 @@ var runArrayTests = function() {
 
       it('throws when provided null or undefined', function() {
         expect(function () { Array.from(); }).to.throw(TypeError);
-		expect(function () { Array.from(undefined); }).to.throw(TypeError);
+        expect(function () { Array.from(undefined); }).to.throw(TypeError);
         expect(function () { Array.from(null); }).to.throw(TypeError);
+      });
+
+      it('returns [] when given 3', function() {
+        expect(Array.from(3)).to.eql([]);
+      });
+
+      it('removes holes', function() {
+        var input = [0, , 2];
+        var result = Array.from([0, , 2]);
+        expect(1 in input).to.be.false;
+        expect(1 in result).to.be.true;
+        expect(result).to.eql([0, undefined, 2]);
       });
     });
 
