@@ -53,7 +53,7 @@ For node.js:
     * `getOwnPropertyDescriptors()` (ES5)
     * `getPropertyDescriptor()` (ES5)
     * `getPropertyNames()` (ES5)
-    * `is()`
+    * `is()` ([a standalone shim is also available](https://github.com/ljharb/object-is))
     * `assign()`
 * `Math`:
     * `sign()`
