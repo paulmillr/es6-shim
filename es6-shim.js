@@ -839,7 +839,7 @@
     } catch (e) {
       var originalObjectKeys = Object.keys;
       Object.keys = function (obj) {
-        return originalObjectKeys(Object(obj));
+        return originalObjectKeys(ES.ToObject(obj));
       };
     }
 

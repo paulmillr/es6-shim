@@ -6,8 +6,14 @@ describe('Object', function() {
       expect(Object.keys('foo')).to.eql(['0', '1', '2']);
     });
 
+    it('throws on null or undefined', function() {
+      expect(function () { Object.keys(); }).to.throw(TypeError);
+      expect(function () { Object.keys(undefined); }).to.throw(TypeError);
+      expect(function () { Object.keys(null); }).to.throw(TypeError);
+    });
+
     it('works on other primitives', function() {
-      [true, false, undefined, NaN, 42, /a/g].forEach(function (item) {
+      [true, false, NaN, 42, /a/g].forEach(function (item) {
         expect(Object.keys(item)).to.eql([]);
       });
     });
