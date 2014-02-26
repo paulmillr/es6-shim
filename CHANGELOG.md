@@ -1,3 +1,13 @@
+# es6-shim 0.9.4 (not yet released)
+* Implement `Promise`, per spec. (#209, #215)
+* Make `Map`/`Set` subclassable; support `iterable` argument to
+  constructor (#218)
+* Rename `Number#clz` to `Math.clz32` (#217)
+* Bug fixes to `Array#find` and `Array#findIndex` on sparse arrays (#213)
+* Re-add `Number.isInteger` (mistakenly removed in 0.9.0)
+* Allow use of `arguments` as an iterable
+* Minor spec-compliance fixes for `String.raw`
+
 # es6-shim 0.9.3 (5 February 2014)
 * Per spec, removed `Object.mixin` (#192)
 * Per spec, treat -0 and +0 keys as identical in Map/Set (#129, #204)
