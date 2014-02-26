@@ -98,6 +98,21 @@
       return result;
     };
 
+    var emulateES6construct = function(o) {
+      if (!ES.TypeIsObject(o)) throw new TypeError('bad object');
+      // es5 approximation to es6 subclass semantics: in es6, 'new Foo'
+      // would invoke Foo.@@create to allocation/initialize the new object.
+      // In es5 we just get the plain object.  So if we detect an
+      // uninitialized object, invoke o.constructor.@@create
+      if (!o._es6construct) {
+        if (o.constructor && ES.IsCallable(o.constructor['@@create'])) {
+          o = o.constructor['@@create'](o);
+        }
+        defineProperties(o, { _es6construct: true });
+      }
+      return o;
+    };
+
     var ES = {
       CheckObjectCoercible: function(x, optMessage) {
         /* jshint eqnull:true */
@@ -182,6 +197,23 @@
           throw new TypeError('bad iterator');
         }
         return result;
+      },
+
+      Construct: function(C, args) {
+        // CreateFromConstructor
+        var obj;
+        if (ES.IsCallable(C['@@create'])) {
+          obj = C['@@create']();
+        } else {
+          // OrdinaryCreateFromConstructor
+          obj = Object.create(C.prototype || null);
+        }
+        // Mark that we've used the es6 construct path
+        // (see emulateES6construct)
+        defineProperties(obj, { _es6construct: true });
+        // Call the constructor.
+        var result = C.apply(obj, args);
+        return ES.TypeIsObject(result) ? result : obj;
       }
     };
 
@@ -1016,18 +1048,9 @@
           capability.resolve = resolve;
           capability.reject = reject;
         };
-        // this is es6 'CreateFromConstructor'
-        if (ES.IsCallable(C['@@create'])) {
-          capability.promise = C['@@create']();
-        } else {
-          capability.promise = Object.create(C.prototype || null);
-        }
-        var cr = C.call(capability.promise, resolver);
+        capability.promise = ES.Construct(C, [resolver]);
         if (!(ES.IsCallable(capability.resolve) &&
               ES.IsCallable(capability.reject))) {
-          throw new TypeError('bad promise constructor');
-        }
-        if (ES.TypeIsObject(cr) && cr !== capability.promise) {
           throw new TypeError('bad promise constructor');
         }
       };
@@ -1098,19 +1121,11 @@
 
       Promise = function(resolver) {
         var promise = this;
-        if (!ES.TypeIsObject(promise)) {
-          throw new TypeError('bad promise');
-        }
-        // es5 approximation to es6 subclass semantics: in es6, 'new Promise'
-        // would invoke Promise.@@create to initialize the new object.
-        // In es5 we just get the plain object.  So if we detect an
-        // uninitialized promise, invoke promise.contructor.@@create
+        promise = emulateES6construct(promise);
         if (!promise._promiseConstructor) {
-          if (!(ES.IsCallable(promise.constructor) &&
-                ES.IsCallable(promise.constructor['@@create']))) {
-            throw new TypeError('bad promise constructor');
-          }
-          promise = promise.constructor['@@create'](promise);
+          // we use _promiseConstructor as a stand-in for the internal
+          // [[PromiseStatus]] field; it's a little more unique.
+          throw new TypeError('bad promise');
         }
         if (promise._status !== undefined) {
           throw new TypeError('promise already initialized');
@@ -1383,18 +1398,50 @@
           addIterator(MapIterator.prototype);
 
           function Map() {
-            if (!(this instanceof Map)) throw new TypeError('Map must be called with "new"');
+            var map = this;
+            map = emulateES6construct(map);
+            if (!map._es6map) {
+              throw new TypeError('bad map');
+            }
 
             var head = new MapEntry(null, null);
             // circular doubly-linked list.
             head.next = head.prev = head;
 
-            defineProperties(this, {
+            defineProperties(map, {
               '_head': head,
               '_storage': emptyObject(),
               '_size': 0
             });
+
+            // Optionally initialize map from iterable
+            var iterable = arguments[0];
+            if (iterable !== undefined && iterable !== null) {
+              var it = ES.GetIterator(iterable);
+              var adder = map.set;
+              if (!ES.IsCallable(adder)) { throw new TypeError('bad map'); }
+              while (true) {
+                var next = ES.IteratorNext(it);
+                if (next.done) { break; }
+                var nextItem = next.value;
+                if (!ES.TypeIsObject(nextItem)) {
+                  throw new TypeError('expected iterable of pairs');
+                }
+                adder.call(map, nextItem[0], nextItem[1]);
+              }
+            }
+            return map;
           }
+          var Map$prototype = Map.prototype;
+          defineProperties(Map, {
+            '@@create': function(obj) {
+              var constructor = this;
+              var prototype = constructor.prototype || Map$prototype;
+              obj = obj || Object.create(prototype);
+              defineProperties(obj, { _es6map: true });
+              return obj;
+            }
+          });
 
           Object.defineProperty(Map.prototype, 'size', {
             configurable: true,
@@ -1537,12 +1584,42 @@
           // as backing storage and lazily create a full Map only when
           // required.
           var SetShim = function Set() {
-            if (!(this instanceof SetShim)) throw new TypeError('Set must be called with "new"');
-            defineProperties(this, {
+            var set = this;
+            set = emulateES6construct(set);
+            if (!set._es6set) {
+              throw new TypeError('bad set');
+            }
+
+            defineProperties(set, {
               '[[SetData]]': null,
               '_storage': emptyObject()
             });
+
+            // Optionally initialize map from iterable
+            var iterable = arguments[0];
+            if (iterable !== undefined && iterable !== null) {
+              var it = ES.GetIterator(iterable);
+              var adder = set.add;
+              if (!ES.IsCallable(adder)) { throw new TypeError('bad set'); }
+              while (true) {
+                var next = ES.IteratorNext(it);
+                if (next.done) { break; }
+                var nextItem = next.value;
+                adder.call(set, nextItem);
+              }
+            }
+            return set;
           };
+          var Set$prototype = SetShim.prototype;
+          defineProperties(SetShim, {
+            '@@create': function(obj) {
+              var constructor = this;
+              var prototype = constructor.prototype || Set$prototype;
+              obj = obj || Object.create(prototype);
+              defineProperties(obj, { _es6set: true });
+              return obj;
+            }
+          });
 
           // Switch from the object backing storage to a full Map.
           var ensureMap = function ensureMap(set) {
