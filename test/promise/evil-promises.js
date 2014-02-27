@@ -9,9 +9,10 @@ describe("Evil promises should not be able to break invariants", function () {
     // Promise.resolve(evilPromise) is just the identity function.
     var EvilPromise = function(executor) { Promise.call(this, executor); };
     if (!EvilPromise.__proto__) { return; } // skip test if on IE < 11
-    EvilPromise.__proto__ = Promise; // mutable __proto__ is in es6.
-    EvilPromise.prototype = Object.create(Promise.prototype);
-    EvilPromise.prototype.constructor = EvilPromise;
+    Object.setPrototypeOf(EvilPromise, Promise);
+    EvilPromise.prototype = Object.create(Promise.prototype, {
+      constructor: { value: EvilPromise }
+    });
 
     var evilPromise = EvilPromise.resolve();
     evilPromise.then = function (f) {

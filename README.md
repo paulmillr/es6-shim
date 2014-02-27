@@ -82,6 +82,21 @@ For node.js:
 
 Math functions accuracy is 1e-11.
 
+## Subclassing
+The `Map`, `Set`, and `Promise` implementations are subclassable.
+You should use the following pattern to create a subclass in ES5 which
+will continue to work in ES6:
+```javascript
+function MyPromise(exec) {
+  Promise.call(this, exec);
+  // ...
+}
+Object.setPrototypeOf(MyPromise, Promise);
+MyPromise.prototype = Object.create(Promise.prototype, {
+  constructor: { value: MyPromise }
+});
+```
+
 ## String.prototype.normalize
 Including a proper shim for `String.prototype.normalize` would
 increase the size of this library by a factor of more than 4.
