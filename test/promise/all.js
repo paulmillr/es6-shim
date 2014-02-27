@@ -172,7 +172,7 @@ describe("Promise.all", function () {
         Promise.call(this, resolver);
       }
     };
-    if (!P.__proto__) { return done(); } // skip test if on IE < 11
+    if (!Object.setPrototypeOf) { return done(); } // skip test if on IE < 11
     Object.setPrototypeOf(P, Promise);
     P.prototype = Object.create(Promise.prototype, {
       constructor: { value: P }

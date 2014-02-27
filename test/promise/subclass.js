@@ -8,7 +8,7 @@ describe("Support user subclassing of Promise", function() {
       Promise.call(this, executor);
       this.mine = 'yeah';
     };
-    if (!MyPromise.__proto__) { return; } // skip test if on IE < 11
+    if (!Object.setPrototypeOf) { return done(); } // skip test if on IE < 11
     Object.setPrototypeOf(MyPromise, Promise);
     MyPromise.prototype = Object.create(Promise.prototype, {
       constructor: { value: MyPromise }

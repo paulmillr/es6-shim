@@ -85,7 +85,7 @@ describe('Collections', function() {
 
     it('should be subclassable', function() {
       var MyMap = function() { Map.call(this, [['a','b']]); }
-      if (!MyMap.__proto__) { return; } // skip test if on IE < 11
+      if (!Object.setPrototypeOf) { return; } // skip test if on IE < 11
       Object.setPrototypeOf(MyMap, Map);
       MyMap.prototype = Object.create(Map.prototype, {
         constructor: { value: MyMap }
@@ -440,7 +440,7 @@ describe('Collections', function() {
 
     it('should be subclassable', function() {
       var MySet = function() { Set.call(this, ['a', 'b']); }
-      if (!MySet.__proto__) { return; } // skip test if on IE < 11
+      if (!Object.setPrototypeOf) { return; } // skip test if on IE < 11
       Object.setPrototypeOf(MySet, Set);
       MySet.prototype = Object.create(Set.prototype, {
         constructor: { value: MySet }

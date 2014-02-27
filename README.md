@@ -64,7 +64,7 @@ details.
     * `keys()` (ES5)
     * `is()` ([a standalone shim is also available](https://github.com/ljharb/object-is))
     * `assign()`
-    * `setPrototypeOf()`
+    * `setPrototypeOf()` (IE >= 11)
 * `Math`:
     * `acosh()`
     * `asinh()`

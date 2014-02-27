@@ -841,7 +841,8 @@
 
     // Workaround bug in Opera 12 where setPrototypeOf(x, null) doesn't work,
     // but Object.create(null) does.
-    if (Object.getPrototypeOf(Object.setPrototypeOf({}, null)) !== null &&
+    if (Object.setPrototypeOf && Object.getPrototypeOf &&
+        Object.getPrototypeOf(Object.setPrototypeOf({}, null)) !== null &&
         Object.getPrototypeOf(Object.create(null)) === null) {
       (function() {
         var FAKENULL = Object.create(null);
