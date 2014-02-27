@@ -1,7 +1,4 @@
 "use strict";
-require('../../'); // import Promise from es6-shim
-
-var assert = require("assert");
 
 var failIfThrows = function(done) {
   return function(e) { done(e); };

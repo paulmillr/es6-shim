@@ -9,13 +9,21 @@
   <!-- note that chai uses Object.create() so needs es5-sham to be loaded -->
   <script src="node_modules/chai/chai.js"></script>
   <script src="es6-shim.js"></script>
-  <script>chai.Assertion.includeStack=true; window.expect=chai.expect; mocha.setup({ui:'bdd',reporter:'tap'});</script>
+  <script>chai.Assertion.includeStack=true; window.expect=chai.expect; window.assert=chai.assert; mocha.setup({ui:'bdd',reporter:'tap'});</script>
   <script src="test/array.js"></script>
   <script src="test/collections.js"></script>
   <script src="test/math.js"></script>
   <script src="test/number.js"></script>
   <script src="test/object.js"></script>
   <script src="test/string.js"></script>
+  <script src="test/promise/all.js"></script>
+  <script src="test/promise/evil-promises.js"></script>
+<!--
+  <script src="test/promise/promises-aplus.js"></script>
+-->
+  <script src="test/promise/race.js"></script>
+  <script src="test/promise/simple.js"></script>
+  <script src="test/promise/subclass.js"></script>
   <script>mocha.run()</script>
 </head>
 <body>

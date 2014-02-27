@@ -1,7 +1,4 @@
 "use strict";
-require('../../'); // import Promise from es6-shim
-
-var assert = require("assert");
 
 describe("Evil promises should not be able to break invariants", function () {
   specify("resolving to a promise that calls onFulfilled twice", function (done) {

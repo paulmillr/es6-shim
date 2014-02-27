@@ -121,18 +121,24 @@ describe('Object', function() {
     });
 
     describe('set prototype', function() {
-      var Foo = function() {};
-      var Bar = {};
-      var foo = new Foo();
-      expect(Object.getPrototypeOf(foo)).to.equal(Foo.prototype);
+      it('should work', function() {
+        var Foo = function() {};
+        var Bar = {};
+        var foo = new Foo();
+        expect(Object.getPrototypeOf(foo)).to.equal(Foo.prototype);
 
-      var fooBar = Object.setPrototypeOf(foo, Bar);
-      expect(fooBar).to.equal(foo);
-      expect(Object.getPrototypeOf(foo)).to.equal(Bar);
+        var fooBar = Object.setPrototypeOf(foo, Bar);
+        expect(fooBar).to.equal(foo);
+        expect(Object.getPrototypeOf(foo)).to.equal(Bar);
+      });
+      it('should be able to set to null', function() {
+        var Foo = function() {};
+        var foo = new Foo();
 
-      var fooNull = Object.setPrototypeOf(foo, null);
-      expect(fooNull).to.equal(foo);
-      expect(Object.getPrototypeOf(foo)).to.equal(null);
+        var fooNull = Object.setPrototypeOf(foo, null);
+        expect(fooNull).to.equal(foo);
+        expect(Object.getPrototypeOf(foo)).to.equal(null);
+      });
     });
   });
 });
