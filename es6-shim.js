@@ -834,6 +834,15 @@
       }
     });
 
+    try {
+      Object.keys('foo');
+    } catch (e) {
+      var originalObjectKeys = Object.keys;
+      Object.keys = function (obj) {
+        return originalObjectKeys(ES.ToObject(obj));
+      };
+    }
+
     var MathShims = {
       acosh: function(value) {
         value = Number(value);

@@ -1,6 +1,24 @@
 describe('Object', function() {
   var undefined;
 
+  describe('Object.keys()', function() {
+    it('works on strings', function() {
+      expect(Object.keys('foo')).to.eql(['0', '1', '2']);
+    });
+
+    it('throws on null or undefined', function() {
+      expect(function () { Object.keys(); }).to.throw(TypeError);
+      expect(function () { Object.keys(undefined); }).to.throw(TypeError);
+      expect(function () { Object.keys(null); }).to.throw(TypeError);
+    });
+
+    it('works on other primitives', function() {
+      [true, false, NaN, 42, /a/g].forEach(function (item) {
+        expect(Object.keys(item)).to.eql([]);
+      });
+    });
+  });
+
   describe('Object.is()', function() {
     it('should compare regular objects correctly', function() {
       [null, undefined, [0], 5, 'str', {a: null}].map(function(item) {
