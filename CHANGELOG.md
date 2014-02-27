@@ -1,4 +1,4 @@
-# es6-shim 0.9.4 (not yet released)
+# es6-shim x.x.x (not yet released)
 * Implement `Promise`, per spec. (#209, #215)
 * Make `Map`/`Set` subclassable; support `iterable` argument to
   constructor (#218)
@@ -7,6 +7,7 @@
 * Re-add `Number.isInteger` (mistakenly removed in 0.9.0)
 * Allow use of `arguments` as an iterable
 * Minor spec-compliance fixes for `String.raw`
+* In ES6, `Object.keys` accepts non-Object types (#220)
 
 # es6-shim 0.9.3 (5 February 2014)
 * Per spec, removed `Object.mixin` (#192)
