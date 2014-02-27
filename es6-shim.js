@@ -12,6 +12,21 @@
     return true;
   };
 
+  var supportsSubclassing = function(C, f) {
+    /* jshint proto:true */
+    try {
+      var Sub = function() { C.apply(this, arguments); };
+      if (!Sub.__proto__) { return false; /* skip test on IE < 11 */ }
+      Object.setPrototypeOf(Sub, C);
+      Sub.prototype = Object.create(C.prototype, {
+        constructor: { value: C }
+      });
+      return f(Sub);
+    } catch (e) {
+      return false;
+    }
+  };
+
   var arePropertyDescriptorsSupported = function() {
     try {
       Object.defineProperty({}, 'x', {});
@@ -1027,7 +1042,7 @@
     // Promises
     // Simplest possible implementation; use a 3rd-party library if you
     // want the best possible speed and/or long stack traces.
-    (function() {
+    var PromiseShim = (function() {
 
       var Promise, Promise$prototype;
 
@@ -1326,12 +1341,18 @@
         return capability.promise;
       };
 
-      // export the Promise constructor.
-      // we might test here whether an existing Promise impl is broken.
-      defineProperties(globals, {
-        Promise: Promise
-      });
+      return Promise;
     })();
+    // export the Promise constructor.
+    defineProperties(globals, { Promise: PromiseShim });
+    // In Chrome 33 (and thereabouts) Promise is defined, but the
+    // implementation is buggy in a number of ways.  Let's check subclassing
+    // support to see if we have a buggy implementation.
+    if (!supportsSubclassing(globals.Promise, function(S) {
+      return S.resolve(42) instanceof S;
+    })) {
+      globals.Promise = PromiseShim;
+    }
 
     // Map and Set require a true ES5 environment
     if (supportsDescriptors) {
@@ -1745,7 +1766,10 @@
           typeof globals.Map.prototype.forEach !== 'function' ||
           typeof globals.Set.prototype.forEach !== 'function' ||
           isCallableWithoutNew(globals.Map) ||
-          isCallableWithoutNew(globals.Set)
+          isCallableWithoutNew(globals.Set) ||
+          !supportsSubclassing(globals.Map, function(M) {
+            return (new M([])) instanceof M;
+          })
         ) {
           globals.Map = collectionShims.Map;
           globals.Set = collectionShims.Set;
