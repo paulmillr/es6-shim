@@ -1,11 +1,14 @@
 "use strict";
 
+var failIfThrows = function(done) {
+  return function(e) { done(e || new Error()); };
+};
+
 describe("Easy-to-debug sanity check", function () {
   specify("a fulfilled promise calls its fulfillment handler", function (done) {
     Promise.resolve(5).then(function (value) {
       assert.strictEqual(value, 5);
-      done();
-    });
+    }).then(done, failIfThrows(done));
   });
 });
 
@@ -19,13 +22,11 @@ describe("Self-resolution errors", function () {
     promise.then(
       function () {
         assert(false, "Should not be fulfilled");
-        done();
       },
       function (err) {
         assert(err instanceof TypeError);
-        done();
       }
-    );
+    ).then(done, failIfThrows(done));
   });
 });
 

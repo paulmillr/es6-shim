@@ -1,7 +1,7 @@
 "use strict";
 
 var failIfThrows = function(done) {
-  return function(e) { done(e); };
+  return function(e) { done(e || new Error()); };
 };
 
 describe("Promise.all", function () {
@@ -11,8 +11,7 @@ describe("Promise.all", function () {
     Promise.all(iterable).then(function (value) {
       assert(Array.isArray(value));
       assert.deepEqual(value, []);
-      done();
-    }, failIfThrows(done));
+    }).then(done, failIfThrows(done));
   });
 
   it("fulfills if passed an empty array-like", function (done) {
@@ -20,8 +19,7 @@ describe("Promise.all", function () {
       Promise.all(arguments).then(function (value) {
         assert(Array.isArray(value));
         assert.deepEqual(value, []);
-        done();
-      }, failIfThrows(done));
+      }).then(done, failIfThrows(done));
     };
     f();
   });
@@ -32,8 +30,7 @@ describe("Promise.all", function () {
     Promise.all(iterable).then(function (value) {
       assert(Array.isArray(value));
       assert.deepEqual(value, [0, 1, 2, 3]);
-      done();
-    }, failIfThrows(done));
+    }).then(done, failIfThrows(done));
   });
 
   it("rejects if any passed promise is rejected", function (done) {
@@ -46,13 +43,11 @@ describe("Promise.all", function () {
     Promise.all(iterable).then(
       function (value) {
         assert(false, "should never get here");
-        done();
       },
       function (reason) {
         assert.strictEqual(reason, error);
-        done();
       }
-    );
+    ).then(done, failIfThrows(done));
   });
 
   it("resolves foreign thenables", function (done) {
@@ -63,8 +58,7 @@ describe("Promise.all", function () {
 
     Promise.all(iterable).then(function (value) {
       assert.deepEqual(value, [1, 2]);
-      done();
-    }, failIfThrows(done));
+    }).then(done, failIfThrows(done));
   });
 
   it("fulfills when passed an sparse array, giving `undefined` for the omitted values", function (done) {
@@ -72,8 +66,7 @@ describe("Promise.all", function () {
 
     Promise.all(iterable).then(function (value) {
       assert.deepEqual(value, [0, undefined, undefined, 1]);
-      done();
-    }, failIfThrows(done));
+    }).then(done, failIfThrows(done));
   });
 
   it("does not modify the input array", function (done) {
@@ -82,8 +75,7 @@ describe("Promise.all", function () {
 
     Promise.all(iterable).then(function (value) {
       assert.notStrictEqual(input, value);
-      done();
-    }, failIfThrows(done));
+    }).then(done, failIfThrows(done));
   });
 
 
@@ -93,13 +85,11 @@ describe("Promise.all", function () {
     Promise.all(notIterable).then(
       function () {
         assert(false, "should never get here");
-        done();
       },
       function (reason) {
         assert(reason instanceof TypeError);
-        done();
       }
-    );
+    ).then(done, failIfThrows(done));
   });
 
   // test cases from

@@ -1,5 +1,9 @@
 "use strict";
 
+var failIfThrows = function(done) {
+  return function(e) { done(e || new Error()); };
+};
+
 var delayPromise = function (value, ms) {
   return new Promise(function (resolve) {
     setTimeout(function () {
@@ -14,8 +18,7 @@ describe("Promise.race", function () {
 
     Promise.race(iterable).then(function (value) {
       assert.strictEqual(value, 1);
-      done();
-    });
+    }).then(done, failIfThrows(done));
   });
 
   it("should reject if all promises are settled and the ordinally-first is rejected", function (done) {
@@ -24,22 +27,19 @@ describe("Promise.race", function () {
     Promise.race(iterable).then(
       function () {
         assert(false, "should never get here");
-        done();
       },
       function (reason) {
         assert.strictEqual(reason, 1);
-        done();
       }
-    );
+    ).then(done, failIfThrows(done));
   });
 
-  it("should settle in the same way as the first promise to settle", function () {
+  it("should settle in the same way as the first promise to settle", function (done) {
     var iterable = [delayPromise(1, 1000), delayPromise(2, 200), delayPromise(3, 500)];
 
     Promise.race(iterable).then(function (value) {
       assert.strictEqual(value, 2);
-      done();
-    });
+    }).then(done, failIfThrows(done));
   });
 
   // see https://github.com/domenic/promises-unwrapping/issues/75
@@ -64,12 +64,10 @@ describe("Promise.race", function () {
     Promise.race(notIterable).then(
       function () {
         assert(false, "should never get here");
-        done();
       },
       function (reason) {
         assert(reason instanceof TypeError);
-        done();
       }
-    );
+    ).then(done, failIfThrows(done));
   });
 });

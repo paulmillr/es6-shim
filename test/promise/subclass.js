@@ -1,7 +1,7 @@
 "use strict";
 
 describe("Support user subclassing of Promise", function() {
-  it("should work if you do it right", function() {
+  it("should work if you do it right", function(done) {
     // This is the "correct" es6-compatible way; see gh #170
     // (Thanks, @domenic!)
     var MyPromise = function(executor) {
@@ -31,7 +31,7 @@ describe("Support user subclassing of Promise", function() {
 
     var p3 = MyPromise.all([p1, p2]);
     assert.strictEqual(p3.mine, 'yeah');
-    p3 = p3.then(function() { done(); });
+    p3 = p3.then(function() { done(); }, done);
   });
 
   it("should throw if you inherit incompletely", function() {
