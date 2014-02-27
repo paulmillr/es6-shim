@@ -839,6 +839,25 @@
       });
     }
 
+    // Workaround bug in Opera 12 where setPrototypeOf(x, null) doesn't work,
+    // but Object.create(null) does.
+    if (Object.getPrototypeOf(Object.setPrototypeOf({}, null)) !== null &&
+        Object.getPrototypeOf(Object.create(null)) === null) {
+      (function() {
+        var FAKENULL = Object.create(null);
+        var gpo = Object.getPrototypeOf, spo = Object.setPrototypeOf;
+        Object.getPrototypeOf = function(o) {
+          var result = gpo(o);
+          return result === FAKENULL ? null : result;
+        };
+        Object.setPrototypeOf = function(o, p) {
+          if (p === null) { p = FAKENULL; }
+          return spo(o, p);
+        };
+        Object.setPrototypeOf.polyfill = false;
+      })();
+    }
+
     defineProperties(Object, {
       getOwnPropertyKeys: function(subject) {
         return Object.keys(subject);
