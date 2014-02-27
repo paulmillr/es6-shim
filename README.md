@@ -21,6 +21,7 @@ For node.js:
 ## Safe shims
 
 * `Map`, `Set` (requires ES5)
+* `Promise`
 * `String`:
     * `fromCodePoint()` ([a standalone shim is also available](http://mths.be/fromcodepoint))
     * `raw()`
@@ -32,18 +33,20 @@ For node.js:
     * `contains()` ([a standalone shim is also available](http://mths.be/contains))
 * `Number`:
     * `MAX_SAFE_INTEGER`
+    * `MIN_SAFE_INTEGER`
     * `EPSILON`
     * `parseInt()`
     * `parseFloat()`
     * `isNaN()`([a standalone shim is also available](https://npmjs.org/package/is-nan))
+    * `isInteger()`
     * `isSafeInteger()`
     * `isFinite()`
-* `Number.prototype`:
-    * `clz()`
 * `Array`:
     * `from()`
     * `of()`
 * `Array.prototype`:
+    * `copyWithin()`
+    * `fill()`
     * `find()` ([a standalone shim is also available](https://github.com/paulmillr/Array.prototype.find))
     * `findIndex()` ([a standalone shim is also available](https://github.com/paulmillr/Array.prototype.findIndex))
     * `keys()` (note: keys/values/entries return an `ArrayIterator` object)
@@ -53,25 +56,56 @@ For node.js:
     * `getOwnPropertyDescriptors()` (ES5)
     * `getPropertyDescriptor()` (ES5)
     * `getPropertyNames()` (ES5)
+    * `getPropertyKeys()` (ES5)
+    * `keys()` (ES5)
     * `is()` ([a standalone shim is also available](https://github.com/ljharb/object-is))
     * `assign()`
+    * `setPrototypeOf()`
 * `Math`:
-    * `sign()`
-    * `log10()`
-    * `log2()`
-    * `log1p()`
-    * `expm1()`
-    * `cosh()`
-    * `sinh()`
-    * `tanh()`
     * `acosh()`
     * `asinh()`
     * `atanh()`
+    * `cbrt()`
+    * `clz32()`
+    * `cosh()`
+    * `expm1()`
     * `hypot()`
+    * `log2()`
+    * `log10()`
+    * `log1p()`
+    * `sign()`
+    * `sinh()`
+    * `tanh()`
     * `trunc()`
     * `imul()`
+    * `fround()`
 
 Math functions accuracy is 1e-11.
+
+## Subclassing
+The `Map`, `Set`, and `Promise` implementations are subclassable.
+You should use the following pattern to create a subclass in ES5 which
+will continue to work in ES6:
+```javascript
+function MyPromise(exec) {
+  Promise.call(this, exec);
+  // ...
+}
+Object.setPrototypeOf(MyPromise, Promise);
+MyPromise.prototype = Object.create(Promise.prototype, {
+  constructor: { value: MyPromise }
+});
+```
+
+## String.prototype.normalize
+Including a proper shim for `String.prototype.normalize` would
+increase the size of this library by a factor of more than 4.
+So instead we recommend that you install the
+[`unorm`](https://github.com/walling/unorm)
+package alongside `es6-shim` if you need `String.prototype.normalize`.
+See https://github.com/paulmillr/es6-shim/issues/134 for more
+discussion.
+
 
 ## WeakMap shim
 It is not possible to implement WeakMap in pure javascript.
@@ -95,7 +129,6 @@ Object.assign({a: 1}, {b: 2}) // {a: 1, b: 2}
 
 Number.isNaN('123') // false. isNaN('123') will give true.
 Number.isFinite('asd') // false. Global isFinite() will give true.
-Number.toInteger(2.4) // 2. converts values to IEEE754 double precision integers
 // Tests if value is a number, finite,
 // >= -9007199254740992 && <= 9007199254740992 and floor(value) === value
 Number.isInteger(2.4) // false.
@@ -124,6 +157,17 @@ set.add(5)
 set.has(1)
 set.has(4)  // => false
 set.delete(5)
+
+// Promises, see
+// http://www.slideshare.net/domenicdenicola/callbacks-promises-and-coroutines-oh-my-the-evolution-of-asynchronicity-in-javascript
+// https://github.com/petkaantonov/bluebird/#what-are-promises-and-why-should-i-use-them
+Promise.resolve(5).then(function(value) {
+  if ( ... ) throw new Error("whoops!");
+  // do some stuff
+  return anotherPromise();
+}).catch(function(e) {
+  // any errors thrown asynchronously end up here
+});
 ```
 
 Other stuff:
@@ -138,7 +182,7 @@ Current maintainers are: [Paul Miller](http://paulmillr.com), [Jordan Harband](h
 
 The MIT License (MIT)
 
-Copyright (c) 2013 Paul Miller (http://paulmillr.com)
+Copyright (c) 2013-2014 Paul Miller (http://paulmillr.com)
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in

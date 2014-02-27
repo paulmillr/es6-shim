@@ -176,9 +176,10 @@ describe("Promise.all", function () {
       }
     };
     if (!P.__proto__) { return done(); } // skip test if on IE < 11
-    P.__proto__ = Promise;
-    P.prototype = Object.create(Promise.prototype);
-    P.prototype.constructor = P;
+    Object.setPrototypeOf(P, Promise);
+    P.prototype = Object.create(Promise.prototype, {
+      constructor: { value: P }
+    });
     P.resolve = function(p) { return p; };
 
     var g = [

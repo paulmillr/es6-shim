@@ -12,9 +12,10 @@ describe("Support user subclassing of Promise", function() {
       this.mine = 'yeah';
     };
     if (!MyPromise.__proto__) { return; } // skip test if on IE < 11
-    MyPromise.__proto__ = Promise; // mutable __proto__ is in es6.
-    MyPromise.prototype = Object.create(Promise.prototype);
-    MyPromise.prototype.constructor = MyPromise;
+    Object.setPrototypeOf(MyPromise, Promise);
+    MyPromise.prototype = Object.create(Promise.prototype, {
+      constructor: { value: MyPromise }
+    });
 
     // let's try it!
     var p1 = MyPromise.resolve(5);
