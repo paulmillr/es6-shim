@@ -1,7 +1,4 @@
 "use strict";
-require('../../'); // import Promise from es6-shim
-
-var assert = require("assert");
 
 describe("Support user subclassing of Promise", function() {
   it("should work if you do it right", function() {

@@ -1,6 +1,5 @@
 // tests from promises-aplus-tests
 "use strict";
-require('../../'); // import Promise from es6-shim
 
 describe("Promises/A+ Tests", function () {
   require("promises-aplus-tests").mocha({

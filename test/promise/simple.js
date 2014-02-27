@@ -1,7 +1,4 @@
 "use strict";
-require('../../'); // import Promise from es6-shim
-
-var assert = require("assert");
 
 describe("Easy-to-debug sanity check", function () {
   specify("a fulfilled promise calls its fulfillment handler", function (done) {
