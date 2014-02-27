@@ -42,8 +42,9 @@ describe("Support user subclassing of Promise", function() {
     // If the constructor doesn't inherit from Promise then
     // in an es6 engine we won't pick up the internal @@create
     // method, even if we do everything else 'correctly'
-    MyPromise.prototype = Object.create(Promise.prototype);
-    MyPromise.prototype.constructor = MyPromise;
+    MyPromise.prototype = Object.create(Promise.prototype, {
+      constructor: { value: MyPromise }
+    });
 
     assert.throws(function() {
       new MyPromise(function(r) { r(5); });
