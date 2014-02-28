@@ -1,5 +1,5 @@
 # es6-shim x.x.x (not yet released)
-* Implement `Promise`, per spec. (#209, #215)
+* Implement `Promise`, per spec. (#209, #215, #224, #225)
 * Make `Map`/`Set` subclassable; support `iterable` argument to
   constructor (#218)
 * Rename `Number#clz` to `Math.clz32` (#217)
@@ -8,6 +8,7 @@
 * Allow use of `arguments` as an iterable
 * Minor spec-compliance fixes for `String.raw`
 * In ES6, `Object.keys` accepts non-Object types (#220)
+* Improved browser compatibility with IE 9/10, Opera 12 (#225)
 
 # es6-shim 0.9.3 (5 February 2014)
 * Per spec, removed `Object.mixin` (#192)
