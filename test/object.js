@@ -103,6 +103,10 @@ describe('Object', function() {
   });
 
   describe('Object.setPrototypeOf()', function() {
+    if (!Object.setPrototypeOf) {
+      return; // IE < 11
+    }
+
     describe('argument checking', function() {
       it('should throw TypeError if first arg is not object', function() {
         var nonObjects = [null, undefined, true, false, 1, 3, 'foo'];

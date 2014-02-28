@@ -1,7 +1,10 @@
 var runStringTests = function() {
+  'use strict';
   describe('String', function() {
+    var hasStrictMode = (function() { return this===null; }).call(null);
     var testObjectCoercible = function(methodName) {
       var fn = String.prototype[methodName];
+      if (!hasStrictMode) { return; } // skip these tests on IE <= 10
       expect(function() { return fn.call(undefined); }).to.throw(TypeError);
       expect(function() { return fn.call(null); }).to.throw(TypeError);
       expect(function() { return fn.apply(undefined); }).to.throw(TypeError);
