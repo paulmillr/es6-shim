@@ -1101,9 +1101,29 @@
 
       // find an appropriate setImmediate-alike
       var setTimeout = globals.setTimeout;
+      var makeZeroTimeout = function() {
+        // from http://dbaron.org/log/20100309-faster-timeouts
+        var timeouts = [];
+        var messageName = "zero-timeout-message";
+        var setZeroTimeout = function(fn) {
+          timeouts.push(fn);
+          window.postMessage(messageName, "*");
+        };
+        var handleMessage = function(event) {
+          if (event.source == window && event.data == messageName) {
+            event.stopPropagation();
+            if (timeouts.length === 0) { return; }
+            var fn = timeouts.shift();
+            fn();
+          }
+        };
+        window.addEventListener("message", handleMessage, true);
+        return setZeroTimeout;
+      };
       var enqueue = ES.IsCallable(globals.setImmediate) ?
         globals.setImmediate.bind(globals) :
         typeof process === 'object' && process.nextTick ? process.nextTick :
+        ES.IsCallable(window.postMessage) ? makeZeroTimeout() :
         function(task) { setTimeout(task, 0); }; // fallback
 
       var triggerPromiseReactions = function(reactions, x) {
