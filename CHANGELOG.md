@@ -1,4 +1,6 @@
 # es6-shim x.x.x (not yet released)
+
+# es6-shim 0.10.0 (1 March 2014)
 * Implement `Promise`, per spec. (#209, #215, #224, #225)
 * Make `Map`/`Set` subclassable; support `iterable` argument to
   constructor (#218)
