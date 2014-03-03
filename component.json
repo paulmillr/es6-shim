@@ -14,7 +14,7 @@
     "map",
     "set",
     "__proto__"
-  ]
+  ],
   "main": "es6-shim.js",
   "scripts": ["es6-shim.js"],
   "dependencies": {},
