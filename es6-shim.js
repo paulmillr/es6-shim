@@ -1093,6 +1093,10 @@
           capability.reject = reject;
         };
         capability.promise = ES.Construct(C, [resolver]);
+        // see https://bugs.ecmascript.org/show_bug.cgi?id=2478
+        if (!capability.promise._es6construct) {
+          throw new TypeError('bad promise constructor');
+        }
         if (!(ES.IsCallable(capability.resolve) &&
               ES.IsCallable(capability.reject))) {
           throw new TypeError('bad promise constructor');
