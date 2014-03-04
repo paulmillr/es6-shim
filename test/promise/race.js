@@ -35,7 +35,12 @@ describe("Promise.race", function () {
   });
 
   it("should settle in the same way as the first promise to settle", function (done) {
-    var iterable = [delayPromise(1, 1000), delayPromise(2, 200), delayPromise(3, 500)];
+    // ensure that even if timeouts are delayed an all execute together,
+    // p2 will settle first.
+    var p2 = delayPromise(2, 200);
+    var p1 = delayPromise(1, 1000);
+    var p3 = delayPromise(3, 500);
+    var iterable = [p1, p2, p3];
 
     Promise.race(iterable).then(function (value) {
       assert.strictEqual(value, 2);
