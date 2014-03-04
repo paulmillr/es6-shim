@@ -191,7 +191,7 @@
 
       IsIterable: function(o) {
         return ES.TypeIsObject(o) &&
-          (ES.IsCallable(o[$iterator$]) || isArguments(o));
+          (o[$iterator$] !== undefined || isArguments(o));
       },
 
       GetIterator: function(o) {
