@@ -81,7 +81,7 @@ describe('Object', function() {
     it('returns the modified target object', function() {
       var target = {};
       var returned = Object.assign(target, { a: 1 });
-      expect(returned).to.equal(returned);
+      expect(returned).to.equal(target);
     });
 
     it('should merge two objects', function() {
