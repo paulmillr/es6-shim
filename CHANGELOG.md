@@ -1,4 +1,7 @@
 # es6-shim x.x.x (not yet released)
+* Update bower.json, component.json, and .npmignore (#229, #230, #233)
+* Minor updates to `Promise` implementation and test suite.
+* Workaround lack of 'strict mode' in IE9. (#232)
 
 # es6-shim 0.10.0 (1 March 2014)
 * Implement `Promise`, per spec. (#209, #215, #224, #225)
