@@ -1124,9 +1124,20 @@
         window.addEventListener("message", handleMessage, true);
         return setZeroTimeout;
       };
+      var makePromiseAsap = function() {
+        // An efficient task-scheduler based on a pre-existing Promise
+        // implementation, which we can use even if we override the
+        // global Promise below (in order to workaround bugs)
+        // https://github.com/Raynos/observ-hash/issues/2#issuecomment-35857671
+        var P = globals.Promise;
+        return P && P.resolve && function(task) {
+          return P.resolve().then(task);
+        };
+      };
       var enqueue = ES.IsCallable(globals.setImmediate) ?
         globals.setImmediate.bind(globals) :
         typeof process === 'object' && process.nextTick ? process.nextTick :
+        makePromiseAsap() ||
         ES.IsCallable(window.postMessage) ? makeZeroTimeout() :
         function(task) { setTimeout(task, 0); }; // fallback
 
