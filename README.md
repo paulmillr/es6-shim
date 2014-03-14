@@ -63,7 +63,7 @@ details.
     * `getPropertyKeys()` (ES5)
     * `keys()` (ES5)
     * `is()` ([a standalone shim is also available](https://github.com/ljharb/object-is))
-    * `assign()`
+    * `assign()` ([a standalone shim is also available](https://github.com/ljharb/object.assign))
     * `setPrototypeOf()` (IE >= 11)
 * `Math`:
     * `acosh()`
