@@ -46,8 +46,8 @@ details.
     * `isSafeInteger()`
     * `isFinite()`
 * `Array`:
-    * `from()`
-    * `of()`
+    * `from()` ([a standalone shim is also available](https://npmjs.org/package/array.from))
+    * `of()` ([a standalone shim is also available](https://npmjs.org/package/array.of))
 * `Array.prototype`:
     * `copyWithin()`
     * `fill()`
