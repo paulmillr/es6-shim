@@ -696,7 +696,9 @@
     addIterator(Array.prototype, function() { return this.values(); });
     // Chrome defines keys/values/entries on Array, but doesn't give us
     // any way to identify its iterator.  So add our own shimmed field.
-    addIterator(Object.getPrototypeOf([].values()));
+    if (Object.getPrototypeOf) {
+      addIterator(Object.getPrototypeOf([].values()));
+    }
 
     var maxSafeInteger = Math.pow(2, 53) - 1;
     defineProperties(Number, {
