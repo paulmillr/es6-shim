@@ -741,14 +741,6 @@
 
     if (supportsDescriptors) {
       defineProperties(Object, {
-        getOwnPropertyDescriptors: function(subject) {
-          var descs = {};
-          Object.getOwnPropertyNames(subject).forEach(function(propName) {
-            descs[propName] = Object.getOwnPropertyDescriptor(subject, propName);
-          });
-          return descs;
-        },
-
         getPropertyDescriptor: function(subject, name) {
           var pd = Object.getOwnPropertyDescriptor(subject, name);
           var proto = Object.getPrototypeOf(subject);

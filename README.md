@@ -57,7 +57,6 @@ details.
     * `entries()`
     * `values()`
 * `Object`:
-    * `getOwnPropertyDescriptors()` (ES5)
     * `getPropertyDescriptor()` (ES5)
     * `getPropertyNames()` (ES5)
     * `getPropertyKeys()` (ES5)

@@ -37,16 +37,6 @@ describe('Object', function() {
     });
   });
 
-  describe('Object.getOwnPropertyDescriptors()', function() {
-    it('should produce an array of properties', function() {
-      expect(Object.getOwnPropertyDescriptors({a: 1, b: 2, c: 3})).to.eql({
-        a: {configurable: true, enumerable: true, value: 1, writable: true},
-        b: {configurable: true, enumerable: true, value: 2, writable: true},
-        c: {configurable: true, enumerable: true, value: 3, writable: true}
-      });
-    });
-  });
-
   describe('Object.getPropertyDescriptor()', function() {
     it('should produce an array of properties including inherited ones',
       function() {
