@@ -77,6 +77,17 @@
       });
     };
 
+    // Simple shim for Object.create on ES3 browsers
+    // (unlike real shim, no attepmt to support `prototype===null`)
+    var create = Object.create || function(prototype, properties) {
+      function Type() {}
+      Type.prototype = prototype;
+      var object = new Type();
+      if (typeof properties !== "undefined")
+        defineProperties(object, properties);
+      return object;
+    };
+
     // This is a private name in the es6 spec, equal to '[Symbol.iterator]'
     // we're going to use an arbitrary _-prefixed name to make our shims
     // work properly with each other, even though we don't have full Iterator
@@ -221,7 +232,7 @@
           obj = C['@@create']();
         } else {
           // OrdinaryCreateFromConstructor
-          obj = Object.create(C.prototype || null);
+          obj = create(C.prototype || null);
         }
         // Mark that we've used the es6 construct path
         // (see emulateES6construct)
@@ -1252,7 +1263,7 @@
           // The `obj` parameter is a hack we use for es5
           // compatibility.
           var prototype = constructor.prototype || Promise$prototype;
-          obj = obj || Object.create(prototype);
+          obj = obj || create(prototype);
           defineProperties(obj, {
             _status: undefined,
             _result: undefined,
@@ -1524,7 +1535,7 @@
             '@@create': function(obj) {
               var constructor = this;
               var prototype = constructor.prototype || Map$prototype;
-              obj = obj || Object.create(prototype);
+              obj = obj || create(prototype);
               defineProperties(obj, { _es6map: true });
               return obj;
             }
@@ -1702,7 +1713,7 @@
             '@@create': function(obj) {
               var constructor = this;
               var prototype = constructor.prototype || Set$prototype;
-              obj = obj || Object.create(prototype);
+              obj = obj || create(prototype);
               defineProperties(obj, { _es6set: true });
               return obj;
             }
