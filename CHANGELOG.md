@@ -1,3 +1,8 @@
+# es6-shim x.x.x (not yet released)
+* Remove `Object.getOwnPropertyDescriptors`, per spec. (#234, #235)
+* IE8 fixes. (#163, #236)
+* Improve `Promise` scheduling. (#231)
+
 # es6-shim 0.10.1 (13 Mar 2014)
 * Update bower.json, component.json, and .npmignore (#229, #230, #233)
 * Minor updates to `Promise` implementation and test suite.
