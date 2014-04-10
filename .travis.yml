@@ -7,7 +7,7 @@ node_js:
   - "0.6"
   - "0.4"
 before_install:
-  - npm install -g npm@~1.4.6
+  - '[ "${TRAVIS_NODE_VERSION}" == "0.6" ] || npm install -g npm@~1.4.6'
 matrix:
   fast_finish: true
   allow_failures:
