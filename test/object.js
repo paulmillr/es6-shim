@@ -68,6 +68,10 @@ describe('Object', function() {
   });
 
   describe('Object.assign()', function() {
+    it('has the correct length', function() {
+      expect(Object.assign.length).to.eql(2);
+    });
+
     it('returns the modified target object', function() {
       var target = {};
       var returned = Object.assign(target, { a: 1 });
@@ -80,6 +84,14 @@ describe('Object', function() {
       expect(returned).to.eql({ a: 1, b: 2 });
     });
 
+    it('should merge three objects', function() {
+      var target = { a: 1 };
+      var source1 = { b: 2 };
+      var source2 = { c: 3 };
+      var returned = Object.assign(target, source1, source2);
+      expect(returned).to.eql({ a: 1, b: 2, c: 3 });
+    });
+
     it('only iterates over own keys', function() {
       var Foo = function () {};
       Foo.prototype.bar = true;
@@ -89,6 +101,19 @@ describe('Object', function() {
       var returned = Object.assign(target, foo);
       expect(returned).to.equal(target);
       expect(target).to.eql({ baz: true, a: 1 });
+    });
+
+    it('throws when target is not an object', function() {
+      expect(function () { Object.assign(null); }).to.throw(TypeError);
+    });
+
+    it('throws when any source is not an object', function() {
+      var target = {};
+      expect(function () { Object.assign(target, null); }).to.throw(TypeError);
+      expect(function () { Object.assign(target, undefined); }).to.throw(TypeError);
+      expect(function () { Object.assign(target, true); }).to.throw(TypeError);
+      expect(function () { Object.assign(target, { a: 1 }, undefined); }).to.throw(TypeError);
+      expect(target).to.eql({ a: 1}, 'target is partially modified');
     });
   });
 
