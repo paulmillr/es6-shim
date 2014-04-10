@@ -781,10 +781,18 @@
 
         // 19.1.3.1
         assign: function(target, source) {
-          return Object.keys(source).reduce(function(target, key) {
-            target[key] = source[key];
-            return target;
-          }, target);
+          if (!ES.TypeIsObject(target)) {
+            throw new TypeError('target must be an object');
+          }
+          return Array.prototype.reduce.call(arguments, function(target, source) {
+            if (!ES.TypeIsObject(source)) {
+              throw new TypeError('source must be an object');
+            }
+            return Object.keys(source).reduce(function(target, key) {
+              target[key] = source[key];
+              return target;
+            }, target);
+          });
         }
       });
 
