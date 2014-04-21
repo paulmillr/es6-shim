@@ -157,6 +157,12 @@ describe('Math', function() {
       expect(Math.expm1(10)).to.almostEqual(22025.465794806718);
       expect(Math.expm1(-10)).to.almostEqual(-0.9999546000702375);
     });
+
+    it('works with very negative numbers', function() {
+      expect(Math.expm1(-38)).to.almostEqual(-1);
+      expect(Math.expm1(-8675309)).to.almostEqual(-1);
+      expect(Math.expm1(-4815162342)).to.almostEqual(-1);
+    });
   });
 
   describe('#hypot()', function() {
