@@ -953,15 +953,7 @@
         value = Number(value);
         if (value === -Infinity) return -1;
         if (!global_isFinite(value) || value === 0) return value;
-        var result = 0;
-        var n = 50;
-        for (var i = 1; i < n; i++) {
-          for (var j = 2, factorial = 1; j <= i; j++) {
-            factorial *= j;
-          }
-          result += Math.pow(value, i) / factorial;
-        }
-        return result;
+        return Math.exp(value) - 1;
       },
 
       hypot: function(x, y) {
