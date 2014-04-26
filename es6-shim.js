@@ -1822,6 +1822,7 @@
           typeof globals.Map.prototype.clear !== 'function' ||
           new globals.Set().size !== 0 ||
           new globals.Map().size !== 0 ||
+          typeof globals.Map.prototype.keys !== 'function' ||
           typeof globals.Set.prototype.keys !== 'function' ||
           typeof globals.Map.prototype.forEach !== 'function' ||
           typeof globals.Set.prototype.forEach !== 'function' ||
