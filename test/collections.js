@@ -434,6 +434,12 @@ describe('Collections', function() {
       expect(Array.from(set2.entries())).to.be.eql([['a','a'],['b','b']]);
     });
 
+    it('accepts an array as an argument', function() {
+      var arr = ['a', 'b', 'c'];
+      var set = new Set(arr);
+      expect(Array.from(set.values())).to.be.eql(arr);
+    });
+
     it('should not be callable without "new"', function() {
       expect(Set).to.throw(TypeError);
     });
