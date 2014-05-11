@@ -49,7 +49,7 @@
   };
 
   var main = function() {
-    var globals = (typeof global === 'undefined') ? window : global;
+    var globals = (typeof global === 'undefined') ? self : global;
     var global_isFinite = globals.isFinite;
     var supportsDescriptors = !!Object.defineProperty && arePropertyDescriptorsSupported();
     var startsWithIsCompliant = startsWithRejectsRegex();
@@ -1126,7 +1126,9 @@
             fn();
           }
         };
-        window.addEventListener("message", handleMessage, true);
+        if (typeof window !== 'undefined') {
+          window.addEventListener("message", handleMessage, true);
+        }
         return setZeroTimeout;
       };
       var makePromiseAsap = function() {
@@ -1143,7 +1145,7 @@
         globals.setImmediate.bind(globals) :
         typeof process === 'object' && process.nextTick ? process.nextTick :
         makePromiseAsap() ||
-        ES.IsCallable(window.postMessage) ? makeZeroTimeout() :
+        (typeof window !== 'undefined' && ES.IsCallable(window.postMessage)) ? makeZeroTimeout() :
         function(task) { setTimeout(task, 0); }; // fallback
 
       var triggerPromiseReactions = function(reactions, x) {
