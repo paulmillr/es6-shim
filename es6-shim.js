@@ -1110,27 +1110,28 @@
 
       // find an appropriate setImmediate-alike
       var setTimeout = globals.setTimeout;
-      var makeZeroTimeout = function() {
-        // from http://dbaron.org/log/20100309-faster-timeouts
-        var timeouts = [];
-        var messageName = "zero-timeout-message";
-        var setZeroTimeout = function(fn) {
-          timeouts.push(fn);
-          window.postMessage(messageName, "*");
-        };
-        var handleMessage = function(event) {
-          if (event.source == window && event.data == messageName) {
-            event.stopPropagation();
-            if (timeouts.length === 0) { return; }
-            var fn = timeouts.shift();
-            fn();
-          }
-        };
-        if (typeof window !== 'undefined') {
+      var makeZeroTimeout;
+      if (typeof window !== 'undefined' && ES.IsCallable(window.postMessage)) {
+        makeZeroTimeout = function() {
+          // from http://dbaron.org/log/20100309-faster-timeouts
+          var timeouts = [];
+          var messageName = "zero-timeout-message";
+          var setZeroTimeout = function(fn) {
+            timeouts.push(fn);
+            window.postMessage(messageName, "*");
+          };
+          var handleMessage = function(event) {
+            if (event.source == window && event.data == messageName) {
+              event.stopPropagation();
+              if (timeouts.length === 0) { return; }
+              var fn = timeouts.shift();
+              fn();
+            }
+          };
           window.addEventListener("message", handleMessage, true);
-        }
-        return setZeroTimeout;
-      };
+          return setZeroTimeout;
+        };
+      }
       var makePromiseAsap = function() {
         // An efficient task-scheduler based on a pre-existing Promise
         // implementation, which we can use even if we override the
@@ -1145,8 +1146,8 @@
         globals.setImmediate.bind(globals) :
         typeof process === 'object' && process.nextTick ? process.nextTick :
         makePromiseAsap() ||
-        (typeof window !== 'undefined' && ES.IsCallable(window.postMessage)) ? makeZeroTimeout() :
-        function(task) { setTimeout(task, 0); }; // fallback
+        (ES.IsCallable(makeZeroTimeout) ? makeZeroTimeout() :
+        function(task) { setTimeout(task, 0); }); // fallback
 
       var triggerPromiseReactions = function(reactions, x) {
         reactions.forEach(function(reaction) {
