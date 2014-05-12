@@ -1,7 +1,13 @@
 # es6-shim x.x.x (not yet released)
+
+# es6-shim 0.11.0 (11 May 2014)
 * Remove `Object.getOwnPropertyDescriptors`, per spec. (#234, #235)
 * IE8 fixes. (#163, #236)
 * Improve `Promise` scheduling. (#231)
+* Add some more standalone shims
+* Use an Object.create fallback, for better ES3 compatibility
+* Fix Math.expm1 in more browsers (#84)
+* Fix es6-shim in Web Workers (#247, #248)
 
 # es6-shim 0.10.1 (13 Mar 2014)
 * Update bower.json, component.json, and .npmignore (#229, #230, #233)
