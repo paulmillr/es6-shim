@@ -1845,7 +1845,7 @@
     }
   };
 
-  if (typeof define === 'function' && typeof define.amd === 'object' && define.amd) {
+  if (typeof define === 'function' && typeof define.amd === 'object') {
     define(main); // RequireJS
   } else {
     main(); // CommonJS and <script>
