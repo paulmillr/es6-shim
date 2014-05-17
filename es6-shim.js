@@ -1411,9 +1411,18 @@
     // In Chrome 33 (and thereabouts) Promise is defined, but the
     // implementation is buggy in a number of ways.  Let's check subclassing
     // support to see if we have a buggy implementation.
-    if (!supportsSubclassing(globals.Promise, function(S) {
+    var promiseSupportsSubclassing = supportsSubclassing(globals.Promise, function(S) {
       return S.resolve(42) instanceof S;
-    })) {
+    });
+    var promiseIgnoresNonFunctionThenCallbacks = (function () {
+      try {
+        Promise.reject(42).then(null,5).then(null, function () {});
+        return true;
+      } catch (ex) {
+        return false;
+      }
+    }());
+    if (!promiseSupportsSubclassing || !promiseIgnoresNonFunctionThenCallbacks) {
       globals.Promise = PromiseShim;
     }
 
