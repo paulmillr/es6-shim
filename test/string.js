@@ -418,6 +418,12 @@ var runStringTests = function() {
         expect(String.raw(callSite)).to.eql('');
       });
     });
+
+    it('#trim()', function() {
+      var trimmed = '\u0085'.trim();
+      expect(trimmed.length).to.equal(0);
+      expect(trimmed).to.equal('');
+    });
   });
 };
 
