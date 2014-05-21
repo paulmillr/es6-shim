@@ -589,7 +589,7 @@
     defineProperties(ArrayIterator.prototype, {
       next: function() {
         var i = this.i, array = this.array;
-        if (i===undefined || this.kind===undefined) {
+        if (i === undefined || this.kind === undefined) {
           throw new TypeError('Not an ArrayIterator');
         }
         if (array!==undefined) {
@@ -599,11 +599,9 @@
             var retval;
             if (kind === "key") {
               retval = i;
-            }
-            if (kind === "value") {
+            } else if (kind === "value") {
               retval = array[i];
-            }
-            if (kind === "entry") {
+            } else if (kind === "entry") {
               retval = [i, array[i]];
             }
             this.i = i + 1;
