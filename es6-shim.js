@@ -745,9 +745,6 @@
 
     });
 
-    defineProperties(Number.prototype, {
-    });
-
     if (supportsDescriptors) {
       defineProperties(Object, {
         getPropertyDescriptor: function(subject, name) {
