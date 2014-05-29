@@ -644,6 +644,7 @@
         }
         return o;
       },
+
       fill: function(value) {
         var start = arguments[1], end = arguments[2]; // fill.length===1
         var O = ES.ToObject(this);
