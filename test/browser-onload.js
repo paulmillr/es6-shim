@@ -21,3 +21,4 @@ if (typeof window !== 'undefined') {
     handleResults(mocha.run());
   };
 }
+

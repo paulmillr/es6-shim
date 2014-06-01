@@ -25,3 +25,4 @@ describe('Worker', function() {
     });
   }
 });
+

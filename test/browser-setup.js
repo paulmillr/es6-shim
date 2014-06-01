@@ -4,3 +4,4 @@ if (typeof window !== 'undefined') {
   window.assert = chai.assert;
   mocha.setup('bdd');
 }
+

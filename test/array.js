@@ -451,3 +451,4 @@ describe('polluted Object.prototype', function() {
   runArrayTests();
   delete Object.prototype[1];
 });
+
