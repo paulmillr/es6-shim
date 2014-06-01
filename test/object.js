@@ -55,13 +55,21 @@ describe('Object', function() {
   });
 
   describe('Object.getPropertyNames()', function() {
+    var getOwnPropertyNames = function(object){
+      var props = [];
+      for (var key in object) {
+          if (object.hasOwnProperty(key)) 
+              props.push(key); 
+      }
+      return props;
+    };
     it('should produce an array of property names including inherited ones',
       function() {
       expect(Object.getPropertyNames(Object.create(null))).to.eql([]);
       var obj = {};
       expect(Object.getPropertyNames(Object.create(obj))).to.eql(
-        Object.getOwnPropertyNames(obj).concat(
-          Object.getOwnPropertyNames(Object.getPrototypeOf(obj))
+          getOwnPropertyNames(obj).concat(
+            getOwnPropertyNames(Object.getPrototypeOf(obj))
         )
       );
     });
