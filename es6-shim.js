@@ -762,15 +762,7 @@
         },
 
         getPropertyNames: function(subject) {
-          var getOwnPropertyNames = function(object){
-            var props = [];
-            for (var key in object) {
-                if (object.hasOwnProperty(key)) 
-                    props.push(key); 
-            }
-            return props;
-          };
-          var result = getOwnPropertyNames(subject);
+          var result = Object.keys(subject);
           var proto = Object.getPrototypeOf(subject);
 
           var addProperty = function(property) {
@@ -780,7 +772,7 @@
           };
 
           while (proto !== null) {
-            getOwnPropertyNames(proto).forEach(addProperty);
+            Object.keys(proto).forEach(addProperty);
             proto = Object.getPrototypeOf(proto);
           }
           return result;
