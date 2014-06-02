@@ -792,6 +792,14 @@
           });
         },
 
+        getOwnPropertyKeys: function(subject) {
+          return Object.keys(subject);
+        },
+
+        is: function(a, b) {
+          return ES.SameValue(a, b);
+        },
+
         // 19.1.3.9
         // shim from https://gist.github.com/WebReflection/5593554
         setPrototypeOf: (function(Object, magic) {
@@ -866,16 +874,6 @@
         Object.setPrototypeOf.polyfill = false;
       })();
     }
-
-    defineProperties(Object, {
-      getOwnPropertyKeys: function(subject) {
-        return Object.keys(subject);
-      },
-
-      is: function(a, b) {
-        return ES.SameValue(a, b);
-      }
-    });
 
     try {
       Object.keys('foo');
