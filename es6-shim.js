@@ -772,8 +772,10 @@
             proto = Object.getPrototypeOf(proto);
           }
           return result;
-        },
+        }
+      });
 
+      defineProperties(Object, {
         // 19.1.3.1
         assign: function(target, source) {
           if (!ES.TypeIsObject(target)) {
@@ -788,12 +790,10 @@
               return target;
             }, target);
           });
-        }
-      });
+        },
 
-      // 19.1.3.9
-      // shim from https://gist.github.com/WebReflection/5593554
-      defineProperties(Object, {
+        // 19.1.3.9
+        // shim from https://gist.github.com/WebReflection/5593554
         setPrototypeOf: (function(Object, magic) {
           var set;
 
