@@ -1,5 +1,9 @@
 # es6-shim x.x.x (not yet released)
 
+# es6-shim 0.11.1 (2 Jun 2014)
+* Make sure to shim Object.assign in all environments, not just true ES5
+* Now including minified file and source map
+
 # es6-shim 0.11.0 (11 May 2014)
 * Remove `Object.getOwnPropertyDescriptors`, per spec. (#234, #235)
 * IE8 fixes. (#163, #236)
