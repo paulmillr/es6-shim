@@ -49,6 +49,10 @@ var runStringTests = function() {
         testObjectCoercible('startsWith');
       });
 
+      it('should throw a TypeError when called on null or undefined', function() {
+        testObjectCoercible('startsWith');
+      });
+
       it('should be truthy on correct results', function() {
         expect('test'.startsWith('te')).to.be.ok;
         expect('test'.startsWith('st')).to.not.be.ok;
@@ -406,16 +410,17 @@ var runStringTests = function() {
       });
 
       it('String.raw ReturnIfAbrupt - Less Substitutions', function() {
-        var callSite = {};
+        var callSite = {
+          raw: {'0': "The total is ", '1': " ($", '2': " with tax)"}
+        };
         var str = 'The total is 10 ($';
-        callSite.raw = {'0': "The total is ", '1': " ($", '2': " with tax)"};
-        expect(String.raw(callSite,10)).to.eql(str);
+        expect(String.raw(callSite, 10)).to.equal(str);
       });
 
       it('String.raw Empty objects', function() {
-        var callSite = {raw:{}};
-        expect(String.raw(callSite,'{total}','{total * 1.01}')).to.eql('');
-        expect(String.raw(callSite)).to.eql('');
+        var callSite = { raw: {} };
+        expect(String.raw(callSite, '{total}', '{total * 1.01}')).to.eql('');
+        expect(String.raw(callSite)).to.equal('');
       });
     });
 
