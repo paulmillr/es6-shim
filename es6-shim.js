@@ -57,6 +57,7 @@
     var _indexOf = String.prototype.indexOf;
     var _toString = Object.prototype.toString;
     var _hasOwnProperty = Object.prototype.hasOwnProperty;
+    var ArrayIterator; // make our implementation private
 
     // Define configurable, writable and non-enumerable props
     // if they don’t exist.
@@ -578,13 +579,13 @@
       }
     });
 
-    defineProperties(globals, {
-      ArrayIterator: function(array, kind) {
+    // Our ArrayIterator is private; see
+    // https://github.com/paulmillr/es6-shim/issues/252
+    ArrayIterator = function(array, kind) {
         this.i = 0;
         this.array = array;
         this.kind = kind;
-      }
-    });
+    };
 
     defineProperties(ArrayIterator.prototype, {
       next: function() {
