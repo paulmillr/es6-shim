@@ -424,10 +424,26 @@ var runStringTests = function() {
       });
     });
 
-    it('#trim()', function() {
-      var trimmed = '\u0085'.trim();
-      expect(trimmed.length).to.equal(0);
-      expect(trimmed).to.equal('');
+    describe('#trim()', function() {
+      it('should trim the correct characters', function() {
+        var whitespace = '\u0009' + '\u000b' + '\u000c' + '\u0020' +
+                         '\u00a0' + '\u1680' + '\u2000' + '\u2001' +
+                         '\u2002' + '\u2003' + '\u2004' + '\u2005' +
+                         '\u2006' + '\u2007' + '\u2008' + '\u2009' +
+                         '\u200A' + '\u202f' + '\u205f' + '\u3000';
+
+        var lineTerminators = '\u000a' + '\u000d' + '\u2028' + '\u2029';
+
+        var trimmed = (whitespace + lineTerminators).trim();
+        expect(trimmed.length).to.equal(0);
+        expect(trimmed).to.equal('');
+      });
+
+      it('should not trim U+0085', function() {
+        var trimmed = '\u0085'.trim();
+        expect(trimmed.length).to.equal(1);
+        expect(trimmed).to.equal('\u0085');
+      });
     });
   });
 };
