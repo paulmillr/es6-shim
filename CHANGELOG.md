@@ -1,5 +1,9 @@
 # es6-shim x.x.x (not yet released)
 
+# es6-shim 0.12.0 (4 Jun 2014)
+* Fix String#trim implementations that incorrectly trim \u0085
+* Stop relying on ArrayIterator being a public var, fixing Safari 8
+
 # es6-shim 0.11.1 (2 Jun 2014)
 * Make sure to shim Object.assign in all environments, not just true ES5
 * Now including minified file and source map
