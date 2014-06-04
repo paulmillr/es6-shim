@@ -60,8 +60,8 @@ describe('Object', function() {
       expect(Object.getPropertyNames(Object.create(null))).to.eql([]);
       var obj = {};
       expect(Object.getPropertyNames(Object.create(obj))).to.eql(
-          Object.keys(obj).concat(
-            Object.keys(Object.getPrototypeOf(obj))
+        Object.getOwnPropertyNames(obj).concat(
+          Object.getOwnPropertyNames(Object.getPrototypeOf(obj))
         )
       );
     });
