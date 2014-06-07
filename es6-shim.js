@@ -79,13 +79,14 @@
     };
 
     // Simple shim for Object.create on ES3 browsers
-    // (unlike real shim, no attepmt to support `prototype===null`)
+    // (unlike real shim, no attempt to support `prototype === null`)
     var create = Object.create || function(prototype, properties) {
       function Type() {}
       Type.prototype = prototype;
       var object = new Type();
-      if (typeof properties !== "undefined")
+      if (typeof properties !== "undefined") {
         defineProperties(object, properties);
+      }
       return object;
     };
 
