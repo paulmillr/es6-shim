@@ -16,6 +16,7 @@
 * Use an Object.create fallback, for better ES3 compatibility
 * Fix Math.expm1 in more browsers (#84)
 * Fix es6-shim in Web Workers (#247, #248)
+* Correct Object.assign to take multiple sources (#241)
 
 # es6-shim 0.10.1 (13 Mar 2014)
 * Update bower.json, component.json, and .npmignore (#229, #230, #233)
