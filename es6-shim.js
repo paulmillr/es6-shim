@@ -1436,7 +1436,7 @@
     });
     var promiseIgnoresNonFunctionThenCallbacks = (function () {
       try {
-        Promise.reject(42).then(null,5).then(null, function () {});
+        globals.Promise.reject(42).then(null, 5).then(null, function () {});
         return true;
       } catch (ex) {
         return false;
