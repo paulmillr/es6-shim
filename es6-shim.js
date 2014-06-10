@@ -49,7 +49,7 @@
   };
 
   var main = function() {
-    var globals = (typeof global === 'undefined') ? self : global;
+    var globals = (typeof window !== 'undefined') ? window : global;
     var global_isFinite = globals.isFinite;
     var supportsDescriptors = !!Object.defineProperty && arePropertyDescriptorsSupported();
     var startsWithIsCompliant = startsWithRejectsRegex();
@@ -79,14 +79,13 @@
     };
 
     // Simple shim for Object.create on ES3 browsers
-    // (unlike real shim, no attempt to support `prototype === null`)
+    // (unlike real shim, no attepmt to support `prototype===null`)
     var create = Object.create || function(prototype, properties) {
       function Type() {}
       Type.prototype = prototype;
       var object = new Type();
-      if (typeof properties !== "undefined") {
+      if (typeof properties !== "undefined")
         defineProperties(object, properties);
-      }
       return object;
     };
 
@@ -333,7 +332,7 @@
       function unpackIEEE754(bytes, ebits, fbits) {
         // Bytes to bits
         var bits = [], i, j, b, str,
-            bias, s, e, f;
+          bias, s, e, f;
 
         for (i = bytes.length; i; i -= 1) {
           b = bytes[i - 1];
@@ -391,7 +390,7 @@
         for (var i = 0, length = points.length; i < length; i++) {
           next = Number(points[i]);
           if (!ES.SameValue(next, ES.ToInteger(next)) ||
-              next < 0 || next > 0x10FFFF) {
+            next < 0 || next > 0x10FFFF) {
             throw new RangeError('Invalid code point ' + next);
           }
 
@@ -523,7 +522,7 @@
           return String(this)
             .replace(trimBeginRegexp, "")
             .replace(trimEndRegexp, "");
-          }
+        }
       });
     }
 
@@ -608,9 +607,9 @@
     // Our ArrayIterator is private; see
     // https://github.com/paulmillr/es6-shim/issues/252
     ArrayIterator = function(array, kind) {
-        this.i = 0;
-        this.array = array;
-        this.kind = kind;
+      this.i = 0;
+      this.array = array;
+      this.kind = kind;
     };
 
     defineProperties(ArrayIterator.prototype, {
@@ -885,8 +884,8 @@
     // Workaround bug in Opera 12 where setPrototypeOf(x, null) doesn't work,
     // but Object.create(null) does.
     if (Object.setPrototypeOf && Object.getPrototypeOf &&
-        Object.getPrototypeOf(Object.setPrototypeOf({}, null)) !== null &&
-        Object.getPrototypeOf(Object.create(null)) === null) {
+      Object.getPrototypeOf(Object.setPrototypeOf({}, null)) !== null &&
+      Object.getPrototypeOf(Object.create(null)) === null) {
       (function() {
         var FAKENULL = Object.create(null);
         var gpo = Object.getPrototypeOf, spo = Object.setPrototypeOf;
@@ -1091,6 +1090,9 @@
 
       var Promise, Promise$prototype;
 
+      /**
+       * @return {boolean}
+       */
       ES.IsPromise = function(promise) {
         if (!ES.TypeIsObject(promise)) {
           return false;
@@ -1100,10 +1102,7 @@
           // check that instead of the [[PromiseStatus]] internal field.
           return false;
         }
-        if (promise._status === undefined) {
-          return false; // uninitialized
-        }
-        return true;
+        return promise._status !== undefined;
       };
 
       // "PromiseCapability" in the spec is what most promise implementations
@@ -1123,7 +1122,7 @@
           throw new TypeError('bad promise constructor');
         }
         if (!(ES.IsCallable(capability.resolve) &&
-              ES.IsCallable(capability.reject))) {
+          ES.IsCallable(capability.reject))) {
           throw new TypeError('bad promise constructor');
         }
       };
@@ -1164,10 +1163,10 @@
       };
       var enqueue = ES.IsCallable(globals.setImmediate) ?
         globals.setImmediate.bind(globals) :
-        typeof process === 'object' && process.nextTick ? process.nextTick :
+          typeof process === 'object' && process.nextTick ? process.nextTick :
         makePromiseAsap() ||
         (ES.IsCallable(makeZeroTimeout) ? makeZeroTimeout() :
-        function(task) { setTimeout(task, 0); }); // fallback
+          function(task) { setTimeout(task, 0); }); // fallback
 
       var triggerPromiseReactions = function(reactions, x) {
         reactions.forEach(function(reaction) {
@@ -1404,22 +1403,22 @@
         var resolutionHandler =
           promiseResolutionHandler(promise, onFulfilled, onRejected);
         var resolveReaction =
-          { capability: capability, handler: resolutionHandler };
+        { capability: capability, handler: resolutionHandler };
         var rejectReaction =
-          { capability: capability, handler: onRejected };
+        { capability: capability, handler: onRejected };
         switch (promise._status) {
-        case 'unresolved':
-          promise._resolveReactions.push(resolveReaction);
-          promise._rejectReactions.push(rejectReaction);
-          break;
-        case 'has-resolution':
-          triggerPromiseReactions([resolveReaction], promise._result);
-          break;
-        case 'has-rejection':
-          triggerPromiseReactions([rejectReaction], promise._result);
-          break;
-        default:
-          throw new TypeError('unexpected');
+          case 'unresolved':
+            promise._resolveReactions.push(resolveReaction);
+            promise._rejectReactions.push(rejectReaction);
+            break;
+          case 'has-resolution':
+            triggerPromiseReactions([resolveReaction], promise._result);
+            break;
+          case 'has-rejection':
+            triggerPromiseReactions([rejectReaction], promise._result);
+            break;
+          default:
+            throw new TypeError('unexpected');
         }
         return capability.promise;
       };
@@ -1431,20 +1430,38 @@
     // In Chrome 33 (and thereabouts) Promise is defined, but the
     // implementation is buggy in a number of ways.  Let's check subclassing
     // support to see if we have a buggy implementation.
-    var promiseSupportsSubclassing = supportsSubclassing(globals.Promise, function(S) {
-      return S.resolve(42) instanceof S;
-    });
+    //var promiseSupportsSubclassing = supportsSubclassing(globals.Promise, function(S) {
+    //  return S.resolve(42) instanceof S;
+    //});
+
+    //if (!promiseSupportsSubclassing) {
+    //  globals.Promise = PromiseShim;
+    //} else {
     var promiseIgnoresNonFunctionThenCallbacks = (function () {
       try {
-        Promise.reject(42).then(null,5).then(null, function () {});
+        globals.Promise.reject(42).then(null, 5).then(null, function () {
+        });
         return true;
       } catch (ex) {
         return false;
       }
     }());
-    if (!promiseSupportsSubclassing || !promiseIgnoresNonFunctionThenCallbacks) {
-      globals.Promise = PromiseShim;
+
+    if (!promiseIgnoresNonFunctionThenCallbacks) {
+      var originalThen = globals.Promise.prototype.then;
+      globals.Promise.prototype.then = function (onFulfilled, onRejected) {
+        if (onFulfilled && !ES.IsCallable(onFulfilled)) {
+          onFulfilled = undefined;
+        }
+
+        if (onRejected && !ES.IsCallable(onRejected)) {
+          onRejected = undefined;
+        }
+
+        originalThen.call(this, onFulfilled, onRejected);
+      };
     }
+    //}
 
     // Map and Set require a true ES5 environment
     if (supportsDescriptors) {
@@ -1844,12 +1861,12 @@
 
       if (globals.Map || globals.Set) {
         /*
-          - In Firefox < 23, Map#size is a function.
-          - In all current Firefox, Set#entries/keys/values & Map#clear do not exist
-          - https://bugzilla.mozilla.org/show_bug.cgi?id=869996
-          - In Firefox 24, Map and Set do not implement forEach
-          - In Firefox 25 at least, Map and Set are callable without "new"
-        */
+         - In Firefox < 23, Map#size is a function.
+         - In all current Firefox, Set#entries/keys/values & Map#clear do not exist
+         - https://bugzilla.mozilla.org/show_bug.cgi?id=869996
+         - In Firefox 24, Map and Set do not implement forEach
+         - In Firefox 25 at least, Map and Set are callable without "new"
+         */
         if (
           typeof globals.Map.prototype.clear !== 'function' ||
           new globals.Set().size !== 0 ||
@@ -1863,7 +1880,7 @@
           !supportsSubclassing(globals.Map, function(M) {
             return (new M([])) instanceof M;
           })
-        ) {
+          ) {
           globals.Map = collectionShims.Map;
           globals.Set = collectionShims.Set;
         }
@@ -1880,4 +1897,3 @@
     main(); // CommonJS and <script>
   }
 })();
-

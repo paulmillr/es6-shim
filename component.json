@@ -1,6 +1,6 @@
 {
-  "name": "es6-shim",
-  "repo": "paulmillr/es6-shim",
+  "name": "t-es6-shim",
+  "repo": "tavwizard/es6-shim",
   "version": "0.12.0",
   "description": "ECMAScript 6 (Harmony) compatibility shims for legacy JavaScript engines",
   "keywords": [
