@@ -49,7 +49,7 @@
   };
 
   var main = function() {
-    var globals = (typeof global === 'undefined') ? self : global;
+    var globals = (typeof window !== 'undefined') ? window : global;
     var global_isFinite = globals.isFinite;
     var supportsDescriptors = !!Object.defineProperty && arePropertyDescriptorsSupported();
     var startsWithIsCompliant = startsWithRejectsRegex();
@@ -1436,7 +1436,7 @@
     });
     var promiseIgnoresNonFunctionThenCallbacks = (function () {
       try {
-        Promise.reject(42).then(null,5).then(null, function () {});
+        globals.Promise.reject(42).then(null,5).then(null, function () {});
         return true;
       } catch (ex) {
         return false;
