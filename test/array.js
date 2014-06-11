@@ -39,13 +39,55 @@ var runArrayTests = function() {
         expect(Array.from.call(Foo, args)).to.eql(expected);
       });
 
-      it('supports a map function', function() {
-        var original = [1, 2, 3];
-        var mapper = function (item) {
-          return item * 2;
-        };
-        var mapped = Array.from(original, mapper);
-        expect(mapped).to.eql([2, 4, 6]);
+      describe('map functions', function() {
+        it('supports a map function', function() {
+          var original = [1, 2, 3];
+          var mapper = function (item) {
+            return item * 2;
+          };
+          var mapped = Array.from(original, mapper);
+          expect(mapped).to.eql([2, 4, 6]);
+        });
+
+        it('passes both the item and the current index to the map function', function() {
+          var original = [1, 2, 3];
+          var expectedItems = [1, 2, 3];
+          var expectedIndices = [0, 1, 2];
+
+          var actualItems = [];
+          var actualIndices = [];
+          var mapper = function (item, index) {
+            actualItems.push(item);
+            actualIndices.push(index);
+            return item;
+          };
+
+          var mapped = Array.from(original, mapper);
+          expect(mapped).to.eql(expectedItems);
+          expect(actualItems).to.eql(expectedItems);
+          expect(actualIndices).to.eql(expectedIndices);
+        });
+
+        it('passes both the item and the current index to the map function with a "this" value', function() {
+          var original = [1, 2, 3];
+          var expectedItems = [1, 2, 3];
+          var expectedIndices = [0, 1, 2];
+          var expectedContext = {};
+
+          var actualItems = [];
+          var actualIndices = [];
+          var mapper = function (item, index) {
+            actualItems.push(item);
+            actualIndices.push(index);
+            expect(this).to.eql(expectedContext);
+            return item;
+          };
+
+          var mapped = Array.from(original, mapper, expectedContext);
+          expect(mapped).to.eql(expectedItems);
+          expect(actualItems).to.eql(expectedItems);
+          expect(actualIndices).to.eql(expectedIndices);
+        });
       });
 
       it('throws when provided a nonfunction second arg', function() {
