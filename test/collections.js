@@ -546,14 +546,28 @@ describe('Collections', function() {
       expect(Set.prototype).to.not.equal(Object.prototype);
     });
 
-    it('should have an iterator that works with Array.from', function() {
-      set.add(1);
-      set.add(NaN);
-      set.add(false);
-      expect(Array.from(set)).to.eql([1, NaN, false]);
-      expect(Array.from(set.keys())).to.eql(Array.from(set));
-      expect(Array.from(set.values())).to.eql(Array.from(set));
-      expect(Array.from(set.entries())).to.eql([[1,1],[NaN,NaN],[false,false]]);
+    describe('has an iterator that works with Array.from', function() {
+      beforeEach(function() {
+        set.add(1);
+        set.add(NaN);
+        set.add(false);
+      });
+
+      it('works with the full set', function() {
+        expect(Array.from(set)).to.eql([1, NaN, false]);
+      });
+
+      it('works with Set#keys()', function() {
+        expect(Array.from(set.keys())).to.eql(Array.from(set));
+      });
+
+      it('works with Set#values()', function() {
+        expect(Array.from(set.values())).to.eql(Array.from(set));
+      });
+
+      it('works with Set#entries()', function() {
+        expect(Array.from(set.entries())).to.eql([[1,1],[NaN,NaN],[false,false]]);
+      });
     });
 
     describe('#forEach', function() {
