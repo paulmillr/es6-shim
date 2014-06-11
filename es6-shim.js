@@ -589,8 +589,8 @@
           } else {
             value = list[i];
           }
-          if (mapFn !== undefined) {
-            result[i] = thisArg ? mapFn.call(thisArg, value) : mapFn(value);
+          if (mapFn) {
+            result[i] = thisArg ? mapFn.call(thisArg, value, i) : mapFn(value, i);
           } else {
             result[i] = value;
           }
