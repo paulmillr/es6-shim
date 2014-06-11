@@ -48,8 +48,12 @@
     return rejectsRegex;
   };
 
+  /*jshint evil: true */
+  var getGlobal = new Function('return this;');
+  /*jshint evil: false */
+
   var main = function() {
-    var globals = (typeof global === 'undefined') ? self : global;
+    var globals = getGlobal();
     var global_isFinite = globals.isFinite;
     var supportsDescriptors = !!Object.defineProperty && arePropertyDescriptorsSupported();
     var startsWithIsCompliant = startsWithRejectsRegex();
