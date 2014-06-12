@@ -1,5 +1,10 @@
 # es6-shim x.x.x (not yet released)
 
+# es6-shim 0.13.0 (11 Jun 2014)
+* Adapt to new Array.from changes: mapper function is now called with both value and index (#261, #262)
+* More reliably getting the global object in strict mode to fix node-webkit (#258, #259)
+* Properly test the global Promise for ignoring non-function callbacks (#258)
+
 # es6-shim 0.12.0 (4 Jun 2014)
 * Fix String#trim implementations that incorrectly trim \u0085
 * Stop relying on ArrayIterator being a public var, fixing Safari 8
