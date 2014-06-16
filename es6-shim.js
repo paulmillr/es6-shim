@@ -1523,7 +1523,7 @@
           };
           addIterator(MapIterator.prototype);
 
-          function Map() {
+          function Map(iterable) {
             var map = this;
             map = emulateES6construct(map);
             if (!map._es6map) {
@@ -1541,7 +1541,6 @@
             });
 
             // Optionally initialize map from iterable
-            var iterable = arguments[0];
             if (iterable !== undefined && iterable !== null) {
               var it = ES.GetIterator(iterable);
               var adder = map.set;
@@ -1709,7 +1708,7 @@
           // Sets containing only string or numeric keys, we use an object
           // as backing storage and lazily create a full Map only when
           // required.
-          var SetShim = function Set() {
+          var SetShim = function Set(iterable) {
             var set = this;
             set = emulateES6construct(set);
             if (!set._es6set) {
@@ -1722,7 +1721,6 @@
             });
 
             // Optionally initialize map from iterable
-            var iterable = arguments[0];
             if (iterable !== undefined && iterable !== null) {
               var it = ES.GetIterator(iterable);
               var adder = set.add;

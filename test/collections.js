@@ -59,7 +59,7 @@ describe('Collections', function() {
     });
 
     it('should have the right arity', function() {
-      expect(Map.length).to.equal(0);
+      expect(Map.length).to.equal(1);
     });
 
     it('should has valid getter and setter calls', function() {
@@ -422,7 +422,7 @@ describe('Collections', function() {
     });
 
     it('should have the right arity', function() {
-      expect(Set.length).to.equal(0);
+      expect(Set.length).to.equal(1);
     });
 
     it('should accept an iterable as argument', function() {
