@@ -141,6 +141,12 @@ var runArrayTests = function() {
         expect(Array.prototype.copyWithin.length).to.equal(2);
       });
 
+      it('modifies the object in-place', function() {
+        var arr = [1, 2, 3, 4, 5];
+        expect(arr.copyWithin(0, 3)).to.eql([4, 5, 3, 4, 5]);
+        expect(arr).to.eql([4, 5, 3, 4, 5]);
+      });
+
       it('works with 2 args', function() {
         expect([1, 2, 3, 4, 5].copyWithin(0, 3)).to.eql([4, 5, 3, 4, 5]);
         expect([1, 2, 3, 4, 5].copyWithin(1, 3)).to.eql([1, 4, 5, 4, 5]);
