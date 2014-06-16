@@ -8,5 +8,7 @@ assert = (function() {
   chai.config.includeStack = true;
   return chai.assert;
 })();
-require('../');
+if (!process.env.NO_ES6_SHIM) {
+  require('../');
+}
 
