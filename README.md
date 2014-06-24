@@ -60,7 +60,7 @@ details.
     * `getPropertyDescriptor()` (ES5)
     * `getPropertyNames()` (ES5)
     * `getPropertyKeys()` (ES5)
-    * `keys()` (ES5)
+    * `keys()` (ES5, but no longer throws on non-object non-null/undefined values in ES6)
     * `is()` ([a standalone shim is also available](https://github.com/ljharb/object-is))
     * `assign()` ([a standalone shim is also available](https://github.com/ljharb/object.assign))
     * `setPrototypeOf()` (IE >= 11)
