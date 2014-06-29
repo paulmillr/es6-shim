@@ -817,7 +817,8 @@
               throw new TypeError('source must be an object');
             }
             return Object.keys(source).reduce(function(target, key) {
-              target[key] = source[key];
+              var d = Object.getOwnPropertyDescriptor(source, key);
+              Object.defineProperty(target, key, d);
               return target;
             }, target);
           });

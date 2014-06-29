@@ -115,6 +115,18 @@ describe('Object', function() {
       expect(function () { Object.assign(target, { a: 1 }, undefined); }).to.throw(TypeError);
       expect(target).to.eql({ a: 1}, 'target is partially modified');
     });
+
+    it("should work with getter/setter", function() {
+      var source = {
+        get a() {},
+        set a(value) {}
+      };
+      var target = {};
+      Object.assign(target, source);
+      var d = Object.getOwnPropertyDescriptor(target, "a");
+      expect(typeof d.get).to.equal("function");
+      expect(typeof d.set).to.equal("function");
+    });
   });
 
   describe('Object.setPrototypeOf()', function() {
