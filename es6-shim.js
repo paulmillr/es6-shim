@@ -821,10 +821,6 @@
           });
         },
 
-        getOwnPropertyKeys: function(subject) {
-          return Object.keys(subject);
-        },
-
         is: function(a, b) {
           return ES.SameValue(a, b);
         },
