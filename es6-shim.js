@@ -755,9 +755,7 @@
       },
 
       isInteger: function(value) {
-        return typeof value === 'number' &&
-          !Number.isNaN(value) &&
-          Number.isFinite(value) &&
+        return Number.isFinite(value) &&
           ES.ToInteger(value) === value;
       },
 
