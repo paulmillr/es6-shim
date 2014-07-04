@@ -482,6 +482,13 @@ var runArrayTests = function() {
         expect(original.fill(-1, -3)).to.eql(filled);
       });
 
+      it('accepts a negative end index', function() {
+        var original = [1, 2, 3];
+        var filled = [4, 2, 3];
+
+        expect(original.fill(4, -3, -2)).to.eql(filled);
+      });
+
       it('accepts a large start index', function() {
         var original = [1, 2, 3, 4, 5, 6];
         var filled = [1, 2, 3, 4, 5, 6];

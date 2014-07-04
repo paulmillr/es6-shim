@@ -677,15 +677,17 @@
       },
 
       fill: function(value) {
-        var start = arguments[1], end = arguments[2]; // fill.length===1
+        var start = arguments.length > 1 ? arguments[1] : undefined;
+        var end = arguments.length > 2 ? arguments[2] : undefined;
         var O = ES.ToObject(this);
         var len = ES.ToLength(O.length);
-        start = ES.ToInteger(start===undefined ? 0 : start);
-        end = ES.ToInteger(end===undefined ? len : end);
+        start = ES.ToInteger(start === undefined ? 0 : start);
+        end = ES.ToInteger(end === undefined ? len : end);
 
         var relativeStart = start < 0 ? Math.max(len + start, 0) : Math.min(start, len);
+        var relativeEnd = end < 0 ? len + end : end;
 
-        for (var i = relativeStart; i < len && i < end; ++i) {
+        for (var i = relativeStart; i < len && i < relativeEnd; ++i) {
           O[i] = value;
         }
         return O;
