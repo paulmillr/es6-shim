@@ -328,8 +328,8 @@
         // Bits to bytes
         bytes = [];
         while (str.length) {
-          bytes.push(parseInt(str.substring(0, 8), 2));
-          str = str.substring(8);
+          bytes.push(parseInt(str.slice(0, 8), 2));
+          str = str.slice(8);
         }
         return bytes;
       }
@@ -351,9 +351,9 @@
 
         // Unpack sign, exponent, fraction
         bias = (1 << (ebits - 1)) - 1;
-        s = parseInt(str.substring(0, 1), 2) ? -1 : 1;
-        e = parseInt(str.substring(1, 1 + ebits), 2);
-        f = parseInt(str.substring(1 + ebits), 2);
+        s = parseInt(str.slice(0, 1), 2) ? -1 : 1;
+        e = parseInt(str.slice(1, 1 + ebits), 2);
+        f = parseInt(str.slice(1 + ebits), 2);
 
         // Produce number
         if (e === (1 << ebits) - 1) {
@@ -1748,7 +1748,7 @@
               Object.keys(set._storage).forEach(function(k) {
                 // fast check for leading '$'
                 if (k.charCodeAt(0) === 36) {
-                  k = k.substring(1);
+                  k = k.slice(1);
                 } else {
                   k = +k;
                 }
