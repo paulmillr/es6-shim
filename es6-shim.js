@@ -951,7 +951,6 @@
       clz32: function(value) {
         // See https://bugs.ecmascript.org/show_bug.cgi?id=2465
         value = Number(value);
-        if (Number.isNaN(value)) return NaN;
         var number = ES.ToUint32(value);
         if (number === 0) {
           return 32;
