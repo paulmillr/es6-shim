@@ -210,10 +210,10 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
-[1]: https://travis-ci.org/paulmillr/es6-shim.png
+[1]: https://travis-ci.org/paulmillr/es6-shim.svg
 [2]: https://travis-ci.org/paulmillr/es6-shim
-[3]: https://david-dm.org/paulmillr/es6-shim.png
+[3]: https://david-dm.org/paulmillr/es6-shim.svg
 [4]: https://david-dm.org/paulmillr/es6-shim
-[5]: https://david-dm.org/paulmillr/es6-shim/dev-status.png
+[5]: https://david-dm.org/paulmillr/es6-shim/dev-status.svg
 [6]: https://david-dm.org/paulmillr/es6-shim#info=devDependencies
 
