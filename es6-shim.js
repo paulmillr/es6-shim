@@ -388,7 +388,7 @@
     }());
 
     defineProperties(String, {
-      fromCodePoint: function() {
+      fromCodePoint: function(_) { // length = 1
         var points = _slice.call(arguments, 0, arguments.length);
         var result = [];
         var next;

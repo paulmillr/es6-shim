@@ -304,8 +304,8 @@ var runStringTests = function() {
         expect(String.fromCodePoint()).to.equal('');
       });
 
-      it('has a length of zero', function() {
-        expect(String.fromCodePoint.length).to.equal(0);
+      it('has a length of one', function() {
+        expect(String.fromCodePoint.length).to.equal(1);
       });
 
       it('works', function() {
