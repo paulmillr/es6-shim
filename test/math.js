@@ -369,6 +369,18 @@ describe('Math', function() {
       expect(Math.imul(1.9, 7)).to.equal(7);
       expect(Math.imul(7, 1.9)).to.equal(7);
     });
+
+    it('should be correct for objects with valueOf', function() {
+     var x = {
+       x: 0,
+       valueOf: function () { return ++this.x; }
+     };
+     expect(Math.imul(x, 1)).to.equal(1);
+     expect(Math.imul(1, x)).to.equal(2);
+     expect(Math.imul(x, 1)).to.equal(3);
+     expect(Math.imul(1, x)).to.equal(4);
+     expect(Math.imul(x, 1)).to.equal(5);
+    });
   });
 
   describe('Math.fround', function() {

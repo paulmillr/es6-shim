@@ -1059,6 +1059,8 @@
 
       imul: function(x, y) {
         // taken from https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/imul
+        x = ES.ToUint32(x);
+        y = ES.ToUint32(y);
         var ah  = (x >>> 16) & 0xffff;
         var al = x & 0xffff;
         var bh  = (y >>> 16) & 0xffff;
