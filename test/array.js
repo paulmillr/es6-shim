@@ -2,6 +2,19 @@ var runArrayTests = function() {
   describe('Array', function() {
     var list = [5, 10, 15, 20];
 
+    describe('@@iterator', function() {
+      it('uses Symbol.iterator if available', function() {
+        var a = [];
+        var iterator;
+        if (typeof Symbol === 'function' && Symbol.iterator) {
+          iterator = Symbol.iterator;
+        } else {
+          iterator = '_es6shim_iterator_';
+        }
+        expect(a[iterator]()).to.eql(a.values());
+      });
+    });
+
     describe('Array.from()', function() {
       it('has a length of 1', function() {
         expect(Array.from.length).to.equal(1);
