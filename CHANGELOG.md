@@ -1,5 +1,16 @@
 # es6-shim x.x.x (not yet released)
 
+# es6-shim 0.14.0 (20 Jul 2014)
+* Properly recognize Symbol.iterator when it is present (#277)
+* Fix Math.clz's improper handling of values that coerce to NaN (#269)
+* Fix incorrect handling of negative end index on Array#fill (#270)
+* Removed Object.getOwnPropertyKeys, which shouldn't be anywhere (#267)
+* Fixed arity of Map and Set constructors, per 2014.04.27 draft spec (rev 24)
+* Added a full additional suite of ES6 promise tests (thanks to @smikes!) (#265)
+* Make Number.isInteger a bit more efficient (#266)
+* Added `npm run test-native` to expose how broken implementations are without the shim ;-)
+* Added additional tests
+
 # es6-shim 0.13.0 (11 Jun 2014)
 * Adapt to new Array.from changes: mapper function is now called with both value and index (#261, #262)
 * More reliably getting the global object in strict mode to fix node-webkit (#258, #259)
