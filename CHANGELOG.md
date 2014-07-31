@@ -1,5 +1,8 @@
 # es6-shim x.x.x (not yet released)
 
+# es6-shim 0.15.0 (31 Jul 2014)
+* Object.assign no longer throws on null or undefined sources, per https://bugs.ecmascript.org/show_bug.cgi?id=3096
+
 # es6-shim 0.14.0 (20 Jul 2014)
 * Properly recognize Symbol.iterator when it is present (#277)
 * Fix Math.clz's improper handling of values that coerce to NaN (#269)
