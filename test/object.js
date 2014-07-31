@@ -107,13 +107,10 @@ describe('Object', function() {
       expect(function () { Object.assign(null); }).to.throw(TypeError);
     });
 
-    it('throws when any source is not an object', function() {
-      var target = {};
-      expect(function () { Object.assign(target, null); }).to.throw(TypeError);
-      expect(function () { Object.assign(target, undefined); }).to.throw(TypeError);
-      expect(function () { Object.assign(target, true); }).to.throw(TypeError);
-      expect(function () { Object.assign(target, { a: 1 }, undefined); }).to.throw(TypeError);
-      expect(target).to.eql({ a: 1}, 'target is partially modified');
+    it('ignores non-object sources', function() {
+      expect(Object.assign({ a: 1 }, null, { b: 2 })).to.eql({ a: 1, b: 2 });
+      expect(Object.assign({ a: 1 }, undefined, { b: 2 })).to.eql({ a: 1, b: 2 });
+      expect(Object.assign({ a: 1 }, { b: 2 }, null)).to.eql({ a: 1, b: 2 });
     });
   });
 

@@ -813,10 +813,7 @@
             throw new TypeError('target must be an object');
           }
           return Array.prototype.reduce.call(arguments, function(target, source) {
-            if (!ES.TypeIsObject(source)) {
-              throw new TypeError('source must be an object');
-            }
-            return Object.keys(source).reduce(function(target, key) {
+            return Object.keys(Object(source)).reduce(function(target, key) {
               target[key] = source[key];
               return target;
             }, target);
