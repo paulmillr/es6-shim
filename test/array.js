@@ -333,7 +333,10 @@ var runArrayTests = function() {
     });
 
     describe('ArrayIterator', function() {
-      var arrayIterator = [1, 2, 3].values();
+      var arrayIterator;
+      beforeEach(function () {
+        arrayIterator = [1, 2, 3].values();
+      });
 
       describe('ArrayIterator#next', function() {
         it('should work when applied to an ArrayIterator', function() {
@@ -355,7 +358,11 @@ var runArrayTests = function() {
       });
 
       var mylist = [5, 10, 15, 20];
-      var keys = mylist.keys();
+      var keys;
+      beforeEach(function () {
+        keys = mylist.keys();
+      });
+
       it('should return 0 on first object', function() {
         expect(keys.next()).to.eql({value: 0, done: false});
       });
@@ -393,7 +400,11 @@ var runArrayTests = function() {
       });
 
       var mylist = [5, 10, 15, 20];
-      var values = mylist.values();
+      var values;
+      beforeEach(function () {
+        values = mylist.values();
+      });
+
       it('should return 5 on first object', function() {
         expect(values.next()).to.eql({value: 5, done: false});
       });
@@ -431,7 +442,11 @@ var runArrayTests = function() {
       });
 
       var mylist = [5, 10, 15, 20];
-      var entries = mylist.entries();
+      var entries;
+      beforeEach(function () {
+        entries = mylist.entries();
+      });
+
       it('should return [0, 5] on first object', function() {
         var val = entries.next();
         expect(val).to.eql({value: [0, 5], done: false});
