@@ -69,6 +69,9 @@ var runArrayTests = function() {
         (function() {
           expect(Array.from(arguments)).to.eql([]);
         })();
+        expect(Array.from([])).to.eql([]);
+        expect(Array.from({})).to.eql([]);
+        expect(Array.from({ a: 1 })).to.eql([]);
       });
 
       it('should work with other constructors', function() {
