@@ -566,12 +566,13 @@
     defineProperties(Array, {
       from: function(iterable) {
         var mapFn = arguments.length > 1 ? arguments[1] : undefined;
-        var thisArg = arguments.length > 2 ? arguments[2] : undefined;
 
         var list = ES.ToObject(iterable, 'bad iterable');
-        if (mapFn !== undefined && !ES.IsCallable(mapFn)) {
+        if (arguments.length > 1 && !ES.IsCallable(mapFn)) {
           throw new TypeError('Array.from: when provided, the second argument must be a function');
         }
+
+        var thisArg = arguments.length > 2 ? arguments[2] : undefined;
 
         var usingIterator = ES.IsIterable(list);
         // does the spec really mean that Arrays should use ArrayIterator?
