@@ -96,7 +96,7 @@ var runArrayTests = function() {
           expect(mapped).to.eql([2, 4, 6]);
         });
 
-        it('passes both the item and the current index to the map function', function() {
+        it('passes both (and only) the item and the current index to the map function', function() {
           var original = [1, 2, 3];
           var expectedItems = [1, 2, 3];
           var expectedIndices = [0, 1, 2];
@@ -106,6 +106,7 @@ var runArrayTests = function() {
           var mapper = function (item, index) {
             actualItems.push(item);
             actualIndices.push(index);
+            expect(arguments.length).to.equal(2);
             return item;
           };
 
@@ -126,6 +127,7 @@ var runArrayTests = function() {
           var mapper = function (item, index) {
             actualItems.push(item);
             actualIndices.push(index);
+            expect(arguments.length).to.equal(2);
             expect(this).to.eql(expectedContext);
             return item;
           };
