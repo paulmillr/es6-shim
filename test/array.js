@@ -53,6 +53,13 @@ var runArrayTests = function() {
         expect(Array.from({ 0: 'a', 1: 'b', length: 2 })).to.eql(['a', 'b']);
       });
 
+      it('swallows negative lengths', function () {
+        expect(Array.from({ length: -1 }).length).to.equal(0);
+        expect(Array.from({ length: -Infinity }).length).to.equal(0);
+        expect(Array.from({ length: -0 }).length).to.equal(0);
+        expect(Array.from({ length: -42 }).length).to.equal(0);
+      });
+
       it('should handle empty iterables correctly', function() {
         (function() {
           expect(Array.from(arguments)).to.eql([]);
