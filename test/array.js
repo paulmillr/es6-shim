@@ -20,6 +20,10 @@ var runArrayTests = function() {
         expect(Array.from.length).to.equal(1);
       });
 
+      it('is not enumerable', function () {
+        expect(Array.propertyIsEnumerable('from')).to.equal(false);
+      });
+
       it('should create correct array from iterable', function() {
         (function() {
           expect(Array.from(arguments)).to.eql([0, 1, 2]);
