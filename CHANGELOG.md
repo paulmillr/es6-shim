@@ -1,5 +1,12 @@
 # es6-shim x.x.x (not yet released)
 
+# es6-shim 0.15.1 (5 Aug 2014)
+* Array.from: now correctly throws if provided `undefined` as a mapper function
+* Array.from: now correctly works if provided a falsy `thisArg`
+* Fix tests so they work properly when Array#(values|keys|entries) are not present
+* Add `npm run lint` to run style checks independently
+* Add `test/native.html` so browsers can be easily checked for shim-less compliance.
+
 # es6-shim 0.15.0 (31 Jul 2014)
 * Object.assign no longer throws on null or undefined sources, per https://bugs.ecmascript.org/show_bug.cgi?id=3096
 
