@@ -144,6 +144,13 @@ var runArrayTests = function() {
             expect(this).to.equal(context);
           }, context);
         });
+
+        it('accepts a primitive thisArg', function () {
+          Array.from([1, 2, 3], function (value, index) {
+            expect(this.valueOf()).to.equal(42);
+            expect(Object.prototype.toString.call(this)).to.equal('[object Number]');
+          }, 42);
+        });
       });
 
       it('throws when provided a nonfunction second arg', function() {
