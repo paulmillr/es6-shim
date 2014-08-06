@@ -360,24 +360,31 @@ var runArrayTests = function() {
       var mylist = [5, 10, 15, 20];
       var keys;
       beforeEach(function () {
-        keys = mylist.keys();
+        if (!keys) {
+          keys = mylist.keys();
+        }
       });
 
       it('should return 0 on first object', function() {
         expect(keys.next()).to.eql({value: 0, done: false});
       });
+
       it('should return 1 on second object', function() {
         expect(keys.next()).to.eql({value: 1, done: false});
       });
+
       it('should return 2 on third object', function() {
         expect(keys.next()).to.eql({value: 2, done: false});
       });
+
       it('should return 3 on fourth object', function() {
         expect(keys.next()).to.eql({value: 3, done: false});
       });
+
       it('should set done on completing iteration', function() {
         expect(keys.next()).to.eql({value: undefined, done: true});
       });
+
       it('once done it should stay done', function() {
         mylist.push(4);
         expect(keys.next()).to.eql({value: undefined, done: true});
@@ -402,24 +409,31 @@ var runArrayTests = function() {
       var mylist = [5, 10, 15, 20];
       var values;
       beforeEach(function () {
-        values = mylist.values();
+        if (!values) {
+          values = mylist.values();
+        }
       });
 
       it('should return 5 on first object', function() {
         expect(values.next()).to.eql({value: 5, done: false});
       });
+
       it('should return 10 on second object', function() {
         expect(values.next()).to.eql({value: 10, done: false});
       });
+
       it('should return 15 on third object', function() {
         expect(values.next()).to.eql({value: 15, done: false});
       });
+
       it('should return 20 on fourth object', function() {
         expect(values.next()).to.eql({value: 20, done: false});
       });
+
       it('should set done on completing iteration', function() {
         expect(values.next()).to.eql({value: undefined, done: true});
       });
+
       it('once done it should stay done', function() {
         mylist.push(4);
         expect(values.next()).to.eql({value: undefined, done: true});
@@ -444,29 +458,36 @@ var runArrayTests = function() {
       var mylist = [5, 10, 15, 20];
       var entries;
       beforeEach(function () {
-        entries = mylist.entries();
+        if (!entries) {
+          entries = mylist.entries();
+        }
       });
 
       it('should return [0, 5] on first object', function() {
         var val = entries.next();
         expect(val).to.eql({value: [0, 5], done: false});
       });
-      it('should return [1, 10] on first object', function() {
+
+      it('should return [1, 10] on second object', function() {
         var val = entries.next();
         expect(val).to.eql({value: [1, 10], done: false});
       });
-      it('should return [2, 15] on first object', function() {
+
+      it('should return [2, 15] on third object', function() {
         var val = entries.next();
         expect(val).to.eql({value: [2, 15], done: false});
       });
-      it('should return [3, 20] on first object', function() {
+
+      it('should return [3, 20] on fourth object', function() {
         var val = entries.next();
         expect(val).to.eql({value: [3, 20], done: false});
       });
+
       it('should set done on completing iteration', function() {
         var val = entries.next();
         expect(val).to.eql({value: undefined, done: true});
       });
+
       it('once done it should stay done', function() {
         mylist.push(4);
         var val = entries.next();
