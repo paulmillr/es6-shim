@@ -20,10 +20,24 @@ var runArrayTests = function() {
         expect(Array.from.length).to.equal(1);
       });
 
+      it('is not enumerable', function () {
+        expect(Array.propertyIsEnumerable('from')).to.equal(false);
+      });
+
+      it('works with primitives', function () {
+        expect(Array.from(false)).to.eql([]);
+        expect(Array.from(true)).to.eql([]);
+        expect(Array.from(-Infinity)).to.eql([]);
+        expect(Array.from(-0)).to.eql([]);
+        expect(Array.from(0)).to.eql([]);
+        expect(Array.from(1)).to.eql([]);
+        expect(Array.from(Infinity)).to.eql([]);
+      });
+
       it('should create correct array from iterable', function() {
-        (function() {
+        (function () {
           expect(Array.from(arguments)).to.eql([0, 1, 2]);
-        })(0, 1, 2);
+        }(0, 1, 2));
 
         expect(Array.from([null, undefined, 0.1248, -0, 0])).to.eql(
           [null, undefined, 0.1248, -0, 0]
@@ -34,10 +48,30 @@ var runArrayTests = function() {
         );
       });
 
+      it('works with arraylike objects', function () {
+        expect(Array.from({ length: 1 })).to.eql([undefined]);
+        expect(Array.from({ 0: 'a', 1: 'b', length: 2 })).to.eql(['a', 'b']);
+      });
+
+      it('swallows negative lengths', function () {
+        expect(Array.from({ length: -1 }).length).to.equal(0);
+        expect(Array.from({ length: -Infinity }).length).to.equal(0);
+        expect(Array.from({ length: -0 }).length).to.equal(0);
+        expect(Array.from({ length: -42 }).length).to.equal(0);
+      });
+
+      it('works with strings', function () {
+        expect(Array.from('')).to.eql([]);
+        expect(Array.from('abc')).to.eql('abc'.split(''));
+      });
+
       it('should handle empty iterables correctly', function() {
         (function() {
           expect(Array.from(arguments)).to.eql([]);
         })();
+        expect(Array.from([])).to.eql([]);
+        expect(Array.from({})).to.eql([]);
+        expect(Array.from({ a: 1 })).to.eql([]);
       });
 
       it('should work with other constructors', function() {
@@ -62,7 +96,7 @@ var runArrayTests = function() {
           expect(mapped).to.eql([2, 4, 6]);
         });
 
-        it('passes both the item and the current index to the map function', function() {
+        it('passes both (and only) the item and the current index to the map function', function() {
           var original = [1, 2, 3];
           var expectedItems = [1, 2, 3];
           var expectedIndices = [0, 1, 2];
@@ -72,6 +106,7 @@ var runArrayTests = function() {
           var mapper = function (item, index) {
             actualItems.push(item);
             actualIndices.push(index);
+            expect(arguments.length).to.equal(2);
             return item;
           };
 
@@ -92,6 +127,7 @@ var runArrayTests = function() {
           var mapper = function (item, index) {
             actualItems.push(item);
             actualIndices.push(index);
+            expect(arguments.length).to.equal(2);
             expect(this).to.eql(expectedContext);
             return item;
           };
@@ -101,9 +137,32 @@ var runArrayTests = function() {
           expect(actualItems).to.eql(expectedItems);
           expect(actualIndices).to.eql(expectedIndices);
         });
+
+        it('accepts an object thisArg', function () {
+          var context = {};
+          Array.from([1, 2, 3], function (value, index) {
+            expect(this).to.equal(context);
+          }, context);
+        });
+
+        it('accepts a primitive thisArg', function () {
+          Array.from([1, 2, 3], function (value, index) {
+            expect(this.valueOf()).to.equal(42);
+            expect(Object.prototype.toString.call(this)).to.equal('[object Number]');
+          }, 42);
+        });
+
+        it('accepts a falsy thisArg', function () {
+          Array.from([1, 2, 3], function (value, index) {
+            expect(this.valueOf()).to.equal(false);
+            expect(Object.prototype.toString.call(this)).to.equal('[object Boolean]');
+          }, false);
+        });
       });
 
       it('throws when provided a nonfunction second arg', function() {
+        expect(function () { Array.from([], undefined); }).to.throw(TypeError);
+        expect(function () { Array.from([], null); }).to.throw(TypeError);
         expect(function () { Array.from([], false); }).to.throw(TypeError);
         expect(function () { Array.from([], true); }).to.throw(TypeError);
         expect(function () { Array.from([], /a/g); }).to.throw(TypeError);
@@ -128,10 +187,6 @@ var runArrayTests = function() {
         expect(function () { Array.from(); }).to.throw(TypeError);
         expect(function () { Array.from(undefined); }).to.throw(TypeError);
         expect(function () { Array.from(null); }).to.throw(TypeError);
-      });
-
-      it('returns [] when given 3', function() {
-        expect(Array.from(3)).to.eql([]);
       });
 
       it('removes holes', function() {
