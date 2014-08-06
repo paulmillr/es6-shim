@@ -137,6 +137,13 @@ var runArrayTests = function() {
           expect(actualItems).to.eql(expectedItems);
           expect(actualIndices).to.eql(expectedIndices);
         });
+
+        it('accepts an object thisArg', function () {
+          var context = {};
+          Array.from([1, 2, 3], function (value, index) {
+            expect(this).to.equal(context);
+          }, context);
+        });
       });
 
       it('throws when provided a nonfunction second arg', function() {
