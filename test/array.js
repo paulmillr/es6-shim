@@ -151,6 +151,13 @@ var runArrayTests = function() {
             expect(Object.prototype.toString.call(this)).to.equal('[object Number]');
           }, 42);
         });
+
+        it('accepts a falsy thisArg', function () {
+          Array.from([1, 2, 3], function (value, index) {
+            expect(this.valueOf()).to.equal(false);
+            expect(Object.prototype.toString.call(this)).to.equal('[object Boolean]');
+          }, false);
+        });
       });
 
       it('throws when provided a nonfunction second arg', function() {

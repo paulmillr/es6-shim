@@ -572,7 +572,8 @@
           throw new TypeError('Array.from: when provided, the second argument must be a function');
         }
 
-        var thisArg = arguments.length > 2 ? arguments[2] : undefined;
+        var hasThisArg = arguments.length > 2;
+        var thisArg = hasThisArg ? arguments[2] : undefined;
 
         var usingIterator = ES.IsIterable(list);
         // does the spec really mean that Arrays should use ArrayIterator?
@@ -595,7 +596,7 @@
             value = list[i];
           }
           if (mapFn) {
-            result[i] = thisArg ? mapFn.call(thisArg, value, i) : mapFn(value, i);
+            result[i] = hasThisArg ? mapFn.call(thisArg, value, i) : mapFn(value, i);
           } else {
             result[i] = value;
           }
