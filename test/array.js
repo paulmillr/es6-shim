@@ -60,6 +60,11 @@ var runArrayTests = function() {
         expect(Array.from({ length: -42 }).length).to.equal(0);
       });
 
+      it('works with strings', function () {
+        expect(Array.from('')).to.eql([]);
+        expect(Array.from('abc')).to.eql('abc'.split(''));
+      });
+
       it('should handle empty iterables correctly', function() {
         (function() {
           expect(Array.from(arguments)).to.eql([]);
