@@ -24,6 +24,16 @@ var runArrayTests = function() {
         expect(Array.propertyIsEnumerable('from')).to.equal(false);
       });
 
+      it('works with primitives', function () {
+        expect(Array.from(false)).to.eql([]);
+        expect(Array.from(true)).to.eql([]);
+        expect(Array.from(-Infinity)).to.eql([]);
+        expect(Array.from(-0)).to.eql([]);
+        expect(Array.from(0)).to.eql([]);
+        expect(Array.from(1)).to.eql([]);
+        expect(Array.from(Infinity)).to.eql([]);
+      });
+
       it('should create correct array from iterable', function() {
         (function() {
           expect(Array.from(arguments)).to.eql([0, 1, 2]);
