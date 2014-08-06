@@ -180,10 +180,6 @@ var runArrayTests = function() {
         expect(function () { Array.from(null); }).to.throw(TypeError);
       });
 
-      it('returns [] when given 3', function() {
-        expect(Array.from(3)).to.eql([]);
-      });
-
       it('removes holes', function() {
         var input = [0, , 2];
         var result = Array.from([0, , 2]);
