@@ -22,7 +22,8 @@
   },
   "main": "es6-shim",
   "scripts": {
-    "test": "jshint es6-shim.js && mocha test/*.js test/*/*.js",
+    "lint": "jshint es6-shim.js",
+    "test": "npm run lint && mocha test/*.js test/*/*.js",
     "test-native": "jshint es6-shim.js && NO_ES6_SHIM=1 mocha test/*.js test/*/*.js",
     "minify": "uglifyjs es6-shim.js --comments --source-map=es6-shim.map -m -b ascii_only=true,beautify=false > es6-shim.min.js"
   },
