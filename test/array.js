@@ -48,6 +48,11 @@ var runArrayTests = function() {
         );
       });
 
+      it('works with arraylike objects', function () {
+        expect(Array.from({ length: 1 })).to.eql([undefined]);
+        expect(Array.from({ 0: 'a', 1: 'b', length: 2 })).to.eql(['a', 'b']);
+      });
+
       it('should handle empty iterables correctly', function() {
         (function() {
           expect(Array.from(arguments)).to.eql([]);
