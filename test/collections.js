@@ -547,10 +547,9 @@ describe('Collections', function() {
     });
 
     describe('has an iterator that works with Array.from', function() {
+      var set;
       beforeEach(function() {
-        set.add(1);
-        set.add(NaN);
-        set.add(false);
+        set = new Set([1, NaN, false]);
       });
 
       it('works with the full set', function() {

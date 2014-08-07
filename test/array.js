@@ -196,6 +196,10 @@ var runArrayTests = function() {
         expect(1 in result).to.be.true;
         expect(result).to.eql([0, undefined, 2]);
       });
+
+      it('works with this flaky example', function () {
+        expect(Array.from([1, NaN, false])).to.eql([1, NaN, false]);
+      });
     });
 
     describe('Array.of()', function() {
