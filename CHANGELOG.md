@@ -1,5 +1,8 @@
 # es6-shim x.x.x (not yet released)
 
+# es6-shim 0.16.0 (6 Aug 2014)
+* Array#find and Array#findIndex: no longer skips holes in sparse arrays, per https://bugs.ecmascript.org/show_bug.cgi?id=3107
+
 # es6-shim 0.15.1 (5 Aug 2014)
 * Array.from: now correctly throws if provided `undefined` as a mapper function
 * Array.from: now correctly works if provided a falsy `thisArg`
