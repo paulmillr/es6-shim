@@ -295,14 +295,15 @@ var runArrayTests = function() {
       });
 
       it('should work with a sparse array', function() {
-        var obj = [1,,undefined];
+        var obj = [1, , undefined];
+        expect(1 in obj).to.equal(false);
         var seen = [];
-        var found = Array.prototype.find.call(obj, function(item, idx) {
+        var found = obj.find(function(item, idx) {
           seen.push([idx, item]);
           return false;
         });
         expect(found).to.equal(undefined);
-        expect(seen).to.eql([[0,1],[2,undefined]]);
+        expect(seen).to.eql([[0, 1], [1, undefined], [2, undefined]]);
       });
 
       it('should work with a sparse array-like object', function() {
@@ -313,7 +314,7 @@ var runArrayTests = function() {
           return false;
         });
         expect(found).to.equal(undefined);
-        expect(seen).to.eql([[0,1],[2,undefined]]);
+        expect(seen).to.eql([[0, 1], [1, undefined], [2, undefined]]);
       });
     });
 
@@ -365,14 +366,15 @@ var runArrayTests = function() {
       });
 
       it('should work with a sparse array', function() {
-        var obj = [1,,undefined];
+        var obj = [1, , undefined];
+        expect(1 in obj).to.equal(false);
         var seen = [];
-        var foundIndex = Array.prototype.findIndex.call(obj, function(item, idx) {
+        var foundIndex = obj.findIndex(function(item, idx) {
           seen.push([idx, item]);
-          return item === undefined;
+          return item === undefined && idx === 2;
         });
         expect(foundIndex).to.equal(2);
-        expect(seen).to.eql([[0,1],[2,undefined]]);
+        expect(seen).to.eql([[0, 1], [1, undefined], [2, undefined]]);
       });
 
       it('should work with a sparse array-like object', function() {
@@ -383,7 +385,7 @@ var runArrayTests = function() {
           return false;
         });
         expect(foundIndex).to.equal(-1);
-        expect(seen).to.eql([[0,1],[2,undefined]]);
+        expect(seen).to.eql([[0, 1], [1, undefined], [2, undefined]]);
       });
     });
 

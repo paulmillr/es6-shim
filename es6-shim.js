@@ -703,10 +703,8 @@
         }
         var thisArg = arguments[1];
         for (var i = 0, value; i < length; i++) {
-          if (i in list) {
-            value = list[i];
-            if (predicate.call(thisArg, value, i, list)) return value;
-          }
+          value = list[i];
+          if (predicate.call(thisArg, value, i, list)) { return value; }
         }
         return undefined;
       },
@@ -719,9 +717,7 @@
         }
         var thisArg = arguments[1];
         for (var i = 0; i < length; i++) {
-          if (i in list) {
-            if (predicate.call(thisArg, list[i], i, list)) return i;
-          }
+          if (predicate.call(thisArg, list[i], i, list)) { return i; }
         }
         return -1;
       },
