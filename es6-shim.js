@@ -223,8 +223,8 @@
         return it;
       },
 
-      IteratorNext: function(it) {
-        var result = (arguments.length > 1) ? it.next(arguments[1]) : it.next();
+      IteratorNext: function (it) {
+        var result = arguments.length > 1 ? it.next(arguments[1]) : it.next();
         if (!ES.TypeIsObject(result)) {
           throw new TypeError('bad iterator');
         }
@@ -579,26 +579,38 @@
         // does the spec really mean that Arrays should use ArrayIterator?
         // https://bugs.ecmascript.org/show_bug.cgi?id=2416
         //if (Array.isArray(list)) { usingIterator=false; }
-        var length = usingIterator ? 0 : ES.ToLength(list.length);
-        var result = ES.IsCallable(this) ? Object(usingIterator ? new this() : new this(length)) : new Array(length);
-        var it = usingIterator ? ES.GetIterator(list) : null;
-        var value;
 
-        for (var i = 0; usingIterator || (i < length); i++) {
-          if (usingIterator) {
-            value = ES.IteratorNext(it);
-            if (value.done) {
-              length = i;
-              break;
+        var length;
+        var result, i, value;
+        if (usingIterator) {
+          i = 0;
+          result = ES.IsCallable(this) ? Object(new this()) : [];
+          var it = usingIterator ? ES.GetIterator(list) : null;
+          var iterationValue;
+
+          do {
+            iterationValue = ES.IteratorNext(it);
+            if (!iterationValue.done) {
+              value = iterationValue.value;
+              if (mapFn) {
+                result[i] = hasThisArg ? mapFn.call(thisArg, value, i) : mapFn(value, i);
+              } else {
+                result[i] = value;
+              }
+              i += 1;
             }
-            value = value.value;
-          } else {
+          } while (!iterationValue.done);
+          length = i;
+        } else {
+          length = ES.ToLength(list.length);
+          result = ES.IsCallable(this) ? Object(new this(length)) : new Array(length);
+          for (i = 0; i < length; ++i) {
             value = list[i];
-          }
-          if (mapFn) {
-            result[i] = hasThisArg ? mapFn.call(thisArg, value, i) : mapFn(value, i);
-          } else {
-            result[i] = value;
+            if (mapFn) {
+              result[i] = hasThisArg ? mapFn.call(thisArg, value, i) : mapFn(value, i);
+            } else {
+              result[i] = value;
+            }
           }
         }
 
