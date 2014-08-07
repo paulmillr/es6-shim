@@ -622,10 +622,10 @@
     defineProperties(ArrayIterator.prototype, {
       next: function() {
         var i = this.i, array = this.array;
-        if (i === undefined || this.kind === undefined) {
+        if (!(this instanceof ArrayIterator)) {
           throw new TypeError('Not an ArrayIterator');
         }
-        if (array!==undefined) {
+        if (array !== undefined) {
           var len = ES.ToLength(array.length);
           for (; i < len; i++) {
             var kind = this.kind;
