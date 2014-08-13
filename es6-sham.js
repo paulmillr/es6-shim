@@ -26,30 +26,29 @@
     if (!Object.setPrototypeOf) (function () {
       /*jshint proto: true */
       // @author    Andrea Giammarchi - @WebReflection
-      var
         // define into target descriptors from source
-        copyDescriptors = function (target, source) {
-          getOwnPropertyNames(source).forEach(function (key) {
-            defineProperty(
-              target,
-              key,
-              getOwnPropertyDescriptor(source, key)
-            );
-          });
-          return target;
-        },
-        // used as fallback when no promotion is possible
-        createAndCopy = function (origin, proto) {
-          return copyDescriptors(create(proto), origin);
-        },
-        create = Object.create,
-        defineProperty = Object.defineProperty,
-        getPrototypeOf = Object.getPrototypeOf,
-        getOwnPropertyNames = Object.getOwnPropertyNames,
-        getOwnPropertyDescriptor = Object.getOwnPropertyDescriptor,
-        proto = Object.prototype,
-        set, setPrototypeOf
-      ;
+      var copyDescriptors = function (target, source) {
+        getOwnPropertyNames(source).forEach(function (key) {
+          defineProperty(
+            target,
+            key,
+            getOwnPropertyDescriptor(source, key)
+          );
+        });
+        return target;
+      };
+      // used as fallback when no promotion is possible
+      var createAndCopy = function (origin, proto) {
+        return copyDescriptors(create(proto), origin);
+      };
+      var create = Object.create;
+      var defineProperty = Object.defineProperty;
+      var getPrototypeOf = Object.getPrototypeOf;
+      var getOwnPropertyNames = Object.getOwnPropertyNames;
+      var getOwnPropertyDescriptor = Object.getOwnPropertyDescriptor;
+      var proto = Object.prototype;
+      var set, setPrototypeOf;
+
       try {
         // this might fail for various reasons
         // ignore if Chrome cought it at runtime
