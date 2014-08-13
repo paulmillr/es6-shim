@@ -29,7 +29,9 @@
     "test-shim": "npm run lint-shim && mocha test/*.js test/*/*.js",
     "test-sham": "npm run lint-sham && mocha test-sham/*.js",
     "test-native": "jshint es6-shim.js && NO_ES6_SHIM=1 mocha test/*.js test/*/*.js",
-    "minify": "uglifyjs es6-shim.js --comments --source-map=es6-shim.map -m -b ascii_only=true,beautify=false > es6-shim.min.js"
+    "minify": "npm run minify-shim && npm run minify-sham",
+    "minify-shim": "uglifyjs es6-shim.js --comments --source-map=es6-shim.map -m -b ascii_only=true,beautify=false > es6-shim.min.js",
+    "minify-sham": "uglifyjs es6-sham.js --comments --source-map=es6-sham.map -m -b ascii_only=true,beautify=false > es6-sham.min.js"
   },
   "testling": {
     "html": "testling.html",
