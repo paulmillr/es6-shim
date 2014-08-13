@@ -3,14 +3,14 @@
 // For more details and documentation:
 // https://github.com/paulmillr/es6-shim/
 
-(function(undefined) {
+(function (undefined) {
   'use strict';
 
   /*jshint evil: true */
   var getGlobal = new Function('return this;');
   /*jshint evil: false */
 
-  var main = function() {
+  var main = function () {
     var globals = getGlobal();
     var Object = globals.Object;
 
@@ -60,7 +60,7 @@
           set.call(origin, proto);
           return origin;
         };
-      } catch(e) {
+      } catch (e) {
         // do one or more feature detections
         set = {__proto__: null};
         // if proto does not work, needs to fallback
