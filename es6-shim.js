@@ -517,8 +517,8 @@
         '\u2004\u2005\u2006\u2007\u2008\u2009\u200A\u202F\u205F\u3000\u2028',
         '\u2029\uFEFF'
       ].join('');
-      var trimBeginRegexp = new RegExp('^[' + ws + '][' + ws + ']*');
-      var trimEndRegexp = new RegExp('[' + ws + '][' + ws + ']*$');
+      var trimBeginRegexp = new RegExp('^[' + ws + ']+');
+      var trimEndRegexp = new RegExp('[' + ws + ']+$');
       defineProperties(String.prototype, {
         trim: function() {
           if (this === undefined || this === null) {
