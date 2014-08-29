@@ -53,7 +53,7 @@
   "dependencies": {},
   "devDependencies": {
     "chai": "~1.9.1",
-    "es5-shim": "~4.0.1",
+    "es5-shim": "~4.0.3",
     "jshint": "~2.5.0",
     "mocha": "~1.21.0",
     "promises-aplus-tests": "~2.0.4",
