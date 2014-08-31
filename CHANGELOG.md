@@ -1,5 +1,11 @@
 # es6-shim x.x.x (not yet released)
 
+# es6-shim 0.17.0 (31 Aug 2014)
+* Added es6-sham (#281)
+* Fixing some flaky tests (#268)
+* Tweaking how ArrayIterator is checked in its "next" function
+* Cleaning up some of the logic in Array.from
+
 # es6-shim 0.16.0 (6 Aug 2014)
 * Array#find and Array#findIndex: no longer skips holes in sparse arrays, per https://bugs.ecmascript.org/show_bug.cgi?id=3107
 
