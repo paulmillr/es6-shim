@@ -448,6 +448,13 @@
       }
     });
 
+    // Firefox 31 reports this function's length as 0
+    // https://bugzilla.mozilla.org/show_bug.cgi?id=1062484
+    if (String.fromCodePoint.length !== 1) {
+      var originalFromCodePoint = String.fromCodePoint;
+      defineProperty(String, 'fromCodePoint', function (_) { return originalFromCodePoint.apply(this, arguments); }, true);
+    }
+
     var StringShims = {
       // Fast repeat, uses the `Exponentiation by squaring` algorithm.
       // Perf: http://jsperf.com/string-repeat2/2
