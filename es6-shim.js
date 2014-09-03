@@ -749,6 +749,21 @@
     };
     defineProperties(Array.prototype, arrayPrototypeShims);
 
+    var handlesSparseArrays = function (method) {
+      var count = 0;
+      method.call([1, ,], function (item) { count += 1; });
+      return count === 2;
+    };
+
+    // Firefox >= 25 (up to 31 at least) does not handle sparse arrays properly
+    // for Array#find and Array#findIndex
+    if (!handlesSparseArrays(Array.prototype.find)) {
+      defineProperty(Array.prototype, 'find', arrayPrototypeShims.find, true);
+    }
+    if (!handlesSparseArrays(Array.prototype.findIndex)) {
+      defineProperty(Array.prototype, 'findIndex', arrayPrototypeShims.findIndex, true);
+    }
+
     addIterator(Array.prototype, function() { return this.values(); });
     // Chrome defines keys/values/entries on Array, but doesn't give us
     // any way to identify its iterator.  So add our own shimmed field.
