@@ -6,6 +6,8 @@ closely as possible to ECMAScript 6 (Harmony).
 
 [![browser support](https://ci.testling.com/paulmillr/es6-shim.png)](https://ci.testling.com/paulmillr/es6-shim)
 
+[![Sauce Test Status](https://saucelabs.com/browser-matrix/es6-shim.svg)](https://saucelabs.com/u/es6-shim)
+
 ## Installation
 If you want to use it in browser:
 

@@ -8,6 +8,12 @@ node_js:
   - "0.4"
 before_install:
   - '[ "${TRAVIS_NODE_VERSION}" == "0.6" ] || npm install -g npm@~1.4.6'
+  - npm install -g grunt-cli
+script:
+  - npm test
+  - '[ "${TRAVIS_NODE_VERSION}" != "0.10" ] || npm run sauce'
+addons:
+  sauce_connect: true
 matrix:
   fast_finish: true
   allow_failures:
@@ -15,4 +21,8 @@ matrix:
     - node_js: "0.9"
     - node_js: "0.6"
     - node_js: "0.4"
-
+env:
+  global:
+    - secure: YD4HLTE93NhSxa+64MYHhnbJ2ZkREp/HGiFGE4q+AWShqAiehtqE/K3hQUe7p0+1/2/34avhm2bz31j508ayCobm6SSUhpleJH58IK3v4LI2o9qtM+2N/MPJFOIvbziHqOM6fPluowU0k3OSdEAp4U+6S23wKSuXzcUSK8upAiM=
+    - secure: k7+PgLcGJL1zyMMxZ8DSRxRrmLr5sb9i4M1kCdUvw2kRGacqoI3UhdvO2AyrAD0TAjIQoRM4dL37WsgJijhTNOu1gTb5lMUXWSQU47T7tFTvpM6OlGvQ54I7iAgv5NABZ/0gDGlQDrVdb9hQPLG1FDrMxsxcdXfgXqzqbhNsv7I=
+    - SAUCE_HAS_TUNNEL=true
