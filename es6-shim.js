@@ -704,7 +704,7 @@
         return O;
       },
 
-      find: function(predicate) {
+      find: function find(predicate) {
         var list = ES.ToObject(this);
         var length = ES.ToLength(list.length);
         if (!ES.IsCallable(predicate)) {
@@ -718,7 +718,7 @@
         return undefined;
       },
 
-      findIndex: function(predicate) {
+      findIndex: function findIndex(predicate) {
         var list = ES.ToObject(this);
         var length = ES.ToLength(list.length);
         if (!ES.IsCallable(predicate)) {
