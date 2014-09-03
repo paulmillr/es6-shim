@@ -186,7 +186,7 @@
         var number = +value;
         if (Number.isNaN(number)) return 0;
         if (number === 0 || !Number.isFinite(number)) return number;
-        return Math.sign(number) * Math.floor(Math.abs(number));
+        return (number > 0 ? 1 : -1) * Math.floor(Math.abs(number));
       },
 
       ToLength: function(value) {
