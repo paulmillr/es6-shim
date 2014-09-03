@@ -1,16 +1,27 @@
 var runArrayTests = function() {
+  var getIteratorPropertyName = function() {
+    var iterator;
+    if (typeof Symbol === 'function' && Symbol.iterator) {
+      iterator = Symbol.iterator;
+    } else {
+      iterator = '_es6shim_iterator_';
+    }
+    // Firefox ships a partial implementation using the name @@iterator.
+    // https://bugzilla.mozilla.org/show_bug.cgi?id=907077#c14
+    // So use that name if we detect it.
+    if (Set && typeof new Set()['@@iterator'] === 'function') {
+      iterator = '@@iterator';
+    }
+    return iterator;
+  };
+
   describe('Array', function() {
     var list = [5, 10, 15, 20];
 
     describe('@@iterator', function() {
       it('uses Symbol.iterator if available', function() {
         var a = [];
-        var iterator;
-        if (typeof Symbol === 'function' && Symbol.iterator) {
-          iterator = Symbol.iterator;
-        } else {
-          iterator = '_es6shim_iterator_';
-        }
+        var iterator = getIteratorPropertyName();
         expect(a[iterator]()).to.eql(a.values());
       });
     });
