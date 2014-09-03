@@ -517,17 +517,14 @@
         '\u2004\u2005\u2006\u2007\u2008\u2009\u200A\u202F\u205F\u3000\u2028',
         '\u2029\uFEFF'
       ].join('');
-      var trimBeginRegexp = new RegExp('^[' + ws + '][' + ws + ']*');
-      var trimEndRegexp = new RegExp('[' + ws + '][' + ws + ']*$');
+      var trimRegexp = new RegExp('(^[' + ws + ']+|[' + ws + ']+)$');
       defineProperties(String.prototype, {
         trim: function() {
           if (this === undefined || this === null) {
             throw new TypeError("can't convert " + this + " to object");
           }
-          return String(this)
-            .replace(trimBeginRegexp, "")
-            .replace(trimEndRegexp, "");
-          }
+          return String(this).replace(trimRegexp, "");
+        }
       });
     }
 
