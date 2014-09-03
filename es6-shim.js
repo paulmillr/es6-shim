@@ -116,6 +116,11 @@
       var o = {};
       o[$iterator$] = impl;
       defineProperties(prototype, o);
+      /* jshint notypeof: true */
+      if (!prototype[$iterator$] && typeof($iterator$)==='symbol') {
+        // implementations are buggy when $iterator$ is a Symbol
+        prototype[$iterator$] = impl;
+      }
     };
 
     // taken directly from https://github.com/ljharb/is-arguments/blob/master/index.js
@@ -667,7 +672,7 @@
     });
     addIterator(ArrayIterator.prototype);
 
-    var arrayPrototypeShims = {
+    var ArrayPrototypeShims = {
       copyWithin: function(target, start) {
         var end = arguments[2]; // copyWithin.length must be 2
         var o = ES.ToObject(this);
@@ -754,23 +759,7 @@
         return new ArrayIterator(this, "entry");
       }
     };
-    defineProperties(Array.prototype, arrayPrototypeShims);
-
-    var handlesSparseArrays = function (method) {
-      var count = 0;
-      method.call([1, ,], function (item) { count += 1; });
-      return count === 2;
-    };
-
-    // Firefox >= 25 (up to 31 at least) does not handle sparse arrays properly
-    // for Array#find and Array#findIndex
-    if (!handlesSparseArrays(Array.prototype.find)) {
-      defineProperty(Array.prototype, 'find', arrayPrototypeShims.find, true);
-    }
-    if (!handlesSparseArrays(Array.prototype.findIndex)) {
-      defineProperty(Array.prototype, 'findIndex', arrayPrototypeShims.findIndex, true);
-    }
-
+    defineProperties(Array.prototype, ArrayPrototypeShims);
     addIterator(Array.prototype, function() { return this.values(); });
     // Chrome defines keys/values/entries on Array, but doesn't give us
     // any way to identify its iterator.  So add our own shimmed field.
@@ -810,6 +799,17 @@
       }
 
     });
+
+    // Work around bugs in Array#find and Array#findIndex -- early
+    // implementations skipped holes in sparse arrays. (Note that the
+    // implementations of find/findIndex indirectly use shimmed
+    // methods of Number, so this test has to happen down here.)
+    if (![,1].find(function(item,idx) { return idx===0; })) {
+      defineProperty(Array.prototype, 'find', ArrayPrototypeShims.find, true);
+    }
+    if ([,1].findIndex(function(item,idx) { return idx===0; }) !== 0) {
+      defineProperty(Array.prototype, 'findIndex', ArrayPrototypeShims.findIndex, true);
+    }
 
     if (supportsDescriptors) {
       defineProperties(Object, {
