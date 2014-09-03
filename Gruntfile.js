@@ -2,30 +2,33 @@ module.exports = function(grunt) {
   var browsers = [
     { browserName: "firefox", version: "19", platform: "XP" },
     { browserName: "firefox", platform: "linux" },
-    { browserName: "firefox", platform: "linux", version: "30" },
-    { browserName: "firefox", platform: "linux", version: "25" },
-    { browserName: "firefox", platform: "OS X 10.9" },
-    { browserName: "chrome", platform: "XP" },
     { browserName: "chrome", platform: "linux" },
-    { browserName: "chrome", platform: "OS X 10.9" },
     { browserName: "internet explorer", platform: "Windows 8.1", version: "11" },
     { browserName: "internet explorer", platform: "WIN8", version: "10" },
-    // XXX failing due to strict mode assumptions in `promises-es6-tests`
-    //{ browserName: "internet explorer", platform: "VISTA", version: "9" },
+    { browserName: "internet explorer", platform: "VISTA", version: "9" },
     { browserName: 'safari', platform: 'OS X 10.6' },
     { browserName: 'safari', platform: 'OS X 10.8' },
     { browserName: 'safari', platform: 'OS X 10.9' },
     { browserName: 'iphone', platform: 'OS X 10.9', version: '7.1' },
-    { browserName: 'iphone', platform: 'OS X 10.8', version: '6.1' },
-    // XXX failing due to strict mode assumptions in `promises-es6-tests`
-    //{ browserName: 'iphone', platform: 'OS X 10.8', version: '5.1' },
     { browserName: 'android', platform: 'Linux', version: '4.4' },
+  ];
+  var extraBrowsers = [
+    { browserName: "firefox", platform: "linux", version: "30" },
+    { browserName: "firefox", platform: "linux", version: "25" },
+    { browserName: "firefox", platform: "OS X 10.9" },
+    { browserName: "chrome", platform: "XP" },
+    { browserName: "chrome", platform: "OS X 10.9" },
+    { browserName: 'iphone', platform: 'OS X 10.8', version: '6.1' },
+    { browserName: 'iphone', platform: 'OS X 10.8', version: '5.1' },
     { browserName: 'android', platform: 'Linux', version: '4.2' },
     // XXX haven't investigated these:
     //{ browserName: "opera", platform: "Windows 2008", version: "12" }
     //{ browserName: 'iphone', platform: 'OS X 10.6', version: '4.3' },
     //{ browserName: 'android', platform: 'Linux', version: '4.0' },
   ];
+  if (grunt.option('extra')) {
+      browsers = browsers.concat(extraBrowsers);
+  }
   grunt.initConfig({
     connect: {
       server: {
@@ -39,18 +42,21 @@ module.exports = function(grunt) {
     'saucelabs-mocha': {
       all: {
         options: {
-          urls: [
-            "http://localhost:9999/test/",
-            "http://localhost:9999/test-sham/"
-          ],
-          tunnelTimeout: 5,
+          urls: (function() {
+	    var urls = ["http://localhost:9999/test/"];
+	    if (grunt.option('extra')) {
+	      urls.push("http://localhost:9999/test-sham/");
+	    }
+	    return urls;
+	  })(),
+          //tunnelTimeout: 5,
           build: process.env.TRAVIS_BUILD_NUMBER,
           tunneled: !process.env.SAUCE_HAS_TUNNEL,
           identifier: process.env.TRAVIS_JOB_NUMBER,
           sauceConfig: {
             'tunnel-identifier': process.env.TRAVIS_JOB_NUMBER
           },
-          concurrency: 3,
+          //concurrency: 3,
           browsers: browsers,
           testname: (function() {
             var testname = "mocha";

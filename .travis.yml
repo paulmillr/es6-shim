@@ -1,7 +1,6 @@
 language: node_js
 node_js:
   - "0.11"
-  - "0.10"
   - "0.9"
   - "0.8"
   - "0.6"
@@ -10,17 +9,23 @@ before_install:
   - '[ "${TRAVIS_NODE_VERSION}" == "0.6" ] || npm install -g npm@~1.4.6'
   - npm install -g grunt-cli
 script:
-  - npm test
-  - '[ "${TRAVIS_NODE_VERSION}" != "0.10" ] || npm run sauce'
+  - 'if [ "${TRAVIS_RUN_SAUCE}" == "true" ]; then npm run sauce ; else npm test ; fi'
 addons:
   sauce_connect: true
 matrix:
   fast_finish: true
+  include:
+    - node_js: "0.10"
+      env: TRAVIS_RUN_SAUCE=true
+    - node_js: "0.10"
+      env: TRAVIS_RUN_SAUCE=false
   allow_failures:
     - node_js: "0.11"
     - node_js: "0.9"
     - node_js: "0.6"
     - node_js: "0.4"
+    - node_js: "0.10"
+      env: TRAVIS_RUN_SAUCE=true
 env:
   global:
     - secure: YD4HLTE93NhSxa+64MYHhnbJ2ZkREp/HGiFGE4q+AWShqAiehtqE/K3hQUe7p0+1/2/34avhm2bz31j508ayCobm6SSUhpleJH58IK3v4LI2o9qtM+2N/MPJFOIvbziHqOM6fPluowU0k3OSdEAp4U+6S23wKSuXzcUSK8upAiM=
