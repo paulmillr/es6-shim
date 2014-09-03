@@ -57,7 +57,7 @@
     "jshint": "~2.5.5",
     "mocha": "~1.21.4",
     "promises-aplus-tests": "~2.0.5",
-    "promises-es6-tests": "~0.3.2",
+    "promises-es6-tests": "~0.5.0",
     "uglify-js": "~2.4.15"
   }
 }
