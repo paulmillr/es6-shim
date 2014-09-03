@@ -656,7 +656,7 @@
     });
     addIterator(ArrayIterator.prototype);
 
-    defineProperties(Array.prototype, {
+    var arrayPrototypeShims = {
       copyWithin: function(target, start) {
         var end = arguments[2]; // copyWithin.length must be 2
         var o = ES.ToObject(this);
@@ -742,7 +742,9 @@
       entries: function() {
         return new ArrayIterator(this, "entry");
       }
-    });
+    };
+    defineProperties(Array.prototype, arrayPrototypeShims);
+
     addIterator(Array.prototype, function() { return this.values(); });
     // Chrome defines keys/values/entries on Array, but doesn't give us
     // any way to identify its iterator.  So add our own shimmed field.
