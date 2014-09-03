@@ -63,22 +63,26 @@
     var _hasOwnProperty = Object.prototype.hasOwnProperty;
     var ArrayIterator; // make our implementation private
 
+    var defineProperty = function(object, name, value, force) {
+      if (!force && name in object) return;
+      if (supportsDescriptors) {
+        Object.defineProperty(object, name, {
+          configurable: true,
+          enumerable: false,
+          writable: true,
+          value: value
+        });
+      } else {
+        object[name] = value;
+      }
+    };
+
     // Define configurable, writable and non-enumerable props
     // if they don’t exist.
     var defineProperties = function(object, map) {
       Object.keys(map).forEach(function(name) {
         var method = map[name];
-        if (name in object) return;
-        if (supportsDescriptors) {
-          Object.defineProperty(object, name, {
-            configurable: true,
-            enumerable: false,
-            writable: true,
-            value: method
-          });
-        } else {
-          object[name] = method;
-        }
+        defineProperty(object, name, method, false);
       });
     };
 
