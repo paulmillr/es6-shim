@@ -444,6 +444,12 @@ var runStringTests = function() {
         expect(trimmed.length).to.equal(1);
         expect(trimmed).to.equal('\u0085');
       });
+
+      it('should trim on both sides', function() {
+        var trimmed = " a ".trim();
+        expect(trimmed.length).to.equal(1);
+        expect(trimmed).to.equal('a');
+      });
     });
   });
 };
