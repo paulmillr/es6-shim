@@ -804,10 +804,10 @@
     // implementations skipped holes in sparse arrays. (Note that the
     // implementations of find/findIndex indirectly use shimmed
     // methods of Number, so this test has to happen down here.)
-    if (![,1].find(function(item,idx) { return idx===0; })) {
+    if (![, 1].find(function(item, idx) { return idx === 0; })) {
       defineProperty(Array.prototype, 'find', ArrayPrototypeShims.find, true);
     }
-    if ([,1].findIndex(function(item,idx) { return idx===0; }) !== 0) {
+    if ([, 1].findIndex(function(item, idx) { return idx === 0; }) !== 0) {
       defineProperty(Array.prototype, 'findIndex', ArrayPrototypeShims.findIndex, true);
     }
 
