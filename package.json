@@ -16,6 +16,7 @@
     "__proto__"
   ],
   "homepage": "https://github.com/paulmillr/es6-shim/",
+  "license": "MIT",
   "repository": {
     "type": "git",
     "url": "git://github.com/paulmillr/es6-shim.git"
