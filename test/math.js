@@ -149,7 +149,8 @@ describe('Math', function() {
 
     it('should be correct', function() {
       // Overridden precision values here are for Chrome, as of v25.0.1364.172
-      expect(Math.cosh(12)).to.almostEqual(81377.39571257407, 3e-11);
+      // Broadened slightly for Firefox 31
+      expect(Math.cosh(12)).to.almostEqual(81377.39571257407, 9e-11);
       expect(Math.cosh(22)).to.almostEqual(1792456423.065795780980053377, 1e-5);
       expect(Math.cosh(-10)).to.almostEqual(11013.23292010332313972137);
       expect(Math.cosh(-23)).to.almostEqual(4872401723.1244513000, 1e-5);
