@@ -66,7 +66,7 @@ describe('Collections', function() {
       ['get', 'set', 'has', 'delete'].forEach(function(method) {
         expect(function() {
           map[method]({});
-        }).to.not.throw();
+        }).to.not['throw']();
       });
     });
 
@@ -80,7 +80,7 @@ describe('Collections', function() {
     });
 
     it('should not be callable without "new"', function() {
-      expect(Map).to.throw(TypeError);
+      expect(Map).to['throw'](TypeError);
     });
 
     it('should be subclassable', function() {
@@ -195,8 +195,8 @@ describe('Collections', function() {
 
     it('Map.prototype.size should throw TypeError', function() {
       // see https://github.com/paulmillr/es6-shim/issues/176
-      expect(function() { Map.prototype.size }).to.throw(TypeError);
-      expect(function() { Map.prototype.size }).to.throw(TypeError);
+      expect(function() { Map.prototype.size }).to['throw'](TypeError);
+      expect(function() { Map.prototype.size }).to['throw'](TypeError);
     });
 
     it('should have keys, values and size props', function() {
@@ -446,7 +446,7 @@ describe('Collections', function() {
     });
 
     it('should not be callable without "new"', function() {
-      expect(Set).to.throw(TypeError);
+      expect(Set).to['throw'](TypeError);
     });
 
     it('should be subclassable', function() {
@@ -466,7 +466,7 @@ describe('Collections', function() {
       ['add', 'has', 'delete'].forEach(function(method) {
         expect(function() {
           set[method]({});
-        }).to.not.throw();
+        }).to.not['throw']();
       });
     });
 
@@ -729,8 +729,8 @@ describe('Collections', function() {
 
     it('Set.prototype.size should throw TypeError', function() {
       // see https://github.com/paulmillr/es6-shim/issues/176
-      expect(function() { Set.prototype.size }).to.throw(TypeError);
-      expect(function() { Set.prototype.size }).to.throw(TypeError);
+      expect(function() { Set.prototype.size }).to['throw'](TypeError);
+      expect(function() { Set.prototype.size }).to['throw'](TypeError);
     });
 
     it.skip('should throw proper errors when user invokes methods with wrong types of receiver', function() {

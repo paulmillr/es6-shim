@@ -165,14 +165,14 @@ var runArrayTests = function() {
       });
 
       it('throws when provided a nonfunction second arg', function() {
-        expect(function () { Array.from([], null); }).to.throw(TypeError);
-        expect(function () { Array.from([], false); }).to.throw(TypeError);
-        expect(function () { Array.from([], true); }).to.throw(TypeError);
-        expect(function () { Array.from([], /a/g); }).to.throw(TypeError);
-        expect(function () { Array.from([], {}); }).to.throw(TypeError);
-        expect(function () { Array.from([], []); }).to.throw(TypeError);
-        expect(function () { Array.from([], ''); }).to.throw(TypeError);
-        expect(function () { Array.from([], 3); }).to.throw(TypeError);
+        expect(function () { Array.from([], null); }).to['throw'](TypeError);
+        expect(function () { Array.from([], false); }).to['throw'](TypeError);
+        expect(function () { Array.from([], true); }).to['throw'](TypeError);
+        expect(function () { Array.from([], /a/g); }).to['throw'](TypeError);
+        expect(function () { Array.from([], {}); }).to['throw'](TypeError);
+        expect(function () { Array.from([], []); }).to['throw'](TypeError);
+        expect(function () { Array.from([], ''); }).to['throw'](TypeError);
+        expect(function () { Array.from([], 3); }).to['throw'](TypeError);
       });
 
       it('supports a this arg', function() {
@@ -187,9 +187,9 @@ var runArrayTests = function() {
       });
 
       it('throws when provided null or undefined', function() {
-        expect(function () { Array.from(); }).to.throw(TypeError);
-        expect(function () { Array.from(undefined); }).to.throw(TypeError);
-        expect(function () { Array.from(null); }).to.throw(TypeError);
+        expect(function () { Array.from(); }).to['throw'](TypeError);
+        expect(function () { Array.from(undefined); }).to['throw'](TypeError);
+        expect(function () { Array.from(null); }).to['throw'](TypeError);
       });
 
       it('removes holes', function() {
@@ -270,7 +270,7 @@ var runArrayTests = function() {
       });
 
       it('should throw TypeError when function was not passed', function() {
-        expect(function() { list.find(); }).to.throw(TypeError);
+        expect(function() { list.find(); }).to['throw'](TypeError);
       });
 
       it('should receive all three parameters', function() {
@@ -341,7 +341,7 @@ var runArrayTests = function() {
       });
 
       it('should throw TypeError when function was not passed', function() {
-        expect(function() { list.findIndex(); }).to.throw(TypeError);
+        expect(function() { list.findIndex(); }).to['throw'](TypeError);
       });
 
       it('should receive all three parameters', function() {
@@ -411,7 +411,7 @@ var runArrayTests = function() {
         });
 
         it('throws when not applied to an ArrayIterator', function() {
-          expect(function () { arrayIterator.next.apply({}); }).to.throw(TypeError);
+          expect(function () { arrayIterator.next.apply({}); }).to['throw'](TypeError);
         });
       });
     });

@@ -5,10 +5,10 @@ var runStringTests = function() {
     var testObjectCoercible = function(methodName) {
       var fn = String.prototype[methodName];
       if (!hasStrictMode) { return; } // skip these tests on IE <= 10
-      expect(function() { return fn.call(undefined); }).to.throw(TypeError);
-      expect(function() { return fn.call(null); }).to.throw(TypeError);
-      expect(function() { return fn.apply(undefined); }).to.throw(TypeError);
-      expect(function() { return fn.apply(null); }).to.throw(TypeError);
+      expect(function() { return fn.call(undefined); }).to['throw'](TypeError);
+      expect(function() { return fn.call(null); }).to['throw'](TypeError);
+      expect(function() { return fn.apply(undefined); }).to['throw'](TypeError);
+      expect(function() { return fn.apply(null); }).to['throw'](TypeError);
     };
     describe('#repeat()', function() {
       it('should throw a TypeError when called on null or undefined', function() {
@@ -16,8 +16,8 @@ var runStringTests = function() {
       });
 
       it('should throw a RangeError when negative or infinite', function() {
-        expect(function negativeOne() { return 'test'.repeat(-1); }).to.throw(RangeError);
-        expect(function infinite() { return 'test'.repeat(Infinity); }).to.throw(RangeError);
+        expect(function negativeOne() { return 'test'.repeat(-1); }).to['throw'](RangeError);
+        expect(function infinite() { return 'test'.repeat(Infinity); }).to['throw'](RangeError);
       });
 
       it('should coerce to an integer', function() {
@@ -85,10 +85,10 @@ var runStringTests = function() {
         if (hasStrictMode) {
           expect(function() {
             ''.startsWith.call(null, 'nu');
-          }).to.throw(TypeError);
+          }).to['throw'](TypeError);
           expect(function() {
             ''.startsWith.call(undefined, 'un');
-          }).to.throw(TypeError);
+          }).to['throw'](TypeError);
         }
         var myobj = {
           toString: function() {return 'abc';},
@@ -124,8 +124,8 @@ var runStringTests = function() {
       });
 
       it('should not allow a regex', function() {
-        expect(function() { return 'abcd'.startsWith(/abc/); }).to.throw(TypeError);
-        expect(function() { return 'abcd'.startsWith(new RegExp('abc')); }).to.throw(TypeError);
+        expect(function() { return 'abcd'.startsWith(/abc/); }).to['throw'](TypeError);
+        expect(function() { return 'abcd'.startsWith(new RegExp('abc')); }).to['throw'](TypeError);
       });
     });
 
@@ -166,10 +166,10 @@ var runStringTests = function() {
         if (hasStrictMode) {
           expect(function() {
             ''.endsWith.call(null, 'ull');
-          }).to.throw(TypeError);
+          }).to['throw'](TypeError);
           expect(function() {
             ''.endsWith.call(undefined, 'ned');
-          }).to.throw(TypeError);
+          }).to['throw'](TypeError);
         }
 
         var myobj = {
@@ -205,8 +205,8 @@ var runStringTests = function() {
       });
 
       it('should not allow a regex', function() {
-        expect(function() { return 'abcd'.endsWith(/abc/); }).to.throw(TypeError);
-        expect(function() { return 'abcd'.endsWith(new RegExp('abc')); }).to.throw(TypeError);
+        expect(function() { return 'abcd'.endsWith(/abc/); }).to['throw'](TypeError);
+        expect(function() { return 'abcd'.endsWith(new RegExp('abc')); }).to['throw'](TypeError);
       });
 
       it('should handle negative and zero positions properly', function() {
@@ -296,7 +296,7 @@ var runStringTests = function() {
           0x10FFFF + 1
         ];
         invalidValues.forEach(function(value) {
-          expect(function() { return String.fromCodePoint(value); }).to.throw(RangeError);
+          expect(function() { return String.fromCodePoint(value); }).to['throw'](RangeError);
         });
       });
 

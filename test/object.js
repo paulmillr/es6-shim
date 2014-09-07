@@ -7,9 +7,9 @@ describe('Object', function() {
     });
 
     it('throws on null or undefined', function() {
-      expect(function () { Object.keys(); }).to.throw(TypeError);
-      expect(function () { Object.keys(undefined); }).to.throw(TypeError);
-      expect(function () { Object.keys(null); }).to.throw(TypeError);
+      expect(function () { Object.keys(); }).to['throw'](TypeError);
+      expect(function () { Object.keys(undefined); }).to['throw'](TypeError);
+      expect(function () { Object.keys(null); }).to['throw'](TypeError);
     });
 
     it('works on other primitives', function() {
@@ -104,7 +104,7 @@ describe('Object', function() {
     });
 
     it('throws when target is not an object', function() {
-      expect(function () { Object.assign(null); }).to.throw(TypeError);
+      expect(function () { Object.assign(null); }).to['throw'](TypeError);
     });
 
     it('ignores non-object sources', function() {
@@ -123,15 +123,15 @@ describe('Object', function() {
       it('should throw TypeError if first arg is not object', function() {
         var nonObjects = [null, undefined, true, false, 1, 3, 'foo'];
         nonObjects.forEach(function(value) {
-          expect(function() { Object.setPrototypeOf(value); }).to.throw(TypeError);
+          expect(function() { Object.setPrototypeOf(value); }).to['throw'](TypeError);
         });
       });
 
       it('should throw TypeError if second arg is not object or null', function() {
-        expect(function() { Object.setPrototypeOf({}, null); }).not.to.throw(TypeError);
+        expect(function() { Object.setPrototypeOf({}, null); }).not.to['throw'](TypeError);
         var invalidPrototypes = [true, false, 1, 3, 'foo'];
         invalidPrototypes.forEach(function(proto) {
-          expect(function() { Object.setPrototypeOf({}, proto); }).to.throw(TypeError);
+          expect(function() { Object.setPrototypeOf({}, proto); }).to['throw'](TypeError);
         });
       });
     });
