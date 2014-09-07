@@ -39,11 +39,11 @@ describe('Collections', function() {
   describe('Map', function() {
     var map;
     var testMapping = function(key, value) {
-      expect(map.has(key)).to.be.false;
+      expect(map.has(key)).to.equal(false);
       expect(map.get(key)).to.equal(undefined);
       map.set(key, value);
       expect(map.get(key)).to.equal(value);
-      expect(map.has(key)).to.be.true;
+      expect(map.has(key)).to.equal(true);
     };
 
     beforeEach(function() {
@@ -74,8 +74,8 @@ describe('Collections', function() {
       testMapping('a','b');
       testMapping('c','d');
       var map2 = new Map(map);
-      expect(map2.has('a')).to.be.true;
-      expect(map2.has('c')).to.be.true;
+      expect(map2.has('a')).to.equal(true);
+      expect(map2.has('c')).to.equal(true);
       expect(Array.from(map2.entries())).to.be.eql([['a','b'],['c','d']]);
     });
 
@@ -99,7 +99,7 @@ describe('Collections', function() {
     it('treats positive and negative zero the same', function() {
       var value1 = {}, value2 = {};
       testMapping(+0, value1);
-      expect(map.has(-0)).to.be.true;
+      expect(map.has(-0)).to.equal(true);
       expect(map.get(-0)).to.equal(value1);
       map.set(-0, value2);
       expect(map.get(-0)).to.equal(value2);
@@ -132,10 +132,10 @@ describe('Collections', function() {
         testMapping('', {});
 
         // -0 and +0 should be the same key (Map uses SameValueZero)
-        expect(map.has(-0)).to.be.true;
+        expect(map.has(-0)).to.equal(true);
         map['delete'](+0);
         testMapping(-0, {});
-        expect(map.has(+0)).to.be.true;
+        expect(map.has(+0)).to.equal(true);
 
         // verify that properties of Object don't peek through.
         ['hasOwnProperty', 'constructor', 'toString', 'isPrototypeOf',
@@ -157,22 +157,22 @@ describe('Collections', function() {
     it('should has correct querying behavior', function() {
       var key = {};
       testMapping(key, 'to-be-present');
-      expect(map.has(key)).to.be.true;
-      expect(map.has({})).to.be.false;
+      expect(map.has(key)).to.equal(true);
+      expect(map.has({})).to.equal(false);
       map.set(key, void 0);
       expect(map.get(key)).to.equal(undefined);
-      expect(map.has(key)).to.be.true;
-      expect(map.has({})).to.be.false;
+      expect(map.has(key)).to.equal(true);
+      expect(map.has({})).to.equal(false);
     });
 
     it('should allow NaN values as keys', function() {
-      expect(map.has(NaN)).to.be.false;
-      expect(map.has(NaN + 1)).to.be.false;
-      expect(map.has(23)).to.be.false;
+      expect(map.has(NaN)).to.equal(false);
+      expect(map.has(NaN + 1)).to.equal(false);
+      expect(map.has(23)).to.equal(false);
       map.set(NaN, 'value');
-      expect(map.has(NaN)).to.be.true;
-      expect(map.has(NaN + 1)).to.be.true;
-      expect(map.has(23)).to.be.false;
+      expect(map.has(NaN)).to.equal(true);
+      expect(map.has(NaN + 1)).to.equal(true);
+      expect(map.has(23)).to.equal(false);
     });
 
     it('should not have [[Enumerable]] props', function() {
@@ -406,11 +406,11 @@ describe('Collections', function() {
   describe('Set', function() {
     var set;
     var testSet = function(key) {
-      expect(set.has(key)).to.be.false;
+      expect(set.has(key)).to.equal(false);
       set.add(key);
-      expect(set.has(key)).to.be.true;
+      expect(set.has(key)).to.equal(true);
       set['delete'](key);
-      expect(set.has(key)).to.be.false;
+      expect(set.has(key)).to.equal(false);
       set.add(key); // add it back
     };
 
@@ -434,8 +434,8 @@ describe('Collections', function() {
       testSet('a');
       testSet('b');
       var set2 = new Set(set);
-      expect(set2.has('a')).to.be.true;
-      expect(set2.has('b')).to.be.true;
+      expect(set2.has('a')).to.equal(true);
+      expect(set2.has('b')).to.equal(true);
       expect(Array.from(set2.entries())).to.be.eql([['a','a'],['b','b']]);
     });
 
@@ -497,10 +497,10 @@ describe('Collections', function() {
         testSet('');
 
         // -0 and +0 should be the same key (Set uses SameValueZero)
-        expect(set.has(-0)).to.be.true;
+        expect(set.has(-0)).to.equal(true);
         set['delete'](+0);
         testSet(-0);
-        expect(set.has(+0)).to.be.true;
+        expect(set.has(+0)).to.equal(true);
 
         // verify that properties of Object don't peek through.
         ['hasOwnProperty', 'constructor', 'toString', 'isPrototypeOf',
@@ -518,20 +518,20 @@ describe('Collections', function() {
       set.add(1);
       set.add(5);
       expect(set.size).to.equal(2);
-      expect(set.has(5)).to.be.true;
+      expect(set.has(5)).to.equal(true);
       set.clear();
       expect(set.size).to.equal(0);
-      expect(set.has(5)).to.be.false;
+      expect(set.has(5)).to.equal(false);
     });
 
     it('should allow NaN values as keys', function() {
-      expect(set.has(NaN)).to.be.false;
-      expect(set.has(NaN + 1)).to.be.false;
-      expect(set.has(23)).to.be.false;
+      expect(set.has(NaN)).to.equal(false);
+      expect(set.has(NaN + 1)).to.equal(false);
+      expect(set.has(23)).to.equal(false);
       set.add(NaN);
-      expect(set.has(NaN)).to.be.true;
-      expect(set.has(NaN + 1)).to.be.true;
-      expect(set.has(23)).to.be.false;
+      expect(set.has(NaN)).to.equal(true);
+      expect(set.has(NaN + 1)).to.equal(true);
+      expect(set.has(23)).to.equal(false);
     });
 
     it('should not have [[Enumerable]] props', function() {

@@ -195,8 +195,8 @@ var runArrayTests = function() {
       it('removes holes', function() {
         var input = [0, , 2];
         var result = Array.from([0, , 2]);
-        expect(1 in input).to.be.false;
-        expect(1 in result).to.be.true;
+        expect(1 in input).to.equal(false);
+        expect(1 in result).to.equal(true);
         expect(result).to.eql([0, undefined, 2]);
       });
 
