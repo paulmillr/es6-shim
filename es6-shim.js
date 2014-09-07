@@ -576,7 +576,7 @@
       String.prototype.endsWith = StringShims.endsWith;
     }
 
-    defineProperties(Array, {
+    var ArrayShims = {
       from: function(iterable) {
         var mapFn = arguments.length > 1 ? arguments[1] : undefined;
 
@@ -634,7 +634,21 @@
       of: function() {
         return Array.from(arguments);
       }
-    });
+    };
+    defineProperties(Array, ArrayShims);
+
+    var arrayFromSwallowsNegativeLengths = function () {
+      try {
+        return Array.from({ length: -1 }).length === 0;
+      } catch (e) {
+        return false;
+      }
+    };
+    // Fixes a Firefox bug in v32
+    // https://bugzilla.mozilla.org/show_bug.cgi?id=1063993
+    if (!arrayFromSwallowsNegativeLengths()) {
+      defineProperty(Array, 'from', ArrayShims.from, true);
+    }
 
     // Our ArrayIterator is private; see
     // https://github.com/paulmillr/es6-shim/issues/252
