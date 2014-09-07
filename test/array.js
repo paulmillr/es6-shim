@@ -160,8 +160,11 @@ var runArrayTests = function() {
         });
       });
 
+      it('does not throw when provided an undefined second arg', function() {
+        expect(Array.from([], undefined)).to.eql([]);
+      });
+
       it('throws when provided a nonfunction second arg', function() {
-        expect(function () { Array.from([], undefined); }).to.throw(TypeError);
         expect(function () { Array.from([], null); }).to.throw(TypeError);
         expect(function () { Array.from([], false); }).to.throw(TypeError);
         expect(function () { Array.from([], true); }).to.throw(TypeError);

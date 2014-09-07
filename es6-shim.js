@@ -581,7 +581,7 @@
         var mapFn = arguments.length > 1 ? arguments[1] : undefined;
 
         var list = ES.ToObject(iterable, 'bad iterable');
-        if (arguments.length > 1 && !ES.IsCallable(mapFn)) {
+        if (mapFn !== undefined && !ES.IsCallable(mapFn)) {
           throw new TypeError('Array.from: when provided, the second argument must be a function');
         }
 
