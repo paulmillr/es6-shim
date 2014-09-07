@@ -228,14 +228,16 @@ describe('Math', function() {
   });
 
   describe('#log10', function() {
-    it('should be correct', function() {
+    it('should be correct for edge cases', function() {
       expect(Number.isNaN(Math.log10(NaN))).to.be.ok;
       expect(Number.isNaN(Math.log10(-1e-50))).to.be.ok;
       expect(Math.log10(+0)).to.equal(-Infinity);
       expect(Math.log10(-0)).to.equal(-Infinity);
       expect(isPositiveZero(Math.log10(1))).to.be.ok;
       expect(Math.log10(Infinity)).to.equal(Infinity);
+    });
 
+    it('should have the right precision', function() {
       expect(Math.log10(5)).to.almostEqual(0.6989700043360189);
       expect(Math.log10(50)).to.almostEqual(1.6989700043360187);
     });
