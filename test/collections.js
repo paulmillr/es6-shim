@@ -182,11 +182,11 @@ describe('Collections', function() {
     });
 
     it('should allow common ecmascript idioms', function() {
-      expect(map).to.be.an.instanceof(Map);
-      expect(Map.prototype.get).to.be.an.instanceof(Function);
-      expect(Map.prototype.set).to.be.an.instanceof(Function);
-      expect(Map.prototype.has).to.be.an.instanceof(Function);
-      expect(Map.prototype['delete']).to.be.an.instanceof(Function);
+      expect(map instanceof Map).to.equal(true);
+      expect(typeof Map.prototype.get).to.equal('function');
+      expect(typeof Map.prototype.set).to.equal('function');
+      expect(typeof Map.prototype.has).to.equal('function');
+      expect(typeof Map.prototype['delete']).to.equal('function');
     });
 
     it('should has unique constructor', function() {
@@ -203,8 +203,8 @@ describe('Collections', function() {
       map.set('a', 1);
       map.set('b', 2);
       map.set('c', 3);
-      expect(map.keys).to.be.an.instanceof(Function);
-      expect(map.values).to.be.an.instanceof(Function);
+      expect(typeof map.keys).to.equal('function');
+      expect(typeof map.values).to.equal('function');
       expect(map.size).to.equal(3);
       map['delete']('a');
       expect(map.size).to.equal(2);
@@ -541,10 +541,10 @@ describe('Collections', function() {
     });
 
     it('should allow common ecmascript idioms', function() {
-      expect(set).to.be.an.instanceof(Set);
-      expect(Set.prototype.add).to.be.an.instanceof(Function);
-      expect(Set.prototype.has).to.be.an.instanceof(Function);
-      expect(Set.prototype['delete']).to.be.an.instanceof(Function);
+      expect(set instanceof Set).to.equal(true);
+      expect(typeof Set.prototype.add).to.equal('function');
+      expect(typeof Set.prototype.has).to.equal('function');
+      expect(typeof Set.prototype['delete']).to.equal('function');
     });
 
     it('should has unique constructor', function() {
