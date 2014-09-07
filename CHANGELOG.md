@@ -1,5 +1,14 @@
 # es6-shim x.x.x (not yet released)
 
+# es6-shim 0.18.0 (6 Sep 2014)
+* Speed up String#trim replacement (#284)
+* named Array#find and Array#findIndex for easier debugging
+* Replace broken native implementation in Firefox 25-31 for Array#find and Array#findIndex
+* Ensure String.fromCodePoint has the correct length in Firefox
+* List the license in `package.json` for `npm`
+* Array.from: fix spec bug with Array.from([], undefined) throwing
+* Array.from: fix Firefox Array.from bug wrt swallowing negative lengths vs throwing
+
 # es6-shim 0.17.0 (31 Aug 2014)
 * Added es6-sham (#281)
 * Fixing some flaky tests (#268)
