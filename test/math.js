@@ -238,7 +238,7 @@ describe('Math', function() {
     });
 
     it('should have the right precision', function() {
-      expect(Math.log10(5)).to.almostEqual(0.6989700043360189);
+      expect(Math.log10(5)).to.almostEqual(0.698970004336018);
       expect(Math.log10(50)).to.almostEqual(1.6989700043360187);
     });
   });
