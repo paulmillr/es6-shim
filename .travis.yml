@@ -7,7 +7,7 @@ node_js:
   - "0.4"
 before_install:
   - '[ "${TRAVIS_NODE_VERSION}" == "0.6" ] || npm install -g npm@~1.4.6'
-  - npm install -g grunt-cli
+  - '[ "${TRAVIS_RUN_SAUCE}" != "true" ] || npm install -g grunt-cli'
 script:
   - 'if [ "${TRAVIS_RUN_SAUCE}" == "true" ]; then npm run sauce ; else npm test ; fi'
 addons:
