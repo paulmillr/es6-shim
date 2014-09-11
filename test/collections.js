@@ -37,17 +37,16 @@ describe('Collections', function() {
   };
 
   describe('Map', function() {
-    var map;
-    var testMapping = function(key, value) {
-      expect(map.has(key)).to.equal(false);
-      expect(map.get(key)).to.equal(undefined);
-      map.set(key, value);
-      expect(map.get(key)).to.equal(value);
-      expect(map.has(key)).to.equal(true);
-    };
-
+    var map, testMapping;
     beforeEach(function() {
       map = new Map();
+      testMapping = function(key, value) {
+        expect(map.has(key)).to.equal(false);
+        expect(map.get(key)).to.equal(undefined);
+        map.set(key, value);
+        expect(map.get(key)).to.equal(value);
+        expect(map.has(key)).to.equal(true);
+      };
     });
 
     afterEach(function() {
@@ -406,18 +405,17 @@ describe('Collections', function() {
   });
 
   describe('Set', function() {
-    var set;
-    var testSet = function(key) {
-      expect(set.has(key)).to.equal(false);
-      set.add(key);
-      expect(set.has(key)).to.equal(true);
-      set['delete'](key);
-      expect(set.has(key)).to.equal(false);
-      set.add(key); // add it back
-    };
-
+    var set, testSet;
     beforeEach(function() {
       set = new Set();
+      testSet = function(key) {
+        expect(set.has(key)).to.equal(false);
+        set.add(key);
+        expect(set.has(key)).to.equal(true);
+        set['delete'](key);
+        expect(set.has(key)).to.equal(false);
+        set.add(key); // add it back
+      };
     });
 
     afterEach(function() {
