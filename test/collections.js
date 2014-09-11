@@ -248,7 +248,7 @@ describe('Collections', function() {
       });
 
       it('should iterate over empty keys', function() {
-        map.clear();
+        var map = new Map();
         var expectedKeys = [{}, null, undefined, '', NaN, 0];
         expectedKeys.forEach(function (key) {
           map.set(key, true);
@@ -603,7 +603,7 @@ describe('Collections', function() {
       });
 
       it('should iterate over empty keys', function() {
-        set.clear();
+        var set = new Set();
         var expectedKeys = [{}, null, undefined, '', NaN, 0];
         expectedKeys.forEach(function (key) {
           set.add(key);
