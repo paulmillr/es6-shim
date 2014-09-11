@@ -43,12 +43,12 @@ module.exports = function(grunt) {
       all: {
         options: {
           urls: (function() {
-	    var urls = ["http://localhost:9999/test/"];
-	    if (grunt.option('extra')) {
-	      urls.push("http://localhost:9999/test-sham/");
-	    }
-	    return urls;
-	  })(),
+            var urls = ["http://localhost:9999/test/"];
+            if (grunt.option('extra')) {
+              urls.push("http://localhost:9999/test-sham/");
+            }
+            return urls;
+          }()),
           //tunnelTimeout: 5,
           build: process.env.TRAVIS_BUILD_NUMBER,
           tunneled: !process.env.SAUCE_HAS_TUNNEL,

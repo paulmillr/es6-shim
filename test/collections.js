@@ -222,14 +222,16 @@ describe('Collections', function() {
 
     describe('#forEach', function() {
       var map;
+
       beforeEach(function() {
-	map = new Map();
+        map = new Map();
         map.set('a', 1);
         map.set('b', 2);
         map.set('c', 3);
       });
+
       afterEach(function() {
-	map = null;
+        map = null;
       });
 
       it('should be iterable via forEach', function() {
@@ -556,8 +558,9 @@ describe('Collections', function() {
       beforeEach(function() {
         set = new Set([1, NaN, false]);
       });
+
       afterEach(function() {
-	set = null;
+        set = null;
       });
 
       it('works with the full set', function() {
@@ -580,13 +583,14 @@ describe('Collections', function() {
     describe('#forEach', function() {
       var set;
       beforeEach(function() {
-	set = new Set();
+        set = new Set();
         set.add('a');
         set.add('b');
         set.add('c');
       });
+
       afterEach(function() {
-	set = null;
+        set = null;
       });
 
       it('should be iterable via forEach', function() {
