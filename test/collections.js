@@ -508,20 +508,24 @@ describe('Collections', function() {
       }
     });
 
-    it('should has #size', function() {
-      set.add(1);
-      set.add(5);
-      expect(set.size).to.equal(2);
+    describe('#size', function() {
+      it('returns the expected size', function() {
+        set.add(1);
+        set.add(5);
+        expect(set.size).to.equal(2);
+      });
     });
 
-    it('should has #clear method', function() {
-      set.add(1);
-      set.add(5);
-      expect(set.size).to.equal(2);
-      expect(set.has(5)).to.equal(true);
-      set.clear();
-      expect(set.size).to.equal(0);
-      expect(set.has(5)).to.equal(false);
+    describe('#clear()', function() {
+      it('should have #clear method', function() {
+        set.add(1);
+        set.add(5);
+        expect(set.size).to.equal(2);
+        expect(set.has(5)).to.equal(true);
+        set.clear();
+        expect(set.size).to.equal(0);
+        expect(set.has(5)).to.equal(false);
+      });
     });
 
     it('should allow NaN values as keys', function() {
