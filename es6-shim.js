@@ -773,7 +773,16 @@
         return new ArrayIterator(this, "entry");
       }
     };
+    // Safari 7.1 defines Array#keys and Array#entries natively,
+    // but the resulting ArrayIterator objects don't have a "next" method.
+    if (Array.prototype.keys && !ES.IsCallable([1].keys().next)) {
+      delete Array.prototype.keys;
+    }
+    if (Array.prototype.entries && !ES.IsCallable([1].entries().next)) {
+      delete Array.prototype.entries;
+    }
     defineProperties(Array.prototype, ArrayPrototypeShims);
+
     addIterator(Array.prototype, function() { return this.values(); });
     // Chrome defines keys/values/entries on Array, but doesn't give us
     // any way to identify its iterator.  So add our own shimmed field.
