@@ -1498,7 +1498,11 @@
         return false;
       }
     }());
-    if (!promiseSupportsSubclassing || !promiseIgnoresNonFunctionThenCallbacks) {
+    var promiseRequiresObjectContext = (function () {
+      try { Promise.call(3, function () {}); } catch (e) { return true; }
+      return false;
+    }());
+    if (!promiseSupportsSubclassing || !promiseIgnoresNonFunctionThenCallbacks || !promiseRequiresObjectContext) {
       globals.Promise = PromiseShim;
     }
 
