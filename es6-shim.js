@@ -1591,9 +1591,9 @@
             head.next = head.prev = head;
 
             defineProperties(map, {
-              '_head': head,
-              '_storage': emptyObject(),
-              '_size': 0
+              _head: head,
+              _storage: emptyObject(),
+              _size: 0
             });
 
             // Optionally initialize map from iterable
@@ -1773,7 +1773,7 @@
 
             defineProperties(set, {
               '[[SetData]]': null,
-              '_storage': emptyObject()
+              _storage: emptyObject()
             });
 
             // Optionally initialize map from iterable
