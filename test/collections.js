@@ -23,8 +23,8 @@ Assertion.addMethod('theSameSet', function (otherArray) {
   );
 });
 
-describe('Collections', function() {
-  var range = function(from, to) {
+describe('Collections', function () {
+  var range = function (from, to) {
     var result = [];
     for (var value = from; value < to; value++) {
       result.push(value);
@@ -32,15 +32,15 @@ describe('Collections', function() {
     return result;
   };
 
-  var expectNotEnumerable = function(object) {
+  var expectNotEnumerable = function (object) {
     expect(Object.keys(object).length).to.equal(0);
   };
 
-  describe('Map', function() {
+  describe('Map', function () {
     var map, testMapping;
-    beforeEach(function() {
+    beforeEach(function () {
       map = new Map();
-      testMapping = function(key, value) {
+      testMapping = function (key, value) {
         expect(map.has(key)).to.equal(false);
         expect(map.get(key)).to.equal(undefined);
         map.set(key, value);
@@ -49,27 +49,27 @@ describe('Collections', function() {
       };
     });
 
-    afterEach(function() {
+    afterEach(function () {
       map = null;
     });
 
-    it('should exist in global namespace', function() {
+    it('should exist in global namespace', function () {
       expect(Map).to.be.ok;
     });
 
-    it('should have the right arity', function() {
+    it('should have the right arity', function () {
       expect(Map.length).to.equal(1);
     });
 
-    it('should has valid getter and setter calls', function() {
-      ['get', 'set', 'has', 'delete'].forEach(function(method) {
-        expect(function() {
+    it('should has valid getter and setter calls', function () {
+      ['get', 'set', 'has', 'delete'].forEach(function (method) {
+        expect(function () {
           map[method]({});
         }).to.not['throw']();
       });
     });
 
-    it('should accept an iterable as argument', function() {
+    it('should accept an iterable as argument', function () {
       testMapping('a','b');
       testMapping('c','d');
       var map2 = new Map(map);
@@ -78,12 +78,12 @@ describe('Collections', function() {
       expect(Array.from(map2.entries())).to.be.eql([['a','b'],['c','d']]);
     });
 
-    it('should not be callable without "new"', function() {
+    it('should not be callable without "new"', function () {
       expect(Map).to['throw'](TypeError);
     });
 
-    it('should be subclassable', function() {
-      var MyMap = function() { Map.call(this, [['a','b']]); }
+    it('should be subclassable', function () {
+      var MyMap = function () { Map.call(this, [['a','b']]); }
       if (!Object.setPrototypeOf) { return; } // skip test if on IE < 11
       Object.setPrototypeOf(MyMap, Map);
       MyMap.prototype = Object.create(Map.prototype, {
@@ -95,7 +95,7 @@ describe('Collections', function() {
       expect(Array.from(map)).to.be.eql([['a','b'],['c','d']]);
     });
 
-    it('treats positive and negative zero the same', function() {
+    it('treats positive and negative zero the same', function () {
       var value1 = {}, value2 = {};
       testMapping(+0, value1);
       expect(map.has(-0)).to.equal(true);
@@ -105,14 +105,14 @@ describe('Collections', function() {
       expect(map.get(+0)).to.equal(value2);
     });
 
-    it('should map values correctly', function() {
+    it('should map values correctly', function () {
       // Run this test twice, one with the "fast" implementation (which only
       // allows string and numeric keys) and once with the "slow" impl.
       for (i = 0; i < 2; i++) {
         var slowkeys = (i !== 0);
         map = new Map();
 
-        range(1, 20).forEach(function(number) {
+        range(1, 20).forEach(function (number) {
           if (slowkeys) testMapping(number, {});
           testMapping(number / 100, {});
           testMapping('key-' + number, {});
@@ -124,7 +124,7 @@ describe('Collections', function() {
         if (slowkeys) {
           testkeys.push(true, false, null, undefined);
         }
-        testkeys.forEach(function(key) {
+        testkeys.forEach(function (key) {
           testMapping(key, {});
           testMapping('' + key, {});
         });
@@ -138,13 +138,13 @@ describe('Collections', function() {
 
         // verify that properties of Object don't peek through.
         ['hasOwnProperty', 'constructor', 'toString', 'isPrototypeOf',
-         '__proto__', '__parent__', '__count__'].forEach(function(key) {
+         '__proto__', '__parent__', '__count__'].forEach(function (key) {
            testMapping(key, {});
          });
       }
     });
 
-    it('should map empty values correctly', function() {
+    it('should map empty values correctly', function () {
       testMapping({}, true);
       testMapping(null, true);
       testMapping(undefined, true);
@@ -153,7 +153,7 @@ describe('Collections', function() {
       testMapping(0, true);
     });
 
-    it('should has correct querying behavior', function() {
+    it('should has correct querying behavior', function () {
       var key = {};
       testMapping(key, 'to-be-present');
       expect(map.has(key)).to.equal(true);
@@ -164,7 +164,7 @@ describe('Collections', function() {
       expect(map.has({})).to.equal(false);
     });
 
-    it('should allow NaN values as keys', function() {
+    it('should allow NaN values as keys', function () {
       expect(map.has(NaN)).to.equal(false);
       expect(map.has(NaN + 1)).to.equal(false);
       expect(map.has(23)).to.equal(false);
@@ -174,13 +174,13 @@ describe('Collections', function() {
       expect(map.has(23)).to.equal(false);
     });
 
-    it('should not have [[Enumerable]] props', function() {
+    it('should not have [[Enumerable]] props', function () {
       expectNotEnumerable(Map);
       expectNotEnumerable(Map.prototype);
       expectNotEnumerable(new Map());
     });
 
-    it('should allow common ecmascript idioms', function() {
+    it('should allow common ecmascript idioms', function () {
       expect(map instanceof Map).to.equal(true);
       expect(typeof Map.prototype.get).to.equal('function');
       expect(typeof Map.prototype.set).to.equal('function');
@@ -188,17 +188,17 @@ describe('Collections', function() {
       expect(typeof Map.prototype['delete']).to.equal('function');
     });
 
-    it('should has unique constructor', function() {
+    it('should has unique constructor', function () {
       expect(Map.prototype).to.not.equal(Object.prototype);
     });
 
-    it('Map.prototype.size should throw TypeError', function() {
+    it('Map.prototype.size should throw TypeError', function () {
       // see https://github.com/paulmillr/es6-shim/issues/176
-      expect(function() { Map.prototype.size }).to['throw'](TypeError);
-      expect(function() { Map.prototype.size }).to['throw'](TypeError);
+      expect(function () { Map.prototype.size }).to['throw'](TypeError);
+      expect(function () { Map.prototype.size }).to['throw'](TypeError);
     });
 
-    it('should have keys, values and size props', function() {
+    it('should have keys, values and size props', function () {
       map.set('a', 1);
       map.set('b', 2);
       map.set('c', 3);
@@ -209,7 +209,7 @@ describe('Collections', function() {
       expect(map.size).to.equal(2);
     });
 
-    it('should have an iterator that works with Array.from', function() {
+    it('should have an iterator that works with Array.from', function () {
       map.set('a', 1);
       map.set('b', NaN);
       map.set('c', false);
@@ -219,21 +219,21 @@ describe('Collections', function() {
       expect(Array.from(map.entries())).to.eql(Array.from(map));
     });
 
-    describe('#forEach', function() {
+    describe('#forEach', function () {
       var map;
 
-      beforeEach(function() {
+      beforeEach(function () {
         map = new Map();
         map.set('a', 1);
         map.set('b', 2);
         map.set('c', 3);
       });
 
-      afterEach(function() {
+      afterEach(function () {
         map = null;
       });
 
-      it('should be iterable via forEach', function() {
+      it('should be iterable via forEach', function () {
         var expectedMap = {
           a: 1,
           b: 2,
@@ -247,7 +247,7 @@ describe('Collections', function() {
         expect(foundMap).to.eql(expectedMap);
       });
 
-      it('should iterate over empty keys', function() {
+      it('should iterate over empty keys', function () {
         var map = new Map();
         var expectedKeys = [{}, null, undefined, '', NaN, 0];
         expectedKeys.forEach(function (key) {
@@ -261,18 +261,18 @@ describe('Collections', function() {
         expect(foundKeys).to.be.theSameSet(expectedKeys);
       });
 
-      it('should support the thisArg', function() {
+      it('should support the thisArg', function () {
         var context = function () {};
         map.forEach(function (value, key, entireMap) {
           expect(this).to.equal(context);
         }, context);
       });
 
-      it('should have a length of 1', function() {
+      it('should have a length of 1', function () {
         expect(Map.prototype.forEach.length).to.equal(1);
       });
 
-      it('should not revisit modified keys', function() {
+      it('should not revisit modified keys', function () {
         var hasModifiedA = false;
         map.forEach(function (value, key) {
           if (!hasModifiedA && key === 'a') {
@@ -284,7 +284,7 @@ describe('Collections', function() {
         });
       });
 
-      it('visits keys added in the iterator', function() {
+      it('visits keys added in the iterator', function () {
         var hasAdded = false;
         var hasFoundD = false;
         map.forEach(function (value, key) {
@@ -298,7 +298,7 @@ describe('Collections', function() {
         expect(hasFoundD).to.equal(true);
       });
 
-      it('visits keys added in the iterator when there is a deletion', function() {
+      it('visits keys added in the iterator when there is a deletion', function () {
         var hasSeenFour = false;;
         var map = new Map();
         map.set('0', 42);
@@ -313,7 +313,7 @@ describe('Collections', function() {
         expect(hasSeenFour).to.equal(true);
       });
 
-      it('does not visit keys deleted before a visit', function() {
+      it('does not visit keys deleted before a visit', function () {
         var hasVisitedC = false;
         map.forEach(function (value, key) {
           if (key === 'c') {
@@ -326,7 +326,7 @@ describe('Collections', function() {
         expect(hasVisitedC).to.equal(false);
       });
 
-      it('should work after deletion of the current key', function() {
+      it('should work after deletion of the current key', function () {
         var expectedMap = {
           a: 1,
           b: 2,
@@ -340,15 +340,15 @@ describe('Collections', function() {
         expect(foundMap).to.eql(expectedMap);
       });
 
-      it('should convert key -0 to +0', function() {
+      it('should convert key -0 to +0', function () {
         var map = new Map(), result = [];
         map.set(-0, 'a');
-        map.forEach(function(value, key) {
+        map.forEach(function (value, key) {
           result.push(String(1/key) + ' ' + value);
         });
         map.set(1, 'b');
         map.set(0, 'c'); // shouldn't cause reordering
-        map.forEach(function(value, key) {
+        map.forEach(function (value, key) {
           result.push(String(1/key) + ' ' + value);
         });
         expect(result.join(', ')).to.equal(
@@ -404,11 +404,11 @@ describe('Collections', function() {
     expect(keys).to.eql(['a', 'd', 'e']);
   });
 
-  describe('Set', function() {
+  describe('Set', function () {
     var set, testSet;
-    beforeEach(function() {
+    beforeEach(function () {
       set = new Set();
-      testSet = function(key) {
+      testSet = function (key) {
         expect(set.has(key)).to.equal(false);
         set.add(key);
         expect(set.has(key)).to.equal(true);
@@ -418,19 +418,19 @@ describe('Collections', function() {
       };
     });
 
-    afterEach(function() {
+    afterEach(function () {
       set = null;
     });
 
-    it('should exist in global namespace', function() {
+    it('should exist in global namespace', function () {
       expect(Set).to.be.ok;
     });
 
-    it('should have the right arity', function() {
+    it('should have the right arity', function () {
       expect(Set.length).to.equal(1);
     });
 
-    it('should accept an iterable as argument', function() {
+    it('should accept an iterable as argument', function () {
       testSet('a');
       testSet('b');
       var set2 = new Set(set);
@@ -439,18 +439,18 @@ describe('Collections', function() {
       expect(Array.from(set2.entries())).to.be.eql([['a','a'],['b','b']]);
     });
 
-    it('accepts an array as an argument', function() {
+    it('accepts an array as an argument', function () {
       var arr = ['a', 'b', 'c'];
       var set = new Set(arr);
       expect(Array.from(set.values())).to.be.eql(arr);
     });
 
-    it('should not be callable without "new"', function() {
+    it('should not be callable without "new"', function () {
       expect(Set).to['throw'](TypeError);
     });
 
-    it('should be subclassable', function() {
-      var MySet = function() { Set.call(this, ['a', 'b']); }
+    it('should be subclassable', function () {
+      var MySet = function () { Set.call(this, ['a', 'b']); }
       if (!Object.setPrototypeOf) { return; } // skip test if on IE < 11
       Object.setPrototypeOf(MySet, Set);
       MySet.prototype = Object.create(Set.prototype, {
@@ -462,22 +462,22 @@ describe('Collections', function() {
       expect(Array.from(set)).to.be.eql(['a','b','c','d']);
     });
 
-    it('should has valid getter and setter calls', function() {
-      ['add', 'has', 'delete'].forEach(function(method) {
-        expect(function() {
+    it('should has valid getter and setter calls', function () {
+      ['add', 'has', 'delete'].forEach(function (method) {
+        expect(function () {
           set[method]({});
         }).to.not['throw']();
       });
     });
 
-    it('should work as expected', function() {
+    it('should work as expected', function () {
       // Run this test twice, one with the "fast" implementation (which only
       // allows string and numeric keys) and once with the "slow" impl.
       for (i = 0; i < 2; i++) {
         var slowkeys = (i !== 0);
         set = new Set();
 
-        range(1, 20).forEach(function(number) {
+        range(1, 20).forEach(function (number) {
           if (slowkeys) testSet({});
           testSet(number);
           testSet(number / 100);
@@ -490,7 +490,7 @@ describe('Collections', function() {
         if (slowkeys) {
           testkeys.push(true, false, null, undefined);
         }
-        testkeys.forEach(function(number) {
+        testkeys.forEach(function (number) {
           testSet(number);
           testSet('' + number);
         });
@@ -508,16 +508,16 @@ describe('Collections', function() {
       }
     });
 
-    describe('#size', function() {
-      it('returns the expected size', function() {
+    describe('#size', function () {
+      it('returns the expected size', function () {
         set.add(1);
         set.add(5);
         expect(set.size).to.equal(2);
       });
     });
 
-    describe('#clear()', function() {
-      it('should have #clear method', function() {
+    describe('#clear()', function () {
+      it('should have #clear method', function () {
         set.add(1);
         set.add(5);
         expect(set.size).to.equal(2);
@@ -528,7 +528,7 @@ describe('Collections', function() {
       });
     });
 
-    it('should allow NaN values as keys', function() {
+    it('should allow NaN values as keys', function () {
       expect(set.has(NaN)).to.equal(false);
       expect(set.has(NaN + 1)).to.equal(false);
       expect(set.has(23)).to.equal(false);
@@ -538,64 +538,64 @@ describe('Collections', function() {
       expect(set.has(23)).to.equal(false);
     });
 
-    it('should not have [[Enumerable]] props', function() {
+    it('should not have [[Enumerable]] props', function () {
       expectNotEnumerable(Set);
       expectNotEnumerable(Set.prototype);
       expectNotEnumerable(new Set());
     });
 
-    it('should allow common ecmascript idioms', function() {
+    it('should allow common ecmascript idioms', function () {
       expect(set instanceof Set).to.equal(true);
       expect(typeof Set.prototype.add).to.equal('function');
       expect(typeof Set.prototype.has).to.equal('function');
       expect(typeof Set.prototype['delete']).to.equal('function');
     });
 
-    it('should has unique constructor', function() {
+    it('should has unique constructor', function () {
       expect(Set.prototype).to.not.equal(Object.prototype);
     });
 
-    describe('has an iterator that works with Array.from', function() {
+    describe('has an iterator that works with Array.from', function () {
       var set;
-      beforeEach(function() {
+      beforeEach(function () {
         set = new Set([1, NaN, false]);
       });
 
-      afterEach(function() {
+      afterEach(function () {
         set = null;
       });
 
-      it('works with the full set', function() {
+      it('works with the full set', function () {
         expect(Array.from(set)).to.eql([1, NaN, false]);
       });
 
-      it('works with Set#keys()', function() {
+      it('works with Set#keys()', function () {
         expect(Array.from(set.keys())).to.eql(Array.from(set));
       });
 
-      it('works with Set#values()', function() {
+      it('works with Set#values()', function () {
         expect(Array.from(set.values())).to.eql(Array.from(set));
       });
 
-      it('works with Set#entries()', function() {
+      it('works with Set#entries()', function () {
         expect(Array.from(set.entries())).to.eql([[1,1],[NaN,NaN],[false,false]]);
       });
     });
 
-    describe('#forEach', function() {
+    describe('#forEach', function () {
       var set;
-      beforeEach(function() {
+      beforeEach(function () {
         set = new Set();
         set.add('a');
         set.add('b');
         set.add('c');
       });
 
-      afterEach(function() {
+      afterEach(function () {
         set = null;
       });
 
-      it('should be iterable via forEach', function() {
+      it('should be iterable via forEach', function () {
         var expectedSet = ['a', 'b', 'c'];
         var foundSet = [];
         set.forEach(function (value, alsoValue, entireSet) {
@@ -606,7 +606,7 @@ describe('Collections', function() {
         expect(foundSet).to.eql(expectedSet);
       });
 
-      it('should iterate over empty keys', function() {
+      it('should iterate over empty keys', function () {
         var set = new Set();
         var expectedKeys = [{}, null, undefined, '', NaN, 0];
         expectedKeys.forEach(function (key) {
@@ -621,18 +621,18 @@ describe('Collections', function() {
         expect(foundKeys).to.be.theSameSet(expectedKeys);
       });
 
-      it('should support the thisArg', function() {
+      it('should support the thisArg', function () {
         var context = function () {};
         set.forEach(function (value, alsoValue, entireSet) {
           expect(this).to.equal(context);
         }, context);
       });
 
-      it('should have a length of 1', function() {
+      it('should have a length of 1', function () {
         expect(Set.prototype.forEach.length).to.equal(1);
       });
 
-      it('should not revisit modified keys', function() {
+      it('should not revisit modified keys', function () {
         var hasModifiedA = false;
         set.forEach(function (value, key) {
           if (!hasModifiedA && key === 'a') {
@@ -644,7 +644,7 @@ describe('Collections', function() {
         });
       });
 
-      it('visits keys added in the iterator', function() {
+      it('visits keys added in the iterator', function () {
         var hasAdded = false;
         var hasFoundD = false;
         set.forEach(function (value, key) {
@@ -658,7 +658,7 @@ describe('Collections', function() {
         expect(hasFoundD).to.equal(true);
       });
 
-      it('visits keys added in the iterator when there is a deletion (slow path)', function() {
+      it('visits keys added in the iterator when there is a deletion (slow path)', function () {
         var hasSeenFour = false;;
         var set = new Set();
         set.add({}); // force use of the slow O(N) implementation
@@ -674,7 +674,7 @@ describe('Collections', function() {
         expect(hasSeenFour).to.equal(true);
       });
 
-      it('visits keys added in the iterator when there is a deletion (fast path)', function() {
+      it('visits keys added in the iterator when there is a deletion (fast path)', function () {
         var hasSeenFour = false;;
         var set = new Set();
         set.add('0');
@@ -689,7 +689,7 @@ describe('Collections', function() {
         expect(hasSeenFour).to.equal(true);
       });
 
-      it('does not visit keys deleted before a visit', function() {
+      it('does not visit keys deleted before a visit', function () {
         var hasVisitedC = false;
         set.forEach(function (value, key) {
           if (key === 'c') {
@@ -702,7 +702,7 @@ describe('Collections', function() {
         expect(hasVisitedC).to.equal(false);
       });
 
-      it('should work after deletion of the current key', function() {
+      it('should work after deletion of the current key', function () {
         var expectedSet = {
           a: 'a',
           b: 'b',
@@ -716,15 +716,15 @@ describe('Collections', function() {
         expect(foundSet).to.eql(expectedSet);
       });
 
-      it('should convert key -0 to +0', function() {
+      it('should convert key -0 to +0', function () {
         var set = new Set(), result = [];
         set.add(-0);
-        set.forEach(function(key) {
+        set.forEach(function (key) {
           result.push(String(1/key));
         });
         set.add(1);
         set.add(0); // shouldn't cause reordering
-        set.forEach(function(key) {
+        set.forEach(function (key) {
           result.push(String(1/key));
         });
         expect(result.join(', ')).to.equal(
@@ -733,13 +733,13 @@ describe('Collections', function() {
       });
     });
 
-    it('Set.prototype.size should throw TypeError', function() {
+    it('Set.prototype.size should throw TypeError', function () {
       // see https://github.com/paulmillr/es6-shim/issues/176
-      expect(function() { Set.prototype.size }).to['throw'](TypeError);
-      expect(function() { Set.prototype.size }).to['throw'](TypeError);
+      expect(function () { Set.prototype.size }).to['throw'](TypeError);
+      expect(function () { Set.prototype.size }).to['throw'](TypeError);
     });
 
-    it.skip('should throw proper errors when user invokes methods with wrong types of receiver', function() {
+    it.skip('should throw proper errors when user invokes methods with wrong types of receiver', function () {
 
     });
   });

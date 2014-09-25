@@ -1,59 +1,59 @@
-var runStringTests = function() {
+var runStringTests = function () {
   'use strict';
-  describe('String', function() {
-    var hasStrictMode = (function() { return this===null; }).call(null);
-    var testObjectCoercible = function(methodName) {
+  describe('String', function () {
+    var hasStrictMode = (function () { return this===null; }).call(null);
+    var testObjectCoercible = function (methodName) {
       var fn = String.prototype[methodName];
       if (!hasStrictMode) { return; } // skip these tests on IE <= 10
-      expect(function() { return fn.call(undefined); }).to['throw'](TypeError);
-      expect(function() { return fn.call(null); }).to['throw'](TypeError);
-      expect(function() { return fn.apply(undefined); }).to['throw'](TypeError);
-      expect(function() { return fn.apply(null); }).to['throw'](TypeError);
+      expect(function () { return fn.call(undefined); }).to['throw'](TypeError);
+      expect(function () { return fn.call(null); }).to['throw'](TypeError);
+      expect(function () { return fn.apply(undefined); }).to['throw'](TypeError);
+      expect(function () { return fn.apply(null); }).to['throw'](TypeError);
     };
-    describe('#repeat()', function() {
-      it('should throw a TypeError when called on null or undefined', function() {
+    describe('#repeat()', function () {
+      it('should throw a TypeError when called on null or undefined', function () {
         testObjectCoercible('repeat');
       });
 
-      it('should throw a RangeError when negative or infinite', function() {
+      it('should throw a RangeError when negative or infinite', function () {
         expect(function negativeOne() { return 'test'.repeat(-1); }).to['throw'](RangeError);
         expect(function infinite() { return 'test'.repeat(Infinity); }).to['throw'](RangeError);
       });
 
-      it('should coerce to an integer', function() {
+      it('should coerce to an integer', function () {
         expect('test'.repeat(null)).to.eql('');
         expect('test'.repeat(false)).to.eql('');
         expect('test'.repeat('')).to.eql('');
         expect('test'.repeat(NaN)).to.eql('');
         expect('test'.repeat({})).to.eql('');
         expect('test'.repeat([])).to.eql('');
-        expect('test'.repeat({ valueOf: function() { return 2; } })).to.eql('testtest');
+        expect('test'.repeat({ valueOf: function () { return 2; } })).to.eql('testtest');
       });
-      it('should work', function() {
+      it('should work', function () {
         expect('test'.repeat(3)).to.eql('testtesttest');
       });
-      it('should work on integers', function() {
+      it('should work on integers', function () {
         expect(String.prototype.repeat.call(2, 3)).to.eql('222');
       });
-      it('should work on booleans', function() {
+      it('should work on booleans', function () {
         expect(String.prototype.repeat.call(true, 3)).to.eql('truetruetrue');
       });
-      it('should work on dates', function() {
+      it('should work on dates', function () {
         var d = new Date();
         expect(String.prototype.repeat.call(d, 3)).to.eql([d, d, d].join(''));
       });
     });
 
-    describe('#startsWith()', function() {
-      it('should throw a TypeError when called on null or undefined', function() {
+    describe('#startsWith()', function () {
+      it('should throw a TypeError when called on null or undefined', function () {
         testObjectCoercible('startsWith');
       });
 
-      it('should throw a TypeError when called on null or undefined', function() {
+      it('should throw a TypeError when called on null or undefined', function () {
         testObjectCoercible('startsWith');
       });
 
-      it('should be truthy on correct results', function() {
+      it('should be truthy on correct results', function () {
         expect('test'.startsWith('te')).to.be.ok;
         expect('test'.startsWith('st')).to.not.be.ok;
         expect(''.startsWith('/')).to.not.be.ok;
@@ -83,15 +83,15 @@ var runStringTests = function() {
         expect('abc'.startsWith('bc', -42)).to.not.be.ok;
         expect('abc'.startsWith('bc', -Infinity)).to.not.be.ok;
         if (hasStrictMode) {
-          expect(function() {
+          expect(function () {
             ''.startsWith.call(null, 'nu');
           }).to['throw'](TypeError);
-          expect(function() {
+          expect(function () {
             ''.startsWith.call(undefined, 'un');
           }).to['throw'](TypeError);
         }
         var myobj = {
-          toString: function() {return 'abc';},
+          toString: function () {return 'abc';},
           startsWith: String.prototype.startsWith
         };
         expect(myobj.startsWith('abc')).to.be.ok;
@@ -100,7 +100,7 @@ var runStringTests = function() {
         var gotStr = false, gotPos = false;
 
         myobj = {
-          toString: function() {
+          toString: function () {
             expect(gotPos).to.not.be.ok;
             gotStr = true;
             return 'xyz';
@@ -108,7 +108,7 @@ var runStringTests = function() {
           startsWith: String.prototype.startsWith
         };
         var idx = {
-          valueOf: function() {
+          valueOf: function () {
             expect(gotStr).to.be.ok;
             gotPos = true;
             return 42;
@@ -118,23 +118,23 @@ var runStringTests = function() {
         expect(gotPos).to.be.ok;
       });
 
-      it('should coerce to a string', function() {
-        expect('abcd'.startsWith({ toString: function() { return 'ab'; } })).to.be.ok;
-        expect('abcd'.startsWith({ toString: function() { return 'foo'; } })).not.to.be.ok;
+      it('should coerce to a string', function () {
+        expect('abcd'.startsWith({ toString: function () { return 'ab'; } })).to.be.ok;
+        expect('abcd'.startsWith({ toString: function () { return 'foo'; } })).not.to.be.ok;
       });
 
-      it('should not allow a regex', function() {
-        expect(function() { return 'abcd'.startsWith(/abc/); }).to['throw'](TypeError);
-        expect(function() { return 'abcd'.startsWith(new RegExp('abc')); }).to['throw'](TypeError);
+      it('should not allow a regex', function () {
+        expect(function () { return 'abcd'.startsWith(/abc/); }).to['throw'](TypeError);
+        expect(function () { return 'abcd'.startsWith(new RegExp('abc')); }).to['throw'](TypeError);
       });
     });
 
-    describe('#endsWith()', function() {
-      it('should throw a TypeError when called on null or undefined', function() {
+    describe('#endsWith()', function () {
+      it('should throw a TypeError when called on null or undefined', function () {
         testObjectCoercible('endsWith');
       });
 
-      it('should be truthy on correct results', function() {
+      it('should be truthy on correct results', function () {
         expect('test'.endsWith('st')).to.be.ok;
         expect('test'.endsWith('te')).to.not.be.ok;
         expect(''.endsWith('/')).to.not.be.ok;
@@ -164,16 +164,16 @@ var runStringTests = function() {
         expect('abc'.endsWith('bc', -Infinity)).to.not.be.ok;
         expect('abc'.endsWith('bc', NaN)).to.not.be.ok;
         if (hasStrictMode) {
-          expect(function() {
+          expect(function () {
             ''.endsWith.call(null, 'ull');
           }).to['throw'](TypeError);
-          expect(function() {
+          expect(function () {
             ''.endsWith.call(undefined, 'ned');
           }).to['throw'](TypeError);
         }
 
         var myobj = {
-          toString: function() { return 'abc'; },
+          toString: function () { return 'abc'; },
           endsWith: String.prototype.endsWith
         };
         expect(myobj.endsWith('abc')).to.be.ok;
@@ -181,7 +181,7 @@ var runStringTests = function() {
         var gotStr = false, gotPos = false;
 
         myobj = {
-          toString: function() {
+          toString: function () {
             expect(gotPos).to.not.be.ok;
             gotStr = true;
             return 'xyz';
@@ -199,17 +199,17 @@ var runStringTests = function() {
         expect(gotPos).to.be.ok;
       });
 
-      it('should coerce to a string', function() {
-        expect('abcd'.endsWith({ toString: function() { return 'cd'; } })).to.be.ok;
-        expect('abcd'.endsWith({ toString: function() { return 'foo'; } })).not.to.be.ok;
+      it('should coerce to a string', function () {
+        expect('abcd'.endsWith({ toString: function () { return 'cd'; } })).to.be.ok;
+        expect('abcd'.endsWith({ toString: function () { return 'foo'; } })).not.to.be.ok;
       });
 
-      it('should not allow a regex', function() {
-        expect(function() { return 'abcd'.endsWith(/abc/); }).to['throw'](TypeError);
-        expect(function() { return 'abcd'.endsWith(new RegExp('abc')); }).to['throw'](TypeError);
+      it('should not allow a regex', function () {
+        expect(function () { return 'abcd'.endsWith(/abc/); }).to['throw'](TypeError);
+        expect(function () { return 'abcd'.endsWith(new RegExp('abc')); }).to['throw'](TypeError);
       });
 
-      it('should handle negative and zero positions properly', function() {
+      it('should handle negative and zero positions properly', function () {
         expect('abcd'.endsWith('bcd', 0)).not.to.be.ok;
         expect('abcd'.endsWith('bcd', -2)).not.to.be.ok;
         expect('abcd'.endsWith('b', -2)).not.to.be.ok;
@@ -217,12 +217,12 @@ var runStringTests = function() {
       });
     });
 
-    describe('#contains()', function() {
-      it('should throw a TypeError when called on null or undefined', function() {
+    describe('#contains()', function () {
+      it('should throw a TypeError when called on null or undefined', function () {
         testObjectCoercible('contains');
       });
 
-      it('should be truthy on correct results', function() {
+      it('should be truthy on correct results', function () {
         expect('test'.contains('es')).to.be.ok;
         expect('abc'.contains('a')).to.be.ok;
         expect('abc'.contains('b')).to.be.ok;
@@ -251,7 +251,7 @@ var runStringTests = function() {
         expect('abc'.contains('cd', NaN)).to.not.be.ok;
 
         var myobj = {
-          toString: function() {return 'abc';},
+          toString: function () {return 'abc';},
           contains: String.prototype.contains
         };
 
@@ -261,7 +261,7 @@ var runStringTests = function() {
         var gotStr = false, gotPos = false;
 
         myobj = {
-          toString: function() {
+          toString: function () {
             expect(gotPos).to.not.be.ok;
             gotStr = true;
             return 'xyz';
@@ -271,7 +271,7 @@ var runStringTests = function() {
         };
 
         var idx = {
-          valueOf: function() {
+          valueOf: function () {
             expect(gotStr).to.be.ok;
             gotPos = true;
             return 42;
@@ -282,33 +282,33 @@ var runStringTests = function() {
         expect(gotPos).to.be.ok;
       });
 
-      it('should be falsy on incorrect results', function() {
+      it('should be falsy on incorrect results', function () {
         expect('test'.contains('1290')).to.not.be.ok;
       });
     });
 
-    describe('.fromCodePoint()', function() {
-      it('throws a RangeError', function() {
+    describe('.fromCodePoint()', function () {
+      it('throws a RangeError', function () {
         var invalidValues = [
           'abc',
           {},
           -1,
           0x10FFFF + 1
         ];
-        invalidValues.forEach(function(value) {
-          expect(function() { return String.fromCodePoint(value); }).to['throw'](RangeError);
+        invalidValues.forEach(function (value) {
+          expect(function () { return String.fromCodePoint(value); }).to['throw'](RangeError);
         });
       });
 
-      it('returns the empty string with no args', function() {
+      it('returns the empty string with no args', function () {
         expect(String.fromCodePoint()).to.equal('');
       });
 
-      it('has a length of one', function() {
+      it('has a length of one', function () {
         expect(String.fromCodePoint.length).to.equal(1);
       });
 
-      it('works', function() {
+      it('works', function () {
         var codePoints = [];
         var chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789…?!';
         for (var i = 0; i < chars.length; ++i) {
@@ -318,26 +318,26 @@ var runStringTests = function() {
         expect(String.fromCodePoint.apply(String, codePoints)).to.equal(chars);
       });
 
-      it('works with unicode', function() {
+      it('works with unicode', function () {
         expect(String.fromCodePoint(0x2500)).to.equal("\u2500");
         expect(String.fromCodePoint(0x010000)).to.equal("\ud800\udc00");
         expect(String.fromCodePoint(0x10FFFF)).to.equal("\udbff\udfff");
       });
     });
 
-    describe('#codePointAt()', function() {
-      it('should throw a TypeError when called on null or undefined', function() {
+    describe('#codePointAt()', function () {
+      it('should throw a TypeError when called on null or undefined', function () {
         testObjectCoercible('codePointAt');
       });
 
-      it('should work', function() {
+      it('should work', function () {
         var str = 'abc';
         expect(str.codePointAt(0)).to.equal(97);
         expect(str.codePointAt(1)).to.equal(98);
         expect(str.codePointAt(2)).to.equal(99);
       });
 
-      it('should work with unicode', function() {
+      it('should work with unicode', function () {
         expect('\u2500'.codePointAt(0)).to.equal(0x2500);
         expect('\ud800\udc00'.codePointAt(0)).to.equal(0x10000);
         expect('\udbff\udfff'.codePointAt(0)).to.equal(0x10ffff);
@@ -347,20 +347,20 @@ var runStringTests = function() {
         expect('\ud800\udc00\udbff\udfff'.codePointAt(3)).to.equal(0xdfff);
       });
 
-      it('should return undefined when pos is negative or too large', function() {
+      it('should return undefined when pos is negative or too large', function () {
         var str = 'abc';
         expect(str.codePointAt(-1)).to.be.undefined;
         expect(str.codePointAt(str.length)).to.be.undefined;
       });
     });
 
-    describe('#iterator()', function() {
-      it('should work with plain strings', function() {
+    describe('#iterator()', function () {
+      it('should work with plain strings', function () {
         var str = 'abc';
         expect(Array.from(str)).to.eql(['a','b','c']);
       });
 
-      it('should work with surrogate characters', function() {
+      it('should work with surrogate characters', function () {
         var str = '\u2500\ud800\udc00\udbff\udfff\ud800';
         expect(Array.from(str)).to.eql(
           [ '\u2500', '\ud800\udc00', '\udbff\udfff', '\ud800' ]
@@ -368,12 +368,12 @@ var runStringTests = function() {
       });
     });
 
-    describe('.raw()', function() {
-      it('should have a length of 1', function() {
+    describe('.raw()', function () {
+      it('should have a length of 1', function () {
         expect(String.raw.length).to.equal(1);
       });
 
-      it('String.raw Works with Array', function() {
+      it('String.raw Works with Array', function () {
         var callSite = {};
 
         var str = 'The total is 10 ($11 with tax)';
@@ -385,7 +385,7 @@ var runStringTests = function() {
         expect(String.raw(callSite,'{total}','{total * 1.01}')).to.eql(str);
       });
 
-      it('String.raw Works with Objects , Keys as Integer', function() {
+      it('String.raw Works with Objects , Keys as Integer', function () {
         var callSite = {};
 
         var str = 'The total is 10 ($11 with tax)';
@@ -397,7 +397,7 @@ var runStringTests = function() {
         expect(String.raw(callSite,'{total}','{total * 1.01}')).to.eql(str);
       });
 
-      it('String.raw Works with Objects , Keys as String', function() {
+      it('String.raw Works with Objects , Keys as String', function () {
         var callSite = {};
 
         var str = 'The total is 10 ($11 with tax)';
@@ -409,7 +409,7 @@ var runStringTests = function() {
         expect(String.raw(callSite,'{total}','{total * 1.01}')).to.eql(str);
       });
 
-      it('String.raw ReturnIfAbrupt - Less Substitutions', function() {
+      it('String.raw ReturnIfAbrupt - Less Substitutions', function () {
         var callSite = {
           raw: {'0': "The total is ", '1': " ($", '2': " with tax)"}
         };
@@ -417,15 +417,15 @@ var runStringTests = function() {
         expect(String.raw(callSite, 10)).to.equal(str);
       });
 
-      it('String.raw Empty objects', function() {
+      it('String.raw Empty objects', function () {
         var callSite = { raw: {} };
         expect(String.raw(callSite, '{total}', '{total * 1.01}')).to.eql('');
         expect(String.raw(callSite)).to.equal('');
       });
     });
 
-    describe('#trim()', function() {
-      it('should trim the correct characters', function() {
+    describe('#trim()', function () {
+      it('should trim the correct characters', function () {
         var whitespace = '\u0009' + '\u000b' + '\u000c' + '\u0020' +
                          '\u00a0' + '\u1680' + '\u2000' + '\u2001' +
                          '\u2002' + '\u2003' + '\u2004' + '\u2005' +
@@ -439,13 +439,13 @@ var runStringTests = function() {
         expect(trimmed).to.equal('');
       });
 
-      it('should not trim U+0085', function() {
+      it('should not trim U+0085', function () {
         var trimmed = '\u0085'.trim();
         expect(trimmed.length).to.equal(1);
         expect(trimmed).to.equal('\u0085');
       });
 
-      it('should trim on both sides', function() {
+      it('should trim on both sides', function () {
         var trimmed = " a ".trim();
         expect(trimmed.length).to.equal(1);
         expect(trimmed).to.equal('a');
@@ -456,7 +456,7 @@ var runStringTests = function() {
 
 describe('clean Object.prototype', runStringTests);
 
-describe('polluted Object.prototype', function() {
+describe('polluted Object.prototype', function () {
   Object.prototype[1] = 42;
   runStringTests();
   delete Object.prototype[1];

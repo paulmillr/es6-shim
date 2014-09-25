@@ -1,4 +1,4 @@
-describe('Worker', function() {
+describe('Worker', function () {
   var undefined,
     workerErrorEventToError = function (errorEvent) {
       var errorText = "Error in Worker";

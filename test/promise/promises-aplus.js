@@ -4,9 +4,9 @@
 describe("Promises/A+ Tests", function () {
   require("promises-aplus-tests").mocha({
     // an adapter from es6 spec to Promises/A+
-    deferred: function() {
+    deferred: function () {
       var result = {};
-      result.promise = new Promise(function(resolve, reject) {
+      result.promise = new Promise(function (resolve, reject) {
         result.resolve = resolve;
         result.reject = reject;
       });

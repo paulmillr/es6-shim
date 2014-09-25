@@ -140,8 +140,8 @@ Number.isInteger(2.4) // false.
 
 Math.sign(400) // 1, 0 or -1 depending on sign. In this case 1.
 
-[5, 10, 15, 10].find(function(item) {return item / 2 === 5;}) // 10
-[5, 10, 15, 10].findIndex(function(item) {return item / 2 === 5;}) // 1
+[5, 10, 15, 10].find(function (item) {return item / 2 === 5;}) // 10
+[5, 10, 15, 10].findIndex(function (item) {return item / 2 === 5;}) // 1
 
 // Replacement for `{}` key-value storage.
 // Keys can be anything.
@@ -166,11 +166,11 @@ set.delete(5)
 // Promises, see
 // http://www.slideshare.net/domenicdenicola/callbacks-promises-and-coroutines-oh-my-the-evolution-of-asynchronicity-in-javascript
 // https://github.com/petkaantonov/bluebird/#what-are-promises-and-why-should-i-use-them
-Promise.resolve(5).then(function(value) {
+Promise.resolve(5).then(function (value) {
   if ( ... ) throw new Error("whoops!");
   // do some stuff
   return anotherPromise();
-}).catch(function(e) {
+}).catch(function (e) {
   // any errors thrown asynchronously end up here
 });
 ```

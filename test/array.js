@@ -1,9 +1,9 @@
-var runArrayTests = function() {
-  describe('Array', function() {
+var runArrayTests = function () {
+  describe('Array', function () {
     var list = [5, 10, 15, 20];
 
-    describe('@@iterator', function() {
-      it('uses Symbol.iterator if available', function() {
+    describe('@@iterator', function () {
+      it('uses Symbol.iterator if available', function () {
         var a = [];
         var iterator;
         if (typeof Symbol === 'function' && Symbol.iterator) {
@@ -15,8 +15,8 @@ var runArrayTests = function() {
       });
     });
 
-    describe('Array.from()', function() {
-      it('has a length of 1', function() {
+    describe('Array.from()', function () {
+      it('has a length of 1', function () {
         expect(Array.from.length).to.equal(1);
       });
 
@@ -34,7 +34,7 @@ var runArrayTests = function() {
         expect(Array.from(Infinity)).to.eql([]);
       });
 
-      it('should create correct array from iterable', function() {
+      it('should create correct array from iterable', function () {
         (function () {
           expect(Array.from(arguments)).to.eql([0, 1, 2]);
         }(0, 1, 2));
@@ -65,8 +65,8 @@ var runArrayTests = function() {
         expect(Array.from('abc')).to.eql('abc'.split(''));
       });
 
-      it('should handle empty iterables correctly', function() {
-        (function() {
+      it('should handle empty iterables correctly', function () {
+        (function () {
           expect(Array.from(arguments)).to.eql([]);
         })();
         expect(Array.from([])).to.eql([]);
@@ -74,7 +74,7 @@ var runArrayTests = function() {
         expect(Array.from({ a: 1 })).to.eql([]);
       });
 
-      it('should work with other constructors', function() {
+      it('should work with other constructors', function () {
         var Foo = function (length, args) {
           this.length = length;
         };
@@ -86,8 +86,8 @@ var runArrayTests = function() {
         expect(Array.from.call(Foo, args)).to.eql(expected);
       });
 
-      describe('map functions', function() {
-        it('supports a map function', function() {
+      describe('map functions', function () {
+        it('supports a map function', function () {
           var original = [1, 2, 3];
           var mapper = function (item) {
             return item * 2;
@@ -96,7 +96,7 @@ var runArrayTests = function() {
           expect(mapped).to.eql([2, 4, 6]);
         });
 
-        it('passes both (and only) the item and the current index to the map function', function() {
+        it('passes both (and only) the item and the current index to the map function', function () {
           var original = [1, 2, 3];
           var expectedItems = [1, 2, 3];
           var expectedIndices = [0, 1, 2];
@@ -116,7 +116,7 @@ var runArrayTests = function() {
           expect(actualIndices).to.eql(expectedIndices);
         });
 
-        it('passes both the item and the current index to the map function with a "this" value', function() {
+        it('passes both the item and the current index to the map function with a "this" value', function () {
           var original = [1, 2, 3];
           var expectedItems = [1, 2, 3];
           var expectedIndices = [0, 1, 2];
@@ -160,11 +160,11 @@ var runArrayTests = function() {
         });
       });
 
-      it('does not throw when provided an undefined second arg', function() {
+      it('does not throw when provided an undefined second arg', function () {
         expect(Array.from([], undefined)).to.eql([]);
       });
 
-      it('throws when provided a nonfunction second arg', function() {
+      it('throws when provided a nonfunction second arg', function () {
         expect(function () { Array.from([], null); }).to['throw'](TypeError);
         expect(function () { Array.from([], false); }).to['throw'](TypeError);
         expect(function () { Array.from([], true); }).to['throw'](TypeError);
@@ -175,7 +175,7 @@ var runArrayTests = function() {
         expect(function () { Array.from([], 3); }).to['throw'](TypeError);
       });
 
-      it('supports a this arg', function() {
+      it('supports a this arg', function () {
         var original = [1, 2, 3];
         var context = {};
         var mapper = function (item) {
@@ -186,13 +186,13 @@ var runArrayTests = function() {
         expect(mapped).to.eql([2, 4, 6]);
       });
 
-      it('throws when provided null or undefined', function() {
+      it('throws when provided null or undefined', function () {
         expect(function () { Array.from(); }).to['throw'](TypeError);
         expect(function () { Array.from(undefined); }).to['throw'](TypeError);
         expect(function () { Array.from(null); }).to['throw'](TypeError);
       });
 
-      it('removes holes', function() {
+      it('removes holes', function () {
         var input = [0, , 2];
         var result = Array.from([0, , 2]);
         expect(1 in input).to.equal(false);
@@ -205,37 +205,37 @@ var runArrayTests = function() {
       });
     });
 
-    describe('Array.of()', function() {
-      it('should create correct array from arguments', function() {
+    describe('Array.of()', function () {
+      it('should create correct array from arguments', function () {
         expect(Array.of(1, null, undefined)).to.eql([1, null, undefined]);
       });
     });
 
-    describe('Array#copyWithin', function() {
-      it('has the right arity', function() {
+    describe('Array#copyWithin', function () {
+      it('has the right arity', function () {
         expect(Array.prototype.copyWithin.length).to.equal(2);
       });
 
-      it('modifies the object in-place', function() {
+      it('modifies the object in-place', function () {
         var arr = [1, 2, 3, 4, 5];
         expect(arr.copyWithin(0, 3)).to.eql([4, 5, 3, 4, 5]);
         expect(arr).to.eql([4, 5, 3, 4, 5]);
       });
 
-      it('works with 2 args', function() {
+      it('works with 2 args', function () {
         expect([1, 2, 3, 4, 5].copyWithin(0, 3)).to.eql([4, 5, 3, 4, 5]);
         expect([1, 2, 3, 4, 5].copyWithin(1, 3)).to.eql([1, 4, 5, 4, 5]);
         expect([1, 2, 3, 4, 5].copyWithin(1, 2)).to.eql([1, 3, 4, 5, 5]);
         expect([1, 2, 3, 4, 5].copyWithin(2, 2)).to.eql([1, 2, 3, 4, 5]);
       });
 
-      it('works with 3 args', function() {
+      it('works with 3 args', function () {
         expect([1, 2, 3, 4, 5].copyWithin(0, 3, 4)).to.eql([4, 2, 3, 4, 5]);
         expect([1, 2, 3, 4, 5].copyWithin(1, 3, 4)).to.eql([1, 4, 3, 4, 5]);
         expect([1, 2, 3, 4, 5].copyWithin(1, 2, 4)).to.eql([1, 3, 4, 4, 5]);
       });
 
-      it('works with negative args', function() {
+      it('works with negative args', function () {
         expect([1, 2, 3, 4, 5].copyWithin(0, -2)).to.eql([4, 5, 3, 4, 5]);
         expect([1, 2, 3, 4, 5].copyWithin(0, -2, -1)).to.eql([4, 2, 3, 4, 5]);
         expect([1, 2, 3, 4, 5].copyWithin(-4, -3, -2)).to.eql([1, 3, 3, 4, 5]);
@@ -243,7 +243,7 @@ var runArrayTests = function() {
         expect([1, 2, 3, 4, 5].copyWithin(-4, -3)).to.eql([1, 3, 4, 5, 5]);
       });
 
-      it('works with arraylike objects', function() {
+      it('works with arraylike objects', function () {
         var args = (function () { return arguments; }(1, 2, 3));
         expect(Array.isArray(args)).not.to.be.ok;
         var argsClass = Object.prototype.toString.call(args);
@@ -254,27 +254,27 @@ var runArrayTests = function() {
       });
     });
 
-    describe('Array#find', function() {
-      it('should have a length of 1', function() {
+    describe('Array#find', function () {
+      it('should have a length of 1', function () {
         expect(Array.prototype.find.length).to.equal(1);
       });
 
-      it('should find item by predicate', function() {
-        var result = list.find(function(item) { return item === 15; });
+      it('should find item by predicate', function () {
+        var result = list.find(function (item) { return item === 15; });
         expect(result).to.equal(15);
       });
 
-      it('should return undefined when nothing matched', function() {
-        var result = list.find(function(item) { return item === 'a'; });
+      it('should return undefined when nothing matched', function () {
+        var result = list.find(function (item) { return item === 'a'; });
         expect(result).to.equal(undefined);
       });
 
-      it('should throw TypeError when function was not passed', function() {
-        expect(function() { list.find(); }).to['throw'](TypeError);
+      it('should throw TypeError when function was not passed', function () {
+        expect(function () { list.find(); }).to['throw'](TypeError);
       });
 
-      it('should receive all three parameters', function() {
-        var index = list.find(function(value, index, arr) {
+      it('should receive all three parameters', function () {
+        var index = list.find(function (value, index, arr) {
           expect(list[index]).to.equal(value);
           expect(list).to.eql(arr);
           return false;
@@ -282,30 +282,30 @@ var runArrayTests = function() {
         expect(index).to.equal(undefined);
       });
 
-      it('should work with the context argument', function() {
+      it('should work with the context argument', function () {
         var context = {};
-        [1].find(function() { expect(this).to.equal(context); }, context);
+        [1].find(function () { expect(this).to.equal(context); }, context);
       });
 
-      it('should work with an array-like object', function() {
+      it('should work with an array-like object', function () {
         var obj = { '0': 1, '1': 2, '2': 3, length: 3 };
-        var found = Array.prototype.find.call(obj, function(item) { return item === 2; });
+        var found = Array.prototype.find.call(obj, function (item) { return item === 2; });
         expect(found).to.equal(2);
       });
 
-      it('should work with an array-like object with negative length', function() {
+      it('should work with an array-like object with negative length', function () {
         var obj = { '0': 1, '1': 2, '2': 3, length: -3 };
-        var found = Array.prototype.find.call(obj, function(item) {
+        var found = Array.prototype.find.call(obj, function (item) {
           throw new Error('should not reach here');
         });
         expect(found).to.equal(undefined);
       });
 
-      it('should work with a sparse array', function() {
+      it('should work with a sparse array', function () {
         var obj = [1, , undefined];
         expect(1 in obj).to.equal(false);
         var seen = [];
-        var found = obj.find(function(item, idx) {
+        var found = obj.find(function (item, idx) {
           seen.push([idx, item]);
           return false;
         });
@@ -313,10 +313,10 @@ var runArrayTests = function() {
         expect(seen).to.eql([[0, 1], [1, undefined], [2, undefined]]);
       });
 
-      it('should work with a sparse array-like object', function() {
+      it('should work with a sparse array-like object', function () {
         var obj = { '0': 1, '2': undefined, length: 3.2 };
         var seen = [];
-        var found = Array.prototype.find.call(obj, function(item, idx) {
+        var found = Array.prototype.find.call(obj, function (item, idx) {
           seen.push([idx, item]);
           return false;
         });
@@ -325,27 +325,27 @@ var runArrayTests = function() {
       });
     });
 
-    describe('Array#findIndex', function() {
-      it('should have a length of 1', function() {
+    describe('Array#findIndex', function () {
+      it('should have a length of 1', function () {
         expect(Array.prototype.findIndex.length).to.equal(1);
       });
 
-      it('should find item key by predicate', function() {
-        var result = list.findIndex(function(item) { return item === 15; });
+      it('should find item key by predicate', function () {
+        var result = list.findIndex(function (item) { return item === 15; });
         expect(result).to.equal(2);
       });
 
-      it('should return -1 when nothing matched', function() {
-        var result = list.findIndex(function(item) { return item === 'a'; });
+      it('should return -1 when nothing matched', function () {
+        var result = list.findIndex(function (item) { return item === 'a'; });
         expect(result).to.equal(-1);
       });
 
-      it('should throw TypeError when function was not passed', function() {
-        expect(function() { list.findIndex(); }).to['throw'](TypeError);
+      it('should throw TypeError when function was not passed', function () {
+        expect(function () { list.findIndex(); }).to['throw'](TypeError);
       });
 
-      it('should receive all three parameters', function() {
-        var index = list.findIndex(function(value, index, arr) {
+      it('should receive all three parameters', function () {
+        var index = list.findIndex(function (value, index, arr) {
           expect(list[index]).to.equal(value);
           expect(list).to.eql(arr);
           return false;
@@ -353,30 +353,30 @@ var runArrayTests = function() {
         expect(index).to.equal(-1);
       });
 
-      it('should work with the context argument', function() {
+      it('should work with the context argument', function () {
         var context = {};
-        [1].findIndex(function() { expect(this).to.equal(context); }, context);
+        [1].findIndex(function () { expect(this).to.equal(context); }, context);
       });
 
-      it('should work with an array-like object', function() {
+      it('should work with an array-like object', function () {
         var obj = { '0': 1, '1': 2, '2': 3, length: 3 };
-        var foundIndex = Array.prototype.findIndex.call(obj, function(item) { return item === 2; });
+        var foundIndex = Array.prototype.findIndex.call(obj, function (item) { return item === 2; });
         expect(foundIndex).to.equal(1);
       });
 
-      it('should work with an array-like object with negative length', function() {
+      it('should work with an array-like object with negative length', function () {
         var obj = { '0': 1, '1': 2, '2': 3, length: -3 };
-        var foundIndex = Array.prototype.findIndex.call(obj, function(item) {
+        var foundIndex = Array.prototype.findIndex.call(obj, function (item) {
           throw new Error('should not reach here');
         });
         expect(foundIndex).to.equal(-1);
       });
 
-      it('should work with a sparse array', function() {
+      it('should work with a sparse array', function () {
         var obj = [1, , undefined];
         expect(1 in obj).to.equal(false);
         var seen = [];
-        var foundIndex = obj.findIndex(function(item, idx) {
+        var foundIndex = obj.findIndex(function (item, idx) {
           seen.push([idx, item]);
           return item === undefined && idx === 2;
         });
@@ -384,10 +384,10 @@ var runArrayTests = function() {
         expect(seen).to.eql([[0, 1], [1, undefined], [2, undefined]]);
       });
 
-      it('should work with a sparse array-like object', function() {
+      it('should work with a sparse array-like object', function () {
         var obj = { '0': 1, '2': undefined, length: 3.2 };
         var seen = [];
-        var foundIndex = Array.prototype.findIndex.call(obj, function(item, idx) {
+        var foundIndex = Array.prototype.findIndex.call(obj, function (item, idx) {
           seen.push([idx, item]);
           return false;
         });
@@ -396,28 +396,28 @@ var runArrayTests = function() {
       });
     });
 
-    describe('ArrayIterator', function() {
+    describe('ArrayIterator', function () {
       var arrayIterator;
       beforeEach(function () {
         arrayIterator = [1, 2, 3].values();
       });
 
-      describe('ArrayIterator#next', function() {
-        it('should work when applied to an ArrayIterator', function() {
+      describe('ArrayIterator#next', function () {
+        it('should work when applied to an ArrayIterator', function () {
           expect(arrayIterator.next.apply(arrayIterator)).to.eql({value:1,done:false});
           expect(arrayIterator.next.apply(arrayIterator)).to.eql({value:2,done:false});
           expect(arrayIterator.next.apply(arrayIterator)).to.eql({value:3,done:false});
           expect(arrayIterator.next.apply(arrayIterator)).to.eql({value:undefined,done:true});
         });
 
-        it('throws when not applied to an ArrayIterator', function() {
+        it('throws when not applied to an ArrayIterator', function () {
           expect(function () { arrayIterator.next.apply({}); }).to['throw'](TypeError);
         });
       });
     });
 
-    describe('Array#keys', function() {
-      it('should have a length of zero', function() {
+    describe('Array#keys', function () {
+      it('should have a length of zero', function () {
         expect(Array.prototype.keys.length).to.equal(0);
       });
 
@@ -429,32 +429,32 @@ var runArrayTests = function() {
         }
       });
 
-      it('should return 0 on first object', function() {
+      it('should return 0 on first object', function () {
         expect(keys.next()).to.eql({value: 0, done: false});
       });
 
-      it('should return 1 on second object', function() {
+      it('should return 1 on second object', function () {
         expect(keys.next()).to.eql({value: 1, done: false});
       });
 
-      it('should return 2 on third object', function() {
+      it('should return 2 on third object', function () {
         expect(keys.next()).to.eql({value: 2, done: false});
       });
 
-      it('should return 3 on fourth object', function() {
+      it('should return 3 on fourth object', function () {
         expect(keys.next()).to.eql({value: 3, done: false});
       });
 
-      it('should set done on completing iteration', function() {
+      it('should set done on completing iteration', function () {
         expect(keys.next()).to.eql({value: undefined, done: true});
       });
 
-      it('once done it should stay done', function() {
+      it('once done it should stay done', function () {
         mylist.push(4);
         expect(keys.next()).to.eql({value: undefined, done: true});
       });
 
-      it('should not skip sparse keys', function() {
+      it('should not skip sparse keys', function () {
         var sparse = [1];
         sparse[2] = 3;
         var keys = sparse.keys();
@@ -465,8 +465,8 @@ var runArrayTests = function() {
       });
     });
 
-    describe('Array#values', function() {
-      it('should have a length of zero', function() {
+    describe('Array#values', function () {
+      it('should have a length of zero', function () {
         expect(Array.prototype.values.length).to.equal(0);
       });
 
@@ -478,32 +478,32 @@ var runArrayTests = function() {
         }
       });
 
-      it('should return 5 on first object', function() {
+      it('should return 5 on first object', function () {
         expect(values.next()).to.eql({value: 5, done: false});
       });
 
-      it('should return 10 on second object', function() {
+      it('should return 10 on second object', function () {
         expect(values.next()).to.eql({value: 10, done: false});
       });
 
-      it('should return 15 on third object', function() {
+      it('should return 15 on third object', function () {
         expect(values.next()).to.eql({value: 15, done: false});
       });
 
-      it('should return 20 on fourth object', function() {
+      it('should return 20 on fourth object', function () {
         expect(values.next()).to.eql({value: 20, done: false});
       });
 
-      it('should set done on completing iteration', function() {
+      it('should set done on completing iteration', function () {
         expect(values.next()).to.eql({value: undefined, done: true});
       });
 
-      it('once done it should stay done', function() {
+      it('once done it should stay done', function () {
         mylist.push(4);
         expect(values.next()).to.eql({value: undefined, done: true});
       });
 
-      it('should not skip sparse values', function() {
+      it('should not skip sparse values', function () {
         var sparse = [1];
         sparse[2] = 3;
         var values = sparse.values();
@@ -514,8 +514,8 @@ var runArrayTests = function() {
       });
     });
 
-    describe('Array#entries', function() {
-      it('should have a length of zero', function() {
+    describe('Array#entries', function () {
+      it('should have a length of zero', function () {
         expect(Array.prototype.entries.length).to.equal(0);
       });
 
@@ -527,38 +527,38 @@ var runArrayTests = function() {
         }
       });
 
-      it('should return [0, 5] on first object', function() {
+      it('should return [0, 5] on first object', function () {
         var val = entries.next();
         expect(val).to.eql({value: [0, 5], done: false});
       });
 
-      it('should return [1, 10] on second object', function() {
+      it('should return [1, 10] on second object', function () {
         var val = entries.next();
         expect(val).to.eql({value: [1, 10], done: false});
       });
 
-      it('should return [2, 15] on third object', function() {
+      it('should return [2, 15] on third object', function () {
         var val = entries.next();
         expect(val).to.eql({value: [2, 15], done: false});
       });
 
-      it('should return [3, 20] on fourth object', function() {
+      it('should return [3, 20] on fourth object', function () {
         var val = entries.next();
         expect(val).to.eql({value: [3, 20], done: false});
       });
 
-      it('should set done on completing iteration', function() {
+      it('should set done on completing iteration', function () {
         var val = entries.next();
         expect(val).to.eql({value: undefined, done: true});
       });
 
-      it('once done it should stay done', function() {
+      it('once done it should stay done', function () {
         mylist.push(4);
         var val = entries.next();
         expect(val).to.eql({value: undefined, done: true});
       });
 
-      it('should not skip sparse entries', function() {
+      it('should not skip sparse entries', function () {
         var sparse = [1];
         sparse[2] = 3;
         var entries = sparse.entries();
@@ -569,40 +569,40 @@ var runArrayTests = function() {
       });
     });
 
-    describe('Array#fill', function() {
-      it('has the right length', function() {
+    describe('Array#fill', function () {
+      it('has the right length', function () {
         expect(Array.prototype.fill.length).to.equal(1);
       });
 
-      it('works with just a value', function() {
+      it('works with just a value', function () {
         var original = [1, 2, 3, 4, 5, 6];
         var filled = [-1, -1, -1, -1, -1, -1];
 
         expect(original.fill(-1)).to.eql(filled);
       });
 
-      it('accepts a positive start index', function() {
+      it('accepts a positive start index', function () {
         var original = [1, 2, 3, 4, 5, 6];
         var filled = [1, 2, 3, -1, -1, -1];
 
         expect(original.fill(-1, 3)).to.eql(filled);
       });
 
-      it('accepts a negative start index', function() {
+      it('accepts a negative start index', function () {
         var original = [1, 2, 3, 4, 5, 6];
         var filled = [1, 2, 3, -1, -1, -1];
 
         expect(original.fill(-1, -3)).to.eql(filled);
       });
 
-      it('accepts a negative end index', function() {
+      it('accepts a negative end index', function () {
         var original = [1, 2, 3];
         var filled = [4, 2, 3];
 
         expect(original.fill(4, -3, -2)).to.eql(filled);
       });
 
-      it('accepts a large start index', function() {
+      it('accepts a large start index', function () {
         var original = [1, 2, 3, 4, 5, 6];
         var filled = [1, 2, 3, 4, 5, 6];
 
@@ -614,7 +614,7 @@ var runArrayTests = function() {
 
 describe('clean Object.prototype', runArrayTests);
 
-describe('polluted Object.prototype', function() {
+describe('polluted Object.prototype', function () {
   Object.prototype[1] = 42;
   runArrayTests();
   delete Object.prototype[1];

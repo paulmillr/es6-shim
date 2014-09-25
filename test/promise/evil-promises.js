@@ -4,7 +4,7 @@ describe("Evil promises should not be able to break invariants", function () {
   specify("resolving to a promise that calls onFulfilled twice", function (done) {
     // note that we have to create a trivial subclass, as otherwise the
     // Promise.resolve(evilPromise) is just the identity function.
-    var EvilPromise = function(executor) { Promise.call(this, executor); };
+    var EvilPromise = function (executor) { Promise.call(this, executor); };
     if (!Object.setPrototypeOf) { return done(); } // skip test if on IE < 11
     Object.setPrototypeOf(EvilPromise, Promise);
     EvilPromise.prototype = Object.create(Promise.prototype, {

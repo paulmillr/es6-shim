@@ -1,7 +1,7 @@
 "use strict";
 
-var failIfThrows = function(done) {
-  return function(e) { done(e || new Error()); };
+var failIfThrows = function (done) {
+  return function (e) { done(e || new Error()); };
 };
 
 var delayPromise = function (value, ms) {

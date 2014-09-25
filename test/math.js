@@ -1,5 +1,5 @@
 var Assertion = expect().constructor;
-Assertion.prototype.almostEqual = function(obj, precision) {
+Assertion.prototype.almostEqual = function (obj, precision) {
   var allowedDiff = precision || 1e-11;
   return this.within(obj - allowedDiff, obj + allowedDiff);
 };
@@ -14,9 +14,9 @@ var isNegativeZero = function (zero) {
 var valueOfIsNaN = { valueOf: function () { return NaN; } };
 var valueOfIsInfinity = { valueOf: function () { return Infinity; } };
 
-describe('Math', function() {
-  describe('#acosh()', function() {
-    it('should be correct', function() {
+describe('Math', function () {
+  describe('#acosh()', function () {
+    it('should be correct', function () {
       expect(Number.isNaN(Math.acosh(NaN))).to.be.ok;
       expect(Number.isNaN(Math.acosh(0))).to.be.ok;
       expect(Number.isNaN(Math.acosh(0.9999999))).to.be.ok;
@@ -29,22 +29,22 @@ describe('Math', function() {
     });
   });
 
-  describe('#asinh()', function() {
-    it('should be correct for NaN', function() {
+  describe('#asinh()', function () {
+    it('should be correct for NaN', function () {
       expect(Number.isNaN(Math.asinh(NaN))).to.be.ok;
     });
 
-    it('should be correct for zeroes', function() {
+    it('should be correct for zeroes', function () {
       expect(isPositiveZero(Math.asinh(+0))).to.be.ok;
       expect(isNegativeZero(Math.asinh(-0))).to.be.ok;
     });
 
-    it('should be correct for Infinities', function() {
+    it('should be correct for Infinities', function () {
       expect(Math.asinh(Infinity)).to.equal(Infinity);
       expect(Math.asinh(-Infinity)).to.equal(-Infinity);
     });
 
-    it('should be correct', function() {
+    it('should be correct', function () {
       expect(Math.asinh(1234)).to.almostEqual(7.811163549201245);
       expect(Math.asinh(9.99)).to.almostEqual(2.997227420191335);
       expect(Math.asinh(1e150)).to.almostEqual(346.0809111296668);
@@ -53,8 +53,8 @@ describe('Math', function() {
     });
   });
 
-  describe('#atanh()', function() {
-    it('should be correct', function() {
+  describe('#atanh()', function () {
+    it('should be correct', function () {
       expect(Number.isNaN(Math.atanh(NaN))).to.be.ok;
       expect(Number.isNaN(Math.atanh(-1.00000001))).to.be.ok;
       expect(Number.isNaN(Math.atanh(1.00000001))).to.be.ok;
@@ -71,7 +71,7 @@ describe('Math', function() {
     });
   });
 
-  describe('#cbrt()', function() {
+  describe('#cbrt()', function () {
     it('should be correct', function () {
       expect(isNaN(Math.cbrt(NaN))).to.be.ok;
       expect(isPositiveZero(Math.cbrt(+0))).to.be.ok;
@@ -85,16 +85,16 @@ describe('Math', function() {
     });
   });
 
-  describe('.clz32()', function() {
-    it('should have proper uint32 conversion', function() {
+  describe('.clz32()', function () {
+    it('should have proper uint32 conversion', function () {
       var integers = [5295, -5295, -9007199254740991, 9007199254740991, 0, -0];
       var nonNumbers = [undefined, true, null, {}, [], 'str'];
       var nonIntegers = [-9007199254741992, 9007199254741992, 5.9];
 
-      integers.forEach(function(item) {
+      integers.forEach(function (item) {
         expect(Math.clz32(item)).to.be.within(0, 32);
       });
-      nonIntegers.forEach(function(item) {
+      nonIntegers.forEach(function (item) {
         expect(Math.clz32(item)).to.be.within(0, 32);
       });
       expect(Math.clz32(true)).to.equal(Math.clz32(1));
@@ -132,22 +132,22 @@ describe('Math', function() {
     });
   });
 
-  describe('#cosh()', function() {
-    it('should be correct for NaN', function() {
+  describe('#cosh()', function () {
+    it('should be correct for NaN', function () {
       expect(Number.isNaN(Math.cosh(NaN))).to.be.ok;
     });
 
-    it('should be correct for Infinities', function() {
+    it('should be correct for Infinities', function () {
       expect(Math.cosh(Infinity)).to.equal(Infinity);
       expect(Math.cosh(-Infinity)).to.equal(Infinity);
     });
 
-    it('should be correct for zeroes', function() {
+    it('should be correct for zeroes', function () {
       expect(Math.cosh(-0)).to.equal(1);
       expect(Math.cosh(+0)).to.equal(1);
     });
 
-    it('should be correct', function() {
+    it('should be correct', function () {
       // Overridden precision values here are for Chrome, as of v25.0.1364.172
       // Broadened slightly for Firefox 31
       expect(Math.cosh(12)).to.almostEqual(81377.39571257407, 9e-11);
@@ -157,8 +157,8 @@ describe('Math', function() {
     });
   });
 
-  describe('#expm1()', function() {
-    it('should be correct', function() {
+  describe('#expm1()', function () {
+    it('should be correct', function () {
       expect(Number.isNaN(Math.expm1(NaN))).to.be.ok;
       expect(isPositiveZero(Math.expm1(+0))).to.be.ok;
       expect(isNegativeZero(Math.expm1(-0))).to.be.ok;
@@ -168,15 +168,15 @@ describe('Math', function() {
       expect(Math.expm1(-10)).to.almostEqual(-0.9999546000702375);
     });
 
-    it('works with very negative numbers', function() {
+    it('works with very negative numbers', function () {
       expect(Math.expm1(-38)).to.almostEqual(-1);
       expect(Math.expm1(-8675309)).to.almostEqual(-1);
       expect(Math.expm1(-4815162342)).to.almostEqual(-1);
     });
   });
 
-  describe('#hypot()', function() {
-    it('should be correct', function() {
+  describe('#hypot()', function () {
+    it('should be correct', function () {
       expect(Math.hypot(Infinity)).to.equal(Infinity);
       expect(Math.hypot(-Infinity)).to.equal(Infinity);
       expect(Math.hypot(Infinity, NaN)).to.equal(Infinity);
@@ -192,29 +192,29 @@ describe('Math', function() {
       expect(Math.hypot(0.1, 100)).to.almostEqual(100.0000499999875);
     });
 
-    it('should coerce to a number', function() {
+    it('should coerce to a number', function () {
       expect(Math.hypot('Infinity', 0)).to.equal(Infinity);
       expect(Math.hypot('3', '3', '3', '3')).to.equal(6);
     });
 
-    it('should take more than 3 arguments', function() {
+    it('should take more than 3 arguments', function () {
       expect(Math.hypot(66, 66, 66)).to.almostEqual(114.3153532995459);
       expect(Math.hypot(66, 66, 66, 66)).to.equal(132);
     });
 
-    it('should have the right length', function() {
+    it('should have the right length', function () {
       expect(Math.hypot.length).to.equal(2);
     });
 
-    it('works for very large or small numbers', function() {
+    it('works for very large or small numbers', function () {
       expect(Math.hypot(1e+300, 1e+300)).to.almostEqual(1.4142135623730952e+300);
       expect(Math.hypot(1e-300, 1e-300)).to.almostEqual(1.4142135623730952e-300);
       expect(Math.hypot(1e+300, 1e+300, 2, 3)).to.almostEqual(1.4142135623730952e+300);
     });
   });
 
-  describe('#log2()', function() {
-    it('should be correct for edge cases', function() {
+  describe('#log2()', function () {
+    it('should be correct for edge cases', function () {
       expect(Number.isNaN(Math.log2(NaN))).to.be.ok;
       expect(Number.isNaN(Math.log2(-1e-50))).to.be.ok;
       expect(Math.log2(+0)).to.equal(-Infinity);
@@ -223,14 +223,14 @@ describe('Math', function() {
       expect(Math.log2(Infinity)).to.equal(Infinity);
     });
 
-    it('should have the right precision', function() {
+    it('should have the right precision', function () {
       expect(Math.log2(5)).to.almostEqual(2.321928094887362);
       expect(Math.log2(32)).to.almostEqual(5);
     });
   });
 
-  describe('#log10', function() {
-    it('should be correct for edge cases', function() {
+  describe('#log10', function () {
+    it('should be correct for edge cases', function () {
       expect(Number.isNaN(Math.log10(NaN))).to.be.ok;
       expect(Number.isNaN(Math.log10(-1e-50))).to.be.ok;
       expect(Math.log10(+0)).to.equal(-Infinity);
@@ -239,14 +239,14 @@ describe('Math', function() {
       expect(Math.log10(Infinity)).to.equal(Infinity);
     });
 
-    it('should have the right precision', function() {
+    it('should have the right precision', function () {
       expect(Math.log10(5)).to.almostEqual(0.698970004336018);
       expect(Math.log10(50)).to.almostEqual(1.6989700043360187);
     });
   });
 
-  describe('#log1p', function() {
-    it('should be correct', function() {
+  describe('#log1p', function () {
+    it('should be correct', function () {
       expect(Number.isNaN(Math.log1p(NaN))).to.be.ok;
       expect(Number.isNaN(Math.log1p(-1.000000001))).to.be.ok;
       expect(Math.log1p(-1)).to.equal(-Infinity);
@@ -259,16 +259,16 @@ describe('Math', function() {
     });
   });
 
-  describe('#sign()', function() {
-    it('should be correct', function() {
+  describe('#sign()', function () {
+    it('should be correct', function () {
       // we also verify that [[ToNumber]] is being called
-      [Infinity, 1].forEach(function(value) {
+      [Infinity, 1].forEach(function (value) {
         expect(Math.sign(value)).to.equal(1);
         expect(Math.sign(''+value)).to.equal(1);
       });
       expect(Math.sign(true)).to.equal(1);
 
-      [-Infinity, -1].forEach(function(value) {
+      [-Infinity, -1].forEach(function (value) {
         expect(Math.sign(value)).to.equal(-1);
         expect(Math.sign(''+value)).to.equal(-1);
       });
@@ -288,8 +288,8 @@ describe('Math', function() {
     });
   });
 
-  describe('#sinh()', function() {
-    it('should be correct', function() {
+  describe('#sinh()', function () {
+    it('should be correct', function () {
       expect(Number.isNaN(Math.sinh(NaN))).to.be.ok;
       expect(isPositiveZero(Math.sinh(+0))).to.be.ok;
       expect(isNegativeZero(Math.sinh(-0))).to.be.ok;
@@ -300,8 +300,8 @@ describe('Math', function() {
     });
   });
 
-  describe('#tanh()', function() {
-    it('should be correct', function() {
+  describe('#tanh()', function () {
+    it('should be correct', function () {
       expect(Number.isNaN(Math.tanh(NaN))).to.be.ok;
       expect(isPositiveZero(Math.tanh(+0))).to.be.ok;
       expect(isNegativeZero(Math.tanh(-0))).to.be.ok;
@@ -312,8 +312,8 @@ describe('Math', function() {
     });
   });
 
-  describe('#trunc()', function() {
-    it('should be correct', function() {
+  describe('#trunc()', function () {
+    it('should be correct', function () {
       expect(Number.isNaN(Math.trunc(NaN))).to.be.ok;
       expect(isNegativeZero(Math.trunc(-0))).to.be.ok;
       expect(isPositiveZero(Math.trunc(+0))).to.be.ok;
@@ -325,18 +325,18 @@ describe('Math', function() {
       expect(Math.trunc(-1.99)).to.equal(-1);
     });
 
-    it('should coerce to a number immediately', function() {
+    it('should coerce to a number immediately', function () {
       expect(Math.trunc(valueOfIsInfinity)).to.equal(Infinity);
       expect(Number.isNaN(Math.trunc(valueOfIsNaN))).to.be.ok;
     });
   });
 
-  describe('#imul()', function() {
+  describe('#imul()', function () {
     var str = 'str';
     var obj = {};
     var arr = [];
 
-    it('should be correct for non-numbers', function() {
+    it('should be correct for non-numbers', function () {
       expect(Math.imul(false, 7)).to.equal(0);
       expect(Math.imul(7, false)).to.equal(0);
       expect(Math.imul(false, false)).to.equal(0);
@@ -354,12 +354,12 @@ describe('Math', function() {
       expect(Math.imul(7, arr)).to.equal(0);
     });
 
-    it('should be correct for hex values', function() {
+    it('should be correct for hex values', function () {
       expect(Math.imul(0xffffffff, 5)).to.equal(-5);
       expect(Math.imul(0xfffffffe, 5)).to.equal(-10);
     });
 
-    it('should be correct', function() {
+    it('should be correct', function () {
       expect(Math.imul(2, 4)).to.equal(8);
       expect(Math.imul(-1, 8)).to.equal(-8);
       expect(Math.imul(-2, -2)).to.equal(4);
@@ -375,7 +375,7 @@ describe('Math', function() {
       expect(Math.imul(7, 1.9)).to.equal(7);
     });
 
-    it('should be correct for objects with valueOf', function() {
+    it('should be correct for objects with valueOf', function () {
      var x = {
        x: 0,
        valueOf: function () { return ++this.x; }
@@ -388,48 +388,48 @@ describe('Math', function() {
     });
   });
 
-  describe('Math.fround', function() {
+  describe('Math.fround', function () {
     // Mozilla's reference tests: https://bug900125.bugzilla.mozilla.org/attachment.cgi?id=793163
-    it('returns NaN for undefined', function() {
+    it('returns NaN for undefined', function () {
       expect(Number.isNaN(Math.fround())).to.be.ok;
     });
 
-    it('returns NaN for NaN', function() {
+    it('returns NaN for NaN', function () {
       expect(Number.isNaN(Math.fround(NaN))).to.be.ok;
     });
 
-    it('works for zeroes and infinities', function() {
+    it('works for zeroes and infinities', function () {
       expect(isPositiveZero(Math.fround(0))).to.be.ok;
       expect(isNegativeZero(Math.fround(-0))).to.be.ok;
       expect(Math.fround(Infinity)).to.equal(Infinity);
       expect(Math.fround(-Infinity)).to.equal(-Infinity);
     });
 
-    it('returns infinity for large numbers', function() {
+    it('returns infinity for large numbers', function () {
       expect(Math.fround(1.7976931348623157e+308)).to.equal(Infinity);
       expect(Math.fround(-1.7976931348623157e+308)).to.equal(-Infinity);
       expect(Math.fround(3.4028235677973366e+38)).to.equal(Infinity);
     });
 
-    it('returns zero for really small numbers', function() {
+    it('returns zero for really small numbers', function () {
       expect(Number.MIN_VALUE).to.equal(Math.pow(2, -1074)); // sanity check
       expect(Math.fround(Number.MIN_VALUE)).to.equal(0);
       expect(Math.fround(-Number.MIN_VALUE)).to.equal(0);
     });
 
-    it('rounds properly', function() {
+    it('rounds properly', function () {
       expect(Math.fround(3)).to.equal(3);
       expect(Math.fround(-3)).to.equal(-3);
     });
 
-    it('rounds properly with the max float 32', function() {
+    it('rounds properly with the max float 32', function () {
       var maxFloat32 = 3.4028234663852886e+38;
       expect(Math.fround(maxFloat32)).to.equal(maxFloat32);
       expect(Math.fround(-maxFloat32)).to.equal(-maxFloat32);
       expect(Math.fround(maxFloat32 + Math.pow(2, Math.pow(2, 8 - 1) - 1 - 23 - 2))).to.equal(maxFloat32); // round-nearest rounds down to maxFloat32
     });
 
-    it('rounds properly with the min float 32', function() {
+    it('rounds properly with the min float 32', function () {
       var minFloat32 = 1.401298464324817e-45;
       expect(Math.fround(minFloat32)).to.equal(minFloat32);
       expect(Math.fround(-minFloat32)).to.equal(-minFloat32);

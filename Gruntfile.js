@@ -1,4 +1,4 @@
-module.exports = function(grunt) {
+module.exports = function (grunt) {
   var browsers = [
     { browserName: "firefox", version: "19", platform: "XP" },
     { browserName: "firefox", platform: "linux" },
@@ -42,7 +42,7 @@ module.exports = function(grunt) {
     'saucelabs-mocha': {
       all: {
         options: {
-          urls: (function() {
+          urls: (function () {
             var urls = ["http://localhost:9999/test/"];
             if (grunt.option('extra')) {
               urls.push("http://localhost:9999/test-sham/");
@@ -58,7 +58,7 @@ module.exports = function(grunt) {
           },
           //concurrency: 3,
           browsers: browsers,
-          testname: (function() {
+          testname: (function () {
             var testname = "mocha";
             if (process.env.TRAVIS_PULL_REQUEST &&
                 process.env.TRAVIS_PULL_REQUEST !== 'false') {
@@ -70,7 +70,7 @@ module.exports = function(grunt) {
             }
             return testname;
           })(),
-          tags: (function() {
+          tags: (function () {
             var tags = [];
             if (process.env.TRAVIS_PULL_REQUEST &&
                 process.env.TRAVIS_PULL_REQUEST !== 'false') {
