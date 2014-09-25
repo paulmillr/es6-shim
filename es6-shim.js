@@ -556,10 +556,10 @@
         return { value: undefined, done: true };
       }
       var first = s.charCodeAt(i), second, len;
-      if (first < 0xD800 || first > 0xDBFF || (i+1) == s.length) {
+      if (first < 0xD800 || first > 0xDBFF || (i + 1) == s.length) {
         len = 1;
       } else {
-        second = s.charCodeAt(i+1);
+        second = s.charCodeAt(i + 1);
         len = (second < 0xDC00 || second > 0xDFFF) ? 1 : 2;
       }
       this._i = i + len;
@@ -695,7 +695,7 @@
         start = ES.ToInteger(start);
         var to = target < 0 ? Math.max(len + target, 0) : Math.min(target, len);
         var from = start < 0 ? Math.max(len + start, 0) : Math.min(start, len);
-        end = (end===undefined) ? len : ES.ToInteger(end);
+        end = end === undefined ? len : ES.ToInteger(end);
         var fin = end < 0 ? Math.max(len + end, 0) : Math.min(end, len);
         var count = Math.min(fin - from, len - to);
         var direction = 1;
@@ -891,8 +891,8 @@
             if (!ES.TypeIsObject(O)) {
               throw new TypeError('cannot set prototype on a non-object');
             }
-            if (!(proto===null || ES.TypeIsObject(proto))) {
-              throw new TypeError('can only set prototype to an object or null'+proto);
+            if (!(proto === null || ES.TypeIsObject(proto))) {
+              throw new TypeError('can only set prototype to an object or null' + proto);
             }
           };
 
@@ -999,7 +999,7 @@
         if (value === 0) return value;
         var negate = value < 0, result;
         if (negate) value = -value;
-        result = Math.pow(value, 1/3);
+        result = Math.pow(value, 1 / 3);
         return negate ? -result : result;
       },
 
@@ -1260,13 +1260,13 @@
           var then = x.then; // only one invocation of accessor
           if (!ES.IsCallable(then)) { return false; }
           then.call(x, resolve, reject);
-        } catch(e) {
+        } catch (e) {
           reject(e);
         }
         return true;
       };
 
-      var promiseResolutionHandler = function (promise, onFulfilled, onRejected){
+      var promiseResolutionHandler = function (promise, onFulfilled, onRejected) {
         return function (x) {
           if (x === promise) {
             return onRejected(new TypeError('self resolution'));
@@ -1440,11 +1440,11 @@
         return capability.promise;
       };
 
-      Promise.prototype['catch'] = function ( onRejected ) {
+      Promise.prototype['catch'] = function (onRejected) {
         return this.then(undefined, onRejected);
       };
 
-      Promise.prototype.then = function ( onFulfilled, onRejected ) {
+      Promise.prototype.then = function (onFulfilled, onRejected) {
         var promise = this;
         if (!ES.IsPromise(promise)) { throw new TypeError('not a promise'); }
         // this.constructor not this._promiseConstructor; see
@@ -1844,7 +1844,7 @@
             add: function (key) {
               var fkey;
               if (this._storage && (fkey = fastkey(key)) !== null) {
-                this._storage[fkey]=true;
+                this._storage[fkey] = true;
                 return;
               }
               ensureMap(this);
