@@ -593,6 +593,16 @@ describe('Collections', function () {
       });
     });
 
+    it('should preserve insertion order', function() {
+      var arr1 = ['d', 'a', 'b'];
+      var arr2 = [3, 2, 'z', 'a', 1];
+      var arr3 = [3, 2, 'z', {}, 'a', 1];
+
+      expect(Array.from(new Set(arr1))).to.eql(arr1);
+      expect(Array.from(new Set(arr2))).to.eql(arr2);
+      expect(Array.from(new Set(arr3))).to.eql(arr3);
+    });
+
     describe('#forEach', function () {
       var set;
       beforeEach(function () {
