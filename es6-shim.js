@@ -1514,12 +1514,15 @@
     // Their fast path also requires that the environment preserve
     // property insertion order, which is not guaranteed by the spec.
     var testOrder = function(a) {
-      var b = Object.keys(a.reduce(function(o, k) { o[k] = true; return o; }, {}));
+      var b = Object.keys(a.reduce(function (o, k) {
+        o[k] = true;
+        return o;
+      }, {}));
       return a.join(':') === b.join(':');
     };
-    var preservesInsertionOrder = testOrder(['z','a','bb']);
+    var preservesInsertionOrder = testOrder(['z', 'a', 'bb']);
     // some engines (eg, Chrome) only preserve insertion order for string keys
-    var preservesNumericInsertionOrder = testOrder(['z',1,'a','3',2]);
+    var preservesNumericInsertionOrder = testOrder(['z', 1, 'a', '3', 2]);
 
     if (supportsDescriptors) {
 
@@ -1830,7 +1833,7 @@
                 if (k.charCodeAt(0) === 36) {
                   k = k.slice(1);
                 } else if (k.charCodeAt(0) === 110 /* 'n' */) {
-                  k = +(k.slice(1));
+                  k = +k.slice(1);
                 } else {
                   k = +k;
                 }
