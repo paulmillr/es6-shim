@@ -1832,7 +1832,7 @@
                 // fast check for leading '$'
                 if (k.charCodeAt(0) === 36) {
                   k = k.slice(1);
-                } else if (k.charCodeAt(0) === 110 /* 'n' */) {
+                } else if (k.charAt(0) === 'n') {
                   k = +k.slice(1);
                 } else {
                   k = +k;
