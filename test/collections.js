@@ -356,6 +356,17 @@ describe('Collections', function () {
         );
       });
     });
+
+    it('should preserve insertion order', function() {
+      var convertToPairs = function (item) { return [item, true]; };
+      var arr1 = ['d', 'a', 'b'];
+      var arr2 = [3, 2, 'z', 'a', 1];
+      var arr3 = [3, 2, 'z', {}, 'a', 1];
+
+      expect(Array.from(new Map(arr1.map(convertToPairs)).keys())).to.eql(arr1);
+      expect(Array.from(new Map(arr2.map(convertToPairs)).keys())).to.eql(arr2);
+      expect(Array.from(new Map(arr3.map(convertToPairs)).keys())).to.eql(arr3);
+    });
   });
 
   it('map iteration', function () {
