@@ -1,5 +1,14 @@
 # es6-shim x.x.x (not yet released)
 
+# es6-shim 0.19.0 (9 Oct 2014)
+* Detect and override noncompliant Map in Firefox 32 (#294)
+* Fix Map and Set for engines that don't preserve numeric key order (#292, #290)
+* Detect and override noncompliant Safari 7.1 Promises (#289)
+* Fix Array#keys and Array#entries in Safari 7.1
+* General style and whitespace cleanup
+* Update dependencies
+* Clean up tests for ES3 by removing reserved words
+
 # es6-shim 0.18.0 (6 Sep 2014)
 * Speed up String#trim replacement (#284)
 * named Array#find and Array#findIndex for easier debugging
