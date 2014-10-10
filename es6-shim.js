@@ -1944,7 +1944,11 @@
           isCallableWithoutNew(globals.Map) ||
           isCallableWithoutNew(globals.Set) ||
           !supportsSubclassing(globals.Map, function (M) {
-            return (new M([])) instanceof M;
+            var m = new M([]);
+            // Firefox 32 is ok with the instantiating the subclass but will
+            // throw when the map is used.
+            m.set(42, 42);
+            return m instanceof M;
           })
         ) {
           globals.Map = collectionShims.Map;
