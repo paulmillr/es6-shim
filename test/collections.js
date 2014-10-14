@@ -284,6 +284,10 @@ describe('Collections', function () {
         });
       });
 
+      it('returns the map from #set() for chaining', function () {
+        expect(map.set({}, {})).to.equal(map);
+      });
+
       it('visits keys added in the iterator', function () {
         var hasAdded = false;
         var hasFoundD = false;
@@ -439,6 +443,10 @@ describe('Collections', function () {
 
     it('should have the right arity', function () {
       expect(Set.length).to.equal(1);
+    });
+
+    it('returns the set from #add() for chaining', function () {
+      expect(set.add({})).to.equal(set);
     });
 
     it('should accept an iterable as argument', function () {
