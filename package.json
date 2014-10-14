@@ -25,8 +25,8 @@
   "scripts": {
     "test": "npm run test-shim && npm run test-sham",
     "lint": "npm run lint-shim && npm run lint-sham",
-    "lint-shim": "jshint es6-shim.js",
-    "lint-sham": "jshint es6-sham.js",
+    "lint-shim": "jshint es6-shim.js test/*.js test/*/*.js",
+    "lint-sham": "jshint es6-sham.js test-sham/*.js",
     "test-shim": "npm run lint-shim && mocha test/*.js test/*/*.js",
     "test-sham": "npm run lint-sham && mocha test-sham/*.js",
     "test-native": "jshint es6-shim.js && NO_ES6_SHIM=1 mocha test/*.js test/*/*.js",
