@@ -1,5 +1,9 @@
 # es6-shim x.x.x (not yet released)
 
+# es6-shim 0.19.1 (14 Oct 2014)
+* Fix Map#set and Set#add to be chainable (#295)
+* Update mocha
+
 # es6-shim 0.19.0 (9 Oct 2014)
 * Detect and override noncompliant Map in Firefox 32 (#294)
 * Fix Map and Set for engines that don't preserve numeric key order (#292, #290)
