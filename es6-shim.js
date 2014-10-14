@@ -1724,6 +1724,7 @@
               entry.prev.next = entry;
               entry.next.prev = entry;
               this._size += 1;
+              return this;
             },
 
             'delete': function (key) {
@@ -1878,7 +1879,8 @@
                 return;
               }
               ensureMap(this);
-              return this['[[SetData]]'].set(key, key);
+              this['[[SetData]]'].set(key, key);
+              return this;
             },
 
             'delete': function (key) {
