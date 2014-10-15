@@ -1,6 +1,5 @@
-describe('Worker', function () {
-  var undefined,
-    workerErrorEventToError = function (errorEvent) {
+describe('Worker', function (undefined) {
+  var workerErrorEventToError = function (errorEvent) {
       var errorText = "Error in Worker";
       if (errorEvent.filename !== undefined) {
         errorText += " " + errorEvent.filename;

@@ -1,6 +1,4 @@
-describe('Object', function () {
-  var undefined;
-
+describe('Object', function (undefined) {
   describe('Object.keys()', function () {
     it('works on strings', function () {
       expect(Object.keys('foo')).to.eql(['0', '1', '2']);
