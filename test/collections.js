@@ -116,7 +116,7 @@ describe('Collections', function () {
           testMapping(number / 100, {});
           testMapping('key-' + number, {});
           testMapping('' + number, {});
-          if (slowkeys) testMapping(new String(number), {});
+          if (slowkeys) testMapping(Object(String(number)), {});
         });
 
         var testkeys = [+0, Infinity, -Infinity, NaN];
@@ -193,8 +193,8 @@ describe('Collections', function () {
 
     it('Map.prototype.size should throw TypeError', function () {
       // see https://github.com/paulmillr/es6-shim/issues/176
-      expect(function () { Map.prototype.size; }).to['throw'](TypeError);
-      expect(function () { Map.prototype.size; }).to['throw'](TypeError);
+      expect(function () { return Map.prototype.size; }).to['throw'](TypeError);
+      expect(function () { return Map.prototype.size; }).to['throw'](TypeError);
     });
 
     it('should have keys, values and size props', function () {
@@ -500,7 +500,7 @@ describe('Collections', function () {
           testSet(number / 100);
           testSet('key-' + number);
           testSet('' + number);
-          if (slowkeys) testSet(new String(number));
+          if (slowkeys) testSet(Object(String(number)));
         });
 
         var testkeys = [+0, Infinity, -Infinity, NaN];
@@ -762,8 +762,8 @@ describe('Collections', function () {
 
     it('Set.prototype.size should throw TypeError', function () {
       // see https://github.com/paulmillr/es6-shim/issues/176
-      expect(function () { Set.prototype.size; }).to['throw'](TypeError);
-      expect(function () { Set.prototype.size; }).to['throw'](TypeError);
+      expect(function () { return Set.prototype.size; }).to['throw'](TypeError);
+      expect(function () { return Set.prototype.size; }).to['throw'](TypeError);
     });
 
     it.skip('should throw proper errors when user invokes methods with wrong types of receiver', function () {
