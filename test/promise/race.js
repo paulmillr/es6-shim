@@ -1,11 +1,12 @@
-"use strict";
 /*global describe, it, setTimeout, assert */
 
 var failIfThrows = function (done) {
+  'use strict';
   return function (e) { done(e || new Error()); };
 };
 
 var delayPromise = function (value, ms) {
+  'use strict';
   return new Promise(function (resolve) {
     setTimeout(function () {
       resolve(value);
@@ -14,6 +15,7 @@ var delayPromise = function (value, ms) {
 };
 
 describe("Promise.race", function () {
+  'use strict';
   it("should fulfill if all promises are settled and the ordinally-first is fulfilled", function (done) {
     var iterable = [Promise.resolve(1), Promise.reject(2), Promise.resolve(3)];
 

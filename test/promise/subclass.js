@@ -1,7 +1,7 @@
-"use strict";
 /*global it, describe */
 
 describe("Support user subclassing of Promise", function () {
+  'use strict';
   it("should work if you do it right", function (done) {
     // This is the "correct" es6-compatible way; see gh #170
     // (Thanks, @domenic!)

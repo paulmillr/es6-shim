@@ -1,11 +1,12 @@
-"use strict";
 /*global it, describe, assert */
 
 var failIfThrows = function (done) {
+  'use strict';
   return function (e) { done(e || new Error()); };
 };
 
 describe("Promise.all", function () {
+  'use strict';
   it("fulfills if passed an empty array", function (done) {
     var iterable = [];
 
