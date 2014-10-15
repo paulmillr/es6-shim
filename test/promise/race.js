@@ -1,4 +1,5 @@
 "use strict";
+/*global describe, it, setTimeout, assert */
 
 var failIfThrows = function (done) {
   return function (e) { done(e || new Error()); };
@@ -76,3 +77,4 @@ describe("Promise.race", function () {
     ).then(done, failIfThrows(done));
   });
 });
+

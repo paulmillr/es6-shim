@@ -1,5 +1,6 @@
+/*global describe */
+
 // tests from promises-es6-tests
-/*global global, describe, require*/
 (function () {
     "use strict";
 

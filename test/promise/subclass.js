@@ -1,4 +1,5 @@
 "use strict";
+/*global it, describe */
 
 describe("Support user subclassing of Promise", function () {
   it("should work if you do it right", function (done) {

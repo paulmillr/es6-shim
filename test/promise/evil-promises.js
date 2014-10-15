@@ -1,4 +1,5 @@
 "use strict";
+/*global describe, specify, assert */
 
 describe("Evil promises should not be able to break invariants", function () {
   specify("resolving to a promise that calls onFulfilled twice", function (done) {
@@ -25,3 +26,4 @@ describe("Evil promises should not be able to break invariants", function () {
     }).then(done, done);
   });
 });
+

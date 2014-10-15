@@ -1,3 +1,5 @@
+/*global describe, require */
+
 // tests from promises-aplus-tests
 "use strict";
 
@@ -16,3 +18,4 @@ describe("Promises/A+ Tests", function () {
     rejected: Promise.reject.bind(Promise)
   });
 });
+

@@ -1,4 +1,5 @@
 "use strict";
+/*global it, describe, assert */
 
 var failIfThrows = function (done) {
   return function (e) { done(e || new Error()); };
@@ -184,5 +185,5 @@ describe("Promise.all", function () {
       }).
       then(done, failIfThrows(done));
   });
-
 });
+
