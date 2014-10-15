@@ -83,7 +83,7 @@ describe('Collections', function () {
     });
 
     it('should be subclassable', function () {
-      var MyMap = function () { Map.call(this, [['a','b']]); }
+      var MyMap = function () { Map.call(this, [['a','b']]); };
       if (!Object.setPrototypeOf) { return; } // skip test if on IE < 11
       Object.setPrototypeOf(MyMap, Map);
       MyMap.prototype = Object.create(Map.prototype, {
@@ -194,8 +194,8 @@ describe('Collections', function () {
 
     it('Map.prototype.size should throw TypeError', function () {
       // see https://github.com/paulmillr/es6-shim/issues/176
-      expect(function () { Map.prototype.size }).to['throw'](TypeError);
-      expect(function () { Map.prototype.size }).to['throw'](TypeError);
+      expect(function () { Map.prototype.size; }).to['throw'](TypeError);
+      expect(function () { Map.prototype.size; }).to['throw'](TypeError);
     });
 
     it('should have keys, values and size props', function () {
@@ -303,7 +303,7 @@ describe('Collections', function () {
       });
 
       it('visits keys added in the iterator when there is a deletion', function () {
-        var hasSeenFour = false;;
+        var hasSeenFour = false;
         var map = new Map();
         map.set('0', 42);
         map.forEach(function (value, key) {
@@ -469,7 +469,7 @@ describe('Collections', function () {
     });
 
     it('should be subclassable', function () {
-      var MySet = function () { Set.call(this, ['a', 'b']); }
+      var MySet = function () { Set.call(this, ['a', 'b']); };
       if (!Object.setPrototypeOf) { return; } // skip test if on IE < 11
       Object.setPrototypeOf(MySet, Set);
       MySet.prototype = Object.create(Set.prototype, {
@@ -688,7 +688,7 @@ describe('Collections', function () {
       });
 
       it('visits keys added in the iterator when there is a deletion (slow path)', function () {
-        var hasSeenFour = false;;
+        var hasSeenFour = false;
         var set = new Set();
         set.add({}); // force use of the slow O(N) implementation
         set.add('0');
@@ -704,7 +704,7 @@ describe('Collections', function () {
       });
 
       it('visits keys added in the iterator when there is a deletion (fast path)', function () {
-        var hasSeenFour = false;;
+        var hasSeenFour = false;
         var set = new Set();
         set.add('0');
         set.forEach(function (value, key) {
@@ -764,8 +764,8 @@ describe('Collections', function () {
 
     it('Set.prototype.size should throw TypeError', function () {
       // see https://github.com/paulmillr/es6-shim/issues/176
-      expect(function () { Set.prototype.size }).to['throw'](TypeError);
-      expect(function () { Set.prototype.size }).to['throw'](TypeError);
+      expect(function () { Set.prototype.size; }).to['throw'](TypeError);
+      expect(function () { Set.prototype.size; }).to['throw'](TypeError);
     });
 
     it.skip('should throw proper errors when user invokes methods with wrong types of receiver', function () {
