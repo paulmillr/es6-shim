@@ -108,8 +108,7 @@ describe('Collections', function () {
     it('should map values correctly', function () {
       // Run this test twice, one with the "fast" implementation (which only
       // allows string and numeric keys) and once with the "slow" impl.
-      for (i = 0; i < 2; i++) {
-        var slowkeys = (i !== 0);
+      [true, false].forEach(function (slowkeys) {
         map = new Map();
 
         range(1, 20).forEach(function (number) {
@@ -141,7 +140,7 @@ describe('Collections', function () {
          '__proto__', '__parent__', '__count__'].forEach(function (key) {
            testMapping(key, {});
          });
-      }
+      });
     });
 
     it('should map empty values correctly', function () {
@@ -492,8 +491,7 @@ describe('Collections', function () {
     it('should work as expected', function () {
       // Run this test twice, one with the "fast" implementation (which only
       // allows string and numeric keys) and once with the "slow" impl.
-      for (i = 0; i < 2; i++) {
-        var slowkeys = (i !== 0);
+      [true, false].forEach(function (slowkeys) {
         set = new Set();
 
         range(1, 20).forEach(function (number) {
@@ -524,7 +522,7 @@ describe('Collections', function () {
         // verify that properties of Object don't peek through.
         ['hasOwnProperty', 'constructor', 'toString', 'isPrototypeOf',
          '__proto__', '__parent__', '__count__'].forEach(testSet);
-      }
+      });
     });
 
     describe('#size', function () {
