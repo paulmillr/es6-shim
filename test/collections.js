@@ -115,7 +115,7 @@ describe('Collections', function () {
           if (slowkeys) testMapping(number, {});
           testMapping(number / 100, {});
           testMapping('key-' + number, {});
-          testMapping('' + number, {});
+          testMapping(String(number), {});
           if (slowkeys) testMapping(Object(String(number)), {});
         });
 
@@ -125,7 +125,7 @@ describe('Collections', function () {
         }
         testkeys.forEach(function (key) {
           testMapping(key, {});
-          testMapping('' + key, {});
+          testMapping(String(key), {});
         });
         testMapping('', {});
 
@@ -499,7 +499,7 @@ describe('Collections', function () {
           testSet(number);
           testSet(number / 100);
           testSet('key-' + number);
-          testSet('' + number);
+          testSet(String(number));
           if (slowkeys) testSet(Object(String(number)));
         });
 
@@ -509,7 +509,7 @@ describe('Collections', function () {
         }
         testkeys.forEach(function (number) {
           testSet(number);
-          testSet('' + number);
+          testSet(String(number));
         });
         testSet('');
 

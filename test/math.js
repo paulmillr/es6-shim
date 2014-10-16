@@ -264,13 +264,13 @@ describe('Math', function () {
       // we also verify that [[ToNumber]] is being called
       [Infinity, 1].forEach(function (value) {
         expect(Math.sign(value)).to.equal(1);
-        expect(Math.sign(''+value)).to.equal(1);
+        expect(Math.sign(String(value))).to.equal(1);
       });
       expect(Math.sign(true)).to.equal(1);
 
       [-Infinity, -1].forEach(function (value) {
         expect(Math.sign(value)).to.equal(-1);
-        expect(Math.sign(''+value)).to.equal(-1);
+        expect(Math.sign(String(value))).to.equal(-1);
       });
 
       expect(isPositiveZero(Math.sign(+0))).to.equal(true);
