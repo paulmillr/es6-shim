@@ -1518,7 +1518,7 @@
     // Map and Set require a true ES5 environment
     // Their fast path also requires that the environment preserve
     // property insertion order, which is not guaranteed by the spec.
-    var testOrder = function(a) {
+    var testOrder = function (a) {
       var b = Object.keys(a.reduce(function (o, k) {
         o[k] = true;
         return o;

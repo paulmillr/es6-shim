@@ -54,7 +54,7 @@ describe('Number', function (undefined) {
         valueOf: function () { return 3; }
       })).to.equal(false);
       expect(Number.isFinite({
-        valueOf: function () { return 0/0; }
+        valueOf: function () { return 0 / 0; }
       })).to.equal(false);
       expect(Number.isFinite({
         valueOf: function () { throw 17; }
@@ -91,7 +91,7 @@ describe('Number', function (undefined) {
         'str',
         function () {},
         { valueOf: function () { return 3; } },
-        { valueOf: function () { return 0/0; } },
+        { valueOf: function () { return 0 / 0; } },
         { valueOf: function () { throw 17; } },
         { toString: function () { throw 17; } },
         { valueOf: function () { throw 17; },
@@ -152,7 +152,7 @@ describe('Number', function (undefined) {
         'str',
         function () {},
         { valueOf: function () { return 3; } },
-        { valueOf: function () { return 0/0; } },
+        { valueOf: function () { return 0 / 0; } },
         { valueOf: function () { throw 17; } },
         { toString: function () { throw 17; } },
         { valueOf: function () { throw 17; },
@@ -200,7 +200,7 @@ describe('Number', function (undefined) {
       integers.concat(nonIntegers).map(Number.isNaN).forEach(expectFalse);
       nonNumbers.map(Number.isNaN).forEach(expectFalse);
       expect(Number.isNaN(NaN)).to.equal(true);
-      expect(Number.isNaN(0/0)).to.equal(true);
+      expect(Number.isNaN(0 / 0)).to.equal(true);
       expect(Number.isNaN(Number('NaN'))).to.equal(true);
       expect(Number.isNaN(4)).to.equal(false);
       expect(Number.isNaN(4.5)).to.equal(false);
@@ -210,7 +210,7 @@ describe('Number', function (undefined) {
       expect(Number.isNaN(0)).to.equal(false);
       expect(Number.isNaN(-0)).to.equal(false);
       expect(Number.isNaN({valueOf: function () { return 3; }})).to.equal(false);
-      expect(Number.isNaN({valueOf: function () { return 0/0; }})).to.equal(false);
+      expect(Number.isNaN({valueOf: function () { return 0 / 0; }})).to.equal(false);
       expect(Number.isNaN({valueOf: function () { throw 17; } })).to.equal(false);
       expect(Number.isNaN({toString: function () { throw 17; } })).to.equal(false);
       expect(Number.isNaN({

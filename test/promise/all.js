@@ -106,7 +106,7 @@ describe('Promise.all', function () {
   };
 
   it('should be robust against tampering (1)', function (done) {
-    var g = [ tamper(Promise.resolve(0)) ];
+    var g = [tamper(Promise.resolve(0))];
     // Prevent countdownHolder.[[Countdown]] from ever reaching zero
     Promise.all(g).
       then(function () { done(); }, failIfThrows(done));
@@ -182,7 +182,7 @@ describe('Promise.all', function () {
     Promise.
       resolve().
       then(function () {
-        assert.deepEqual(actualArguments, [ [ 0, 'tampered', 2 ] ]);
+        assert.deepEqual(actualArguments, [[0, 'tampered', 2]]);
       }).
       then(done, failIfThrows(done));
   });

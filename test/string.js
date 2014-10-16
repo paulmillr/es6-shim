@@ -1,7 +1,7 @@
 var runStringTests = function () {
   'use strict';
   describe('String', function () {
-    var hasStrictMode = (function () { return this===null; }).call(null);
+    var hasStrictMode = (function () { return this === null; }).call(null);
     var testObjectCoercible = function (methodName) {
       var fn = String.prototype[methodName];
       if (!hasStrictMode) { return; } // skip these tests on IE <= 10
@@ -363,7 +363,7 @@ var runStringTests = function () {
       it('should work with surrogate characters', function () {
         var str = '\u2500\ud800\udc00\udbff\udfff\ud800';
         expect(Array.from(str)).to.eql(
-          [ '\u2500', '\ud800\udc00', '\udbff\udfff', '\ud800' ]
+          ['\u2500', '\ud800\udc00', '\udbff\udfff', '\ud800']
         );
       });
     });

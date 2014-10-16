@@ -347,12 +347,12 @@ describe('Collections', function () {
         var map = new Map(), result = [];
         map.set(-0, 'a');
         map.forEach(function (value, key) {
-          result.push(String(1/key) + ' ' + value);
+          result.push(String(1 / key) + ' ' + value);
         });
         map.set(1, 'b');
         map.set(0, 'c'); // shouldn't cause reordering
         map.forEach(function (value, key) {
-          result.push(String(1/key) + ' ' + value);
+          result.push(String(1 / key) + ' ' + value);
         });
         expect(result.join(', ')).to.equal(
           'Infinity a, Infinity c, 1 b'
@@ -360,7 +360,7 @@ describe('Collections', function () {
       });
     });
 
-    it('should preserve insertion order', function() {
+    it('should preserve insertion order', function () {
       var convertToPairs = function (item) { return [item, true]; };
       var arr1 = ['d', 'a', 'b'];
       var arr2 = [3, 2, 'z', 'a', 1];
@@ -599,7 +599,7 @@ describe('Collections', function () {
       });
     });
 
-    it('should preserve insertion order', function() {
+    it('should preserve insertion order', function () {
       var arr1 = ['d', 'a', 'b'];
       var arr2 = [3, 2, 'z', 'a', 1];
       var arr3 = [3, 2, 'z', {}, 'a', 1];
@@ -747,12 +747,12 @@ describe('Collections', function () {
         var set = new Set(), result = [];
         set.add(-0);
         set.forEach(function (key) {
-          result.push(String(1/key));
+          result.push(String(1 / key));
         });
         set.add(1);
         set.add(0); // shouldn't cause reordering
         set.forEach(function (key) {
-          result.push(String(1/key));
+          result.push(String(1 / key));
         });
         expect(result.join(', ')).to.equal(
           'Infinity, Infinity, 1'
