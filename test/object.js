@@ -22,16 +22,16 @@ describe('Object', function (undefined) {
       [null, undefined, [0], 5, 'str', {a: null}].map(function (item) {
         return Object.is(item, item);
       }).forEach(function (result) {
-        expect(result).to.be.ok;
+        expect(result).to.equal(true);
       });
     });
 
     it('should compare 0 and -0 correctly', function () {
-      expect(Object.is(0, -0)).to.not.be.ok;
+      expect(Object.is(0, -0)).to.equal(false);
     });
 
     it('should compare NaNs correctly', function () {
-      expect(Object.is(NaN, NaN)).to.be.ok;
+      expect(Object.is(NaN, NaN)).to.equal(true);
     });
   });
 

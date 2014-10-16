@@ -3,11 +3,11 @@ describe('Number', function (undefined) {
   var nonIntegers = [-9007199254741992, 9007199254741992, 5.9];
   var infinities = [Infinity, -Infinity];
   var nonNumbers = [undefined, true, null, {}, [], 'str'];
-  var expectToBeOk = function (item) {
-    expect(item).to.be.ok;
+  var expectTrue = function (item) {
+    expect(item).to.equal(true);
   };
-  var expectToNotBeOk = function (item) {
-    expect(item).to.not.be.ok;
+  var expectFalse = function (item) {
+    expect(item).to.equal(false);
   };
 
   describe('Number constants', function () {
@@ -38,47 +38,47 @@ describe('Number', function (undefined) {
 
   describe('Number.isFinite()', function () {
     it('should work', function () {
-      integers.map(Number.isFinite).forEach(expectToBeOk);
-      infinities.map(Number.isFinite).forEach(expectToNotBeOk);
-      expect(Number.isFinite(Infinity)).to.not.be.ok;
-      expect(Number.isFinite(-Infinity)).to.not.be.ok;
-      expect(Number.isFinite(NaN)).to.not.be.ok;
-      expect(Number.isFinite(4)).to.be.ok;
-      expect(Number.isFinite(4.5)).to.be.ok;
-      expect(Number.isFinite('hi')).to.not.be.ok;
-      expect(Number.isFinite('1.3')).to.not.be.ok;
-      expect(Number.isFinite('51')).to.not.be.ok;
-      expect(Number.isFinite(0)).to.be.ok;
-      expect(Number.isFinite(-0)).to.be.ok;
+      integers.map(Number.isFinite).forEach(expectTrue);
+      infinities.map(Number.isFinite).forEach(expectFalse);
+      expect(Number.isFinite(Infinity)).to.equal(false);
+      expect(Number.isFinite(-Infinity)).to.equal(false);
+      expect(Number.isFinite(NaN)).to.equal(false);
+      expect(Number.isFinite(4)).to.equal(true);
+      expect(Number.isFinite(4.5)).to.equal(true);
+      expect(Number.isFinite('hi')).to.equal(false);
+      expect(Number.isFinite('1.3')).to.equal(false);
+      expect(Number.isFinite('51')).to.equal(false);
+      expect(Number.isFinite(0)).to.equal(true);
+      expect(Number.isFinite(-0)).to.equal(true);
       expect(Number.isFinite({
         valueOf: function () { return 3; }
-      })).to.not.be.ok;
+      })).to.equal(false);
       expect(Number.isFinite({
         valueOf: function () { return 0/0; }
-      })).to.not.be.ok;
+      })).to.equal(false);
       expect(Number.isFinite({
         valueOf: function () { throw 17; }
-      })).to.not.be.ok;
+      })).to.equal(false);
       expect(Number.isFinite({
         toString: function () { throw 17; }
-      })).to.not.be.ok;
+      })).to.equal(false);
       expect(Number.isFinite({
         valueOf: function () { throw 17; },
         toString: function () { throw 42; }
-      })).to.not.be.ok;
+      })).to.equal(false);
     });
 
     it('should not be confused by type coercion', function () {
-      nonNumbers.map(Number.isFinite).forEach(expectToNotBeOk);
+      nonNumbers.map(Number.isFinite).forEach(expectFalse);
     });
   });
 
   describe('Number.isInteger()', function () {
     it('should be truthy on integers', function () {
-      integers.map(Number.isInteger).forEach(expectToBeOk);
-      expect(Number.isInteger(4)).to.be.ok;
-      expect(Number.isInteger(4.0)).to.be.ok;
-      expect(Number.isInteger(1801439850948)).to.be.ok;
+      integers.map(Number.isInteger).forEach(expectTrue);
+      expect(Number.isInteger(4)).to.equal(true);
+      expect(Number.isInteger(4.0)).to.equal(true);
+      expect(Number.isInteger(1801439850948)).to.equal(true);
     });
 
     it('should be false when the type is not number', function () {
@@ -136,10 +136,10 @@ describe('Number', function (undefined) {
 
   describe('Number.isSafeInteger()', function () {
     it('should be truthy on integers', function () {
-      integers.map(Number.isSafeInteger).forEach(expectToBeOk);
-      expect(Number.isSafeInteger(4)).to.be.ok;
-      expect(Number.isSafeInteger(4.0)).to.be.ok;
-      expect(Number.isSafeInteger(1801439850948)).to.be.ok;
+      integers.map(Number.isSafeInteger).forEach(expectTrue);
+      expect(Number.isSafeInteger(4)).to.equal(true);
+      expect(Number.isSafeInteger(4.0)).to.equal(true);
+      expect(Number.isSafeInteger(1801439850948)).to.equal(true);
     });
 
     it('should be false when the type is not number', function () {
@@ -197,26 +197,26 @@ describe('Number', function (undefined) {
 
   describe('Number.isNaN()', function () {
     it('should be truthy only on NaN', function () {
-      integers.concat(nonIntegers).map(Number.isNaN).forEach(expectToNotBeOk);
-      nonNumbers.map(Number.isNaN).forEach(expectToNotBeOk);
-      expect(Number.isNaN(NaN)).to.be.ok;
-      expect(Number.isNaN(0/0)).to.be.ok;
-      expect(Number.isNaN(Number('NaN'))).to.be.ok;
-      expect(Number.isNaN(4)).to.not.be.ok;
-      expect(Number.isNaN(4.5)).to.not.be.ok;
-      expect(Number.isNaN('hi')).to.not.be.ok;
-      expect(Number.isNaN('1.3')).to.not.be.ok;
-      expect(Number.isNaN('51')).to.not.be.ok;
-      expect(Number.isNaN(0)).to.not.be.ok;
-      expect(Number.isNaN(-0)).to.not.be.ok;
-      expect(Number.isNaN({valueOf: function () { return 3; }})).to.not.be.ok;
-      expect(Number.isNaN({valueOf: function () { return 0/0; }})).to.not.be.ok;
-      expect(Number.isNaN({valueOf: function () { throw 17; } })).to.not.be.ok;
-      expect(Number.isNaN({toString: function () { throw 17; } })).to.not.be.ok;
+      integers.concat(nonIntegers).map(Number.isNaN).forEach(expectFalse);
+      nonNumbers.map(Number.isNaN).forEach(expectFalse);
+      expect(Number.isNaN(NaN)).to.equal(true);
+      expect(Number.isNaN(0/0)).to.equal(true);
+      expect(Number.isNaN(Number('NaN'))).to.equal(true);
+      expect(Number.isNaN(4)).to.equal(false);
+      expect(Number.isNaN(4.5)).to.equal(false);
+      expect(Number.isNaN('hi')).to.equal(false);
+      expect(Number.isNaN('1.3')).to.equal(false);
+      expect(Number.isNaN('51')).to.equal(false);
+      expect(Number.isNaN(0)).to.equal(false);
+      expect(Number.isNaN(-0)).to.equal(false);
+      expect(Number.isNaN({valueOf: function () { return 3; }})).to.equal(false);
+      expect(Number.isNaN({valueOf: function () { return 0/0; }})).to.equal(false);
+      expect(Number.isNaN({valueOf: function () { throw 17; } })).to.equal(false);
+      expect(Number.isNaN({toString: function () { throw 17; } })).to.equal(false);
       expect(Number.isNaN({
         valueOf: function () { throw 17; },
         toString: function () { throw 42; }
-      })).to.not.be.ok;
+      })).to.equal(false);
     });
   });
 });

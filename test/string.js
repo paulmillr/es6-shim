@@ -54,34 +54,34 @@ var runStringTests = function () {
       });
 
       it('should be truthy on correct results', function () {
-        expect('test'.startsWith('te')).to.be.ok;
-        expect('test'.startsWith('st')).to.not.be.ok;
-        expect(''.startsWith('/')).to.not.be.ok;
-        expect('#'.startsWith('/')).to.not.be.ok;
-        expect('##'.startsWith('///')).to.not.be.ok;
+        expect('test'.startsWith('te')).to.equal(true);
+        expect('test'.startsWith('st')).to.equal(false);
+        expect(''.startsWith('/')).to.equal(false);
+        expect('#'.startsWith('/')).to.equal(false);
+        expect('##'.startsWith('///')).to.equal(false);
 
-        expect('abc'.startsWith('abc')).to.be.ok;
-        expect('abcd'.startsWith('abc')).to.be.ok;
-        expect('abc'.startsWith('a')).to.be.ok;
-        expect('abc'.startsWith('abcd')).to.not.be.ok;
-        expect('abc'.startsWith('bcde')).to.not.be.ok;
-        expect('abc'.startsWith('b')).to.not.be.ok;
-        expect('abc'.startsWith('abc', 0)).to.be.ok;
-        expect('abc'.startsWith('bc', 0)).to.not.be.ok;
-        expect('abc'.startsWith('bc', 1)).to.be.ok;
-        expect('abc'.startsWith('c', 1)).to.not.be.ok;
-        expect('abc'.startsWith('abc', 1)).to.not.be.ok;
-        expect('abc'.startsWith('c', 2)).to.be.ok;
-        expect('abc'.startsWith('d', 2)).to.not.be.ok;
-        expect('abc'.startsWith('dcd', 2)).to.not.be.ok;
-        expect('abc'.startsWith('a', 42)).to.not.be.ok;
-        expect('abc'.startsWith('a', Infinity)).to.not.be.ok;
-        expect('abc'.startsWith('a', NaN)).to.be.ok;
-        expect('abc'.startsWith('b', NaN)).to.not.be.ok;
-        expect('abc'.startsWith('ab', -43)).to.be.ok;
-        expect('abc'.startsWith('ab', -Infinity)).to.be.ok;
-        expect('abc'.startsWith('bc', -42)).to.not.be.ok;
-        expect('abc'.startsWith('bc', -Infinity)).to.not.be.ok;
+        expect('abc'.startsWith('abc')).to.equal(true);
+        expect('abcd'.startsWith('abc')).to.equal(true);
+        expect('abc'.startsWith('a')).to.equal(true);
+        expect('abc'.startsWith('abcd')).to.equal(false);
+        expect('abc'.startsWith('bcde')).to.equal(false);
+        expect('abc'.startsWith('b')).to.equal(false);
+        expect('abc'.startsWith('abc', 0)).to.equal(true);
+        expect('abc'.startsWith('bc', 0)).to.equal(false);
+        expect('abc'.startsWith('bc', 1)).to.equal(true);
+        expect('abc'.startsWith('c', 1)).to.equal(false);
+        expect('abc'.startsWith('abc', 1)).to.equal(false);
+        expect('abc'.startsWith('c', 2)).to.equal(true);
+        expect('abc'.startsWith('d', 2)).to.equal(false);
+        expect('abc'.startsWith('dcd', 2)).to.equal(false);
+        expect('abc'.startsWith('a', 42)).to.equal(false);
+        expect('abc'.startsWith('a', Infinity)).to.equal(false);
+        expect('abc'.startsWith('a', NaN)).to.equal(true);
+        expect('abc'.startsWith('b', NaN)).to.equal(false);
+        expect('abc'.startsWith('ab', -43)).to.equal(true);
+        expect('abc'.startsWith('ab', -Infinity)).to.equal(true);
+        expect('abc'.startsWith('bc', -42)).to.equal(false);
+        expect('abc'.startsWith('bc', -Infinity)).to.equal(false);
         if (hasStrictMode) {
           expect(function () {
             ''.startsWith.call(null, 'nu');
@@ -94,14 +94,14 @@ var runStringTests = function () {
           toString: function () {return 'abc';},
           startsWith: String.prototype.startsWith
         };
-        expect(myobj.startsWith('abc')).to.be.ok;
-        expect(myobj.startsWith('bc')).to.not.be.ok;
+        expect(myobj.startsWith('abc')).to.equal(true);
+        expect(myobj.startsWith('bc')).to.equal(false);
 
         var gotStr = false, gotPos = false;
 
         myobj = {
           toString: function () {
-            expect(gotPos).to.not.be.ok;
+            expect(gotPos).to.equal(false);
             gotStr = true;
             return 'xyz';
           },
@@ -109,18 +109,18 @@ var runStringTests = function () {
         };
         var idx = {
           valueOf: function () {
-            expect(gotStr).to.be.ok;
+            expect(gotStr).to.equal(true);
             gotPos = true;
             return 42;
           }
         };
         myobj.startsWith('elephant', idx);
-        expect(gotPos).to.be.ok;
+        expect(gotPos).to.equal(true);
       });
 
       it('should coerce to a string', function () {
-        expect('abcd'.startsWith({ toString: function () { return 'ab'; } })).to.be.ok;
-        expect('abcd'.startsWith({ toString: function () { return 'foo'; } })).not.to.be.ok;
+        expect('abcd'.startsWith({ toString: function () { return 'ab'; } })).to.equal(true);
+        expect('abcd'.startsWith({ toString: function () { return 'foo'; } })).to.equal(false);
       });
 
       it('should not allow a regex', function () {
@@ -135,34 +135,34 @@ var runStringTests = function () {
       });
 
       it('should be truthy on correct results', function () {
-        expect('test'.endsWith('st')).to.be.ok;
-        expect('test'.endsWith('te')).to.not.be.ok;
-        expect(''.endsWith('/')).to.not.be.ok;
-        expect('#'.endsWith('/')).to.not.be.ok;
-        expect('##'.endsWith('///')).to.not.be.ok;
+        expect('test'.endsWith('st')).to.equal(true);
+        expect('test'.endsWith('te')).to.equal(false);
+        expect(''.endsWith('/')).to.equal(false);
+        expect('#'.endsWith('/')).to.equal(false);
+        expect('##'.endsWith('///')).to.equal(false);
 
-        expect('abc'.endsWith('abc')).to.be.ok;
-        expect('abcd'.endsWith('bcd')).to.be.ok;
-        expect('abc'.endsWith('c')).to.be.ok;
-        expect('abc'.endsWith('abcd')).to.not.be.ok;
-        expect('abc'.endsWith('bbc')).to.not.be.ok;
-        expect('abc'.endsWith('b')).to.not.be.ok;
-        expect('abc'.endsWith('abc', 3)).to.be.ok;
-        expect('abc'.endsWith('bc', 3)).to.be.ok;
-        expect('abc'.endsWith('a', 3)).to.not.be.ok;
-        expect('abc'.endsWith('bc', 3)).to.be.ok;
-        expect('abc'.endsWith('a', 1)).to.be.ok;
-        expect('abc'.endsWith('abc', 1)).to.not.be.ok;
-        expect('abc'.endsWith('b', 2)).to.be.ok;
-        expect('abc'.endsWith('d', 2)).to.not.be.ok;
-        expect('abc'.endsWith('dcd', 2)).to.not.be.ok;
-        expect('abc'.endsWith('a', 42)).to.not.be.ok;
-        expect('abc'.endsWith('bc', Infinity)).to.be.ok;
-        expect('abc'.endsWith('a', Infinity)).to.not.be.ok;
-        expect('abc'.endsWith('bc', undefined)).to.be.ok;
-        expect('abc'.endsWith('bc', -43)).to.not.be.ok;
-        expect('abc'.endsWith('bc', -Infinity)).to.not.be.ok;
-        expect('abc'.endsWith('bc', NaN)).to.not.be.ok;
+        expect('abc'.endsWith('abc')).to.equal(true);
+        expect('abcd'.endsWith('bcd')).to.equal(true);
+        expect('abc'.endsWith('c')).to.equal(true);
+        expect('abc'.endsWith('abcd')).to.equal(false);
+        expect('abc'.endsWith('bbc')).to.equal(false);
+        expect('abc'.endsWith('b')).to.equal(false);
+        expect('abc'.endsWith('abc', 3)).to.equal(true);
+        expect('abc'.endsWith('bc', 3)).to.equal(true);
+        expect('abc'.endsWith('a', 3)).to.equal(false);
+        expect('abc'.endsWith('bc', 3)).to.equal(true);
+        expect('abc'.endsWith('a', 1)).to.equal(true);
+        expect('abc'.endsWith('abc', 1)).to.equal(false);
+        expect('abc'.endsWith('b', 2)).to.equal(true);
+        expect('abc'.endsWith('d', 2)).to.equal(false);
+        expect('abc'.endsWith('dcd', 2)).to.equal(false);
+        expect('abc'.endsWith('a', 42)).to.equal(false);
+        expect('abc'.endsWith('bc', Infinity)).to.equal(true);
+        expect('abc'.endsWith('a', Infinity)).to.equal(false);
+        expect('abc'.endsWith('bc', undefined)).to.equal(true);
+        expect('abc'.endsWith('bc', -43)).to.equal(false);
+        expect('abc'.endsWith('bc', -Infinity)).to.equal(false);
+        expect('abc'.endsWith('bc', NaN)).to.equal(false);
         if (hasStrictMode) {
           expect(function () {
             ''.endsWith.call(null, 'ull');
@@ -176,13 +176,13 @@ var runStringTests = function () {
           toString: function () { return 'abc'; },
           endsWith: String.prototype.endsWith
         };
-        expect(myobj.endsWith('abc')).to.be.ok;
-        expect(myobj.endsWith('ab')).to.not.be.ok;
+        expect(myobj.endsWith('abc')).to.equal(true);
+        expect(myobj.endsWith('ab')).to.equal(false);
         var gotStr = false, gotPos = false;
 
         myobj = {
           toString: function () {
-            expect(gotPos).to.not.be.ok;
+            expect(gotPos).to.equal(false);
             gotStr = true;
             return 'xyz';
           },
@@ -190,18 +190,18 @@ var runStringTests = function () {
         };
         var idx = {
           valueOf: function () {
-            expect(gotStr).to.be.ok;
+            expect(gotStr).to.equal(true);
             gotPos = true;
             return 42;
           }
         };
         myobj.endsWith('elephant', idx);
-        expect(gotPos).to.be.ok;
+        expect(gotPos).to.equal(true);
       });
 
       it('should coerce to a string', function () {
-        expect('abcd'.endsWith({ toString: function () { return 'cd'; } })).to.be.ok;
-        expect('abcd'.endsWith({ toString: function () { return 'foo'; } })).not.to.be.ok;
+        expect('abcd'.endsWith({ toString: function () { return 'cd'; } })).to.equal(true);
+        expect('abcd'.endsWith({ toString: function () { return 'foo'; } })).to.equal(false);
       });
 
       it('should not allow a regex', function () {
@@ -210,10 +210,10 @@ var runStringTests = function () {
       });
 
       it('should handle negative and zero positions properly', function () {
-        expect('abcd'.endsWith('bcd', 0)).not.to.be.ok;
-        expect('abcd'.endsWith('bcd', -2)).not.to.be.ok;
-        expect('abcd'.endsWith('b', -2)).not.to.be.ok;
-        expect('abcd'.endsWith('ab', -2)).not.to.be.ok;
+        expect('abcd'.endsWith('bcd', 0)).to.equal(false);
+        expect('abcd'.endsWith('bcd', -2)).to.equal(false);
+        expect('abcd'.endsWith('b', -2)).to.equal(false);
+        expect('abcd'.endsWith('ab', -2)).to.equal(false);
       });
     });
 
@@ -223,46 +223,46 @@ var runStringTests = function () {
       });
 
       it('should be truthy on correct results', function () {
-        expect('test'.contains('es')).to.be.ok;
-        expect('abc'.contains('a')).to.be.ok;
-        expect('abc'.contains('b')).to.be.ok;
-        expect('abc'.contains('abc')).to.be.ok;
-        expect('abc'.contains('bc')).to.be.ok;
-        expect('abc'.contains('d')).to.not.be.ok;
-        expect('abc'.contains('abcd')).to.not.be.ok;
-        expect('abc'.contains('ac')).to.not.be.ok;
-        expect('abc'.contains('abc', 0)).to.be.ok;
-        expect('abc'.contains('bc', 0)).to.be.ok;
-        expect('abc'.contains('de', 0)).to.not.be.ok;
-        expect('abc'.contains('bc', 1)).to.be.ok;
-        expect('abc'.contains('c', 1)).to.be.ok;
-        expect('abc'.contains('a', 1)).to.not.be.ok;
-        expect('abc'.contains('abc', 1)).to.not.be.ok;
-        expect('abc'.contains('c', 2)).to.be.ok;
-        expect('abc'.contains('d', 2)).to.not.be.ok;
-        expect('abc'.contains('dcd', 2)).to.not.be.ok;
-        expect('abc'.contains('a', 42)).to.not.be.ok;
-        expect('abc'.contains('a', Infinity)).to.not.be.ok;
-        expect('abc'.contains('ab', -43)).to.be.ok;
-        expect('abc'.contains('cd', -42)).to.not.be.ok;
-        expect('abc'.contains('ab', -Infinity)).to.be.ok;
-        expect('abc'.contains('cd', -Infinity)).to.not.be.ok;
-        expect('abc'.contains('ab', NaN)).to.be.ok;
-        expect('abc'.contains('cd', NaN)).to.not.be.ok;
+        expect('test'.contains('es')).to.equal(true);
+        expect('abc'.contains('a')).to.equal(true);
+        expect('abc'.contains('b')).to.equal(true);
+        expect('abc'.contains('abc')).to.equal(true);
+        expect('abc'.contains('bc')).to.equal(true);
+        expect('abc'.contains('d')).to.equal(false);
+        expect('abc'.contains('abcd')).to.equal(false);
+        expect('abc'.contains('ac')).to.equal(false);
+        expect('abc'.contains('abc', 0)).to.equal(true);
+        expect('abc'.contains('bc', 0)).to.equal(true);
+        expect('abc'.contains('de', 0)).to.equal(false);
+        expect('abc'.contains('bc', 1)).to.equal(true);
+        expect('abc'.contains('c', 1)).to.equal(true);
+        expect('abc'.contains('a', 1)).to.equal(false);
+        expect('abc'.contains('abc', 1)).to.equal(false);
+        expect('abc'.contains('c', 2)).to.equal(true);
+        expect('abc'.contains('d', 2)).to.equal(false);
+        expect('abc'.contains('dcd', 2)).to.equal(false);
+        expect('abc'.contains('a', 42)).to.equal(false);
+        expect('abc'.contains('a', Infinity)).to.equal(false);
+        expect('abc'.contains('ab', -43)).to.equal(true);
+        expect('abc'.contains('cd', -42)).to.equal(false);
+        expect('abc'.contains('ab', -Infinity)).to.equal(true);
+        expect('abc'.contains('cd', -Infinity)).to.equal(false);
+        expect('abc'.contains('ab', NaN)).to.equal(true);
+        expect('abc'.contains('cd', NaN)).to.equal(false);
 
         var myobj = {
           toString: function () {return 'abc';},
           contains: String.prototype.contains
         };
 
-        expect(myobj.contains('abc')).to.be.ok;
-        expect(myobj.contains('cd')).to.not.be.ok;
+        expect(myobj.contains('abc')).to.equal(true);
+        expect(myobj.contains('cd')).to.equal(false);
 
         var gotStr = false, gotPos = false;
 
         myobj = {
           toString: function () {
-            expect(gotPos).to.not.be.ok;
+            expect(gotPos).to.equal(false);
             gotStr = true;
             return 'xyz';
           },
@@ -272,18 +272,18 @@ var runStringTests = function () {
 
         var idx = {
           valueOf: function () {
-            expect(gotStr).to.be.ok;
+            expect(gotStr).to.equal(true);
             gotPos = true;
             return 42;
           }
         };
 
         myobj.contains('elephant', idx);
-        expect(gotPos).to.be.ok;
+        expect(gotPos).to.equal(true);
       });
 
       it('should be falsy on incorrect results', function () {
-        expect('test'.contains('1290')).to.not.be.ok;
+        expect('test'.contains('1290')).to.equal(false);
       });
     });
 
@@ -349,8 +349,8 @@ var runStringTests = function () {
 
       it('should return undefined when pos is negative or too large', function () {
         var str = 'abc';
-        expect(str.codePointAt(-1)).to.be.undefined;
-        expect(str.codePointAt(str.length)).to.be.undefined;
+        expect(str.codePointAt(-1)).to.equal(undefined);
+        expect(str.codePointAt(str.length)).to.equal(undefined);
       });
     });
 

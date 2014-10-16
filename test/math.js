@@ -17,12 +17,12 @@ var valueOfIsInfinity = { valueOf: function () { return Infinity; } };
 describe('Math', function () {
   describe('#acosh()', function () {
     it('should be correct', function () {
-      expect(Number.isNaN(Math.acosh(NaN))).to.be.ok;
-      expect(Number.isNaN(Math.acosh(0))).to.be.ok;
-      expect(Number.isNaN(Math.acosh(0.9999999))).to.be.ok;
-      expect(Number.isNaN(Math.acosh(-1e300))).to.be.ok;
+      expect(Number.isNaN(Math.acosh(NaN))).to.equal(true);
+      expect(Number.isNaN(Math.acosh(0))).to.equal(true);
+      expect(Number.isNaN(Math.acosh(0.9999999))).to.equal(true);
+      expect(Number.isNaN(Math.acosh(-1e300))).to.equal(true);
       expect(Math.acosh(1e+99)).to.almostEqual(228.64907138697046);
-      expect(isPositiveZero(Math.acosh(1))).to.be.ok;
+      expect(isPositiveZero(Math.acosh(1))).to.equal(true);
       expect(Math.acosh(Infinity)).to.equal(Infinity);
       expect(Math.acosh(1234)).to.almostEqual(7.811163220849231);
       expect(Math.acosh(8.88)).to.almostEqual(2.8737631531629235);
@@ -31,12 +31,12 @@ describe('Math', function () {
 
   describe('#asinh()', function () {
     it('should be correct for NaN', function () {
-      expect(Number.isNaN(Math.asinh(NaN))).to.be.ok;
+      expect(Number.isNaN(Math.asinh(NaN))).to.equal(true);
     });
 
     it('should be correct for zeroes', function () {
-      expect(isPositiveZero(Math.asinh(+0))).to.be.ok;
-      expect(isNegativeZero(Math.asinh(-0))).to.be.ok;
+      expect(isPositiveZero(Math.asinh(+0))).to.equal(true);
+      expect(isNegativeZero(Math.asinh(-0))).to.equal(true);
     });
 
     it('should be correct for Infinities', function () {
@@ -55,15 +55,15 @@ describe('Math', function () {
 
   describe('#atanh()', function () {
     it('should be correct', function () {
-      expect(Number.isNaN(Math.atanh(NaN))).to.be.ok;
-      expect(Number.isNaN(Math.atanh(-1.00000001))).to.be.ok;
-      expect(Number.isNaN(Math.atanh(1.00000001))).to.be.ok;
-      expect(Number.isNaN(Math.atanh(-1e300))).to.be.ok;
-      expect(Number.isNaN(Math.atanh(1e300))).to.be.ok;
+      expect(Number.isNaN(Math.atanh(NaN))).to.equal(true);
+      expect(Number.isNaN(Math.atanh(-1.00000001))).to.equal(true);
+      expect(Number.isNaN(Math.atanh(1.00000001))).to.equal(true);
+      expect(Number.isNaN(Math.atanh(-1e300))).to.equal(true);
+      expect(Number.isNaN(Math.atanh(1e300))).to.equal(true);
       expect(Math.atanh(-1)).to.equal(-Infinity);
       expect(Math.atanh(1)).to.equal(Infinity);
-      expect(isPositiveZero(Math.atanh(+0))).to.be.ok;
-      expect(isNegativeZero(Math.atanh(-0))).to.be.ok;
+      expect(isPositiveZero(Math.atanh(+0))).to.equal(true);
+      expect(isNegativeZero(Math.atanh(-0))).to.equal(true);
       expect(Math.atanh(0.5)).to.almostEqual(0.5493061443340549);
       expect(Math.atanh(-0.5)).to.almostEqual(-0.5493061443340549);
       expect(Math.atanh(-0.5)).to.almostEqual(-0.5493061443340549);
@@ -73,9 +73,9 @@ describe('Math', function () {
 
   describe('#cbrt()', function () {
     it('should be correct', function () {
-      expect(isNaN(Math.cbrt(NaN))).to.be.ok;
-      expect(isPositiveZero(Math.cbrt(+0))).to.be.ok;
-      expect(isNegativeZero(Math.cbrt(-0))).to.be.ok;
+      expect(isNaN(Math.cbrt(NaN))).to.equal(true);
+      expect(isPositiveZero(Math.cbrt(+0))).to.equal(true);
+      expect(isNegativeZero(Math.cbrt(-0))).to.equal(true);
       expect(Math.cbrt(Infinity)).to.equal(Infinity);
       expect(Math.cbrt(-Infinity)).to.equal(-Infinity);
       expect(Math.cbrt(-8)).to.almostEqual(-2);
@@ -134,7 +134,7 @@ describe('Math', function () {
 
   describe('#cosh()', function () {
     it('should be correct for NaN', function () {
-      expect(Number.isNaN(Math.cosh(NaN))).to.be.ok;
+      expect(Number.isNaN(Math.cosh(NaN))).to.equal(true);
     });
 
     it('should be correct for Infinities', function () {
@@ -159,9 +159,9 @@ describe('Math', function () {
 
   describe('#expm1()', function () {
     it('should be correct', function () {
-      expect(Number.isNaN(Math.expm1(NaN))).to.be.ok;
-      expect(isPositiveZero(Math.expm1(+0))).to.be.ok;
-      expect(isNegativeZero(Math.expm1(-0))).to.be.ok;
+      expect(Number.isNaN(Math.expm1(NaN))).to.equal(true);
+      expect(isPositiveZero(Math.expm1(+0))).to.equal(true);
+      expect(isNegativeZero(Math.expm1(-0))).to.equal(true);
       expect(Math.expm1(Infinity)).to.equal(Infinity);
       expect(Math.expm1(-Infinity)).to.equal(-1);
       expect(Math.expm1(10)).to.almostEqual(22025.465794806718);
@@ -183,11 +183,11 @@ describe('Math', function () {
       expect(Math.hypot(NaN, Infinity)).to.equal(Infinity);
       expect(Math.hypot(-Infinity, 'Hello')).to.equal(Infinity);
       expect(Math.hypot(1, 2, Infinity)).to.equal(Infinity);
-      expect(Number.isNaN(Math.hypot(NaN, 1))).to.be.ok;
-      expect(isPositiveZero(Math.hypot())).to.be.ok;
-      expect(isPositiveZero(Math.hypot(0, 0, 0))).to.be.ok;
-      expect(isPositiveZero(Math.hypot(0, -0, 0))).to.be.ok;
-      expect(isPositiveZero(Math.hypot(-0, -0, -0))).to.be.ok;
+      expect(Number.isNaN(Math.hypot(NaN, 1))).to.equal(true);
+      expect(isPositiveZero(Math.hypot())).to.equal(true);
+      expect(isPositiveZero(Math.hypot(0, 0, 0))).to.equal(true);
+      expect(isPositiveZero(Math.hypot(0, -0, 0))).to.equal(true);
+      expect(isPositiveZero(Math.hypot(-0, -0, -0))).to.equal(true);
       expect(Math.hypot(66, 66)).to.almostEqual(93.33809511662427);
       expect(Math.hypot(0.1, 100)).to.almostEqual(100.0000499999875);
     });
@@ -215,11 +215,11 @@ describe('Math', function () {
 
   describe('#log2()', function () {
     it('should be correct for edge cases', function () {
-      expect(Number.isNaN(Math.log2(NaN))).to.be.ok;
-      expect(Number.isNaN(Math.log2(-1e-50))).to.be.ok;
+      expect(Number.isNaN(Math.log2(NaN))).to.equal(true);
+      expect(Number.isNaN(Math.log2(-1e-50))).to.equal(true);
       expect(Math.log2(+0)).to.equal(-Infinity);
       expect(Math.log2(-0)).to.equal(-Infinity);
-      expect(isPositiveZero(Math.log2(1))).to.be.ok;
+      expect(isPositiveZero(Math.log2(1))).to.equal(true);
       expect(Math.log2(Infinity)).to.equal(Infinity);
     });
 
@@ -231,11 +231,11 @@ describe('Math', function () {
 
   describe('#log10', function () {
     it('should be correct for edge cases', function () {
-      expect(Number.isNaN(Math.log10(NaN))).to.be.ok;
-      expect(Number.isNaN(Math.log10(-1e-50))).to.be.ok;
+      expect(Number.isNaN(Math.log10(NaN))).to.equal(true);
+      expect(Number.isNaN(Math.log10(-1e-50))).to.equal(true);
       expect(Math.log10(+0)).to.equal(-Infinity);
       expect(Math.log10(-0)).to.equal(-Infinity);
-      expect(isPositiveZero(Math.log10(1))).to.be.ok;
+      expect(isPositiveZero(Math.log10(1))).to.equal(true);
       expect(Math.log10(Infinity)).to.equal(Infinity);
     });
 
@@ -247,11 +247,11 @@ describe('Math', function () {
 
   describe('#log1p', function () {
     it('should be correct', function () {
-      expect(Number.isNaN(Math.log1p(NaN))).to.be.ok;
-      expect(Number.isNaN(Math.log1p(-1.000000001))).to.be.ok;
+      expect(Number.isNaN(Math.log1p(NaN))).to.equal(true);
+      expect(Number.isNaN(Math.log1p(-1.000000001))).to.equal(true);
       expect(Math.log1p(-1)).to.equal(-Infinity);
-      expect(isPositiveZero(Math.log1p(+0))).to.be.ok;
-      expect(isNegativeZero(Math.log1p(-0))).to.be.ok;
+      expect(isPositiveZero(Math.log1p(+0))).to.equal(true);
+      expect(isNegativeZero(Math.log1p(-0))).to.equal(true);
       expect(Math.log1p(Infinity)).to.equal(Infinity);
 
       expect(Math.log1p(5)).to.almostEqual(1.791759469228055);
@@ -273,26 +273,26 @@ describe('Math', function () {
         expect(Math.sign(''+value)).to.equal(-1);
       });
 
-      expect(isPositiveZero(Math.sign(+0))).to.be.ok;
-      expect(isPositiveZero(Math.sign('0'))).to.be.ok;
-      expect(isPositiveZero(Math.sign('+0'))).to.be.ok;
-      expect(isPositiveZero(Math.sign(''))).to.be.ok;
-      expect(isPositiveZero(Math.sign(' '))).to.be.ok;
-      expect(isPositiveZero(Math.sign(null))).to.be.ok;
-      expect(isPositiveZero(Math.sign(false))).to.be.ok;
-      expect(isNegativeZero(Math.sign(-0))).to.be.ok;
-      expect(isNegativeZero(Math.sign('-0'))).to.be.ok;
-      expect(Number.isNaN(Math.sign(NaN))).to.be.ok;
-      expect(Number.isNaN(Math.sign('NaN'))).to.be.ok;
-      expect(Number.isNaN(Math.sign(undefined))).to.be.ok;
+      expect(isPositiveZero(Math.sign(+0))).to.equal(true);
+      expect(isPositiveZero(Math.sign('0'))).to.equal(true);
+      expect(isPositiveZero(Math.sign('+0'))).to.equal(true);
+      expect(isPositiveZero(Math.sign(''))).to.equal(true);
+      expect(isPositiveZero(Math.sign(' '))).to.equal(true);
+      expect(isPositiveZero(Math.sign(null))).to.equal(true);
+      expect(isPositiveZero(Math.sign(false))).to.equal(true);
+      expect(isNegativeZero(Math.sign(-0))).to.equal(true);
+      expect(isNegativeZero(Math.sign('-0'))).to.equal(true);
+      expect(Number.isNaN(Math.sign(NaN))).to.equal(true);
+      expect(Number.isNaN(Math.sign('NaN'))).to.equal(true);
+      expect(Number.isNaN(Math.sign(undefined))).to.equal(true);
     });
   });
 
   describe('#sinh()', function () {
     it('should be correct', function () {
-      expect(Number.isNaN(Math.sinh(NaN))).to.be.ok;
-      expect(isPositiveZero(Math.sinh(+0))).to.be.ok;
-      expect(isNegativeZero(Math.sinh(-0))).to.be.ok;
+      expect(Number.isNaN(Math.sinh(NaN))).to.equal(true);
+      expect(isPositiveZero(Math.sinh(+0))).to.equal(true);
+      expect(isNegativeZero(Math.sinh(-0))).to.equal(true);
       expect(Math.sinh(Infinity)).to.equal(Infinity);
       expect(Math.sinh(-Infinity)).to.equal(-Infinity);
       expect(Math.sinh(-5)).to.almostEqual(-74.20321057778875);
@@ -302,9 +302,9 @@ describe('Math', function () {
 
   describe('#tanh()', function () {
     it('should be correct', function () {
-      expect(Number.isNaN(Math.tanh(NaN))).to.be.ok;
-      expect(isPositiveZero(Math.tanh(+0))).to.be.ok;
-      expect(isNegativeZero(Math.tanh(-0))).to.be.ok;
+      expect(Number.isNaN(Math.tanh(NaN))).to.equal(true);
+      expect(isPositiveZero(Math.tanh(+0))).to.equal(true);
+      expect(isNegativeZero(Math.tanh(-0))).to.equal(true);
       expect(Math.tanh(Infinity)).to.equal(1);
       expect(Math.tanh(-Infinity)).to.equal(-1);
       expect(Math.tanh(90)).to.almostEqual(1);
@@ -314,9 +314,9 @@ describe('Math', function () {
 
   describe('#trunc()', function () {
     it('should be correct', function () {
-      expect(Number.isNaN(Math.trunc(NaN))).to.be.ok;
-      expect(isNegativeZero(Math.trunc(-0))).to.be.ok;
-      expect(isPositiveZero(Math.trunc(+0))).to.be.ok;
+      expect(Number.isNaN(Math.trunc(NaN))).to.equal(true);
+      expect(isNegativeZero(Math.trunc(-0))).to.equal(true);
+      expect(isPositiveZero(Math.trunc(+0))).to.equal(true);
       expect(Math.trunc(Infinity)).to.equal(Infinity);
       expect(Math.trunc(-Infinity)).to.equal(-Infinity);
       expect(Math.trunc(1.01)).to.equal(1);
@@ -327,7 +327,7 @@ describe('Math', function () {
 
     it('should coerce to a number immediately', function () {
       expect(Math.trunc(valueOfIsInfinity)).to.equal(Infinity);
-      expect(Number.isNaN(Math.trunc(valueOfIsNaN))).to.be.ok;
+      expect(Number.isNaN(Math.trunc(valueOfIsNaN))).to.equal(true);
     });
   });
 
@@ -391,16 +391,16 @@ describe('Math', function () {
   describe('Math.fround', function () {
     // Mozilla's reference tests: https://bug900125.bugzilla.mozilla.org/attachment.cgi?id=793163
     it('returns NaN for undefined', function () {
-      expect(Number.isNaN(Math.fround())).to.be.ok;
+      expect(Number.isNaN(Math.fround())).to.equal(true);
     });
 
     it('returns NaN for NaN', function () {
-      expect(Number.isNaN(Math.fround(NaN))).to.be.ok;
+      expect(Number.isNaN(Math.fround(NaN))).to.equal(true);
     });
 
     it('works for zeroes and infinities', function () {
-      expect(isPositiveZero(Math.fround(0))).to.be.ok;
-      expect(isNegativeZero(Math.fround(-0))).to.be.ok;
+      expect(isPositiveZero(Math.fround(0))).to.equal(true);
+      expect(isNegativeZero(Math.fround(-0))).to.equal(true);
       expect(Math.fround(Infinity)).to.equal(Infinity);
       expect(Math.fround(-Infinity)).to.equal(-Infinity);
     });

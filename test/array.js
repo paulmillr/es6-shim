@@ -245,7 +245,7 @@ var runArrayTests = function () {
 
       it('works with arraylike objects', function () {
         var args = (function () { return arguments; }(1, 2, 3));
-        expect(Array.isArray(args)).not.to.be.ok;
+        expect(Array.isArray(args)).to.equal(false);
         var argsClass = Object.prototype.toString.call(args);
         expect(Array.prototype.slice.call(args)).to.eql([1, 2, 3]);
         Array.prototype.copyWithin.call(args, -2, 0);
