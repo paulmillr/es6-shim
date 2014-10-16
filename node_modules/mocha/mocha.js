@@ -224,7 +224,22 @@ var JsDiff = (function() {
 
   var LineDiff = new Diff();
   LineDiff.tokenize = function(value) {
-    return value.split(/^/m);
+    var retLines = [],
+        lines = value.split(/^/m);
+
+    for(var i = 0; i < lines.length; i++) {
+      var line = lines[i],
+          lastLine = lines[i - 1];
+
+      // Merge lines that may contain windows new lines
+      if (line == '\n' && lastLine && lastLine[lastLine.length - 1] === '\r') {
+        retLines[retLines.length - 1] += '\n';
+      } else if (line) {
+        retLines.push(line);
+      }
+    }
+
+    return retLines;
   };
 
   return {
@@ -414,6 +429,21 @@ if (typeof module !== 'undefined') {
 
 }); // module: browser/diff.js
 
+require.register("browser/escape-string-regexp.js", function(module, exports, require){
+'use strict';
+
+var matchOperatorsRe = /[|\\{}()[\]^$+*?.]/g;
+
+module.exports = function (str) {
+	if (typeof str !== 'string') {
+		throw new TypeError('Expected a string');
+	}
+
+	return str.replace(matchOperatorsRe,  '\\$&');
+};
+
+}); // module: browser/escape-string-regexp.js
+
 require.register("browser/events.js", function(module, exports, require){
 
 /**
@@ -598,6 +628,10 @@ EventEmitter.prototype.emit = function (name) {
 require.register("browser/fs.js", function(module, exports, require){
 
 }); // module: browser/fs.js
+
+require.register("browser/glob.js", function(module, exports, require){
+
+}); // module: browser/glob.js
 
 require.register("browser/path.js", function(module, exports, require){
 
@@ -902,7 +936,8 @@ require.register("interfaces/bdd.js", function(module, exports, require){
 
 var Suite = require('../suite')
   , Test = require('../test')
-  , utils = require('../utils');
+  , utils = require('../utils')
+  , escapeRe = require('browser/escape-string-regexp');
 
 /**
  * BDD-style interface:
@@ -1005,7 +1040,7 @@ module.exports = function(suite){
 
     context.it = context.specify = function(title, fn){
       var suite = suites[0];
-      if (suite.pending) var fn = null;
+      if (suite.pending) fn = null;
       var test = new Test(title, fn);
       test.file = file;
       suite.addTest(test);
@@ -1018,7 +1053,7 @@ module.exports = function(suite){
 
     context.it.only = function(title, fn){
       var test = context.it(title, fn);
-      var reString = '^' + utils.escapeRegexp(test.fullTitle()) + '$';
+      var reString = '^' + escapeRe(test.fullTitle()) + '$';
       mocha.grep(new RegExp(reString));
       return test;
     };
@@ -1092,7 +1127,7 @@ module.exports = function(suite){
             suites[0].addTest(test);
         }
       } else {
-        var suite = Suite.create(suites[0], key);
+        suite = Suite.create(suites[0], key);
         suites.unshift(suite);
         visit(obj[key]);
         suites.shift();
@@ -1120,6 +1155,7 @@ require.register("interfaces/qunit.js", function(module, exports, require){
 
 var Suite = require('../suite')
   , Test = require('../test')
+  , escapeRe = require('browser/escape-string-regexp')
   , utils = require('../utils');
 
 /**
@@ -1224,7 +1260,7 @@ module.exports = function(suite){
 
     context.test.only = function(title, fn){
       var test = context.test(title, fn);
-      var reString = '^' + utils.escapeRegexp(test.fullTitle()) + '$';
+      var reString = '^' + escapeRe(test.fullTitle()) + '$';
       mocha.grep(new RegExp(reString));
     };
 
@@ -1248,7 +1284,8 @@ require.register("interfaces/tdd.js", function(module, exports, require){
 
 var Suite = require('../suite')
   , Test = require('../test')
-  , utils = require('../utils');;
+  , escapeRe = require('browser/escape-string-regexp')
+  , utils = require('../utils');
 
 /**
  * TDD-style interface:
@@ -1355,7 +1392,7 @@ module.exports = function(suite){
 
     context.test = function(title, fn){
       var suite = suites[0];
-      if (suite.pending) var fn = null;
+      if (suite.pending) fn = null;
       var test = new Test(title, fn);
       test.file = file;
       suite.addTest(test);
@@ -1368,7 +1405,7 @@ module.exports = function(suite){
 
     context.test.only = function(title, fn){
       var test = context.test(title, fn);
-      var reString = '^' + utils.escapeRegexp(test.fullTitle()) + '$';
+      var reString = '^' + escapeRe(test.fullTitle()) + '$';
       mocha.grep(new RegExp(reString));
     };
 
@@ -1396,6 +1433,7 @@ require.register("mocha.js", function(module, exports, require){
  */
 
 var path = require('browser/path')
+  , escapeRe = require('browser/escape-string-regexp')
   , utils = require('./utils');
 
 /**
@@ -1607,7 +1645,7 @@ Mocha.prototype._growl = function(runner, reporter) {
 
 Mocha.prototype.grep = function(re){
   this.options.grep = 'string' == typeof re
-    ? new RegExp(utils.escapeRegexp(re))
+    ? new RegExp(escapeRe(re))
     : re;
   return this;
 };
@@ -1758,6 +1796,16 @@ Mocha.prototype.asyncOnly = function(){
 };
 
 /**
+ * Disable syntax highlighting (in browser).
+ * @returns {Mocha}
+ * @api public
+ */
+Mocha.prototype.noHighlighting = function() {
+  this.options.noHighlighting = true;
+  return this;
+};
+
+/**
  * Run tests and invoke `fn()` when complete.
  *
  * @param {Function} fn
@@ -1811,7 +1859,7 @@ var y = d * 365.25;
 module.exports = function(val, options){
   options = options || {};
   if ('string' == typeof val) return parse(val);
-  return options.long ? longFormat(val) : shortFormat(val);
+  return options['long'] ? longFormat(val) : shortFormat(val);
 };
 
 /**
@@ -2085,7 +2133,7 @@ exports.list = function(failures){
     }
 
     // actual / expected diff
-    if ('string' == typeof actual && 'string' == typeof expected) {
+    if (err.showDiff && 'string' == typeof actual && 'string' == typeof expected) {
       fmt = color('error title', '  %s) %s:\n%s') + color('error stack', '\n%s\n');
       var match = message.match(/^([^:]+): expected/);
       msg = '\n      ' + color('error message', match ? match[1] : msg);
@@ -2943,7 +2991,7 @@ function map(cov) {
   }
 
   return ret;
-};
+}
 
 /**
  * Map jscoverage data for a single source file
@@ -3100,6 +3148,7 @@ function JSONReporter(runner) {
   Base.call(this, runner);
 
   var tests = []
+    , pending = []
     , failures = []
     , passes = [];
 
@@ -3111,21 +3160,23 @@ function JSONReporter(runner) {
     passes.push(test);
   });
 
-  runner.on('fail', function(test, err){
+  runner.on('fail', function(test){
     failures.push(test);
-    if (err === Object(err)) {
-      test.errMsg = err.message;
-      test.errStack = err.stack;
-    }
+  });
+
+  runner.on('pending', function(test){
+    pending.push(test);
   });
 
   runner.on('end', function(){
     var obj = {
       stats: self.stats,
       tests: tests.map(clean),
+      pending: pending.map(clean),
       failures: failures.map(clean),
       passes: passes.map(clean)
     };
+
     runner.testResults = obj;
 
     process.stdout.write(JSON.stringify(obj, null, 2));
@@ -3146,10 +3197,22 @@ function clean(test) {
     title: test.title,
     fullTitle: test.fullTitle(),
     duration: test.duration,
-    err: test.err,
-    errStack: test.err.stack,
-    errMessage: test.err.message
+    err: errorJSON(test.err || {})
   }
+}
+
+/**
+ * Transform `error` into a JSON object.
+ * @param {Error} err
+ * @return {Object}
+ */
+
+function errorJSON(err) {
+  var res = {};
+  Object.getOwnPropertyNames(err).forEach(function(key) {
+    res[key] = err[key];
+  }, err);
+  return res;
 }
 
 }); // module: reporters/json.js
@@ -3658,7 +3721,7 @@ NyanCat.prototype.face = function() {
   } else {
     return '( - .-)';
   }
-}
+};
 
 /**
  * Move cursor up `n`.
@@ -4203,6 +4266,7 @@ Runnable.prototype.constructor = Runnable;
 
 Runnable.prototype.timeout = function(ms){
   if (0 == arguments.length) return this._timeout;
+  if (ms === 0) this._enableTimeouts = false;
   if ('string' == typeof ms) ms = milliseconds(ms);
   debug('timeout %d', ms);
   this._timeout = ms;
@@ -4292,6 +4356,7 @@ Runnable.prototype.resetTimeout = function(){
   if (!this._enableTimeouts) return;
   this.clearTimeout();
   this.timer = setTimeout(function(){
+    if (!self._enableTimeouts) return;
     self.callback(new Error('timeout of ' + ms + 'ms exceeded'));
     self.timedOut = true;
   }, ms);
@@ -4942,17 +5007,24 @@ Runner.prototype.runSuite = function(suite, fn){
 
 Runner.prototype.uncaught = function(err){
   if (err) {
-    debug('uncaught exception %s', err.message);
+    debug('uncaught exception %s', err !== function () {
+      return this;
+    }.call(err) ? err : ( err.message || err ));
   } else {
     debug('uncaught undefined exception');
-    err = new Error('Catched undefined error, did you throw without specifying what?');
+    err = new Error('Caught undefined error, did you throw without specifying what?');
   }
-  
-  var runnable = this.currentRunnable;
-  if (!runnable || 'failed' == runnable.state) return;
-  runnable.clearTimeout();
   err.uncaught = true;
+
+  var runnable = this.currentRunnable;
+  if (!runnable) return;
+
+  var wasAlreadyDone = runnable.state;
   this.fail(runnable, err);
+
+  runnable.clearTimeout();
+
+  if (wasAlreadyDone) return;
 
   // recover from test
   if ('test' == runnable.type) {
@@ -5013,7 +5085,7 @@ Runner.prototype.run = function(fn){
 Runner.prototype.abort = function(){
   debug('aborting');
   this._abort = true;
-}
+};
 
 /**
  * Filter leaks with the given globals flagged as `ok`.
@@ -5182,6 +5254,7 @@ Suite.prototype.clone = function(){
 
 Suite.prototype.timeout = function(ms){
   if (0 == arguments.length) return this._timeout;
+  if (ms === 0) this._enableTimeouts = false;
   if ('string' == typeof ms) ms = milliseconds(ms);
   debug('timeout %d', ms);
   this._timeout = parseInt(ms, 10);
@@ -5201,7 +5274,7 @@ Suite.prototype.enableTimeouts = function(enabled){
   debug('enableTimeouts %s', enabled);
   this._enableTimeouts = enabled;
   return this;
-}
+};
 
 /**
  * Set slow `ms` or short-hand such as "2s".
@@ -5476,6 +5549,9 @@ require.register("utils.js", function(module, exports, require){
 
 var fs = require('browser/fs')
   , path = require('browser/path')
+  , basename = path.basename
+  , exists = fs.existsSync || path.existsSync
+  , glob = require('browser/glob')
   , join = path.join
   , debug = require('browser/debug')('mocha:watch');
 
@@ -5697,18 +5773,6 @@ exports.clean = function(str) {
 };
 
 /**
- * Escape regular expression characters in `str`.
- *
- * @param {String} str
- * @return {String}
- * @api private
- */
-
-exports.escapeRegexp = function(str){
-  return str.replace(/[-\\^$*+?.()|[\]{}]/g, "\\$&");
-};
-
-/**
  * Trim the given `str`.
  *
  * @param {String} str
@@ -5767,7 +5831,7 @@ function highlight(js) {
  */
 
 exports.highlightTags = function(name) {
-  var code = document.getElementsByTagName(name);
+  var code = document.getElementById('mocha').getElementsByTagName(name);
   for (var i = 0, len = code.length; i < len; ++i) {
     code[i].innerHTML = highlight(code[i].innerHTML);
   }
@@ -5785,41 +5849,88 @@ exports.highlightTags = function(name) {
 exports.stringify = function(obj) {
   if (obj instanceof RegExp) return obj.toString();
   return JSON.stringify(exports.canonicalize(obj), null, 2).replace(/,(\n|$)/g, '$1');
-}
+};
 
 /**
  * Return a new object that has the keys in sorted order.
  * @param {Object} obj
+ * @param {Array} [stack]
  * @return {Object}
  * @api private
  */
 
 exports.canonicalize = function(obj, stack) {
-   stack = stack || [];
+  stack = stack || [];
 
-   if (exports.indexOf(stack, obj) !== -1) return '[Circular]';
+  if (exports.indexOf(stack, obj) !== -1) return '[Circular]';
 
-   var canonicalizedObj;
+  var canonicalizedObj;
 
-   if ({}.toString.call(obj) === '[object Array]') {
-     stack.push(obj);
-     canonicalizedObj = exports.map(obj, function(item) {
-       return exports.canonicalize(item, stack);
-     });
-     stack.pop();
-   } else if (typeof obj === 'object' && obj !== null) {
-     stack.push(obj);
-     canonicalizedObj = {};
-     exports.forEach(exports.keys(obj).sort(), function(key) {
-       canonicalizedObj[key] = exports.canonicalize(obj[key], stack);
-     });
-     stack.pop();
-   } else {
-     canonicalizedObj = obj;
-   }
+  if ({}.toString.call(obj) === '[object Array]') {
+    stack.push(obj);
+    canonicalizedObj = exports.map(obj, function (item) {
+      return exports.canonicalize(item, stack);
+    });
+    stack.pop();
+  } else if (typeof obj === 'object' && obj !== null) {
+    stack.push(obj);
+    canonicalizedObj = {};
+    exports.forEach(exports.keys(obj).sort(), function (key) {
+      canonicalizedObj[key] = exports.canonicalize(obj[key], stack);
+    });
+    stack.pop();
+  } else {
+    canonicalizedObj = obj;
+  }
 
-   return canonicalizedObj;
- }
+  return canonicalizedObj;
+ };
+
+/**
+ * Lookup file names at the given `path`.
+ */
+exports.lookupFiles = function lookupFiles(path, extensions, recursive) {
+  var files = [];
+  var re = new RegExp('\\.(' + extensions.join('|') + ')$');
+
+  if (!exists(path)) {
+    if (exists(path + '.js')) {
+      path += '.js';
+    } else {
+      files = glob.sync(path);
+      if (!files.length) throw new Error("cannot resolve path (or pattern) '" + path + "'");
+      return files;
+    }
+  }
+
+  try {
+    var stat = fs.statSync(path);
+    if (stat.isFile()) return path;
+  }
+  catch (ignored) {
+    return;
+  }
+
+  fs.readdirSync(path).forEach(function(file){
+    file = join(path, file);
+    try {
+      var stat = fs.statSync(file);
+      if (stat.isDirectory()) {
+        if (recursive) {
+          files = files.concat(lookupFiles(file, extensions, recursive));
+        }
+        return;
+      }
+    }
+    catch (ignored) {
+      return;
+    }
+    if (!stat.isFile() || !re.test(file) || basename(file)[0] === '.') return;
+    files.push(file);
+  });
+
+  return files;
+};
 
 }); // module: utils.js
 // The global object is "self" in Web Workers.
@@ -5968,7 +6079,8 @@ mocha.run = function(fn){
 
   return Mocha.prototype.run.call(mocha, function(err){
     // The DOM Document is not available in Web Workers.
-    if (global.document) {
+    var document = global.document;
+    if (document && document.getElementById('mocha') && options.noHighlighting !== true) {
       Mocha.utils.highlightTags('code');
     }
     if (fn) fn(err);
