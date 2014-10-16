@@ -54,7 +54,7 @@ describe('Collections', function () {
     });
 
     it('should exist in global namespace', function () {
-      expect(Map).to.be.ok;
+      expect(typeof Map).to.equal('function');
     });
 
     it('should have the right arity', function () {
@@ -437,7 +437,7 @@ describe('Collections', function () {
     });
 
     it('should exist in global namespace', function () {
-      expect(Set).to.be.ok;
+      expect(typeof Set).to.equal('function');
     });
 
     it('should have the right arity', function () {
