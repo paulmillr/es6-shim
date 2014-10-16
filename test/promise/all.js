@@ -5,9 +5,9 @@ var failIfThrows = function (done) {
   return function (e) { done(e || new Error()); };
 };
 
-describe("Promise.all", function () {
+describe('Promise.all', function () {
   'use strict';
-  it("fulfills if passed an empty array", function (done) {
+  it('fulfills if passed an empty array', function (done) {
     var iterable = [];
 
     Promise.all(iterable).then(function (value) {
@@ -16,7 +16,7 @@ describe("Promise.all", function () {
     }).then(done, failIfThrows(done));
   });
 
-  it("fulfills if passed an empty array-like", function (done) {
+  it('fulfills if passed an empty array-like', function (done) {
     var f = function () {
       Promise.all(arguments).then(function (value) {
         assert(Array.isArray(value));
@@ -26,7 +26,7 @@ describe("Promise.all", function () {
     f();
   });
 
-  it("fulfills if passed an array of mixed fulfilled promises and values", function (done) {
+  it('fulfills if passed an array of mixed fulfilled promises and values', function (done) {
     var iterable = [0, Promise.resolve(1), 2, Promise.resolve(3)];
 
     Promise.all(iterable).then(function (value) {
@@ -35,16 +35,16 @@ describe("Promise.all", function () {
     }).then(done, failIfThrows(done));
   });
 
-  it("rejects if any passed promise is rejected", function (done) {
+  it('rejects if any passed promise is rejected', function (done) {
     var foreverPending = new Promise(function () { });
-    var error = new Error("Rejected");
+    var error = new Error('Rejected');
     var rejected = Promise.reject(error);
 
     var iterable = [foreverPending, rejected];
 
     Promise.all(iterable).then(
       function (value) {
-        assert(false, "should never get here");
+        assert(false, 'should never get here');
       },
       function (reason) {
         assert.strictEqual(reason, error);
@@ -52,7 +52,7 @@ describe("Promise.all", function () {
     ).then(done, failIfThrows(done));
   });
 
-  it("resolves foreign thenables", function (done) {
+  it('resolves foreign thenables', function (done) {
     var normal = Promise.resolve(1);
     var foreign = { then: function (f) { f(2); } };
 
@@ -63,7 +63,7 @@ describe("Promise.all", function () {
     }).then(done, failIfThrows(done));
   });
 
-  it("fulfills when passed an sparse array, giving `undefined` for the omitted values", function (done) {
+  it('fulfills when passed an sparse array, giving `undefined` for the omitted values', function (done) {
     var iterable = [Promise.resolve(0), , , Promise.resolve(1)];
 
     Promise.all(iterable).then(function (value) {
@@ -71,7 +71,7 @@ describe("Promise.all", function () {
     }).then(done, failIfThrows(done));
   });
 
-  it("does not modify the input array", function (done) {
+  it('does not modify the input array', function (done) {
     var input = [0, 1];
     var iterable = input;
 
@@ -81,12 +81,12 @@ describe("Promise.all", function () {
   });
 
 
-  it("should reject with a TypeError if given a non-iterable", function (done) {
+  it('should reject with a TypeError if given a non-iterable', function (done) {
     var notIterable = {};
 
     Promise.all(notIterable).then(
       function () {
-        assert(false, "should never get here");
+        assert(false, 'should never get here');
       },
       function (reason) {
         assert(reason instanceof TypeError);
@@ -105,14 +105,14 @@ describe("Promise.all", function () {
     });
   };
 
-  it("should be robust against tampering (1)", function (done) {
+  it('should be robust against tampering (1)', function (done) {
     var g = [ tamper(Promise.resolve(0)) ];
     // Prevent countdownHolder.[[Countdown]] from ever reaching zero
     Promise.all(g).
       then(function () { done(); }, failIfThrows(done));
   });
 
-  it("should be robust against tampering (2)", function (done) {
+  it('should be robust against tampering (2)', function (done) {
     var g = [
       Promise.resolve(0),
       tamper(Promise.resolve(1)),
@@ -132,7 +132,7 @@ describe("Promise.all", function () {
       then(done, failIfThrows(done));
   });
 
-  it("should be robust against tampering (3)", function (done) {
+  it('should be robust against tampering (3)', function (done) {
     var g = [
       Promise.resolve(0),
       tamper(Promise.resolve(1)),
@@ -147,7 +147,7 @@ describe("Promise.all", function () {
       }).then(done, failIfThrows(done));
   });
 
-  it("should be robust against tampering (4)", function (done) {
+  it('should be robust against tampering (4)', function (done) {
     var hijack = true;
     var actualArguments = [];
     var P = function (resolver) {

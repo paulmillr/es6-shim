@@ -17,7 +17,7 @@ Assertion.addMethod('theSameSet', function (otherArray) {
 
   this.assert(
     diff.length === 0,
-    "expected #{this} to be equal to #{exp} (as sets, i.e. no order)",
+    'expected #{this} to be equal to #{exp} (as sets, i.e. no order)',
     array,
     otherArray
   );
@@ -355,7 +355,7 @@ describe('Collections', function () {
           result.push(String(1/key) + ' ' + value);
         });
         expect(result.join(', ')).to.equal(
-          "Infinity a, Infinity c, 1 b"
+          'Infinity a, Infinity c, 1 b'
         );
       });
     });
@@ -382,9 +382,9 @@ describe('Collections', function () {
     var keys = [];
     var iterator = map.keys();
     keys.push(iterator.next().value);
-    map["delete"]('a');
-    map["delete"]('b');
-    map["delete"]('c');
+    map['delete']('a');
+    map['delete']('b');
+    map['delete']('c');
     map.set('e');
     keys.push(iterator.next().value);
     keys.push(iterator.next().value);
@@ -405,9 +405,9 @@ describe('Collections', function () {
     var keys = [];
     var iterator = set.keys();
     keys.push(iterator.next().value);
-    set["delete"]('a');
-    set["delete"]('b');
-    set["delete"]('c');
+    set['delete']('a');
+    set['delete']('b');
+    set['delete']('c');
     set.add('e');
     keys.push(iterator.next().value);
     keys.push(iterator.next().value);
@@ -755,7 +755,7 @@ describe('Collections', function () {
           result.push(String(1/key));
         });
         expect(result.join(', ')).to.equal(
-          "Infinity, Infinity, 1"
+          'Infinity, Infinity, 1'
         );
       });
     });

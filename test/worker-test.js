@@ -1,14 +1,14 @@
 describe('Worker', function (undefined) {
   var workerErrorEventToError = function (errorEvent) {
-    var errorText = "Error in Worker";
+    var errorText = 'Error in Worker';
     if (errorEvent.filename !== undefined) {
-      errorText += " " + errorEvent.filename;
+      errorText += ' ' + errorEvent.filename;
     }
     if (errorEvent.lineno !== undefined) {
-      errorText += "(" + errorEvent.lineno + ")";
+      errorText += '(' + errorEvent.lineno + ')';
     }
     if (errorEvent.message !== undefined) {
-      errorText += ": " + errorEvent.message;
+      errorText += ': ' + errorEvent.message;
     }
     return new Error(errorText);
   };

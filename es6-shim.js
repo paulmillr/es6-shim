@@ -97,7 +97,7 @@
       function Type() {}
       Type.prototype = prototype;
       var object = new Type();
-      if (typeof properties !== "undefined") {
+      if (typeof properties !== 'undefined') {
         defineProperties(object, properties);
       }
       return object;
@@ -228,7 +228,7 @@
       GetIterator: function (o) {
         if (isArguments(o)) {
           // special case support for `arguments`
-          return new ArrayIterator(o, "value");
+          return new ArrayIterator(o, 'value');
         }
         var it = o[$iterator$]();
         if (!ES.TypeIsObject(it)) {
@@ -542,9 +542,9 @@
       defineProperties(String.prototype, {
         trim: function () {
           if (this === undefined || this === null) {
-            throw new TypeError("can't convert " + this + " to object");
+            throw new TypeError("can't convert " + this + ' to object');
           }
-          return String(this).replace(trimRegexp, "");
+          return String(this).replace(trimRegexp, '');
         }
       });
     }
@@ -674,11 +674,11 @@
           for (; i < len; i++) {
             var kind = this.kind;
             var retval;
-            if (kind === "key") {
+            if (kind === 'key') {
               retval = i;
-            } else if (kind === "value") {
+            } else if (kind === 'value') {
               retval = array[i];
-            } else if (kind === "entry") {
+            } else if (kind === 'entry') {
               retval = [i, array[i]];
             }
             this.i = i + 1;
@@ -767,15 +767,15 @@
       },
 
       keys: function () {
-        return new ArrayIterator(this, "key");
+        return new ArrayIterator(this, 'key');
       },
 
       values: function () {
-        return new ArrayIterator(this, "value");
+        return new ArrayIterator(this, 'value');
       },
 
       entries: function () {
-        return new ArrayIterator(this, "entry");
+        return new ArrayIterator(this, 'entry');
       }
     };
     // Safari 7.1 defines Array#keys and Array#entries natively,
@@ -1200,10 +1200,10 @@
         makeZeroTimeout = function () {
           // from http://dbaron.org/log/20100309-faster-timeouts
           var timeouts = [];
-          var messageName = "zero-timeout-message";
+          var messageName = 'zero-timeout-message';
           var setZeroTimeout = function (fn) {
             timeouts.push(fn);
-            window.postMessage(messageName, "*");
+            window.postMessage(messageName, '*');
           };
           var handleMessage = function (event) {
             if (event.source == window && event.data == messageName) {
@@ -1213,7 +1213,7 @@
               fn();
             }
           };
-          window.addEventListener("message", handleMessage, true);
+          window.addEventListener('message', handleMessage, true);
           return setZeroTimeout;
         };
       }
@@ -1589,9 +1589,9 @@
               while (i.next !== head) {
                 i = i.next;
                 if (!i.isRemoved()) {
-                  if (kind === "key") {
+                  if (kind === 'key') {
                     result = i.key;
-                  } else if (kind === "value") {
+                  } else if (kind === 'value') {
                     result = i.value;
                   } else {
                     result = [i.key, i.value];
@@ -1764,15 +1764,15 @@
             },
 
             keys: function () {
-              return new MapIterator(this, "key");
+              return new MapIterator(this, 'key');
             },
 
             values: function () {
-              return new MapIterator(this, "value");
+              return new MapIterator(this, 'value');
             },
 
             entries: function () {
-              return new MapIterator(this, "key+value");
+              return new MapIterator(this, 'key+value');
             },
 
             forEach: function (callback) {

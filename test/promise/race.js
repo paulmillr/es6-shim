@@ -14,9 +14,9 @@ var delayPromise = function (value, ms) {
   });
 };
 
-describe("Promise.race", function () {
+describe('Promise.race', function () {
   'use strict';
-  it("should fulfill if all promises are settled and the ordinally-first is fulfilled", function (done) {
+  it('should fulfill if all promises are settled and the ordinally-first is fulfilled', function (done) {
     var iterable = [Promise.resolve(1), Promise.reject(2), Promise.resolve(3)];
 
     Promise.race(iterable).then(function (value) {
@@ -24,12 +24,12 @@ describe("Promise.race", function () {
     }).then(done, failIfThrows(done));
   });
 
-  it("should reject if all promises are settled and the ordinally-first is rejected", function (done) {
+  it('should reject if all promises are settled and the ordinally-first is rejected', function (done) {
     var iterable = [Promise.reject(1), Promise.reject(2), Promise.resolve(3)];
 
     Promise.race(iterable).then(
       function () {
-        assert(false, "should never get here");
+        assert(false, 'should never get here');
       },
       function (reason) {
         assert.strictEqual(reason, 1);
@@ -37,7 +37,7 @@ describe("Promise.race", function () {
     ).then(done, failIfThrows(done));
   });
 
-  it("should settle in the same way as the first promise to settle", function (done) {
+  it('should settle in the same way as the first promise to settle', function (done) {
     // ensure that even if timeouts are delayed an all execute together,
     // p2 will settle first.
     var p2 = delayPromise(2, 200);
@@ -51,7 +51,7 @@ describe("Promise.race", function () {
   });
 
   // see https://github.com/domenic/promises-unwrapping/issues/75
-  it("should never settle when given an empty iterable", function (done) {
+  it('should never settle when given an empty iterable', function (done) {
     var iterable = [];
     var settled = false;
 
@@ -66,12 +66,12 @@ describe("Promise.race", function () {
     }, 300);
   });
 
-  it("should reject with a TypeError if given a non-iterable", function (done) {
+  it('should reject with a TypeError if given a non-iterable', function (done) {
     var notIterable = {};
 
     Promise.race(notIterable).then(
       function () {
-        assert(false, "should never get here");
+        assert(false, 'should never get here');
       },
       function (reason) {
         assert(reason instanceof TypeError);

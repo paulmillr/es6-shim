@@ -319,9 +319,9 @@ var runStringTests = function () {
       });
 
       it('works with unicode', function () {
-        expect(String.fromCodePoint(0x2500)).to.equal("\u2500");
-        expect(String.fromCodePoint(0x010000)).to.equal("\ud800\udc00");
-        expect(String.fromCodePoint(0x10FFFF)).to.equal("\udbff\udfff");
+        expect(String.fromCodePoint(0x2500)).to.equal('\u2500');
+        expect(String.fromCodePoint(0x010000)).to.equal('\ud800\udc00');
+        expect(String.fromCodePoint(0x10FFFF)).to.equal('\udbff\udfff');
       });
     });
 
@@ -377,11 +377,11 @@ var runStringTests = function () {
         var callSite = {};
 
         var str = 'The total is 10 ($11 with tax)';
-        callSite.raw = ["The total is ", " ($", " with tax)"];
+        callSite.raw = ['The total is ', ' ($', ' with tax)'];
         expect(String.raw(callSite,10,11)).to.eql(str);
 
         str = 'The total is {total} (${total * 1.01} with tax)';
-        callSite.raw = ["The total is ", " ($", " with tax)"];
+        callSite.raw = ['The total is ', ' ($', ' with tax)'];
         expect(String.raw(callSite,'{total}','{total * 1.01}')).to.eql(str);
       });
 
@@ -389,11 +389,11 @@ var runStringTests = function () {
         var callSite = {};
 
         var str = 'The total is 10 ($11 with tax)';
-        callSite.raw = {0: "The total is ", 1: " ($", 2: " with tax)"};
+        callSite.raw = {0: 'The total is ', 1: ' ($', 2: ' with tax)'};
         expect(String.raw(callSite,10,11)).to.eql(str);
 
         str = 'The total is {total} (${total * 1.01} with tax)';
-        callSite.raw = {0: "The total is ", 1: " ($", 2: " with tax)"};
+        callSite.raw = {0: 'The total is ', 1: ' ($', 2: ' with tax)'};
         expect(String.raw(callSite,'{total}','{total * 1.01}')).to.eql(str);
       });
 
@@ -401,17 +401,17 @@ var runStringTests = function () {
         var callSite = {};
 
         var str = 'The total is 10 ($11 with tax)';
-        callSite.raw = {'0': "The total is ", '1': " ($", '2': " with tax)"};
+        callSite.raw = {'0': 'The total is ', '1': ' ($', '2': ' with tax)'};
         expect(String.raw(callSite,10,11)).to.eql(str);
 
         str = 'The total is {total} (${total * 1.01} with tax)';
-        callSite.raw = {'0': "The total is ", '1': " ($", '2': " with tax)"};
+        callSite.raw = {'0': 'The total is ', '1': ' ($', '2': ' with tax)'};
         expect(String.raw(callSite,'{total}','{total * 1.01}')).to.eql(str);
       });
 
       it('String.raw ReturnIfAbrupt - Less Substitutions', function () {
         var callSite = {
-          raw: {'0': "The total is ", '1': " ($", '2': " with tax)"}
+          raw: {'0': 'The total is ', '1': ' ($', '2': ' with tax)'}
         };
         var str = 'The total is 10 ($';
         expect(String.raw(callSite, 10)).to.equal(str);
@@ -446,7 +446,7 @@ var runStringTests = function () {
       });
 
       it('should trim on both sides', function () {
-        var trimmed = " a ".trim();
+        var trimmed = ' a '.trim();
         expect(trimmed.length).to.equal(1);
         expect(trimmed).to.equal('a');
       });

@@ -6,16 +6,16 @@ var failIfThrows = function (done) {
   return function (e) { done(e || new Error()); };
 };
 
-describe("Promise", function () {
+describe('Promise', function () {
   'use strict';
 
-  specify("sanity check: a fulfilled promise calls its fulfillment handler", function (done) {
+  specify('sanity check: a fulfilled promise calls its fulfillment handler', function (done) {
     Promise.resolve(5).then(function (value) {
       assert.strictEqual(value, 5);
     }).then(done, failIfThrows(done));
   });
 
-  specify("directly resolving the promise with itself", function (done) {
+  specify('directly resolving the promise with itself', function (done) {
     var resolvePromise;
     var promise = new Promise(function (resolve) { resolvePromise = resolve; });
 
@@ -23,7 +23,7 @@ describe("Promise", function () {
 
     promise.then(
       function () {
-        assert(false, "Should not be fulfilled");
+        assert(false, 'Should not be fulfilled');
       },
       function (err) {
         assert(err instanceof TypeError);
@@ -31,7 +31,7 @@ describe("Promise", function () {
     ).then(done, failIfThrows(done));
   });
 
-    specify("Stealing a resolver and using it to trigger possible reentrancy bug (#83)", function () {
+    specify('Stealing a resolver and using it to trigger possible reentrancy bug (#83)', function () {
         var stolenResolver;
         function StealingPromiseConstructor(resolver) {
             stolenResolver = resolver;

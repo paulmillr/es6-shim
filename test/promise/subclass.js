@@ -1,8 +1,8 @@
 /*global it, describe */
 
-describe("Support user subclassing of Promise", function () {
+describe('Support user subclassing of Promise', function () {
   'use strict';
-  it("should work if you do it right", function (done) {
+  it('should work if you do it right', function (done) {
     // This is the "correct" es6-compatible way; see gh #170
     // (Thanks, @domenic!)
     var MyPromise = function (executor) {
@@ -35,7 +35,7 @@ describe("Support user subclassing of Promise", function () {
     p3 = p3.then(function () { done(); }, done);
   });
 
-  it("should throw if you inherit incompletely", function () {
+  it('should throw if you inherit incompletely', function () {
     var MyPromise = function (executor) {
       Promise.call(this, executor);
       this.mine = 'yeah';

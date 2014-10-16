@@ -2,10 +2,10 @@
 
 // tests from promises-aplus-tests
 
-describe("Promises/A+ Tests", function () {
+describe('Promises/A+ Tests', function () {
   'use strict';
 
-  require("promises-aplus-tests").mocha({
+  require('promises-aplus-tests').mocha({
     // an adapter from es6 spec to Promises/A+
     deferred: function () {
       var result = {};

@@ -1,8 +1,8 @@
 /*global describe, specify, assert */
 
-describe("Evil promises should not be able to break invariants", function () {
+describe('Evil promises should not be able to break invariants', function () {
   'use strict';
-  specify("resolving to a promise that calls onFulfilled twice", function (done) {
+  specify('resolving to a promise that calls onFulfilled twice', function (done) {
     // note that we have to create a trivial subclass, as otherwise the
     // Promise.resolve(evilPromise) is just the identity function.
     var EvilPromise = function (executor) { Promise.call(this, executor); };
