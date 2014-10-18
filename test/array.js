@@ -288,13 +288,13 @@ var runArrayTests = function () {
       });
 
       it('should work with an array-like object', function () {
-        var obj = { '0': 1, '1': 2, '2': 3, length: 3 };
+        var obj = { 0: 1, 1: 2, 2: 3, length: 3 };
         var found = Array.prototype.find.call(obj, function (item) { return item === 2; });
         expect(found).to.equal(2);
       });
 
       it('should work with an array-like object with negative length', function () {
-        var obj = { '0': 1, '1': 2, '2': 3, length: -3 };
+        var obj = { 0: 1, 1: 2, 2: 3, length: -3 };
         var found = Array.prototype.find.call(obj, function (item) {
           throw new Error('should not reach here');
         });
@@ -314,7 +314,7 @@ var runArrayTests = function () {
       });
 
       it('should work with a sparse array-like object', function () {
-        var obj = { '0': 1, '2': undefined, length: 3.2 };
+        var obj = { 0: 1, 2: undefined, length: 3.2 };
         var seen = [];
         var found = Array.prototype.find.call(obj, function (item, idx) {
           seen.push([idx, item]);
@@ -359,13 +359,13 @@ var runArrayTests = function () {
       });
 
       it('should work with an array-like object', function () {
-        var obj = { '0': 1, '1': 2, '2': 3, length: 3 };
+        var obj = { 0: 1, 1: 2, 2: 3, length: 3 };
         var foundIndex = Array.prototype.findIndex.call(obj, function (item) { return item === 2; });
         expect(foundIndex).to.equal(1);
       });
 
       it('should work with an array-like object with negative length', function () {
-        var obj = { '0': 1, '1': 2, '2': 3, length: -3 };
+        var obj = { 0: 1, 1: 2, 2: 3, length: -3 };
         var foundIndex = Array.prototype.findIndex.call(obj, function (item) {
           throw new Error('should not reach here');
         });
@@ -385,7 +385,7 @@ var runArrayTests = function () {
       });
 
       it('should work with a sparse array-like object', function () {
-        var obj = { '0': 1, '2': undefined, length: 3.2 };
+        var obj = { 0: 1, 2: undefined, length: 3.2 };
         var seen = [];
         var foundIndex = Array.prototype.findIndex.call(obj, function (item, idx) {
           seen.push([idx, item]);
