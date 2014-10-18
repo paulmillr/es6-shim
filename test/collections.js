@@ -112,11 +112,11 @@ describe('Collections', function () {
         map = new Map();
 
         range(1, 20).forEach(function (number) {
-          if (slowkeys) testMapping(number, {});
+          if (slowkeys) { testMapping(number, {}); }
           testMapping(number / 100, {});
           testMapping('key-' + number, {});
           testMapping(String(number), {});
-          if (slowkeys) testMapping(Object(String(number)), {});
+          if (slowkeys) { testMapping(Object(String(number)), {}); }
         });
 
         var testkeys = [+0, Infinity, -Infinity, NaN];
@@ -495,12 +495,12 @@ describe('Collections', function () {
         set = new Set();
 
         range(1, 20).forEach(function (number) {
-          if (slowkeys) testSet({});
+          if (slowkeys) { testSet({}); }
           testSet(number);
           testSet(number / 100);
           testSet('key-' + number);
           testSet(String(number));
-          if (slowkeys) testSet(Object(String(number)));
+          if (slowkeys) { testSet(Object(String(number))); }
         });
 
         var testkeys = [+0, Infinity, -Infinity, NaN];

@@ -27,8 +27,10 @@
     //        because it's based on ES5 API.
     //        (probably just an IE <= 8 problem)
     //
-    // NOTE:  nodejs is fine in version 0.8, 0.10 and future versions.
-    if (!Object.setPrototypeOf) (function () {
+    // NOTE:  nodejs is fine in version 0.8, 0.10, and future versions.
+    (function () {
+      if (Object.setPrototypeOf) { return; }
+
       /*jshint proto: true */
       // @author    Andrea Giammarchi - @WebReflection
         // define into target descriptors from source
