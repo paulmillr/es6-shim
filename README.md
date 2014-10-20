@@ -175,11 +175,6 @@ Promise.resolve(5).then(function (value) {
 });
 ```
 
-Note that the ES6 `Promise` specification includes very few methods.
-For a more useful set of utility methods
-(`map`/`reduce`/`bind`/`guard`/etc), you might want to look into the
-[`prfun`](https://github.com/cscott/prfun) package.
-
 Other stuff:
 
 * [ECMAScript 6 drafts](http://wiki.ecmascript.org/doku.php?id=harmony:specification_drafts)
