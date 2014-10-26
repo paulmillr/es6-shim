@@ -1,5 +1,9 @@
 # es6-shim x.x.x (not yet released)
 
+# es6-shim 0.19.2 (25 Oct 2014)
+* Set#delete and Map#delete should return a boolean indicating success. (#298)
+* Make style consistent; add jscs
+
 # es6-shim 0.19.1 (14 Oct 2014)
 * Fix Map#set and Set#add to be chainable (#295)
 * Update mocha
