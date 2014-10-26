@@ -1,3 +1,5 @@
+var exported = require('../');
+
 describe('Number', function (undefined) {
   var integers = [5295, -5295, -9007199254740991, 9007199254740991, 0, -0];
   var nonIntegers = [-9007199254741992, 9007199254741992, 5.9];
@@ -9,6 +11,10 @@ describe('Number', function (undefined) {
   var expectFalse = function (item) {
     expect(item).to.equal(false);
   };
+
+  it('is on the exported object', function () {
+    expect(exported.Number).to.equal(Number);
+  });
 
   describe('Number constants', function () {
     it('should have max safe integer', function () {

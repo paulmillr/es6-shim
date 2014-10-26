@@ -1,3 +1,5 @@
+var exported = require('../');
+
 var Assertion = expect().constructor;
 Assertion.prototype.almostEqual = function (obj, precision) {
   var allowedDiff = precision || 1e-11;
@@ -15,6 +17,10 @@ var valueOfIsNaN = { valueOf: function () { return NaN; } };
 var valueOfIsInfinity = { valueOf: function () { return Infinity; } };
 
 describe('Math', function () {
+  it('is on the exported object', function () {
+    expect(exported.Math).to.equal(Math);
+  });
+
   describe('#acosh()', function () {
     it('should be correct', function () {
       expect(Number.isNaN(Math.acosh(NaN))).to.equal(true);

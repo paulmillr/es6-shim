@@ -1984,5 +1984,7 @@
     addIterator(Object.getPrototypeOf((new globals.Map()).keys()));
     addIterator(Object.getPrototypeOf((new globals.Set()).keys()));
   }
+
+  return globals;
 }));
 

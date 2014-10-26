@@ -1,3 +1,5 @@
+var exported = require('../');
+
 var runStringTests = function () {
   'use strict';
   describe('String', function () {
@@ -10,6 +12,11 @@ var runStringTests = function () {
       expect(function () { return fn.apply(undefined); }).to['throw'](TypeError);
       expect(function () { return fn.apply(null); }).to['throw'](TypeError);
     };
+
+    it('is on the exported object', function () {
+      expect(exported.String).to.equal(String);
+    });
+
     describe('#repeat()', function () {
       it('should throw a TypeError when called on null or undefined', function () {
         testObjectCoercible('repeat');

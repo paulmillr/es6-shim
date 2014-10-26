@@ -1,5 +1,6 @@
 // Big thanks to V8 folks for test ideas.
 // v8/test/mjsunit/harmony/collections.js
+var exported = require('../');
 
 var Assertion = expect().constructor;
 Assertion.addMethod('theSameSet', function (otherArray) {
@@ -51,6 +52,10 @@ describe('Collections', function () {
 
     afterEach(function () {
       map = null;
+    });
+
+    it('is on the exported object', function () {
+      expect(exported.Map).to.equal(Map);
     });
 
     it('should exist in global namespace', function () {
@@ -436,6 +441,10 @@ describe('Collections', function () {
 
     afterEach(function () {
       set = null;
+    });
+
+    it('is on the exported object', function () {
+      expect(exported.Set).to.equal(Set);
     });
 
     it('should exist in global namespace', function () {

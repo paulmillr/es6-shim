@@ -1,6 +1,12 @@
+var exported = require('../');
+
 var runArrayTests = function () {
   describe('Array', function () {
     var list = [5, 10, 15, 20];
+
+    it('is on the exported object', function () {
+      expect(exported.Array).to.equal(Array);
+    });
 
     describe('@@iterator', function () {
       it('uses Symbol.iterator if available', function () {
