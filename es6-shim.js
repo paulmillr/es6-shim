@@ -1891,8 +1891,7 @@
             'delete': function (key) {
               var fkey;
               if (this._storage && (fkey = fastkey(key)) !== null) {
-                delete this._storage[fkey];
-                return;
+                return delete this._storage[fkey];
               }
               ensureMap(this);
               return this['[[SetData]]']['delete'](key);

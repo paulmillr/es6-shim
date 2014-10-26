@@ -131,7 +131,7 @@ describe('Collections', function () {
 
         // -0 and +0 should be the same key (Map uses SameValueZero)
         expect(map.has(-0)).to.equal(true);
-        map['delete'](+0);
+        expect(map['delete'](+0)).to.equal(true);
         testMapping(-0, {});
         expect(map.has(+0)).to.equal(true);
 
@@ -204,7 +204,7 @@ describe('Collections', function () {
       expect(typeof map.keys).to.equal('function');
       expect(typeof map.values).to.equal('function');
       expect(map.size).to.equal(3);
-      map['delete']('a');
+      expect(map['delete']('a')).to.equal(true);
       expect(map.size).to.equal(2);
     });
 
@@ -307,7 +307,7 @@ describe('Collections', function () {
         map.set('0', 42);
         map.forEach(function (value, key) {
           if (key === '0') {
-            map['delete']('0');
+            expect(map['delete']('0')).to.equal(true);
             map.set('4', 'a value');
           } else if (key === '4') {
             hasSeenFour = true;
@@ -318,12 +318,14 @@ describe('Collections', function () {
 
       it('does not visit keys deleted before a visit', function () {
         var hasVisitedC = false;
+        var hasDeletedC = false;
         map.forEach(function (value, key) {
           if (key === 'c') {
             hasVisitedC = true;
           }
-          if (!hasVisitedC) {
-            map['delete']('c');
+          if (!hasVisitedC && !hasDeletedC) {
+            hasDeletedC = map['delete']('c');
+            expect(hasDeletedC).to.equal(true);
           }
         });
         expect(hasVisitedC).to.equal(false);
@@ -338,7 +340,7 @@ describe('Collections', function () {
         var foundMap = {};
         map.forEach(function (value, key) {
           foundMap[key] = value;
-          map['delete'](key);
+          expect(map['delete'](key)).to.equal(true);
         });
         expect(foundMap).to.eql(expectedMap);
       });
@@ -382,9 +384,9 @@ describe('Collections', function () {
     var keys = [];
     var iterator = map.keys();
     keys.push(iterator.next().value);
-    map['delete']('a');
-    map['delete']('b');
-    map['delete']('c');
+    expect(map['delete']('a')).to.equal(true);
+    expect(map['delete']('b')).to.equal(true);
+    expect(map['delete']('c')).to.equal(true);
     map.set('e');
     keys.push(iterator.next().value);
     keys.push(iterator.next().value);
@@ -405,9 +407,9 @@ describe('Collections', function () {
     var keys = [];
     var iterator = set.keys();
     keys.push(iterator.next().value);
-    set['delete']('a');
-    set['delete']('b');
-    set['delete']('c');
+    expect(set['delete']('a')).to.equal(true);
+    expect(set['delete']('b')).to.equal(true);
+    expect(set['delete']('c')).to.equal(true);
     set.add('e');
     keys.push(iterator.next().value);
     keys.push(iterator.next().value);
@@ -426,7 +428,7 @@ describe('Collections', function () {
         expect(set.has(key)).to.equal(false);
         set.add(key);
         expect(set.has(key)).to.equal(true);
-        set['delete'](key);
+        expect(set['delete'](key)).to.equal(true);
         expect(set.has(key)).to.equal(false);
         set.add(key); // add it back
       };
@@ -515,7 +517,7 @@ describe('Collections', function () {
 
         // -0 and +0 should be the same key (Set uses SameValueZero)
         expect(set.has(-0)).to.equal(true);
-        set['delete'](+0);
+        expect(set['delete'](+0)).to.equal(true);
         testSet(-0);
         expect(set.has(+0)).to.equal(true);
 
@@ -692,7 +694,7 @@ describe('Collections', function () {
         set.add('0');
         set.forEach(function (value, key) {
           if (key === '0') {
-            set['delete']('0');
+            expect(set['delete']('0')).to.equal(true);
             set.add('4');
           } else if (key === '4') {
             hasSeenFour = true;
@@ -707,7 +709,7 @@ describe('Collections', function () {
         set.add('0');
         set.forEach(function (value, key) {
           if (key === '0') {
-            set['delete']('0');
+            expect(set['delete']('0')).to.equal(true);
             set.add('4');
           } else if (key === '4') {
             hasSeenFour = true;
@@ -718,12 +720,14 @@ describe('Collections', function () {
 
       it('does not visit keys deleted before a visit', function () {
         var hasVisitedC = false;
+        var hasDeletedC = false;
         set.forEach(function (value, key) {
           if (key === 'c') {
             hasVisitedC = true;
           }
-          if (!hasVisitedC) {
-            set['delete']('c');
+          if (!hasVisitedC && !hasDeletedC) {
+            hasDeletedC = set['delete']('c');
+            expect(hasDeletedC).to.equal(true);
           }
         });
         expect(hasVisitedC).to.equal(false);
@@ -738,7 +742,7 @@ describe('Collections', function () {
         var foundSet = {};
         set.forEach(function (value, key) {
           foundSet[key] = value;
-          set['delete'](key);
+          expect(set['delete'](key)).to.equal(true);
         });
         expect(foundSet).to.eql(expectedSet);
       });
