@@ -1,5 +1,9 @@
 # es6-shim x.x.x (not yet released)
 
+# es6-shim 0.20.0 (26 Oct 2014)
+* Use a more reliable UMD
+* export the global object rather than undefined
+
 # es6-shim 0.19.2 (25 Oct 2014)
 * Set#delete and Map#delete should return a boolean indicating success. (#298)
 * Make style consistent; add jscs
