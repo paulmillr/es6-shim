@@ -1,5 +1,8 @@
 # es6-shim x.x.x (not yet released)
 
+# es6-shim 0.20.1 (27 Oct 2014)
+* Set#delete and Map#delete should return false unless a deletion occurred. (#298)
+
 # es6-shim 0.20.0 (26 Oct 2014)
 * Use a more reliable UMD
 * export the global object rather than undefined
