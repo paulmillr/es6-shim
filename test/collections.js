@@ -202,6 +202,11 @@ describe('Collections', function () {
       expect(function () { return Map.prototype.size; }).to['throw'](TypeError);
     });
 
+    it('should return false when deleting a nonexistent key', function () {
+      expect(map.has('a')).to.equal(false);
+      expect(map.delete('a')).to.equal(false);
+    });
+
     it('should have keys, values and size props', function () {
       map.set('a', 1);
       map.set('b', 2);
@@ -431,6 +436,7 @@ describe('Collections', function () {
       set = new Set();
       testSet = function (key) {
         expect(set.has(key)).to.equal(false);
+        expect(set['delete'](key)).to.equal(false);
         set.add(key);
         expect(set.has(key)).to.equal(true);
         expect(set['delete'](key)).to.equal(true);
@@ -457,6 +463,11 @@ describe('Collections', function () {
 
     it('returns the set from #add() for chaining', function () {
       expect(set.add({})).to.equal(set);
+    });
+
+    it('should return false when deleting an item not in the set', function () {
+      expect(set.has('a')).to.equal(false);
+      expect(set.delete('a')).to.equal(false);
     });
 
     it('should accept an iterable as argument', function () {
