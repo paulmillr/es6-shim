@@ -91,14 +91,14 @@ var runStringTests = function () {
         expect('abc'.startsWith('bc', -Infinity)).to.equal(false);
         if (hasStrictMode) {
           expect(function () {
-            ''.startsWith.call(null, 'nu');
+            return ''.startsWith.call(null, 'nu');
           }).to['throw'](TypeError);
           expect(function () {
-            ''.startsWith.call(undefined, 'un');
+            return ''.startsWith.call(undefined, 'un');
           }).to['throw'](TypeError);
         }
         var myobj = {
-          toString: function () {return 'abc';},
+          toString: function () { return 'abc'; },
           startsWith: String.prototype.startsWith
         };
         expect(myobj.startsWith('abc')).to.equal(true);
@@ -172,10 +172,10 @@ var runStringTests = function () {
         expect('abc'.endsWith('bc', NaN)).to.equal(false);
         if (hasStrictMode) {
           expect(function () {
-            ''.endsWith.call(null, 'ull');
+            return ''.endsWith.call(null, 'ull');
           }).to['throw'](TypeError);
           expect(function () {
-            ''.endsWith.call(undefined, 'ned');
+            return ''.endsWith.call(undefined, 'ned');
           }).to['throw'](TypeError);
         }
 
