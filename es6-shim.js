@@ -23,8 +23,9 @@
     // Browser globals (root is window)
     root.returnExports = factory();
   }
-}(this, function (undefined) {
+}(this, function () {
   'use strict';
+  var undefined;
 
   var isCallableWithoutNew = function (func) {
     try { func(); }
