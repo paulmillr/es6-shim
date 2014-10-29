@@ -25,7 +25,6 @@
   }
 }(this, function () {
   'use strict';
-  var undefined;
 
   var isCallableWithoutNew = function (func) {
     try { func(); }
@@ -238,7 +237,7 @@
 
     IsIterable: function (o) {
       return ES.TypeIsObject(o) &&
-        (o[$iterator$] !== undefined || isArguments(o));
+        (typeof o[$iterator$] !== 'undefined' || isArguments(o));
     },
 
     GetIterator: function (o) {
@@ -463,7 +462,7 @@
           break;
         }
         next = substitutions[nextKey];
-        if (next === undefined) {
+        if (typeof next === 'undefined') {
           break;
         }
         nextSub = String(next);
@@ -508,7 +507,7 @@
         throw new TypeError('Cannot call method "startsWith" with a regex');
       }
       searchStr = String(searchStr);
-      var startArg = arguments.length > 1 ? arguments[1] : undefined;
+      var startArg = arguments.length > 1 ? arguments[1] : void 0;
       var start = Math.max(ES.ToInteger(startArg), 0);
       return thisStr.slice(start, start + searchStr.length) === searchStr;
     },
@@ -520,14 +519,14 @@
       }
       searchStr = String(searchStr);
       var thisLen = thisStr.length;
-      var posArg = arguments.length > 1 ? arguments[1] : undefined;
-      var pos = posArg === undefined ? thisLen : ES.ToInteger(posArg);
+      var posArg = arguments.length > 1 ? arguments[1] : void 0;
+      var pos = typeof posArg === 'undefined' ? thisLen : ES.ToInteger(posArg);
       var end = Math.min(Math.max(pos, 0), thisLen);
       return thisStr.slice(end - searchStr.length, end) === searchStr;
     },
 
     contains: function (searchString) {
-      var position = arguments.length > 1 ? arguments[1] : undefined;
+      var position = arguments.length > 1 ? arguments[1] : void 0;
       // Somehow this trick makes method 100% compat with the spec.
       return _indexOf.call(this, searchString, position) !== -1;
     },
@@ -561,7 +560,7 @@
     var trimRegexp = new RegExp('(^[' + ws + ']+)|([' + ws + ']+$)', 'g');
     defineProperties(String.prototype, {
       trim: function () {
-        if (this === undefined || this === null) {
+        if (typeof this === 'undefined' || this === null) {
           throw new TypeError("can't convert " + this + ' to object');
         }
         return String(this).replace(trimRegexp, '');
@@ -576,9 +575,9 @@
   };
   StringIterator.prototype.next = function () {
     var s = this._s, i = this._i;
-    if (s === undefined || i >= s.length) {
-      this._s = undefined;
-      return { value: undefined, done: true };
+    if (typeof s === 'undefined' || i >= s.length) {
+      this._s = void 0;
+      return { value: void 0, done: true };
     }
     var first = s.charCodeAt(i), second, len;
     if (first < 0xD800 || first > 0xDBFF || (i + 1) == s.length) {
@@ -603,15 +602,15 @@
 
   var ArrayShims = {
     from: function (iterable) {
-      var mapFn = arguments.length > 1 ? arguments[1] : undefined;
+      var mapFn = arguments.length > 1 ? arguments[1] : void 0;
 
       var list = ES.ToObject(iterable, 'bad iterable');
-      if (mapFn !== undefined && !ES.IsCallable(mapFn)) {
+      if (typeof mapFn !== 'undefined' && !ES.IsCallable(mapFn)) {
         throw new TypeError('Array.from: when provided, the second argument must be a function');
       }
 
       var hasThisArg = arguments.length > 2;
-      var thisArg = hasThisArg ? arguments[2] : undefined;
+      var thisArg = hasThisArg ? arguments[2] : void 0;
 
       var usingIterator = ES.IsIterable(list);
       // does the spec really mean that Arrays should use ArrayIterator?
@@ -689,7 +688,7 @@
       if (!(this instanceof ArrayIterator)) {
         throw new TypeError('Not an ArrayIterator');
       }
-      if (array !== undefined) {
+      if (typeof array !== 'undefined') {
         var len = ES.ToLength(array.length);
         for (; i < len; i++) {
           var kind = this.kind;
@@ -705,8 +704,8 @@
           return { value: retval, done: false };
         }
       }
-      this.array = undefined;
-      return { value: undefined, done: true };
+      this.array = void 0;
+      return { value: void 0, done: true };
     }
   });
   addIterator(ArrayIterator.prototype);
@@ -720,7 +719,7 @@
       start = ES.ToInteger(start);
       var to = target < 0 ? Math.max(len + target, 0) : Math.min(target, len);
       var from = start < 0 ? Math.max(len + start, 0) : Math.min(start, len);
-      end = end === undefined ? len : ES.ToInteger(end);
+      end = typeof end === 'undefined' ? len : ES.ToInteger(end);
       var fin = end < 0 ? Math.max(len + end, 0) : Math.min(end, len);
       var count = Math.min(fin - from, len - to);
       var direction = 1;
@@ -743,12 +742,12 @@
     },
 
     fill: function (value) {
-      var start = arguments.length > 1 ? arguments[1] : undefined;
-      var end = arguments.length > 2 ? arguments[2] : undefined;
+      var start = arguments.length > 1 ? arguments[1] : void 0;
+      var end = arguments.length > 2 ? arguments[2] : void 0;
       var O = ES.ToObject(this);
       var len = ES.ToLength(O.length);
-      start = ES.ToInteger(start === undefined ? 0 : start);
-      end = ES.ToInteger(end === undefined ? len : end);
+      start = ES.ToInteger(typeof start === 'undefined' ? 0 : start);
+      end = ES.ToInteger(typeof end === 'undefined' ? len : end);
 
       var relativeStart = start < 0 ? Math.max(len + start, 0) : Math.min(start, len);
       var relativeEnd = end < 0 ? len + end : end;
@@ -770,7 +769,7 @@
         value = list[i];
         if (predicate.call(thisArg, value, i, list)) { return value; }
       }
-      return undefined;
+      return;
     },
 
     findIndex: function findIndex(predicate) {
@@ -864,7 +863,7 @@
       getPropertyDescriptor: function (subject, name) {
         var pd = Object.getOwnPropertyDescriptor(subject, name);
         var proto = Object.getPrototypeOf(subject);
-        while (pd === undefined && proto !== null) {
+        while (typeof pd === 'undefined' && proto !== null) {
           pd = Object.getOwnPropertyDescriptor(proto, name);
           proto = Object.getPrototypeOf(proto);
         }
@@ -1185,7 +1184,7 @@
         // check that instead of the [[PromiseStatus]] internal field.
         return false;
       }
-      if (promise._status === undefined) {
+      if (typeof promise._status === 'undefined') {
         return false; // uninitialized
       }
       return true;
@@ -1319,7 +1318,7 @@
         // [[PromiseStatus]] field; it's a little more unique.
         throw new TypeError('bad promise');
       }
-      if (promise._status !== undefined) {
+      if (typeof promise._status !== 'undefined') {
         throw new TypeError('promise already initialized');
       }
       // see https://bugs.ecmascript.org/show_bug.cgi?id=2482
@@ -1334,8 +1333,8 @@
         if (promise._status !== 'unresolved') { return; }
         var reactions = promise._resolveReactions;
         promise._result = resolution;
-        promise._resolveReactions = undefined;
-        promise._rejectReactions = undefined;
+        promise._resolveReactions = void 0;
+        promise._rejectReactions = void 0;
         promise._status = 'has-resolution';
         triggerPromiseReactions(reactions, resolution);
       };
@@ -1343,8 +1342,8 @@
         if (promise._status !== 'unresolved') { return; }
         var reactions = promise._rejectReactions;
         promise._result = reason;
-        promise._resolveReactions = undefined;
-        promise._rejectReactions = undefined;
+        promise._resolveReactions = void 0;
+        promise._rejectReactions = void 0;
         promise._status = 'has-rejection';
         triggerPromiseReactions(reactions, reason);
       };
@@ -1365,11 +1364,11 @@
         var prototype = constructor.prototype || Promise$prototype;
         obj = obj || create(prototype);
         defineProperties(obj, {
-          _status: undefined,
-          _result: undefined,
-          _resolveReactions: undefined,
-          _rejectReactions: undefined,
-          _promiseConstructor: undefined
+          _status: void 0,
+          _result: void 0,
+          _resolveReactions: void 0,
+          _rejectReactions: void 0,
+          _promiseConstructor: void 0
         });
         obj._promiseConstructor = constructor;
         return obj;
@@ -1470,7 +1469,7 @@
     };
 
     Promise.prototype['catch'] = function (onRejected) {
-      return this.then(undefined, onRejected);
+      return this.then(void 0, onRejected);
     };
 
     Promise.prototype.then = function (onFulfilled, onRejected) {
@@ -1598,8 +1597,8 @@
         MapIterator.prototype = {
           next: function () {
             var i = this.i, kind = this.kind, head = this.head, result;
-            if (this.i === undefined) {
-              return { value: undefined, done: true };
+            if (typeof this.i === 'undefined') {
+              return { value: void 0, done: true };
             }
             while (i.isRemoved() && i !== head) {
               // back up off of removed entries
@@ -1621,8 +1620,8 @@
               }
             }
             // once the iterator is done, it is done forever.
-            this.i = undefined;
-            return { value: undefined, done: true };
+            this.i = void 0;
+            return { value: void 0, done: true };
           }
         };
         addIterator(MapIterator.prototype);
@@ -1645,7 +1644,7 @@
           });
 
           // Optionally initialize map from iterable
-          if (iterable !== undefined && iterable !== null) {
+          if (typeof iterable !== 'undefined' && iterable !== null) {
             var it = ES.GetIterator(iterable);
             var adder = map.set;
             if (!ES.IsCallable(adder)) { throw new TypeError('bad map'); }
@@ -1689,7 +1688,11 @@
             if (fkey !== null) {
               // fast O(1) path
               var entry = this._storage[fkey];
-              return entry ? entry.value : undefined;
+              if (entry) {
+                return entry.value;
+              } else {
+                return;
+              }
             }
             var head = this._head, i = head;
             while ((i = i.next) !== head) {
@@ -1697,7 +1700,7 @@
                 return i.value;
               }
             }
-            return undefined;
+            return;
           },
 
           has: function (key) {
@@ -1826,7 +1829,7 @@
           });
 
           // Optionally initialize map from iterable
-          if (iterable !== undefined && iterable !== null) {
+          if (typeof iterable !== 'undefined' && iterable !== null) {
             var it = ES.GetIterator(iterable);
             var adder = set.add;
             if (!ES.IsCallable(adder)) { throw new TypeError('bad set'); }
