@@ -1,5 +1,8 @@
 # es6-shim x.x.x (not yet released)
 
+# es6-shim 0.20.2 (28 Oct 2014)
+* Fix AMD (#299)
+
 # es6-shim 0.20.1 (27 Oct 2014)
 * Set#delete and Map#delete should return false unless a deletion occurred. (#298)
 
