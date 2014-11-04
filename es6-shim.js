@@ -295,7 +295,7 @@
 
     function packIEEE754(v, ebits, fbits) {
       var bias = (1 << (ebits - 1)) - 1,
-        s, e, f, ln,
+        s, e, f,
         i, bits, str, bytes;
 
       // Compute sign, exponent, fraction
