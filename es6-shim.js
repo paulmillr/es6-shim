@@ -1899,7 +1899,7 @@
             var fkey;
             if (this._storage && (fkey = fastkey(key)) !== null) {
               this._storage[fkey] = true;
-              return;
+              return this;
             }
             ensureMap(this);
             this['[[SetData]]'].set(key, key);

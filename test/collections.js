@@ -409,10 +409,10 @@ describe('Collections', function () {
 
   it('set iteration', function () {
     var set = new Set();
-    set.add('a');
-    set.add('b');
-    set.add('c');
-    set.add('d');
+    expect(set.add('a')).to.equal(set);
+    expect(set.add('b')).to.equal(set);
+    expect(set.add('c')).to.equal(set);
+    expect(set.add('d')).to.equal(set);
 
     var keys = [];
     var iterator = set.keys();
@@ -420,12 +420,12 @@ describe('Collections', function () {
     expect(set['delete']('a')).to.equal(true);
     expect(set['delete']('b')).to.equal(true);
     expect(set['delete']('c')).to.equal(true);
-    set.add('e');
+    expect(set.add('e')).to.equal(set);
     keys.push(iterator.next().value);
     keys.push(iterator.next().value);
 
     expect(iterator.next().done).to.equal(true);
-    set.add('f');
+    expect(set.add('f')).to.equal(set);
     expect(iterator.next().done).to.equal(true);
     expect(keys).to.eql(['a', 'd', 'e']);
   });
@@ -437,11 +437,11 @@ describe('Collections', function () {
       testSet = function (key) {
         expect(set.has(key)).to.equal(false);
         expect(set['delete'](key)).to.equal(false);
-        set.add(key);
+        expect(set.add(key)).to.equal(set);
         expect(set.has(key)).to.equal(true);
         expect(set['delete'](key)).to.equal(true);
         expect(set.has(key)).to.equal(false);
-        set.add(key); // add it back
+        expect(set.add(key)).to.equal(set); // add it back
       };
     });
 
@@ -549,16 +549,16 @@ describe('Collections', function () {
 
     describe('#size', function () {
       it('returns the expected size', function () {
-        set.add(1);
-        set.add(5);
+        expect(set.add(1)).to.equal(set);
+        expect(set.add(5)).to.equal(set);
         expect(set.size).to.equal(2);
       });
     });
 
     describe('#clear()', function () {
       it('should have #clear method', function () {
-        set.add(1);
-        set.add(5);
+        expect(set.add(1)).to.equal(set);
+        expect(set.add(5)).to.equal(set);
         expect(set.size).to.equal(2);
         expect(set.has(5)).to.equal(true);
         set.clear();
@@ -571,7 +571,7 @@ describe('Collections', function () {
       expect(set.has(NaN)).to.equal(false);
       expect(set.has(NaN + 1)).to.equal(false);
       expect(set.has(23)).to.equal(false);
-      set.add(NaN);
+      expect(set.add(NaN)).to.equal(set);
       expect(set.has(NaN)).to.equal(true);
       expect(set.has(NaN + 1)).to.equal(true);
       expect(set.has(23)).to.equal(false);
@@ -635,9 +635,9 @@ describe('Collections', function () {
       var set;
       beforeEach(function () {
         set = new Set();
-        set.add('a');
-        set.add('b');
-        set.add('c');
+        expect(set.add('a')).to.equal(set);
+        expect(set.add('b')).to.equal(set);
+        expect(set.add('c')).to.equal(set);
       });
 
       afterEach(function () {
@@ -659,7 +659,7 @@ describe('Collections', function () {
         var set = new Set();
         var expectedKeys = [{}, null, undefined, '', NaN, 0];
         expectedKeys.forEach(function (key) {
-          set.add(key);
+          expect(set.add(key)).to.equal(set);
         });
         var foundKeys = [];
         set.forEach(function (value, key, entireSet) {
@@ -685,7 +685,7 @@ describe('Collections', function () {
         var hasModifiedA = false;
         set.forEach(function (value, key) {
           if (!hasModifiedA && key === 'a') {
-            set.add('a');
+            expect(set.add('a')).to.equal(set);
             hasModifiedA = true;
           } else {
             expect(key).not.to.equal('a');
@@ -698,7 +698,7 @@ describe('Collections', function () {
         var hasFoundD = false;
         set.forEach(function (value, key) {
           if (!hasAdded) {
-            set.add('d');
+            expect(set.add('d')).to.equal(set);
             hasAdded = true;
           } else if (key === 'd') {
             hasFoundD = true;
@@ -710,12 +710,12 @@ describe('Collections', function () {
       it('visits keys added in the iterator when there is a deletion (slow path)', function () {
         var hasSeenFour = false;
         var set = new Set();
-        set.add({}); // force use of the slow O(N) implementation
-        set.add('0');
+        expect(set.add({})).to.equal(set); // force use of the slow O(N) implementation
+        expect(set.add('0')).to.equal(set);
         set.forEach(function (value, key) {
           if (key === '0') {
             expect(set['delete']('0')).to.equal(true);
-            set.add('4');
+            expect(set.add('4')).to.equal(set);
           } else if (key === '4') {
             hasSeenFour = true;
           }
@@ -726,11 +726,11 @@ describe('Collections', function () {
       it('visits keys added in the iterator when there is a deletion (fast path)', function () {
         var hasSeenFour = false;
         var set = new Set();
-        set.add('0');
+        expect(set.add('0')).to.equal(set);
         set.forEach(function (value, key) {
           if (key === '0') {
             expect(set['delete']('0')).to.equal(true);
-            set.add('4');
+            expect(set.add('4')).to.equal(set);
           } else if (key === '4') {
             hasSeenFour = true;
           }
@@ -768,13 +768,14 @@ describe('Collections', function () {
       });
 
       it('should convert key -0 to +0', function () {
-        var set = new Set(), result = [];
-        set.add(-0);
+        var set = new Set();
+        var result = [];
+        expect(set.add(-0)).to.equal(set);
         set.forEach(function (key) {
           result.push(String(1 / key));
         });
-        set.add(1);
-        set.add(0); // shouldn't cause reordering
+        expect(set.add(1)).to.equal(set);
+        expect(set.add(0)).to.equal(set); // shouldn't cause reordering
         set.forEach(function (key) {
           result.push(String(1 / key));
         });
