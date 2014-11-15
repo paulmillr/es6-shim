@@ -44,7 +44,7 @@ describe('Collections', function () {
       testMapping = function (key, value) {
         expect(map.has(key)).to.equal(false);
         expect(map.get(key)).to.equal(undefined);
-        map.set(key, value);
+        expect(map.set(key, value)).to.equal(map);
         expect(map.get(key)).to.equal(value);
         expect(map.has(key)).to.equal(true);
       };
@@ -105,7 +105,7 @@ describe('Collections', function () {
       testMapping(+0, value1);
       expect(map.has(-0)).to.equal(true);
       expect(map.get(-0)).to.equal(value1);
-      map.set(-0, value2);
+      expect(map.set(-0, value2)).to.equal(map);
       expect(map.get(-0)).to.equal(value2);
       expect(map.get(+0)).to.equal(value2);
     });
@@ -162,7 +162,7 @@ describe('Collections', function () {
       testMapping(key, 'to-be-present');
       expect(map.has(key)).to.equal(true);
       expect(map.has({})).to.equal(false);
-      map.set(key, void 0);
+      expect(map.set(key, void 0)).to.equal(map);
       expect(map.get(key)).to.equal(undefined);
       expect(map.has(key)).to.equal(true);
       expect(map.has({})).to.equal(false);
@@ -172,7 +172,7 @@ describe('Collections', function () {
       expect(map.has(NaN)).to.equal(false);
       expect(map.has(NaN + 1)).to.equal(false);
       expect(map.has(23)).to.equal(false);
-      map.set(NaN, 'value');
+      expect(map.set(NaN, 'value')).to.equal(map);
       expect(map.has(NaN)).to.equal(true);
       expect(map.has(NaN + 1)).to.equal(true);
       expect(map.has(23)).to.equal(false);
@@ -208,9 +208,9 @@ describe('Collections', function () {
     });
 
     it('should have keys, values and size props', function () {
-      map.set('a', 1);
-      map.set('b', 2);
-      map.set('c', 3);
+      expect(map.set('a', 1)).to.equal(map);
+      expect(map.set('b', 2)).to.equal(map);
+      expect(map.set('c', 3)).to.equal(map);
       expect(typeof map.keys).to.equal('function');
       expect(typeof map.values).to.equal('function');
       expect(map.size).to.equal(3);
@@ -219,9 +219,9 @@ describe('Collections', function () {
     });
 
     it('should have an iterator that works with Array.from', function () {
-      map.set('a', 1);
-      map.set('b', NaN);
-      map.set('c', false);
+      expect(map.set('a', 1)).to.equal(map);
+      expect(map.set('b', NaN)).to.equal(map);
+      expect(map.set('c', false)).to.equal(map);
       expect(Array.from(map)).to.eql([['a',1], ['b',NaN], ['c',false]]);
       expect(Array.from(map.keys())).to.eql(['a', 'b', 'c']);
       expect(Array.from(map.values())).to.eql([1, NaN, false]);
@@ -233,9 +233,9 @@ describe('Collections', function () {
 
       beforeEach(function () {
         map = new Map();
-        map.set('a', 1);
-        map.set('b', 2);
-        map.set('c', 3);
+        expect(map.set('a', 1)).to.equal(map);
+        expect(map.set('b', 2)).to.equal(map);
+        expect(map.set('c', 3)).to.equal(map);
       });
 
       afterEach(function () {
@@ -260,7 +260,7 @@ describe('Collections', function () {
         var map = new Map();
         var expectedKeys = [{}, null, undefined, '', NaN, 0];
         expectedKeys.forEach(function (key) {
-          map.set(key, true);
+          expect(map.set(key, true)).to.equal(map);
         });
         var foundKeys = [];
         map.forEach(function (value, key, entireMap) {
@@ -285,7 +285,7 @@ describe('Collections', function () {
         var hasModifiedA = false;
         map.forEach(function (value, key) {
           if (!hasModifiedA && key === 'a') {
-            map.set('a', 4);
+            expect(map.set('a', 4)).to.equal(map);
             hasModifiedA = true;
           } else {
             expect(key).not.to.equal('a');
@@ -295,6 +295,10 @@ describe('Collections', function () {
 
       it('returns the map from #set() for chaining', function () {
         expect(map.set({}, {})).to.equal(map);
+        expect(map.set(42, {})).to.equal(map);
+        expect(map.set(0, {})).to.equal(map);
+        expect(map.set(NaN, {})).to.equal(map);
+        expect(map.set(-0, {})).to.equal(map);
       });
 
       it('visits keys added in the iterator', function () {

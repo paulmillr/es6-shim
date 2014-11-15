@@ -1725,7 +1725,7 @@
               // fast O(1) path
               if (typeof this._storage[fkey] !== 'undefined') {
                 this._storage[fkey].value = value;
-                return;
+                return this;
               } else {
                 entry = this._storage[fkey] = new MapEntry(key, value);
                 i = head.prev;
@@ -1735,7 +1735,7 @@
             while ((i = i.next) !== head) {
               if (ES.SameValueZero(i.key, key)) {
                 i.value = value;
-                return;
+                return this;
               }
             }
             entry = entry || new MapEntry(key, value);
