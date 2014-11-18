@@ -245,7 +245,11 @@
         // special case support for `arguments`
         return new ArrayIterator(o, 'value');
       }
-      var it = o[$iterator$]();
+      var itFn = o[$iterator$];
+      if (!ES.IsCallable(itFn)) {
+        throw new TypeError('value is not an iterable');
+      }
+      var it = itFn.call(o);
       if (!ES.TypeIsObject(it)) {
         throw new TypeError('bad iterator');
       }
@@ -1818,6 +1822,9 @@
         // required.
         var SetShim = function Set(iterable) {
           var set = this;
+          if (!ES.TypeIsObject(set)) {
+            throw new TypeError('Set does not accept arguments when called as a function');
+          }
           set = emulateES6construct(set);
           if (!set._es6set) {
             throw new TypeError('bad set');
