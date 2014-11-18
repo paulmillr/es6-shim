@@ -1632,6 +1632,9 @@
 
         function Map(iterable) {
           var map = this;
+          if (!ES.TypeIsObject(map)) {
+            throw new TypeError('Map does not accept arguments when called as a function');
+          }
           map = emulateES6construct(map);
           if (!map._es6map) {
             throw new TypeError('bad map');
