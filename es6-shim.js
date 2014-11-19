@@ -422,13 +422,11 @@
 
   defineProperties(String, {
     fromCodePoint: function (_) { // length = 1
-      var points = _slice.call(arguments, 0, arguments.length);
       var result = [];
       var next;
-      for (var i = 0, length = points.length; i < length; i++) {
-        next = Number(points[i]);
-        if (!ES.SameValue(next, ES.ToInteger(next)) ||
-            next < 0 || next > 0x10FFFF) {
+      for (var i = 0, length = arguments.length; i < length; i++) {
+        next = Number(arguments[i]);
+        if (!ES.SameValue(next, ES.ToInteger(next)) || next < 0 || next > 0x10FFFF) {
           throw new RangeError('Invalid code point ' + next);
         }
 
@@ -444,7 +442,6 @@
     },
 
     raw: function (callSite) { // raw.length===1
-      var substitutions = _slice.call(arguments, 1, arguments.length);
       var cooked = ES.ToObject(callSite, 'bad callSite');
       var rawValue = cooked.raw;
       var raw = ES.ToObject(rawValue, 'bad raw value');
@@ -465,7 +462,7 @@
         if (nextIndex + 1 >= literalsegments) {
           break;
         }
-        next = substitutions[nextKey];
+        next = arguments[nextIndex + 1];
         if (typeof next === 'undefined') {
           break;
         }

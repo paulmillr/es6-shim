@@ -385,11 +385,11 @@ var runStringTests = function () {
 
         var str = 'The total is 10 ($11 with tax)';
         callSite.raw = ['The total is ', ' ($', ' with tax)'];
-        expect(String.raw(callSite,10,11)).to.eql(str);
+        expect(String.raw(callSite, 10, 11)).to.eql(str);
 
         str = 'The total is {total} (${total * 1.01} with tax)';
         callSite.raw = ['The total is ', ' ($', ' with tax)'];
-        expect(String.raw(callSite,'{total}','{total * 1.01}')).to.eql(str);
+        expect(String.raw(callSite, '{total}', '{total * 1.01}')).to.eql(str);
       });
 
       it('String.raw Works with Objects , Keys as Integer', function () {
@@ -397,11 +397,11 @@ var runStringTests = function () {
 
         var str = 'The total is 10 ($11 with tax)';
         callSite.raw = {0: 'The total is ', 1: ' ($', 2: ' with tax)'};
-        expect(String.raw(callSite,10,11)).to.eql(str);
+        expect(String.raw(callSite, 10, 11)).to.eql(str);
 
         str = 'The total is {total} (${total * 1.01} with tax)';
         callSite.raw = {0: 'The total is ', 1: ' ($', 2: ' with tax)'};
-        expect(String.raw(callSite,'{total}','{total * 1.01}')).to.eql(str);
+        expect(String.raw(callSite, '{total}', '{total * 1.01}')).to.eql(str);
       });
 
       it('String.raw Works with Objects , Keys as String', function () {
