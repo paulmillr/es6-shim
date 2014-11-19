@@ -1,5 +1,10 @@
 # es6-shim x.x.x (not yet released)
 
+# es6-shim 0.20.3 (19 Nov 2014)
+* Fix Set#add and Map#set to always return "this" (#302)
+* Clarify TypeError messages thrown by Map/Set
+* Fix Chrome 38 bug with Array#values
+
 # es6-shim 0.20.2 (28 Oct 2014)
 * Fix AMD (#299)
 
