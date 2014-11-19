@@ -809,6 +809,13 @@
   if (Array.prototype.entries && !ES.IsCallable([1].entries().next)) {
     delete Array.prototype.entries;
   }
+
+  // Chrome 38 defines Array#keys and Array#entries, and Array#@@iterator, but not Array#values
+  if (Array.prototype.keys && Array.prototype.entries && !Array.prototype.values && Array.prototype[$iterator$]) {
+    defineProperties(Array.prototype, {
+      values: Array.prototype[$iterator$]
+    });
+  }
   defineProperties(Array.prototype, ArrayPrototypeShims);
 
   addIterator(Array.prototype, function () { return this.values(); });
