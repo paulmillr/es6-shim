@@ -421,7 +421,7 @@
   }());
 
   defineProperties(String, {
-    fromCodePoint: function (_) { // length = 1
+    fromCodePoint: function fromCodePoint(_) { // length = 1
       var result = [];
       var next;
       for (var i = 0, length = arguments.length; i < length; i++) {
@@ -441,7 +441,7 @@
       return result.join('');
     },
 
-    raw: function (callSite) { // raw.length===1
+    raw: function raw(callSite) { // raw.length===1
       var cooked = ES.ToObject(callSite, 'bad callSite');
       var rawValue = cooked.raw;
       var raw = ES.ToObject(rawValue, 'bad raw value');
