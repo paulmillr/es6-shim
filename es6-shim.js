@@ -444,10 +444,10 @@
     raw: function raw(callSite) { // raw.length===1
       var cooked = ES.ToObject(callSite, 'bad callSite');
       var rawValue = cooked.raw;
-      var raw = ES.ToObject(rawValue, 'bad raw value');
-      var len = Object.keys(raw).length;
+      var rawString = ES.ToObject(rawValue, 'bad raw value');
+      var len = rawString.length;
       var literalsegments = ES.ToLength(len);
-      if (literalsegments === 0) {
+      if (literalsegments <= 0) {
         return '';
       }
 
@@ -456,7 +456,7 @@
       var nextKey, next, nextSeg, nextSub;
       while (nextIndex < literalsegments) {
         nextKey = String(nextIndex);
-        next = raw[nextKey];
+        next = rawString[nextKey];
         nextSeg = String(next);
         stringElements.push(nextSeg);
         if (nextIndex + 1 >= literalsegments) {
