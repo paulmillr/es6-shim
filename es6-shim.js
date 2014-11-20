@@ -462,10 +462,7 @@
         if (nextIndex + 1 >= literalsegments) {
           break;
         }
-        next = arguments[nextIndex + 1];
-        if (typeof next === 'undefined') {
-          break;
-        }
+        next = nextIndex + 1 < arguments.length ? arguments[nextIndex + 1] : '';
         nextSub = String(next);
         stringElements.push(nextSub);
         nextIndex++;

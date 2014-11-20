@@ -414,7 +414,7 @@ var runStringTests = function () {
         var callSite = {
           raw: { 0: 'The total is ', 1: ' ($', 2: ' with tax)', length: 3 }
         };
-        var str = 'The total is 10 ($';
+        var str = 'The total is 10 ($ with tax)';
         expect(String.raw(callSite, 10)).to.equal(str);
       });
     });
