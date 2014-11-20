@@ -1,5 +1,12 @@
 # es6-shim x.x.x (not yet released)
 
+# es6-shim 0.20.4 (20 Nov 2014)
+* Performance improvements: avoid slicing arguments, avoid `Function#call` when possible
+* Name `String.{fromCodePoint,raw}` for debugging
+* Fix `String.raw` to match spec
+* Ensure Chrome‘s excess Promise methods are purged
+* Ensure `Set#keys === Set#values`, per spec
+
 # es6-shim 0.20.3 (19 Nov 2014)
 * Fix Set#add and Map#set to always return "this" (#302)
 * Clarify TypeError messages thrown by Map/Set
@@ -25,7 +32,7 @@
 
 # es6-shim 0.19.0 (9 Oct 2014)
 * Detect and override noncompliant Map in Firefox 32 (#294)
-* Fix Map and Set for engines that don't preserve numeric key order (#292, #290)
+* Fix Map and Set for engines that don‘t preserve numeric key order (#292, #290)
 * Detect and override noncompliant Safari 7.1 Promises (#289)
 * Fix Array#keys and Array#entries in Safari 7.1
 * General style and whitespace cleanup
@@ -62,9 +69,9 @@
 
 # es6-shim 0.14.0 (20 Jul 2014)
 * Properly recognize Symbol.iterator when it is present (#277)
-* Fix Math.clz's improper handling of values that coerce to NaN (#269)
+* Fix Math.clz‘s improper handling of values that coerce to NaN (#269)
 * Fix incorrect handling of negative end index on Array#fill (#270)
-* Removed Object.getOwnPropertyKeys, which shouldn't be anywhere (#267)
+* Removed Object.getOwnPropertyKeys, which shouldn‘t be anywhere (#267)
 * Fixed arity of Map and Set constructors, per 2014.04.27 draft spec (rev 24)
 * Added a full additional suite of ES6 promise tests (thanks to @smikes!) (#265)
 * Make Number.isInteger a bit more efficient (#266)
@@ -97,7 +104,7 @@
 # es6-shim 0.10.1 (13 Mar 2014)
 * Update bower.json, component.json, and .npmignore (#229, #230, #233)
 * Minor updates to `Promise` implementation and test suite.
-* Workaround lack of 'strict mode' in IE9. (#232)
+* Workaround lack of "strict mode" in IE9. (#232)
 
 # es6-shim 0.10.0 (1 March 2014)
 * Implement `Promise`, per spec. (#209, #215, #224, #225)
