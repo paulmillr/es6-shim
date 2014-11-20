@@ -380,7 +380,7 @@ var runStringTests = function () {
         expect(String.raw.length).to.equal(1);
       });
 
-      it('String.raw Works with Array', function () {
+      it('works with callSite.raw: Array', function () {
         var callSite = {};
 
         var str = 'The total is 10 ($11 with tax)';
@@ -392,7 +392,7 @@ var runStringTests = function () {
         expect(String.raw(callSite, '{total}', '{total * 1.01}')).to.eql(str);
       });
 
-      it('String.raw Works with Objects , Keys as Integer', function () {
+      it('works with callSite.raw: Object', function () {
         var callSite = {};
 
         var str = 'The total is 10 ($11 with tax)';
@@ -404,30 +404,18 @@ var runStringTests = function () {
         expect(String.raw(callSite, '{total}', '{total * 1.01}')).to.eql(str);
       });
 
-      it('String.raw Works with Objects , Keys as String', function () {
-        var callSite = {};
-
-        var str = 'The total is 10 ($11 with tax)';
-        callSite.raw = { 0: 'The total is ', 1: ' ($', 2: ' with tax)' };
-        expect(String.raw(callSite,10,11)).to.eql(str);
-
-        str = 'The total is {total} (${total * 1.01} with tax)';
-        callSite.raw = { 0: 'The total is ', 1: ' ($', 2: ' with tax)' };
-        expect(String.raw(callSite,'{total}','{total * 1.01}')).to.eql(str);
+      it('works with callSite.raw: empty Objects', function () {
+        var callSite = { raw: {} };
+        expect(String.raw(callSite, '{total}', '{total * 1.01}')).to.eql('');
+        expect(String.raw(callSite)).to.equal('');
       });
 
-      it('String.raw ReturnIfAbrupt - Less Substitutions', function () {
+      it('ReturnIfAbrupt - Less Substitutions', function () {
         var callSite = {
           raw: { 0: 'The total is ', 1: ' ($', 2: ' with tax)' }
         };
         var str = 'The total is 10 ($';
         expect(String.raw(callSite, 10)).to.equal(str);
-      });
-
-      it('String.raw Empty objects', function () {
-        var callSite = { raw: {} };
-        expect(String.raw(callSite, '{total}', '{total * 1.01}')).to.eql('');
-        expect(String.raw(callSite)).to.equal('');
       });
     });
 
