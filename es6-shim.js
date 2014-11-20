@@ -1943,11 +1943,6 @@
             return this['[[SetData]]'].clear();
           },
 
-          keys: function () {
-            ensureMap(this);
-            return this['[[SetData]]'].keys();
-          },
-
           values: function () {
             ensureMap(this);
             return this['[[SetData]]'].values();
@@ -1967,6 +1962,7 @@
             });
           }
         });
+        defineProperty(SetShim, 'keys', SetShim.values, true);
         addIterator(SetShim.prototype, function () { return this.values(); });
 
         return SetShim;
@@ -2003,6 +1999,9 @@
         globals.Map = collectionShims.Map;
         globals.Set = collectionShims.Set;
       }
+    }
+    if (globals.Set.prototype.keys !== globals.Set.prototype.values) {
+      defineProperty(globals.Set.prototype, 'keys', globals.Set.prototype.values, true);
     }
     // Shim incomplete iterator implementations.
     addIterator(Object.getPrototypeOf((new globals.Map()).keys()));

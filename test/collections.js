@@ -461,8 +461,12 @@ describe('Collections', function () {
       expect(typeof Set).to.equal('function');
     });
 
-    it('should have the right arity', function () {
+    it('has the right arity', function () {
       expect(Set.length).to.equal(1);
+    });
+
+    it('has #keys which is the same object as #values', function () {
+      expect(Set.prototype.keys).to.equal(Set.prototype.values);
     });
 
     it('returns the set from #add() for chaining', function () {
