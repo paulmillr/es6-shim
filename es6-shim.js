@@ -1518,6 +1518,14 @@
 
     return Promise;
   })();
+
+  // Chrome's native Promise has extra methods that it shouldn't have. Let's remove them.
+  if (globals.Promise) {
+    delete globals.Promise.accept;
+    delete globals.Promise.defer;
+    delete globals.Promise.prototype.chain;
+  }
+
   // export the Promise constructor.
   defineProperties(globals, { Promise: PromiseShim });
   // In Chrome 33 (and thereabouts) Promise is defined, but the
