@@ -762,10 +762,14 @@
       if (!ES.IsCallable(predicate)) {
         throw new TypeError('Array#find: predicate must be a function');
       }
-      var thisArg = arguments[1];
+      var thisArg = arguments.length > 1 ? arguments[1] : null;
       for (var i = 0, value; i < length; i++) {
         value = list[i];
-        if (predicate.call(thisArg, value, i, list)) { return value; }
+        if (thisArg) {
+          if (predicate.call(thisArg, value, i, list)) { return value; }
+        } else {
+          if (predicate(value, i, list)) { return value; }
+        }
       }
       return;
     },
@@ -776,9 +780,13 @@
       if (!ES.IsCallable(predicate)) {
         throw new TypeError('Array#findIndex: predicate must be a function');
       }
-      var thisArg = arguments[1];
+      var thisArg = arguments.length > 1 ? arguments[1] : null;
       for (var i = 0; i < length; i++) {
-        if (predicate.call(thisArg, list[i], i, list)) { return i; }
+        if (thisArg) {
+          if (predicate.call(thisArg, list[i], i, list)) { return i; }
+        } else {
+          if (predicate(list[i], i, list)) { return i; }
+        }
       }
       return -1;
     },
@@ -1818,7 +1826,11 @@
             var context = arguments.length > 1 ? arguments[1] : null;
             var it = this.entries();
             for (var entry = it.next(); !entry.done; entry = it.next()) {
-              callback.call(context, entry.value[1], entry.value[0], this);
+              if (context) {
+                callback.call(context, entry.value[1], entry.value[0], this);
+              } else {
+                callback(entry.value[1], entry.value[0], this);
+              }
             }
           }
         });
@@ -1956,9 +1968,13 @@
           forEach: function (callback) {
             var context = arguments.length > 1 ? arguments[1] : null;
             var entireSet = this;
-            ensureMap(this);
+            ensureMap(entireSet);
             this['[[SetData]]'].forEach(function (value, key) {
-              callback.call(context, key, key, entireSet);
+              if (context) {
+                callback.call(context, key, key, entireSet);
+              } else {
+                callback(key, key, entireSet);
+              }
             });
           }
         });
