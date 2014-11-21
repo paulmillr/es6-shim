@@ -522,7 +522,7 @@
       return thisStr.slice(end - searchStr.length, end) === searchStr;
     },
 
-    contains: function (searchString) {
+    includes: function includes(searchString) {
       var position = arguments.length > 1 ? arguments[1] : void 0;
       // Somehow this trick makes method 100% compat with the spec.
       return _indexOf.call(this, searchString, position) !== -1;

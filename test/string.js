@@ -224,46 +224,46 @@ var runStringTests = function () {
       });
     });
 
-    describe('#contains()', function () {
+    describe('#includes()', function () {
       it('should throw a TypeError when called on null or undefined', function () {
-        testObjectCoercible('contains');
+        testObjectCoercible('includes');
       });
 
       it('should be truthy on correct results', function () {
-        expect('test'.contains('es')).to.equal(true);
-        expect('abc'.contains('a')).to.equal(true);
-        expect('abc'.contains('b')).to.equal(true);
-        expect('abc'.contains('abc')).to.equal(true);
-        expect('abc'.contains('bc')).to.equal(true);
-        expect('abc'.contains('d')).to.equal(false);
-        expect('abc'.contains('abcd')).to.equal(false);
-        expect('abc'.contains('ac')).to.equal(false);
-        expect('abc'.contains('abc', 0)).to.equal(true);
-        expect('abc'.contains('bc', 0)).to.equal(true);
-        expect('abc'.contains('de', 0)).to.equal(false);
-        expect('abc'.contains('bc', 1)).to.equal(true);
-        expect('abc'.contains('c', 1)).to.equal(true);
-        expect('abc'.contains('a', 1)).to.equal(false);
-        expect('abc'.contains('abc', 1)).to.equal(false);
-        expect('abc'.contains('c', 2)).to.equal(true);
-        expect('abc'.contains('d', 2)).to.equal(false);
-        expect('abc'.contains('dcd', 2)).to.equal(false);
-        expect('abc'.contains('a', 42)).to.equal(false);
-        expect('abc'.contains('a', Infinity)).to.equal(false);
-        expect('abc'.contains('ab', -43)).to.equal(true);
-        expect('abc'.contains('cd', -42)).to.equal(false);
-        expect('abc'.contains('ab', -Infinity)).to.equal(true);
-        expect('abc'.contains('cd', -Infinity)).to.equal(false);
-        expect('abc'.contains('ab', NaN)).to.equal(true);
-        expect('abc'.contains('cd', NaN)).to.equal(false);
+        expect('test'.includes('es')).to.equal(true);
+        expect('abc'.includes('a')).to.equal(true);
+        expect('abc'.includes('b')).to.equal(true);
+        expect('abc'.includes('abc')).to.equal(true);
+        expect('abc'.includes('bc')).to.equal(true);
+        expect('abc'.includes('d')).to.equal(false);
+        expect('abc'.includes('abcd')).to.equal(false);
+        expect('abc'.includes('ac')).to.equal(false);
+        expect('abc'.includes('abc', 0)).to.equal(true);
+        expect('abc'.includes('bc', 0)).to.equal(true);
+        expect('abc'.includes('de', 0)).to.equal(false);
+        expect('abc'.includes('bc', 1)).to.equal(true);
+        expect('abc'.includes('c', 1)).to.equal(true);
+        expect('abc'.includes('a', 1)).to.equal(false);
+        expect('abc'.includes('abc', 1)).to.equal(false);
+        expect('abc'.includes('c', 2)).to.equal(true);
+        expect('abc'.includes('d', 2)).to.equal(false);
+        expect('abc'.includes('dcd', 2)).to.equal(false);
+        expect('abc'.includes('a', 42)).to.equal(false);
+        expect('abc'.includes('a', Infinity)).to.equal(false);
+        expect('abc'.includes('ab', -43)).to.equal(true);
+        expect('abc'.includes('cd', -42)).to.equal(false);
+        expect('abc'.includes('ab', -Infinity)).to.equal(true);
+        expect('abc'.includes('cd', -Infinity)).to.equal(false);
+        expect('abc'.includes('ab', NaN)).to.equal(true);
+        expect('abc'.includes('cd', NaN)).to.equal(false);
 
         var myobj = {
           toString: function () {return 'abc';},
-          contains: String.prototype.contains
+          includes: String.prototype.includes
         };
 
-        expect(myobj.contains('abc')).to.equal(true);
-        expect(myobj.contains('cd')).to.equal(false);
+        expect(myobj.includes('abc')).to.equal(true);
+        expect(myobj.includes('cd')).to.equal(false);
 
         var gotStr = false, gotPos = false;
 
@@ -274,7 +274,7 @@ var runStringTests = function () {
             return 'xyz';
           },
 
-          contains: String.prototype.contains
+          includes: String.prototype.includes
         };
 
         var idx = {
@@ -285,12 +285,12 @@ var runStringTests = function () {
           }
         };
 
-        myobj.contains('elephant', idx);
+        myobj.includes('elephant', idx);
         expect(gotPos).to.equal(true);
       });
 
       it('should be falsy on incorrect results', function () {
-        expect('test'.contains('1290')).to.equal(false);
+        expect('test'.includes('1290')).to.equal(false);
       });
     });
 

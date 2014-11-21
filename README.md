@@ -36,7 +36,7 @@ details.
     * `repeat()` ([a standalone shim is also available](http://mths.be/repeat))
     * `startsWith()` ([a standalone shim is also available](http://mths.be/startswith))
     * `endsWith()` ([a standalone shim is also available](http://mths.be/endswith))
-    * `contains()` ([a standalone shim is also available](http://mths.be/contains))
+    * `includes()` ([a standalone shim is also available](http://mths.be/includes))
 * `Number`:
     * `MAX_SAFE_INTEGER`
     * `MIN_SAFE_INTEGER`
@@ -126,7 +126,7 @@ WeakMap has a very unusual use-case so you probably won't need it at all
 ```javascript
 'abc'.startsWith('a') // true
 'abc'.endsWith('a') // false
-'john alice'.contains('john') // true
+'john alice'.includes('john') // true
 '123'.repeat(2)     // '123123'
 
 Object.is(NaN, NaN) // Fixes ===. 0 isnt -0, NaN is NaN
