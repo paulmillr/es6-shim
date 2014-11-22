@@ -82,6 +82,13 @@
   var _hasOwnProperty = Object.prototype.hasOwnProperty;
   var ArrayIterator; // make our implementation private
 
+  var Symbol = globals.Symbol || {};
+  var isSymbol = function (sym) {
+    /*jshint notypeof: true */
+    return typeof globals.Symbol === 'function' && typeof sym === 'symbol';
+    /*jshint notypeof: false */
+  };
+
   var defineProperty = function (object, name, value, force) {
     if (!force && name in object) { return; }
     if (supportsDescriptors) {
@@ -122,7 +129,7 @@
   // work properly with each other, even though we don't have full Iterator
   // support.  That is, `Array.from(map.keys())` will work, but we don't
   // pretend to export a "real" Iterator interface.
-  var $iterator$ = (typeof Symbol === 'function' && Symbol.iterator) || '_es6-shim iterator_';
+  var $iterator$ = isSymbol(Symbol.iterator) ? Symbol.iterator : '_es6-shim iterator_';
   // Firefox ships a partial implementation using the name @@iterator.
   // https://bugzilla.mozilla.org/show_bug.cgi?id=907077#c14
   // So use that name if we detect it.
@@ -134,8 +141,7 @@
     var o = {};
     o[$iterator$] = impl;
     defineProperties(prototype, o);
-    /* jshint notypeof: true */
-    if (!prototype[$iterator$] && typeof $iterator$ === 'symbol') {
+    if (!prototype[$iterator$] && isSymbol($iterator$)) {
       // implementations are buggy when $iterator$ is a Symbol
       prototype[$iterator$] = impl;
     }
@@ -816,6 +822,9 @@
     defineProperties(Array.prototype, {
       values: Array.prototype[$iterator$]
     });
+    if (isSymbol(Symbol.unscopables)) {
+      Array.prototype[Symbol.unscopables].values = true;
+    }
   }
   defineProperties(Array.prototype, ArrayPrototypeShims);
 
