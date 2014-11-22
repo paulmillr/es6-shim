@@ -8,7 +8,22 @@
   * https://github.com/paulmillr/es6-shim/
   */
 
-(function (undefined) {
+// UMD (Universal Module Definition)
+// see https://github.com/umdjs/umd/blob/master/returnExports.js
+(function (root, factory) {
+  if (typeof define === 'function' && define.amd) {
+    // AMD. Register as an anonymous module.
+    define(factory);
+  } else if (typeof exports === 'object') {
+    // Node. Does not work with strict CommonJS, but
+    // only CommonJS-like enviroments that support module.exports,
+    // like Node.
+    module.exports = factory();
+  } else {
+    // Browser globals (root is window)
+    root.returnExports = factory();
+  }
+}(this, function (undefined) {
   'use strict';
 
   /*jshint evil: true */
@@ -103,11 +118,5 @@
     }());
 
   };
-
-  if (typeof define === 'function' && define.amd) {
-    define(main); // RequireJS
-  } else {
-    main(); // CommonJS and <script>
-  }
-}());
+}));
 
