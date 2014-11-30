@@ -599,8 +599,10 @@
 
   if (!startsWithIsCompliant) {
     // Firefox has a noncompliant startsWith implementation
-    String.prototype.startsWith = StringShims.startsWith;
-    String.prototype.endsWith = StringShims.endsWith;
+    defineProperties(String.prototype, {
+      startsWith: StringShims.startsWith,
+      endsWith: StringShims.endsWith
+    });
   }
 
   var ArrayShims = {
