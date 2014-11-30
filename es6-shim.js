@@ -83,10 +83,14 @@
   var ArrayIterator; // make our implementation private
 
   var Symbol = globals.Symbol || {};
-  var isSymbol = function (sym) {
-    /*jshint notypeof: true */
-    return typeof globals.Symbol === 'function' && typeof sym === 'symbol';
-    /*jshint notypeof: false */
+  var Type = {
+    string: function (x) { return _toString(x) === '[object String]'; },
+    regex: function (x) { return _toString(x) === '[object RegExp]'; },
+    symbol: function (x) {
+      /*jshint notypeof: true */
+      return typeof globals.Symbol === 'function' && typeof x === 'symbol';
+      /*jshint notypeof: false */
+    }
   };
 
   var defineProperty = function (object, name, value, force) {
@@ -129,7 +133,7 @@
   // work properly with each other, even though we don't have full Iterator
   // support.  That is, `Array.from(map.keys())` will work, but we don't
   // pretend to export a "real" Iterator interface.
-  var $iterator$ = isSymbol(Symbol.iterator) ? Symbol.iterator : '_es6-shim iterator_';
+  var $iterator$ = Type.symbol(Symbol.iterator) ? Symbol.iterator : '_es6-shim iterator_';
   // Firefox ships a partial implementation using the name @@iterator.
   // https://bugzilla.mozilla.org/show_bug.cgi?id=907077#c14
   // So use that name if we detect it.
@@ -141,7 +145,7 @@
     var o = {};
     o[$iterator$] = impl;
     defineProperties(prototype, o);
-    if (!prototype[$iterator$] && isSymbol($iterator$)) {
+    if (!prototype[$iterator$] && Type.symbol($iterator$)) {
       // implementations are buggy when $iterator$ is a Symbol
       prototype[$iterator$] = impl;
     }
@@ -506,7 +510,7 @@
 
     startsWith: function (searchStr) {
       var thisStr = String(ES.CheckObjectCoercible(this));
-      if (_toString(searchStr) === '[object RegExp]') {
+      if (Type.regex(searchStr)) {
         throw new TypeError('Cannot call method "startsWith" with a regex');
       }
       searchStr = String(searchStr);
@@ -517,7 +521,7 @@
 
     endsWith: function (searchStr) {
       var thisStr = String(ES.CheckObjectCoercible(this));
-      if (_toString(searchStr) === '[object RegExp]') {
+      if (Type.regex(searchStr)) {
         throw new TypeError('Cannot call method "endsWith" with a regex');
       }
       searchStr = String(searchStr);
@@ -824,7 +828,7 @@
     defineProperties(Array.prototype, {
       values: Array.prototype[$iterator$]
     });
-    if (isSymbol(Symbol.unscopables)) {
+    if (Type.symbol(Symbol.unscopables)) {
       Array.prototype[Symbol.unscopables].values = true;
     }
   }
