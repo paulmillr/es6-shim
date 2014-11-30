@@ -77,9 +77,9 @@
   var supportsDescriptors = !!Object.defineProperty && arePropertyDescriptorsSupported();
   var startsWithIsCompliant = startsWithRejectsRegex();
   var _slice = Array.prototype.slice;
-  var _indexOf = String.prototype.indexOf;
-  var _toString = Object.prototype.toString;
-  var _hasOwnProperty = Object.prototype.hasOwnProperty;
+  var _indexOf = Function.call.bind(String.prototype.indexOf);
+  var _toString = Function.call.bind(Object.prototype.toString);
+  var _hasOwnProperty = Function.call.bind(Object.prototype.hasOwnProperty);
   var ArrayIterator; // make our implementation private
 
   var Symbol = globals.Symbol || {};
@@ -150,7 +150,7 @@
   // taken directly from https://github.com/ljharb/is-arguments/blob/master/index.js
   // can be replaced with require('is-arguments') if we ever use a build process instead
   var isArguments = function isArguments(value) {
-    var str = _toString.call(value);
+    var str = _toString(value);
     var result = str === '[object Arguments]';
     if (!result) {
       result = str !== '[object Array]' &&
@@ -158,7 +158,7 @@
         typeof value === 'object' &&
         typeof value.length === 'number' &&
         value.length >= 0 &&
-        _toString.call(value.callee) === '[object Function]';
+        _toString(value.callee) === '[object Function]';
     }
     return result;
   };
@@ -201,7 +201,7 @@
     IsCallable: function (x) {
       return typeof x === 'function' &&
         // some versions of IE say that typeof /abc/ === 'function'
-        _toString.call(x) === '[object Function]';
+        _toString(x) === '[object Function]';
     },
 
     ToInt32: function (x) {
@@ -479,8 +479,8 @@
   // Firefox 31 reports this function's length as 0
   // https://bugzilla.mozilla.org/show_bug.cgi?id=1062484
   if (String.fromCodePoint.length !== 1) {
-    var originalFromCodePoint = String.fromCodePoint;
-    defineProperty(String, 'fromCodePoint', function (_) { return originalFromCodePoint.apply(this, arguments); }, true);
+    var originalFromCodePoint = Function.apply.bind(String.fromCodePoint);
+    defineProperty(String, 'fromCodePoint', function (_) { return originalFromCodePoint(this, arguments); }, true);
   }
 
   var StringShims = {
@@ -506,7 +506,7 @@
 
     startsWith: function (searchStr) {
       var thisStr = String(ES.CheckObjectCoercible(this));
-      if (_toString.call(searchStr) === '[object RegExp]') {
+      if (_toString(searchStr) === '[object RegExp]') {
         throw new TypeError('Cannot call method "startsWith" with a regex');
       }
       searchStr = String(searchStr);
@@ -517,7 +517,7 @@
 
     endsWith: function (searchStr) {
       var thisStr = String(ES.CheckObjectCoercible(this));
-      if (_toString.call(searchStr) === '[object RegExp]') {
+      if (_toString(searchStr) === '[object RegExp]') {
         throw new TypeError('Cannot call method "endsWith" with a regex');
       }
       searchStr = String(searchStr);
@@ -531,7 +531,7 @@
     includes: function includes(searchString) {
       var position = arguments.length > 1 ? arguments[1] : void 0;
       // Somehow this trick makes method 100% compat with the spec.
-      return _indexOf.call(this, searchString, position) !== -1;
+      return _indexOf(this, searchString, position) !== -1;
     },
 
     codePointAt: function (pos) {
@@ -734,7 +734,7 @@
         to += count - 1;
       }
       while (count > 0) {
-        if (_hasOwnProperty.call(o, from)) {
+        if (_hasOwnProperty(o, from)) {
           o[to] = o[from];
         } else {
           delete o[from];
@@ -1950,7 +1950,7 @@
           'delete': function (key) {
             var fkey;
             if (this._storage && (fkey = fastkey(key)) !== null) {
-              var hasFKey = _hasOwnProperty.call(this._storage, fkey);
+              var hasFKey = _hasOwnProperty(this._storage, fkey);
               return (delete this._storage[fkey]) && hasFKey;
             }
             ensureMap(this);
