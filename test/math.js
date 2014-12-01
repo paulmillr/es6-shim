@@ -103,6 +103,9 @@ describe('Math', function () {
       nonIntegers.forEach(function (item) {
         expect(Math.clz32(item)).to.be.within(0, 32);
       });
+      nonNumbers.forEach(function (item) {
+        expect(Math.clz32(item)).to.equal(item === true ? 31 : 32);
+      });
       expect(Math.clz32(true)).to.equal(Math.clz32(1));
       expect(Math.clz32('')).to.equal(Math.clz32(0));
       expect(Math.clz32('10')).to.equal(Math.clz32(10));
