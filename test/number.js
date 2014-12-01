@@ -4,7 +4,25 @@ describe('Number', function (undefined) {
   var integers = [5295, -5295, -9007199254740991, 9007199254740991, 0, -0];
   var nonIntegers = [-9007199254741992, 9007199254741992, 5.9];
   var infinities = [Infinity, -Infinity];
-  var nonNumbers = [undefined, true, null, {}, [], 'str'];
+  var nonNumbers = [
+    undefined,
+    true,
+    false,
+    null,
+    {},
+    [],
+    'str',
+    '',
+    { valueOf: function () { return 3; } },
+    { valueOf: function () { return 0 / 0; } },
+    { valueOf: function () { throw 17; } },
+    { toString: function () { throw 17; } },
+    {
+      valueOf: function () { throw 17; },
+      toString: function () { throw 42; }
+    },
+    /a/g
+];
   var expectTrue = function (item) {
     expect(item).to.equal(true);
   };
@@ -88,23 +106,6 @@ describe('Number', function (undefined) {
     });
 
     it('should be false when the type is not number', function () {
-      var nonNumbers = [
-        false,
-        true,
-        null,
-        undefined,
-        '',
-        'str',
-        function () {},
-        { valueOf: function () { return 3; } },
-        { valueOf: function () { return 0 / 0; } },
-        { valueOf: function () { throw 17; } },
-        { toString: function () { throw 17; } },
-        { valueOf: function () { throw 17; },
-          toString: function () { throw 42; } },
-        /a/g,
-        {}
-      ];
       nonNumbers.forEach(function (thing) {
         expect(Number.isInteger(thing)).to.equal(false);
       });
@@ -149,23 +150,6 @@ describe('Number', function (undefined) {
     });
 
     it('should be false when the type is not number', function () {
-      var nonNumbers = [
-        false,
-        true,
-        null,
-        undefined,
-        '',
-        'str',
-        function () {},
-        { valueOf: function () { return 3; } },
-        { valueOf: function () { return 0 / 0; } },
-        { valueOf: function () { throw 17; } },
-        { toString: function () { throw 17; } },
-        { valueOf: function () { throw 17; },
-          toString: function () { throw 42; } },
-        /a/g,
-        {}
-      ];
       nonNumbers.forEach(function (thing) {
         expect(Number.isSafeInteger(thing)).to.equal(false);
       });
