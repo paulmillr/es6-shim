@@ -16,6 +16,10 @@ var delayPromise = function (value, ms) {
 
 describe('Promise.race', function () {
   'use strict';
+  it('should not be enumerable', function () {
+    expect(Object.keys(Promise)).not.to.include('race');
+  });
+
   it('should fulfill if all promises are settled and the ordinally-first is fulfilled', function (done) {
     var iterable = [Promise.resolve(1), Promise.reject(2), Promise.resolve(3)];
 

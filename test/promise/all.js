@@ -7,6 +7,11 @@ var failIfThrows = function (done) {
 
 describe('Promise.all', function () {
   'use strict';
+
+  it('should not be enumerable', function () {
+    expect(Object.keys(Promise)).not.to.include('all');
+  });
+
   it('fulfills if passed an empty array', function (done) {
     var iterable = [];
 

@@ -871,7 +871,6 @@
       // isNaN('foo') => true
       return value !== value;
     }
-
   });
 
   // Work around bugs in Array#find and Array#findIndex -- early
@@ -1382,6 +1381,19 @@
       return promise;
     };
     Promise$prototype = Promise.prototype;
+    var _promiseAllResolver = function (index, values, capability, remaining) {
+      var done = false;
+      return function (x) {
+        if (done) { return; } // protect against being called multiple times
+        done = true;
+        values[index] = x;
+        if ((--remaining.count) === 0) {
+          var resolve = capability.resolve;
+          resolve(values); // call w/ this===undefined
+        }
+      };
+    };
+
     defineProperties(Promise, {
       '@@create': function (obj) {
         var constructor = this;
@@ -1399,144 +1411,130 @@
         });
         obj._promiseConstructor = constructor;
         return obj;
+      },
+
+      all: function all(iterable) {
+        var C = this;
+        var capability = new PromiseCapability(C);
+        var resolve = capability.resolve;
+        var reject = capability.reject;
+        try {
+          if (!ES.IsIterable(iterable)) {
+            throw new TypeError('bad iterable');
+          }
+          var it = ES.GetIterator(iterable);
+          var values = [], remaining = { count: 1 };
+          for (var index = 0; ; index++) {
+            var next = ES.IteratorNext(it);
+            if (next.done) {
+              break;
+            }
+            var nextPromise = C.resolve(next.value);
+            var resolveElement = _promiseAllResolver(
+              index, values, capability, remaining
+            );
+            remaining.count++;
+            nextPromise.then(resolveElement, capability.reject);
+          }
+          if ((--remaining.count) === 0) {
+            resolve(values); // call w/ this===undefined
+          }
+        } catch (e) {
+          reject(e);
+        }
+        return capability.promise;
+      },
+
+      race: function race(iterable) {
+        var C = this;
+        var capability = new PromiseCapability(C);
+        var resolve = capability.resolve;
+        var reject = capability.reject;
+        try {
+          if (!ES.IsIterable(iterable)) {
+            throw new TypeError('bad iterable');
+          }
+          var it = ES.GetIterator(iterable);
+          while (true) {
+            var next = ES.IteratorNext(it);
+            if (next.done) {
+              // If iterable has no items, resulting promise will never
+              // resolve; see:
+              // https://github.com/domenic/promises-unwrapping/issues/75
+              // https://bugs.ecmascript.org/show_bug.cgi?id=2515
+              break;
+            }
+            var nextPromise = C.resolve(next.value);
+            nextPromise.then(resolve, reject);
+          }
+        } catch (e) {
+          reject(e);
+        }
+        return capability.promise;
+      },
+
+      reject: function reject(reason) {
+        var C = this;
+        var capability = new PromiseCapability(C);
+        var reject = capability.reject;
+        reject(reason); // call with this===undefined
+        return capability.promise;
+      },
+
+      resolve: function resolve(v) {
+        var C = this;
+        if (ES.IsPromise(v)) {
+          var constructor = v._promiseConstructor;
+          if (constructor === C) { return v; }
+        }
+        var capability = new PromiseCapability(C);
+        var resolve = capability.resolve;
+        resolve(v); // call with this===undefined
+        return capability.promise;
       }
     });
 
-    var _promiseAllResolver = function (index, values, capability, remaining) {
-      var done = false;
-      return function (x) {
-        if (done) { return; } // protect against being called multiple times
-        done = true;
-        values[index] = x;
-        if ((--remaining.count) === 0) {
-          var resolve = capability.resolve;
-          resolve(values); // call w/ this===undefined
-        }
-      };
-    };
+    defineProperties(Promise$prototype, {
+      'catch': function (onRejected) {
+        return this.then(void 0, onRejected);
+      },
 
-    Promise.all = function (iterable) {
-      var C = this;
-      var capability = new PromiseCapability(C);
-      var resolve = capability.resolve;
-      var reject = capability.reject;
-      try {
-        if (!ES.IsIterable(iterable)) {
-          throw new TypeError('bad iterable');
+      then: function then(onFulfilled, onRejected) {
+        var promise = this;
+        if (!ES.IsPromise(promise)) { throw new TypeError('not a promise'); }
+        // this.constructor not this._promiseConstructor; see
+        // https://bugs.ecmascript.org/show_bug.cgi?id=2513
+        var C = this.constructor;
+        var capability = new PromiseCapability(C);
+        if (!ES.IsCallable(onRejected)) {
+          onRejected = function (e) { throw e; };
         }
-        var it = ES.GetIterator(iterable);
-        var values = [], remaining = { count: 1 };
-        for (var index = 0; ; index++) {
-          var next = ES.IteratorNext(it);
-          if (next.done) {
+        if (!ES.IsCallable(onFulfilled)) {
+          onFulfilled = function (x) { return x; };
+        }
+        var resolutionHandler = promiseResolutionHandler(promise, onFulfilled, onRejected);
+        var resolveReaction = { capability: capability, handler: resolutionHandler };
+        var rejectReaction = { capability: capability, handler: onRejected };
+        switch (promise._status) {
+          case 'unresolved':
+            promise._resolveReactions.push(resolveReaction);
+            promise._rejectReactions.push(rejectReaction);
             break;
-          }
-          var nextPromise = C.resolve(next.value);
-          var resolveElement = _promiseAllResolver(
-            index, values, capability, remaining
-          );
-          remaining.count++;
-          nextPromise.then(resolveElement, capability.reject);
-        }
-        if ((--remaining.count) === 0) {
-          resolve(values); // call w/ this===undefined
-        }
-      } catch (e) {
-        reject(e);
-      }
-      return capability.promise;
-    };
-
-    Promise.race = function (iterable) {
-      var C = this;
-      var capability = new PromiseCapability(C);
-      var resolve = capability.resolve;
-      var reject = capability.reject;
-      try {
-        if (!ES.IsIterable(iterable)) {
-          throw new TypeError('bad iterable');
-        }
-        var it = ES.GetIterator(iterable);
-        while (true) {
-          var next = ES.IteratorNext(it);
-          if (next.done) {
-            // If iterable has no items, resulting promise will never
-            // resolve; see:
-            // https://github.com/domenic/promises-unwrapping/issues/75
-            // https://bugs.ecmascript.org/show_bug.cgi?id=2515
+          case 'has-resolution':
+            triggerPromiseReactions([resolveReaction], promise._result);
             break;
-          }
-          var nextPromise = C.resolve(next.value);
-          nextPromise.then(resolve, reject);
+          case 'has-rejection':
+            triggerPromiseReactions([rejectReaction], promise._result);
+            break;
+          default:
+            throw new TypeError('unexpected');
         }
-      } catch (e) {
-        reject(e);
+        return capability.promise;
       }
-      return capability.promise;
-    };
-
-    Promise.reject = function (reason) {
-      var C = this;
-      var capability = new PromiseCapability(C);
-      var reject = capability.reject;
-      reject(reason); // call with this===undefined
-      return capability.promise;
-    };
-
-    Promise.resolve = function (v) {
-      var C = this;
-      if (ES.IsPromise(v)) {
-        var constructor = v._promiseConstructor;
-        if (constructor === C) { return v; }
-      }
-      var capability = new PromiseCapability(C);
-      var resolve = capability.resolve;
-      resolve(v); // call with this===undefined
-      return capability.promise;
-    };
-
-    Promise.prototype['catch'] = function (onRejected) {
-      return this.then(void 0, onRejected);
-    };
-
-    Promise.prototype.then = function (onFulfilled, onRejected) {
-      var promise = this;
-      if (!ES.IsPromise(promise)) { throw new TypeError('not a promise'); }
-      // this.constructor not this._promiseConstructor; see
-      // https://bugs.ecmascript.org/show_bug.cgi?id=2513
-      var C = this.constructor;
-      var capability = new PromiseCapability(C);
-      if (!ES.IsCallable(onRejected)) {
-        onRejected = function (e) { throw e; };
-      }
-      if (!ES.IsCallable(onFulfilled)) {
-        onFulfilled = function (x) { return x; };
-      }
-      var resolutionHandler =
-        promiseResolutionHandler(promise, onFulfilled, onRejected);
-      var resolveReaction =
-        { capability: capability, handler: resolutionHandler };
-      var rejectReaction =
-        { capability: capability, handler: onRejected };
-      switch (promise._status) {
-      case 'unresolved':
-        promise._resolveReactions.push(resolveReaction);
-        promise._rejectReactions.push(rejectReaction);
-        break;
-      case 'has-resolution':
-        triggerPromiseReactions([resolveReaction], promise._result);
-        break;
-      case 'has-rejection':
-        triggerPromiseReactions([rejectReaction], promise._result);
-        break;
-      default:
-        throw new TypeError('unexpected');
-      }
-      return capability.promise;
-    };
+    });
 
     return Promise;
-  })();
+  }());
 
   // Chrome's native Promise has extra methods that it shouldn't have. Let's remove them.
   if (globals.Promise) {
@@ -1566,7 +1564,8 @@
     return false;
   }());
   if (!promiseSupportsSubclassing || !promiseIgnoresNonFunctionThenCallbacks || !promiseRequiresObjectContext) {
-    globals.Promise = PromiseShim;
+    Promise = PromiseShim;
+    defineProperty(globals, 'Promise', PromiseShim, true);
   }
 
   // Map and Set require a true ES5 environment
