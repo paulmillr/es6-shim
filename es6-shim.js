@@ -1476,8 +1476,8 @@
       reject: function reject(reason) {
         var C = this;
         var capability = new PromiseCapability(C);
-        var reject = capability.reject;
-        reject(reason); // call with this===undefined
+        var rejectPromise = capability.reject;
+        rejectPromise(reason); // call with this===undefined
         return capability.promise;
       },
 
@@ -1488,8 +1488,8 @@
           if (constructor === C) { return v; }
         }
         var capability = new PromiseCapability(C);
-        var resolve = capability.resolve;
-        resolve(v); // call with this===undefined
+        var resolvePromise = capability.resolve;
+        resolvePromise(v); // call with this===undefined
         return capability.promise;
       }
     });
@@ -1564,7 +1564,9 @@
     return false;
   }());
   if (!promiseSupportsSubclassing || !promiseIgnoresNonFunctionThenCallbacks || !promiseRequiresObjectContext) {
+    /*globals Promise: true */
     Promise = PromiseShim;
+    /*globals Promise: false */
     defineProperty(globals, 'Promise', PromiseShim, true);
   }
 
