@@ -1,5 +1,13 @@
 # es6-shim x.x.x (not yet released)
 
+# es6-shim 0.21.1 (4 Dec 2014)
+* Promise/Promise.prototype methods, and String#{startsWith,endsWith} are now not enumerable
+* Array#{keys, values, entries} should all be @@unscopeable in browsers that support that
+* Ensure that tampering with Function#{call,apply} won’t break internal methods
+* Add Math.clz32, RegExp tests
+* Update es6-sham UMD
+* Update `chai`, `es5-shim`, `grunt-saucelabs`, `jscs`
+
 # es6-shim 0.21.0 (21 Nov 2014)
 * String#contains → String#includes per 2014-11-19 TC39 meeting
 * Use an invalid identifier as the es6-shim iterator key, so it doesn’t show up in the console as easily.
