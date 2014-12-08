@@ -111,6 +111,19 @@
     }
   };
 
+  var Value = {
+    getter: function (object, name, getter) {
+      if (!supportsDescriptors) {
+        throw new TypeError('getters require true ES5 support');
+      }
+      Object.defineProperty(object, name, {
+        configurable: true,
+        enumerable: false,
+        get: getter
+      });
+    }
+  };
+
   // Define configurable, writable and non-enumerable props
   // if they don’t exist.
   var defineProperties = function (object, map) {
@@ -1713,15 +1726,11 @@
           }
         });
 
-        Object.defineProperty(Map.prototype, 'size', {
-          configurable: true,
-          enumerable: false,
-          get: function () {
-            if (typeof this._size === 'undefined') {
-              throw new TypeError('size method called on incompatible Map');
-            }
-            return this._size;
+        Value.getter(Map.prototype, 'size', function () {
+          if (typeof this._size === 'undefined') {
+            throw new TypeError('size method called on incompatible Map');
           }
+          return this._size;
         });
 
         defineProperties(Map.prototype, {
@@ -1920,17 +1929,13 @@
           }
         };
 
-        Object.defineProperty(SetShim.prototype, 'size', {
-          configurable: true,
-          enumerable: false,
-          get: function () {
-            if (typeof this._storage === 'undefined') {
-              // https://github.com/paulmillr/es6-shim/issues/176
-              throw new TypeError('size method called on incompatible Set');
-            }
-            ensureMap(this);
-            return this['[[SetData]]'].size;
+        Value.getter(SetShim.prototype, 'size', function () {
+          if (typeof this._storage === 'undefined') {
+            // https://github.com/paulmillr/es6-shim/issues/176
+            throw new TypeError('size method called on incompatible Set');
           }
+          ensureMap(this);
+          return this['[[SetData]]'].size;
         });
 
         defineProperties(SetShim.prototype, {
