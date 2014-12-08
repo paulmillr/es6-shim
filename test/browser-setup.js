@@ -1,3 +1,5 @@
+/*global window, chai, mocha */
+
 if (typeof window !== 'undefined') {
   chai.config.includeStack = true;
   window.expect = chai.expect;
@@ -7,4 +9,3 @@ if (typeof window !== 'undefined') {
     return window;
   };
 }
-

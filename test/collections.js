@@ -1,3 +1,5 @@
+/*global describe, it, expect, require, beforeEach, afterEach */
+
 // Big thanks to V8 folks for test ideas.
 // v8/test/mjsunit/harmony/collections.js
 var exported = require('../');
@@ -75,12 +77,12 @@ describe('Collections', function () {
     });
 
     it('should accept an iterable as argument', function () {
-      testMapping('a','b');
-      testMapping('c','d');
+      testMapping('a', 'b');
+      testMapping('c', 'd');
       var map2 = new Map(map);
       expect(map2.has('a')).to.equal(true);
       expect(map2.has('c')).to.equal(true);
-      expect(Array.from(map2.entries())).to.be.eql([['a','b'],['c','d']]);
+      expect(Array.from(map2.entries())).to.be.eql([['a', 'b'], ['c', 'd']]);
     });
 
     it('should not be callable without "new"', function () {
@@ -88,7 +90,7 @@ describe('Collections', function () {
     });
 
     it('should be subclassable', function () {
-      var MyMap = function () { Map.call(this, [['a','b']]); };
+      var MyMap = function () { Map.call(this, [['a', 'b']]); };
       if (!Object.setPrototypeOf) { return; } // skip test if on IE < 11
       Object.setPrototypeOf(MyMap, Map);
       MyMap.prototype = Object.create(Map.prototype, {
@@ -97,7 +99,7 @@ describe('Collections', function () {
 
       map = new MyMap();
       testMapping('c', 'd');
-      expect(Array.from(map)).to.be.eql([['a','b'],['c','d']]);
+      expect(Array.from(map)).to.be.eql([['a', 'b'], ['c', 'd']]);
     });
 
     it('treats positive and negative zero the same', function () {
@@ -222,7 +224,7 @@ describe('Collections', function () {
       expect(map.set('a', 1)).to.equal(map);
       expect(map.set('b', NaN)).to.equal(map);
       expect(map.set('c', false)).to.equal(map);
-      expect(Array.from(map)).to.eql([['a',1], ['b',NaN], ['c',false]]);
+      expect(Array.from(map)).to.eql([['a', 1], ['b', NaN], ['c', false]]);
       expect(Array.from(map.keys())).to.eql(['a', 'b', 'c']);
       expect(Array.from(map.values())).to.eql([1, NaN, false]);
       expect(Array.from(map.entries())).to.eql(Array.from(map));
@@ -272,7 +274,7 @@ describe('Collections', function () {
 
       it('should support the thisArg', function () {
         var context = function () {};
-        map.forEach(function (value, key, entireMap) {
+        map.forEach(function () {
           expect(this).to.equal(context);
         }, context);
       });
@@ -484,7 +486,7 @@ describe('Collections', function () {
       var set2 = new Set(set);
       expect(set2.has('a')).to.equal(true);
       expect(set2.has('b')).to.equal(true);
-      expect(Array.from(set2.entries())).to.be.eql([['a','a'],['b','b']]);
+      expect(Array.from(set2.entries())).to.be.eql([['a', 'a'], ['b', 'b']]);
     });
 
     it('accepts an array as an argument', function () {
@@ -507,7 +509,7 @@ describe('Collections', function () {
 
       set = new MySet();
       testSet('c'); testSet('d');
-      expect(Array.from(set)).to.be.eql(['a','b','c','d']);
+      expect(Array.from(set)).to.be.eql(['a', 'b', 'c', 'd']);
     });
 
     it('should has valid getter and setter calls', function () {
@@ -625,7 +627,7 @@ describe('Collections', function () {
       });
 
       it('works with Set#entries()', function () {
-        expect(Array.from(set.entries())).to.eql([[1,1],[NaN,NaN],[false,false]]);
+        expect(Array.from(set.entries())).to.eql([[1, 1], [NaN, NaN], [false, false]]);
       });
     });
 
@@ -680,7 +682,7 @@ describe('Collections', function () {
 
       it('should support the thisArg', function () {
         var context = function () {};
-        set.forEach(function (value, alsoValue, entireSet) {
+        set.forEach(function () {
           expect(this).to.equal(context);
         }, context);
       });
@@ -804,4 +806,3 @@ describe('Collections', function () {
     });
   });
 });
-

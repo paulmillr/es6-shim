@@ -1,3 +1,5 @@
+/*global describe, it, expect, require, beforeEach */
+
 var exported = require('../');
 
 var runArrayTests = function () {
@@ -81,7 +83,7 @@ var runArrayTests = function () {
       it('should handle empty iterables correctly', function () {
         (function () {
           expect(Array.from(arguments)).to.eql([]);
-        })();
+        }());
         expect(Array.from([])).to.eql([]);
         expect(Array.from({})).to.eql([]);
         expect(Array.from({ a: 1 })).to.eql([]);
@@ -89,6 +91,7 @@ var runArrayTests = function () {
 
       it('should work with other constructors', function () {
         var Foo = function (length, args) {
+          this.args = args;
           this.length = length;
         };
         var args = ['a', 'b', 'c'];
@@ -153,20 +156,20 @@ var runArrayTests = function () {
 
         it('accepts an object thisArg', function () {
           var context = {};
-          Array.from([1, 2, 3], function (value, index) {
+          Array.from([1, 2, 3], function () {
             expect(this).to.equal(context);
           }, context);
         });
 
         it('accepts a primitive thisArg', function () {
-          Array.from([1, 2, 3], function (value, index) {
+          Array.from([1, 2, 3], function () {
             expect(this.valueOf()).to.equal(42);
             expect(Object.prototype.toString.call(this)).to.equal('[object Number]');
           }, 42);
         });
 
         it('accepts a falsy thisArg', function () {
-          Array.from([1, 2, 3], function (value, index) {
+          Array.from([1, 2, 3], function () {
             expect(this.valueOf()).to.equal(false);
             expect(Object.prototype.toString.call(this)).to.equal('[object Boolean]');
           }, false);
@@ -308,7 +311,7 @@ var runArrayTests = function () {
 
       it('should work with an array-like object with negative length', function () {
         var obj = { 0: 1, 1: 2, 2: 3, length: -3 };
-        var found = Array.prototype.find.call(obj, function (item) {
+        var found = Array.prototype.find.call(obj, function () {
           throw new Error('should not reach here');
         });
         expect(found).to.equal(undefined);
@@ -379,7 +382,7 @@ var runArrayTests = function () {
 
       it('should work with an array-like object with negative length', function () {
         var obj = { 0: 1, 1: 2, 2: 3, length: -3 };
-        var foundIndex = Array.prototype.findIndex.call(obj, function (item) {
+        var foundIndex = Array.prototype.findIndex.call(obj, function () {
           throw new Error('should not reach here');
         });
         expect(foundIndex).to.equal(-1);
@@ -417,10 +420,10 @@ var runArrayTests = function () {
 
       describe('ArrayIterator#next', function () {
         it('should work when applied to an ArrayIterator', function () {
-          expect(arrayIterator.next.apply(arrayIterator)).to.eql({value:1,done:false});
-          expect(arrayIterator.next.apply(arrayIterator)).to.eql({value:2,done:false});
-          expect(arrayIterator.next.apply(arrayIterator)).to.eql({value:3,done:false});
-          expect(arrayIterator.next.apply(arrayIterator)).to.eql({value:undefined,done:true});
+          expect(arrayIterator.next.apply(arrayIterator)).to.eql({value: 1, done: false});
+          expect(arrayIterator.next.apply(arrayIterator)).to.eql({value: 2, done: false});
+          expect(arrayIterator.next.apply(arrayIterator)).to.eql({value: 3, done: false});
+          expect(arrayIterator.next.apply(arrayIterator)).to.eql({value: undefined, done: true});
         });
 
         it('throws when not applied to an ArrayIterator', function () {
@@ -656,4 +659,3 @@ describe('polluted Object.prototype', function () {
   runArrayTests();
   delete Object.prototype[1];
 });
-

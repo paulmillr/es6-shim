@@ -1,9 +1,11 @@
+/*global describe, it, expect, require */
+
 var exported = require('../');
 
 var runStringTests = function () {
   'use strict';
   describe('String', function () {
-    var hasStrictMode = (function () { return this === null; }).call(null);
+    var hasStrictMode = (function () { return this === null; }.call(null));
     var testObjectCoercible = function (methodName) {
       var fn = String.prototype[methodName];
       if (!hasStrictMode) { return; } // skip these tests on IE <= 10
@@ -364,7 +366,7 @@ var runStringTests = function () {
     describe('#iterator()', function () {
       it('should work with plain strings', function () {
         var str = 'abc';
-        expect(Array.from(str)).to.eql(['a','b','c']);
+        expect(Array.from(str)).to.eql(['a', 'b', 'c']);
       });
 
       it('should work with surrogate characters', function () {
@@ -456,4 +458,3 @@ describe('polluted Object.prototype', function () {
   runStringTests();
   delete Object.prototype[1];
 });
-

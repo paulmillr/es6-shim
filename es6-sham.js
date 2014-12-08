@@ -11,6 +11,7 @@
 // UMD (Universal Module Definition)
 // see https://github.com/umdjs/umd/blob/master/returnExports.js
 (function (root, factory) {
+  /*global define, exports, module */
   if (typeof define === 'function' && define.amd) {
     // AMD. Register as an anonymous module.
     define(factory);
@@ -116,4 +117,3 @@
   }());
 
 }));
-

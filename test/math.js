@@ -1,3 +1,5 @@
+/*global describe, it, expect, require */
+
 var exported = require('../');
 
 var Assertion = expect().constructor;
@@ -449,4 +451,3 @@ describe('Math', function () {
     });
   });
 });
-

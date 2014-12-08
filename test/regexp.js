@@ -1,3 +1,5 @@
+/*global describe, it, expect, require */
+
 var exported = require('../');
 
 describe('RegExp', function () {

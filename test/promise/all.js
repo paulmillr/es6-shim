@@ -48,7 +48,7 @@ describe('Promise.all', function () {
     var iterable = [foreverPending, rejected];
 
     Promise.all(iterable).then(
-      function (value) {
+      function () {
         assert(false, 'should never get here');
       },
       function (reason) {

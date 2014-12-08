@@ -1,3 +1,5 @@
+/*global describe, it, expect, require */
+
 var exported = require('../');
 
 describe('Number', function (undefined) {
@@ -210,4 +212,3 @@ describe('Number', function (undefined) {
     });
   });
 });
-

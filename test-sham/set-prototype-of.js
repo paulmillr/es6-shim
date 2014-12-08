@@ -1,3 +1,4 @@
+/*global expect */
 describe('Object.setPrototypeOf(o, p)', function () {
 
   it('changes prototype to regular objects', function () {
@@ -21,4 +22,3 @@ describe('Object.setPrototypeOf(o, p)', function () {
   });
 
 });
-

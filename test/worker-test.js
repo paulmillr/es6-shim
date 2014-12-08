@@ -1,3 +1,5 @@
+/*global describe, it, expect */
+
 describe('Worker', function (undefined) {
   var workerErrorEventToError = function (errorEvent) {
     var errorText = 'Error in Worker';
@@ -35,4 +37,3 @@ describe('Worker', function (undefined) {
     });
   }
 });
-
