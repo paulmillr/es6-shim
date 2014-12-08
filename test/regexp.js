@@ -2,6 +2,14 @@
 
 var exported = require('../');
 
+var getRegexLiteral = function (stringRegex) {
+  try {
+    /*jshint evil: true */
+    return Function('return ' + stringRegex + ';')();
+    /*jshint evil: false */
+  } catch (e) {}
+};
+
 describe('RegExp', function () {
   it('is on the exported object', function () {
     expect(exported.RegExp).to.equal(RegExp);
@@ -33,6 +41,63 @@ describe('RegExp', function () {
     it('toStrings properly', function () {
       expect(Object.prototype.toString.call(/a/g)).to.equal('[object RegExp]');
       expect(Object.prototype.toString.call(new RegExp('a', 'g'))).to.equal('[object RegExp]');
+    });
+  });
+
+  describe('#flags', function () {
+    it('throws when not called on an object', function () {
+      var nonObjects = ['', false, true, 42, NaN, null, undefined];
+      nonObjects.forEach(function (nonObject) {
+        expect(function () { RegExp.prototype.flags.call(nonObject); }).to['throw'](TypeError);
+      });
+    });
+
+    it('has the correct flags on a literal', function () {
+      expect((/a/g).flags).to.equal('g');
+      expect((/a/i).flags).to.equal('i');
+      expect((/a/m).flags).to.equal('m');
+      if (RegExp.prototype.hasOwnProperty('sticky')) {
+        expect(getRegexLiteral('/a/y').flags).to.equal('y');
+      }
+      if (RegExp.prototype.hasOwnProperty('unicode')) {
+        expect(getRegexLiteral('/a/u').flags).to.equal('u');
+      }
+    });
+
+    it('has the correct flags on a constructed RegExp', function () {
+      expect(new RegExp('a', 'g').flags).to.equal('g');
+      expect(new RegExp('a', 'i').flags).to.equal('i');
+      expect(new RegExp('a', 'm').flags).to.equal('m');
+      if (RegExp.prototype.hasOwnProperty('sticky')) {
+        expect(new RegExp('a', 'y').flags).to.equal('y');
+      }
+      if (RegExp.prototype.hasOwnProperty('unicode')) {
+        expect(new RegExp('a', 'u').flags).to.equal('u');
+      }
+    });
+
+    it('returns flags sorted on a literal', function () {
+      expect((/a/gim).flags).to.equal('gim');
+      expect((/a/mig).flags).to.equal('gim');
+      expect((/a/mgi).flags).to.equal('gim');
+      if (RegExp.prototype.hasOwnProperty('sticky')) {
+        expect(getRegexLiteral('/a/gyim').flags).to.equal('gimy');
+      }
+      if (RegExp.prototype.hasOwnProperty('unicode')) {
+        expect(getRegexLiteral('/a/ugmi').flags).to.equal('gimu');
+      }
+    });
+
+    it('returns flags sorted on a constructed RegExp', function () {
+      expect(new RegExp('a', 'gim').flags).to.equal('gim');
+      expect(new RegExp('a', 'mig').flags).to.equal('gim');
+      expect(new RegExp('a', 'mgi').flags).to.equal('gim');
+      if (RegExp.prototype.hasOwnProperty('sticky')) {
+        expect(new RegExp('a', 'mygi').flags).to.equal('gimy');
+      }
+      if (RegExp.prototype.hasOwnProperty('unicode')) {
+        expect(new RegExp('a', 'mugi').flags).to.equal('gimu');
+      }
     });
   });
 

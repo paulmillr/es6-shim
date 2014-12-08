@@ -37,6 +37,8 @@ details.
     * `startsWith()` ([a standalone shim is also available](http://mths.be/startswith))
     * `endsWith()` ([a standalone shim is also available](http://mths.be/endswith))
     * `includes()` ([a standalone shim is also available](http://mths.be/includes))
+* `RegExp.prototype`:
+    * `flags` (requires ES5)
 * `Number`:
     * `MAX_SAFE_INTEGER`
     * `MIN_SAFE_INTEGER`

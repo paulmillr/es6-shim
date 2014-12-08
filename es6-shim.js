@@ -1030,6 +1030,18 @@
     };
   }
 
+  if (!RegExp.prototype.flags && supportsDescriptors) {
+    var regExpFlagsGetter = function flags() {
+      if (!ES.TypeIsObject(this)) {
+        throw new TypeError('Method called on incompatible type: must be an object.');
+      }
+      var str = String(this);
+      return str.slice(str.lastIndexOf('/') + 1);
+    };
+
+    Value.getter(RegExp.prototype, 'flags', regExpFlagsGetter);
+  }
+
   var MathShims = {
     acosh: function (value) {
       value = Number(value);
