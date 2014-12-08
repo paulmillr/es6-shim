@@ -84,6 +84,7 @@
   var _toString = Function.call.bind(Object.prototype.toString);
   var _hasOwnProperty = Function.call.bind(Object.prototype.hasOwnProperty);
   var ArrayIterator; // make our implementation private
+  var noop = function () {};
 
   var Symbol = globals.Symbol || {};
   var Type = {
@@ -1554,7 +1555,7 @@
   });
   var promiseIgnoresNonFunctionThenCallbacks = (function () {
     try {
-      globals.Promise.reject(42).then(null, 5).then(null, function () {});
+      globals.Promise.reject(42).then(null, 5).then(null, noop);
       return true;
     } catch (ex) {
       return false;
@@ -1562,7 +1563,7 @@
   }());
   var promiseRequiresObjectContext = (function () {
     /*global Promise */
-    try { Promise.call(3, function () {}); } catch (e) { return true; }
+    try { Promise.call(3, noop); } catch (e) { return true; }
     return false;
   }());
   if (!promiseSupportsSubclassing || !promiseIgnoresNonFunctionThenCallbacks || !promiseRequiresObjectContext) {
