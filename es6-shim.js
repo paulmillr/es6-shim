@@ -121,6 +121,27 @@
         enumerable: false,
         get: getter
       });
+    },
+    proxy: function (originalObject, key, targetObject) {
+      if (!supportsDescriptors) {
+        throw new TypeError('getters require true ES5 support');
+      }
+      var originalDescriptor = Object.getOwnPropertyDescriptor(originalObject, key);
+      Object.defineProperty(targetObject, key, {
+        configurable: originalDescriptor.configurable,
+        enumerable: originalDescriptor.enumerable,
+        get: function getKey() { return originalObject[key]; },
+        set: function setKey(value) { originalObject[key] = value; }
+      });
+    },
+    redefine: function (object, property, newValue) {
+      if (supportsDescriptors) {
+        var descriptor = Object.getOwnPropertyDescriptor(object, property);
+        descriptor.value = newValue;
+        Object.defineProperty(object, property, descriptor);
+      } else {
+        object[property] = newValue;
+      }
     }
   };
 
@@ -1040,6 +1061,40 @@
     };
 
     Value.getter(RegExp.prototype, 'flags', regExpFlagsGetter);
+  }
+
+  var regExpSupportsFlagsWithRegex = (function () {
+    try {
+      return String(new RegExp(/a/g, 'i')) === '/a/i';
+    } catch (e) {
+      return false;
+    }
+  }());
+
+  if (!regExpSupportsFlagsWithRegex && supportsDescriptors) {
+    var OrigRegExp = RegExp;
+    var RegExpShim = function RegExp(pattern, flags) {
+      if (Type.regex(pattern) && Type.string(flags)) {
+        return new RegExp(pattern.source, flags);
+      }
+      return new OrigRegExp(pattern, flags);
+    };
+    defineProperty(RegExpShim, 'toString', OrigRegExp.toString.bind(OrigRegExp), true);
+    if (Object.setPrototypeOf) {
+      // sets up proper prototype chain where possible
+      Object.setPrototypeOf(OrigRegExp, RegExpShim);
+    }
+    Object.getOwnPropertyNames(OrigRegExp).forEach(function (key) {
+      if (key === '$input') { return; } // Chrome < v39 & Opera < 26 have a nonstandard "$input" property
+      if (key in noop) { return; }
+      Value.proxy(OrigRegExp, key, RegExpShim);
+    });
+    RegExpShim.prototype = OrigRegExp.prototype;
+    Value.redefine(OrigRegExp.prototype, 'constructor', RegExpShim);
+    /*globals RegExp: true */
+    RegExp = RegExpShim;
+    Value.redefine(globals, 'RegExp', RegExpShim);
+    /*globals RegExp: false */
   }
 
   var MathShims = {

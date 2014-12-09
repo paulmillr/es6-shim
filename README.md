@@ -37,6 +37,8 @@ details.
     * `startsWith()` ([a standalone shim is also available](http://mths.be/startswith))
     * `endsWith()` ([a standalone shim is also available](http://mths.be/endswith))
     * `includes()` ([a standalone shim is also available](http://mths.be/includes))
+* `RegExp`:
+    * `new RegExp`, when given a RegExp as the pattern, will no longer throw when given a "flags" string argument. (requires ES5)
 * `RegExp.prototype`:
     * `flags` (requires ES5)
 * `Number`:

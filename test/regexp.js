@@ -1,4 +1,4 @@
-/*global describe, it, expect, require */
+/*global describe, it, xit, expect, require */
 
 var exported = require('../');
 
@@ -28,19 +28,30 @@ describe('RegExp', function () {
       expect(String(new RegExp('a', 'mgi'))).to.equal('/a/gim');
     });
 
+    it('allows a regex with flags', function () {
+      var a = /a/g;
+      var makeRegex = function () { return new RegExp(a, 'mi'); };
+      expect(makeRegex).not.to['throw'](TypeError);
+      expect(makeRegex()).to.eql(/a/mi);
+      expect(String(makeRegex())).to.equal('/a/im');
+    });
+
     it('works with instanceof', function () {
-      expect(/a/g).to.be.an['instanceof'](RegExp);
-      expect(new RegExp('a', 'im')).to.be.an['instanceof'](RegExp);
+      expect(/a/g).to.be.an.instanceOf(RegExp);
+      expect(new RegExp('a', 'im')).to.be.an.instanceOf(RegExp);
+      expect(new RegExp(/a/g, 'im')).to.be.an.instanceOf(RegExp);
     });
 
     it('has the right constructor', function () {
       expect(/a/g).to.have.property('constructor', RegExp);
       expect(new RegExp('a', 'im')).to.have.property('constructor', RegExp);
+      expect(new RegExp(/a/g, 'im')).to.have.property('constructor', RegExp);
     });
 
     it('toStrings properly', function () {
       expect(Object.prototype.toString.call(/a/g)).to.equal('[object RegExp]');
       expect(Object.prototype.toString.call(new RegExp('a', 'g'))).to.equal('[object RegExp]');
+      expect(Object.prototype.toString.call(new RegExp(/a/g, 'im'))).to.equal('[object RegExp]');
     });
   });
 
@@ -102,18 +113,49 @@ describe('RegExp', function () {
   });
 
   describe('Object properties', function () {
-    xit('does not have the nonstandard $input property', function () {
+    it('does not have the nonstandard $input property', function () {
       expect(RegExp).not.to.have.property('$input'); // Chrome < 39, Opera < 26 have this
     });
 
+    it('has "input" property', function () {
+      expect(Object.getOwnPropertyNames(RegExp)).to.include('input');
+      expect(Object.getOwnPropertyNames(RegExp)).to.include('$_');
+      expect(Object.keys(RegExp)).not.to.include('$_');
+    });
+
+    it('has "last match" property', function () {
+      expect(Object.getOwnPropertyNames(RegExp)).to.include('lastMatch');
+      expect(Object.getOwnPropertyNames(RegExp)).to.include('$+');
+      expect(Object.keys(RegExp)).not.to.include('$+');
+    });
+
+    it('has "last paren" property', function () {
+      expect(Object.getOwnPropertyNames(RegExp)).to.include('lastParen');
+      expect(Object.getOwnPropertyNames(RegExp)).to.include('$&');
+      expect(Object.keys(RegExp)).not.to.include('$&');
+    });
+
+    it('has "leftContext" property', function () {
+      expect(Object.getOwnPropertyNames(RegExp)).to.include('leftContext');
+      expect(Object.getOwnPropertyNames(RegExp)).to.include('$`');
+      expect(Object.keys(RegExp)).not.to.include('$`');
+    });
+
+    it('has "rightContext" property', function () {
+      expect(Object.getOwnPropertyNames(RegExp)).to.include('rightContext');
+      expect(Object.getOwnPropertyNames(RegExp)).to.include("$'");
+      expect(Object.keys(RegExp)).not.to.include("$'");
+    });
+
+    xit('has "multiline" property', function () {
+      // fails in IE 9, 10, 11
+      expect(Object.getOwnPropertyNames(RegExp)).to.include('multiline');
+      expect(Object.getOwnPropertyNames(RegExp)).to.include('$*');
+      expect(Object.keys(RegExp)).not.to.include('$*');
+    });
+
     it('has the right globals', function () {
-      var enumerableKeys = [
-        'input',
-        'multiline',
-        'lastMatch',
-        'lastParen',
-        'leftContext',
-        'rightContext',
+      var matchVars = [
         '$1',
         '$2',
         '$3',
@@ -124,20 +166,9 @@ describe('RegExp', function () {
         '$8',
         '$9'
       ];
-      var nonEnumerableKeys = [
-        '$_',
-        '$*',
-        '$&',
-        '$+',
-        '$`',
-        "$'"
-      ];
-      expect(Object.keys(RegExp)).to.eql(enumerableKeys);
-      var noop = function () {};
-      var actualNonEnumerables = Object.getOwnPropertyNames(RegExp).filter(function (key) {
-        return !(key in noop) && key !== '$input'; // see above test
+      matchVars.forEach(function (match) {
+        expect(RegExp).to.have.property(match);
       });
-      expect(actualNonEnumerables).to.have.members(enumerableKeys.concat(nonEnumerableKeys));
     });
 
     it('updates RegExp globals', function () {
