@@ -43,36 +43,6 @@ describe('Object', function (undefined) {
     });
   });
 
-  describe('Object.getPropertyDescriptor()', function () {
-    it('should produce an array of properties including inherited ones',
-      function () {
-      expect(Object.getPropertyDescriptor([1], 'length')).to.eql({
-        configurable: false, enumerable: false, value: 1, writable: true
-      });
-
-      expect(Object.getPropertyDescriptor([1, 5], 'length')).to.eql({
-        configurable: false, enumerable: false, value: 2, writable: true
-      });
-
-      expect(Object.getPropertyDescriptor(function (a) {}, 'length')).to.eql({
-        configurable: false, enumerable: false, value: 1, writable: false
-      });
-    });
-  });
-
-  describe('Object.getPropertyNames()', function () {
-    it('should produce an array of property names including inherited ones',
-      function () {
-      expect(Object.getPropertyNames(Object.create(null))).to.eql([]);
-      var obj = {};
-      expect(Object.getPropertyNames(Object.create(obj))).to.eql(
-        Object.getOwnPropertyNames(obj).concat(
-          Object.getOwnPropertyNames(Object.getPrototypeOf(obj))
-        )
-      );
-    });
-  });
-
   describe('Object.assign()', function () {
     it('has the correct length', function () {
       expect(Object.assign.length).to.eql(2);

@@ -921,35 +921,6 @@
 
   if (supportsDescriptors) {
     defineProperties(Object, {
-      getPropertyDescriptor: function (subject, name) {
-        var pd = Object.getOwnPropertyDescriptor(subject, name);
-        var proto = Object.getPrototypeOf(subject);
-        while (typeof pd === 'undefined' && proto !== null) {
-          pd = Object.getOwnPropertyDescriptor(proto, name);
-          proto = Object.getPrototypeOf(proto);
-        }
-        return pd;
-      },
-
-      getPropertyNames: function (subject) {
-        var result = Object.getOwnPropertyNames(subject);
-        var proto = Object.getPrototypeOf(subject);
-
-        var addProperty = function (property) {
-          if (result.indexOf(property) === -1) {
-            result.push(property);
-          }
-        };
-
-        while (proto !== null) {
-          Object.getOwnPropertyNames(proto).forEach(addProperty);
-          proto = Object.getPrototypeOf(proto);
-        }
-        return result;
-      }
-    });
-
-    defineProperties(Object, {
       // 19.1.3.1
       assign: function (target, source) {
         if (!ES.TypeIsObject(target)) {
