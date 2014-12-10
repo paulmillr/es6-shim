@@ -40,7 +40,7 @@ details.
 * `RegExp`:
     * `new RegExp`, when given a RegExp as the pattern, will no longer throw when given a "flags" string argument. (requires ES5)
 * `RegExp.prototype`:
-    * `flags` (requires ES5)
+    * `flags` (requires ES5) ([a standalone shim is also available](https://github.com/es-shims/RegExp.prototype.flags))
 * `Number`:
     * `MAX_SAFE_INTEGER`
     * `MIN_SAFE_INTEGER`
