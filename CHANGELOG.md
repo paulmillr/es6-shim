@@ -1,5 +1,10 @@
 # es6-shim x.x.x (not yet released)
 
+# es6-shim 0.22.0 (12 Dec 2014)
+* Add RegExp#flags
+* Make `new RegExp` work with both a regex and a flags string
+* Remove non-spec `Object.{getPropertyNames,getPropertyDescriptor}`
+
 # es6-shim 0.21.1 (4 Dec 2014)
 * Promise/Promise.prototype methods, and String#{startsWith,endsWith} are now not enumerable
 * Array#{keys, values, entries} should all be @@unscopeable in browsers that support that
