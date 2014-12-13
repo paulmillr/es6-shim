@@ -1027,8 +1027,23 @@
       if (!ES.TypeIsObject(this)) {
         throw new TypeError('Method called on incompatible type: must be an object.');
       }
-      var str = String(this);
-      return str.slice(str.lastIndexOf('/') + 1);
+      var result = '';
+      if (this.global) {
+        result += 'g';
+      }
+      if (this.ignoreCase) {
+        result += 'i';
+      }
+      if (this.multiline) {
+        result += 'm';
+      }
+      if (this.unicode) {
+        result += 'u';
+      }
+      if (this.sticky) {
+        result += 'y';
+      }
+      return result;
     };
 
     Value.getter(RegExp.prototype, 'flags', regExpFlagsGetter);

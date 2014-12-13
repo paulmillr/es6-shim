@@ -55,11 +55,23 @@ describe('RegExp', function () {
     });
   });
 
+  var regexpFlagsDescriptor = Object.getOwnPropertyDescriptor(RegExp.prototype, 'flags');
+  var testGenericRegExpFlags = function (object) {
+    return regexpFlagsDescriptor.get.call(object);
+  };
+
   describe('#flags', function () {
+    it('has the correct descriptor', function () {
+      expect(regexpFlagsDescriptor.configurable).to.equal(true);
+      expect(regexpFlagsDescriptor.enumerable).to.equal(false);
+      expect(regexpFlagsDescriptor.get instanceof Function).to.equal(true);
+      expect(regexpFlagsDescriptor.set).to.equal(undefined);
+    });
+
     it('throws when not called on an object', function () {
       var nonObjects = ['', false, true, 42, NaN, null, undefined];
       nonObjects.forEach(function (nonObject) {
-        expect(function () { RegExp.prototype.flags.call(nonObject); }).to['throw'](TypeError);
+        expect(function () { testGenericRegExpFlags(nonObject); }).to['throw'](TypeError);
       });
     });
 
