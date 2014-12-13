@@ -1,5 +1,8 @@
 # es6-shim x.x.x (not yet released)
 
+# es6-shim 0.22.1 (13 Dec 2014)
+* Make RegExp#flags generic, per spec (#310)
+
 # es6-shim 0.22.0 (12 Dec 2014)
 * Add RegExp#flags
 * Make `new RegExp` work with both a regex and a flags string
