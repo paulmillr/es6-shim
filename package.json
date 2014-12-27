@@ -70,7 +70,7 @@
     "grunt-saucelabs": "~8.4.1",
     "jscs": "~1.9.0",
     "jshint": "~2.5.11",
-    "mocha": "~2.0.1",
+    "mocha": "~2.1.0",
     "promises-aplus-tests": "~2.1.0",
     "promises-es6-tests": "~0.5.0",
     "uglify-js": "~2.4.16"
