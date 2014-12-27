@@ -68,7 +68,7 @@
     "grunt-contrib-connect": "~0.9.0",
     "grunt-contrib-watch": "~0.6.1",
     "grunt-saucelabs": "~8.4.1",
-    "jscs": "~1.8.1",
+    "jscs": "~1.9.0",
     "jshint": "~2.5.11",
     "mocha": "~2.0.1",
     "promises-aplus-tests": "~2.1.0",
