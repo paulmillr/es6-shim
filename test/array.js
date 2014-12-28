@@ -3,7 +3,9 @@
 var exported = require('../');
 
 var runArrayTests = function () {
-  if (!Symbol) { var Symbol = {}; }
+  'use strict';
+
+  if (typeof Symbol === 'undefined') { var Symbol = {}; }
   var isSymbol = function (sym) {
     /*jshint notypeof: true */
     return typeof Symbol === 'function' && typeof sym === 'symbol';
@@ -655,6 +657,7 @@ var runArrayTests = function () {
 describe('clean Object.prototype', runArrayTests);
 
 describe('polluted Object.prototype', function () {
+  'use strict';
   Object.prototype[1] = 42;
   runArrayTests();
   delete Object.prototype[1];

@@ -4,19 +4,22 @@ var exported = require('../');
 
 var Assertion = expect().constructor;
 Assertion.prototype.almostEqual = function (obj, precision) {
+  'use strict';
   var allowedDiff = precision || 1e-11;
   return this.within(obj - allowedDiff, obj + allowedDiff);
 };
 
 var isPositiveZero = function (zero) {
+  'use strict';
   return zero === 0 && 1 / zero === Infinity;
 };
 
 var isNegativeZero = function (zero) {
+  'use strict';
   return zero === 0 && 1 / zero === -Infinity;
 };
-var valueOfIsNaN = { valueOf: function () { return NaN; } };
-var valueOfIsInfinity = { valueOf: function () { return Infinity; } };
+var valueOfIsNaN = { valueOf: function () { 'use strict'; return NaN; } };
+var valueOfIsInfinity = { valueOf: function () { 'use strict'; return Infinity; } };
 
 describe('Math', function () {
   it('is on the exported object', function () {

@@ -1,5 +1,6 @@
 /*global expect */
 describe('Object.setPrototypeOf(o, p)', function () {
+  'use strict';
 
   it('changes prototype to regular objects', function () {
     var obj = {a: 123};
