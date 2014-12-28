@@ -1,4 +1,4 @@
-/*global describe, require */
+/*global describe, require, Promise */
 
 // tests from promises-aplus-tests
 
@@ -19,4 +19,3 @@ describe('Promises/A+ Tests', function () {
     rejected: Promise.reject.bind(Promise)
   });
 });
-

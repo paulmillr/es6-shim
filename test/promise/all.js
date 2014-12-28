@@ -1,4 +1,4 @@
-/*global it, describe, assert */
+/*global it, describe, expect, assert, Promise */
 
 var failIfThrows = function (done) {
   'use strict';

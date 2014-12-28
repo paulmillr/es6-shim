@@ -1,4 +1,4 @@
-/*global describe, it, expect */
+/*global describe, it, expect, Worker, location */
 
 describe('Worker', function (undefined) {
   var workerErrorEventToError = function (errorEvent) {

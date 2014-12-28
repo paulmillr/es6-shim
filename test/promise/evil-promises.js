@@ -1,4 +1,4 @@
-/*global describe, specify, assert */
+/*global describe, specify, assert, Promise */
 
 describe('Evil promises should not be able to break invariants', function () {
   'use strict';
@@ -26,4 +26,3 @@ describe('Evil promises should not be able to break invariants', function () {
     }).then(done, done);
   });
 });
-

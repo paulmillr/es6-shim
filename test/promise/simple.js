@@ -1,4 +1,4 @@
-/*global describe, specify, assert */
+/*global describe, specify, assert, Promise */
 
 
 var failIfThrows = function (done) {
@@ -50,4 +50,3 @@ describe('Promise', function () {
         });
     });
 });
-
