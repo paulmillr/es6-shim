@@ -2097,6 +2097,88 @@
     // Shim incomplete iterator implementations.
     addIterator(Object.getPrototypeOf((new globals.Map()).keys()));
     addIterator(Object.getPrototypeOf((new globals.Set()).keys()));
+
+    // Reflect
+    if (!globals.Reflect) {
+      globals.Reflect = {
+
+        // Syntax in a functional form.
+        get: function (target, key, receiver) {
+          if (!ES.TypeIsObject(target)) {
+              throw new TypeError('target must be an object');
+          }
+
+          return target[key];
+        },
+
+        set: function (target, key, value, receiver) {
+          if (!ES.TypeIsObject(target)) {
+              throw new TypeError('target must be an object');
+          }
+
+          target[key] = value;
+        },
+
+        has: function (target, key) {
+          if (!ES.TypeIsObject(target)) {
+              throw new TypeError('target must be an object');
+          }
+
+          return key in target;
+        },
+
+        deleteProperty: function (target, key) {
+          if (!ES.TypeIsObject(target)) {
+              throw new TypeError('target must be an object');
+          }
+
+          delete target[key];
+        },
+
+        enumerate: function (target) {
+          if (!ES.TypeIsObject(target)) {
+              throw new TypeError('target must be an object');
+          }
+
+          var keys = [];
+
+          for (var key in target) {
+            keys.push(key);
+          }
+
+          return new ArrayIterator(keys, 'value');
+        },
+
+        // New operator in a functional form.
+        construct: function (constructor, args) {
+          if (!ES.IsCallable(constructor)) {
+            throw new TypeError('First argument must be callable.');
+          }
+
+          return ES.Construct(constructor, args);
+        },
+
+        // Apply method in a functional form.
+        apply: function (func, context, args) {
+          if (!ES.IsCallable(func)) {
+            throw new TypeError('First argument must be callable.');
+          }
+
+          return func.apply(context, args);
+        },
+
+        // Same as Object global.
+        defineProperty: Object.defineProperty,
+        getOwnPropertyDescriptor: Object.getOwnPropertyDescriptor,
+        getPrototypeOf: Object.getPrototypeOf,
+        isExtensible: Object.isExtensible,
+        preventExtensions: Object.preventExtensions,
+        setPrototypeOf: Object.setPrototypeOf,
+
+        // Different name.
+        ownKeys: Object.keys
+      };
+    }
   }
 
   return globals;
