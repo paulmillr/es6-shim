@@ -2105,7 +2105,7 @@
         // Syntax in a functional form.
         get: function (target, key, receiver) {
           if (!ES.TypeIsObject(target)) {
-              throw new TypeError('target must be an object');
+            throw new TypeError('target must be an object');
           }
 
           return target[key];
@@ -2113,7 +2113,7 @@
 
         set: function (target, key, value, receiver) {
           if (!ES.TypeIsObject(target)) {
-              throw new TypeError('target must be an object');
+            throw new TypeError('target must be an object');
           }
 
           target[key] = value;
@@ -2121,7 +2121,7 @@
 
         has: function (target, key) {
           if (!ES.TypeIsObject(target)) {
-              throw new TypeError('target must be an object');
+            throw new TypeError('target must be an object');
           }
 
           return key in target;
@@ -2129,7 +2129,7 @@
 
         deleteProperty: function (target, key) {
           if (!ES.TypeIsObject(target)) {
-              throw new TypeError('target must be an object');
+            throw new TypeError('target must be an object');
           }
 
           delete target[key];
@@ -2137,7 +2137,7 @@
 
         enumerate: function (target) {
           if (!ES.TypeIsObject(target)) {
-              throw new TypeError('target must be an object');
+            throw new TypeError('target must be an object');
           }
 
           var keys = [];
