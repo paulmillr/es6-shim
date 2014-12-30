@@ -72,6 +72,42 @@ describe('Reflect', function () {
       expect(typeof Reflect.deleteProperty).to.equal('function');
     });
 
+		it('returns the value as using delete', function () {
+			var o = { a: 1 };
+
+			Object.defineProperty(o, 'b', { value: 2 });
+
+			expect(o).to.have.property('a');
+			expect(o).to.have.property('b');
+			expect(o.a).to.equal(1);
+			expect(o.b).to.equal(2);
+
+			expect(Reflect.deleteProperty(o, 'a')).to.equal(true);
+
+			expect(o).not.to.have.property('a');
+			expect(o.b).to.equal(2);
+
+			// non-strict
+			expect(function () {
+				delete o.b;
+			}).not.to.throw(TypeError);
+
+			// strict
+			expect(function () {
+				'use strict';
+
+				delete o.b;
+			}).to.throw(TypeError);
+
+			expect(function () {
+				Reflect.deleteProperty(o, 'b');
+			}).to.throw(TypeError);
+
+			expect(o).to.have.property('b');
+			expect(o.b).to.equal(2);
+
+			expect(Reflect.deleteProperty(o, 'a')).to.equal(true);
+		});
   });
 
   describe('Reflect.getOwnPropertyDescriptor()', function () {
