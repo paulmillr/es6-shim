@@ -72,7 +72,7 @@ describe('Reflect', function () {
       expect(typeof Reflect.deleteProperty).to.equal('function');
     });
 
-    it('returns the value as using delete', function () {
+    it('returns true for success and false for failure', function () {
       var o = { a: 1 };
 
       Object.defineProperty(o, 'b', { value: 2 });
@@ -87,21 +87,7 @@ describe('Reflect', function () {
       expect(o).not.to.have.property('a');
       expect(o.b).to.equal(2);
 
-      // non-strict
-      expect(function () {
-        delete o.b;
-      }).not.to.throw(TypeError);
-
-      // strict
-      expect(function () {
-        'use strict';
-
-        delete o.b;
-      }).to.throw(TypeError);
-
-      expect(function () {
-        Reflect.deleteProperty(o, 'b');
-      }).to.throw(TypeError);
+      expect(Reflect.deleteProperty(o, 'b')).to.equal(false);
 
       expect(o).to.have.property('b');
       expect(o.b).to.equal(2);
