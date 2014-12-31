@@ -2137,7 +2137,7 @@
       defineProperty(globals, 'Reflect', {
 
         // Syntax in a functional form.
-        get: function (target, key, receiver) {
+        get: function get(target, key, receiver) {
           if (!ES.TypeIsObject(target)) {
             throw new TypeError('target must be an object');
           }
@@ -2145,7 +2145,7 @@
           return target[key];
         },
 
-        set: function (target, key, value, receiver) {
+        set: function set(target, key, value, receiver) {
           if (!ES.TypeIsObject(target)) {
             throw new TypeError('target must be an object');
           }
@@ -2153,7 +2153,7 @@
           target[key] = value;
         },
 
-        has: function (target, key) {
+        has: function has(target, key) {
           if (!ES.TypeIsObject(target)) {
             throw new TypeError('target must be an object');
           }
@@ -2165,7 +2165,7 @@
         // true is returned.
         // When attempting to delete a non-configurable property,
         // it will return false.
-        deleteProperty: function (target, key) {
+        deleteProperty: function deleteProperty(target, key) {
           if (!ES.TypeIsObject(target)) {
             throw new TypeError('target must be an object');
           }
@@ -2180,7 +2180,7 @@
           return delete target[key];
         },
 
-        enumerate: function (target) {
+        enumerate: function enumerate(target) {
           if (!ES.TypeIsObject(target)) {
             throw new TypeError('target must be an object');
           }
@@ -2195,7 +2195,7 @@
         },
 
         // New operator in a functional form.
-        construct: function (constructor, args) {
+        construct: function construct(constructor, args) {
           if (!ES.IsCallable(constructor)) {
             throw new TypeError('First argument must be callable.');
           }
@@ -2204,7 +2204,7 @@
         },
 
         // Apply method in a functional form.
-        apply: function (func, context, args) {
+        apply: function apply(func, context, args) {
           if (!ES.IsCallable(func)) {
             throw new TypeError('First argument must be callable.');
           }
