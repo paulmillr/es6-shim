@@ -2161,15 +2161,22 @@
           return key in target;
         },
 
-        // When deleting a configurable property, true is returned.
+        // When deleting a non-existant or configurable property,
+        // true is returned.
         // When attempting to delete a non-configurable property,
-        // and strict is supported, it will throw.
-        // If strict mode is not supported, it will return false.
+        // it will return false.
         deleteProperty: function (target, key) {
           if (!ES.TypeIsObject(target)) {
             throw new TypeError('target must be an object');
           }
 
+          var desc = Object.getOwnPropertyDescriptor(target, key);
+
+          if (desc && !desc.configurable) {
+            return false;
+          }
+
+          // Will return true.
           return delete target[key];
         },
 
