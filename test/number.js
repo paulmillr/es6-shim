@@ -136,9 +136,9 @@ describe('Number', function (undefined) {
 
     it('should be true when abs(number) is less than 2^53', function () {
       var safeIntegers = [0, 1, Math.pow(2, 53) - 1];
-      safeIntegers.forEach(function (int) {
-        expect(Number.isInteger(int)).to.equal(true);
-        expect(Number.isInteger(-int)).to.equal(true);
+      safeIntegers.forEach(function (integer) {
+        expect(Number.isInteger(integer)).to.equal(true);
+        expect(Number.isInteger(-integer)).to.equal(true);
       });
     });
   });
@@ -180,9 +180,9 @@ describe('Number', function (undefined) {
 
     it('should be true when abs(number) is less than 2^53', function () {
       var safeIntegers = [0, 1, Math.pow(2, 53) - 1];
-      safeIntegers.forEach(function (int) {
-        expect(Number.isSafeInteger(int)).to.equal(true);
-        expect(Number.isSafeInteger(-int)).to.equal(true);
+      safeIntegers.forEach(function (integer) {
+        expect(Number.isSafeInteger(integer)).to.equal(true);
+        expect(Number.isSafeInteger(-integer)).to.equal(true);
       });
     });
   });

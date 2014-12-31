@@ -206,7 +206,7 @@ describe('Collections', function () {
 
     it('should return false when deleting a nonexistent key', function () {
       expect(map.has('a')).to.equal(false);
-      expect(map.delete('a')).to.equal(false);
+      expect(map['delete']('a')).to.equal(false);
     });
 
     it('should have keys, values and size props', function () {
@@ -477,7 +477,7 @@ describe('Collections', function () {
 
     it('should return false when deleting an item not in the set', function () {
       expect(set.has('a')).to.equal(false);
-      expect(set.delete('a')).to.equal(false);
+      expect(set['delete']('a')).to.equal(false);
     });
 
     it('should accept an iterable as argument', function () {
