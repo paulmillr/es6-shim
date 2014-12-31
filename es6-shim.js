@@ -2100,7 +2100,7 @@
 
     // Reflect
     if (!globals.Reflect) {
-      globals.Reflect = {
+      defineProperty(globals, 'Reflect', {
 
         // Syntax in a functional form.
         get: function (target, key, receiver) {
@@ -2181,7 +2181,7 @@
 
         // Different name.
         ownKeys: Object.keys
-      };
+      });
     }
   }
 
