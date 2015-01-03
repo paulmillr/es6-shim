@@ -2134,7 +2134,33 @@
 
     // Reflect
     if (!globals.Reflect) {
-      defineProperty(globals, 'Reflect', {
+      var Reflect = {};
+
+      var internal_get = function get(target, key, receiver) {
+        var desc = Object.getOwnPropertyDescriptor(target, key);
+
+        if (!desc) {
+          var parent = Reflect.getPrototypeOf(target);
+
+          if (parent === null) {
+            return undefined;
+          }
+
+          return internal_get(parent, key, receiver);
+        }
+
+        if ('value' in desc) {
+          return desc.value;
+        }
+
+        if (desc.get) {
+          return desc.get.call(receiver);
+        }
+
+        return undefined;
+      };
+
+      defineProperties(Reflect, {
 
         // Syntax in a functional form.
         get: function get(target, key, receiver) {
@@ -2142,7 +2168,11 @@
             throw new TypeError('target must be an object');
           }
 
-          return target[key];
+          if (typeof receiver === 'undefined') {
+            receiver = target;
+          }
+
+          return internal_get(target, key, receiver);
         },
 
         set: function set(target, key, value, receiver) {
@@ -2223,6 +2253,8 @@
         // Different name.
         ownKeys: Object.keys
       });
+
+      defineProperty(globals, 'Reflect', Reflect);
     }
   }
 
