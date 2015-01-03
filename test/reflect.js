@@ -26,6 +26,16 @@ describe('Reflect', function () {
   });
 
   describe('Reflect.get()', function () {
+    var object = {
+      _value: 0
+    };
+
+    Object.defineProperty(object, 'value', {
+      get: function () {
+        return this._value;
+      }
+    });
+
     it('is a function', function () {
       expect(typeof Reflect.get).to.equal('function');
     });
@@ -36,6 +46,30 @@ describe('Reflect', function () {
           return Reflect.get(item, 'property');
         }).to['throw'](TypeError);
       });
+    });
+
+    it('can retrieve a simple value, from the target', function () {
+      var o = { a: 1 },
+        p = { a: 2 };
+
+        expect(Reflect.get(o, 'a')).to.equal(1);
+        // p has no effect
+        expect(Reflect.get(o, 'a', p)).to.equal(1);
+    });
+
+    it('will invoke getters on the receiver rather than target', function () {
+      var other = { _value: 1337 };
+
+      expect(Reflect.get(object, 'value', other)).to.equal(1337);
+    });
+
+    it('will search target\'s prototype chain if no getter exists on target', function () {
+      var other = Object.create(object);
+      other._value = 17;
+
+      var yet_another = { _value: 4711 };
+
+      expect(Reflect.get(other, 'value', yet_another)).to.equal(4711);
     });
   });
 
@@ -93,6 +127,10 @@ describe('Reflect', function () {
       expect(o.b).to.equal(2);
 
       expect(Reflect.deleteProperty(o, 'a')).to.equal(true);
+    });
+
+    it('cannot delete a function\'s name property', function () {
+      expect(Reflect.deleteProperty(function a() {}, 'name')).to.equal(false);
     });
   });
 
