@@ -5,10 +5,10 @@ var exported = require('../');
 var runArrayTests = function () {
   'use strict';
 
-  if (typeof Symbol === 'undefined') { var Symbol = {}; }
+  var Sym = typeof Symbol !== 'undefined' ? Symbol : {};
   var isSymbol = function (sym) {
     /*jshint notypeof: true */
-    return typeof Symbol === 'function' && typeof sym === 'symbol';
+    return typeof Sym === 'function' && typeof sym === 'symbol';
     /*jshint notypeof: false */
   };
 
@@ -23,8 +23,8 @@ var runArrayTests = function () {
       it('uses Symbol.iterator if available', function () {
         var a = [];
         var iterator;
-        if (isSymbol(Symbol && Symbol.iterator)) {
-          iterator = Symbol.iterator;
+        if (isSymbol(Sym.iterator)) {
+          iterator = Sym.iterator;
         } else {
           return;
         }
@@ -483,8 +483,8 @@ var runArrayTests = function () {
       });
 
       it('should be unscopable if Symbols exist', function () {
-        if (isSymbol(Symbol && Symbol.unscopables)) {
-          var unscopables = mylist[Symbol.unscopables];
+        if (isSymbol(Sym.unscopables)) {
+          var unscopables = mylist[Sym.unscopables];
           expect(!!unscopables).to.equal(true);
           expect(unscopables.keys).to.equal(true);
         }
@@ -540,8 +540,8 @@ var runArrayTests = function () {
       });
 
       it('should be unscopable if Symbols exist', function () {
-        if (isSymbol(Symbol && Symbol.unscopables)) {
-          var unscopables = mylist[Symbol.unscopables];
+        if (isSymbol(Sym.unscopables)) {
+          var unscopables = mylist[Sym.unscopables];
           expect(!!unscopables).to.equal(true);
           expect(unscopables.values).to.equal(true);
         }
@@ -603,8 +603,8 @@ var runArrayTests = function () {
       });
 
       it('should be unscopable if Symbols exist', function () {
-        if (isSymbol(Symbol && Symbol.unscopables)) {
-          var unscopables = mylist[Symbol.unscopables];
+        if (isSymbol(Sym.unscopables)) {
+          var unscopables = mylist[Sym.unscopables];
           expect(!!unscopables).to.equal(true);
           expect(unscopables.entries).to.equal(true);
         }
