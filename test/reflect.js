@@ -3,6 +3,29 @@
 var exported = require('../');
 
 describe('Reflect', function () {
+  var object = {
+    something: 1,
+    _value: 0
+  };
+
+  Object.defineProperties(object, {
+    value: {
+      get: function () {
+        return this._value;
+      }
+    },
+
+    setter: {
+      set: function (val) {
+        this._value = val;
+      }
+    },
+
+    bool: {
+      value: true
+    }
+  });
+
   it('is on the exported object', function () {
     expect(exported.Reflect).to.equal(Reflect);
   });
@@ -26,16 +49,6 @@ describe('Reflect', function () {
   });
 
   describe('Reflect.get()', function () {
-    var object = {
-      _value: 0
-    };
-
-    Object.defineProperty(object, 'value', {
-      get: function () {
-        return this._value;
-      }
-    });
-
     it('is a function', function () {
       expect(typeof Reflect.get).to.equal('function');
     });
@@ -49,27 +62,38 @@ describe('Reflect', function () {
     });
 
     it('can retrieve a simple value, from the target', function () {
-      var o = { a: 1 },
-        p = { a: 2 };
+      var p = { something: 2, bool: false };
 
-        expect(Reflect.get(o, 'a')).to.equal(1);
-        // p has no effect
-        expect(Reflect.get(o, 'a', p)).to.equal(1);
+      expect(Reflect.get(object, 'something')).to.equal(1);
+      // p has no effect
+      expect(Reflect.get(object, 'something', p)).to.equal(1);
+
+      // Value-defined properties take the target's value,
+      // and ignore that of the receiver.
+      expect(Reflect.get(object, 'bool', p)).to.equal(true);
+
+      // Undefined values
+      expect(Reflect.get(object, 'undefined_property')).to.equal(undefined);
     });
 
     it('will invoke getters on the receiver rather than target', function () {
       var other = { _value: 1337 };
 
       expect(Reflect.get(object, 'value', other)).to.equal(1337);
+
+      // No getter for setter property
+      expect(Reflect.get(object, 'setter', other)).to.equal(undefined);
     });
 
-    it('will search target\'s prototype chain if no getter exists on target', function () {
+    it('will search the prototype chain', function () {
       var other = Object.create(object);
       other._value = 17;
 
       var yet_another = { _value: 4711 };
 
       expect(Reflect.get(other, 'value', yet_another)).to.equal(4711);
+
+      expect(Reflect.get(other, 'bool', yet_another)).to.equal(true);
     });
   });
 
