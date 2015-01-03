@@ -467,7 +467,7 @@
   }());
 
   defineProperties(String, {
-    fromCodePoint: function fromCodePoint(_) { // length = 1
+    fromCodePoint: function fromCodePoint(codePoints) {
       var result = [];
       var next;
       for (var i = 0, length = arguments.length; i < length; i++) {
@@ -487,7 +487,7 @@
       return result.join('');
     },
 
-    raw: function raw(callSite) { // raw.length===1
+    raw: function raw(callSite) {
       var cooked = ES.ToObject(callSite, 'bad callSite');
       var rawValue = cooked.raw;
       var rawString = ES.ToObject(rawValue, 'bad raw value');
@@ -521,7 +521,7 @@
   // https://bugzilla.mozilla.org/show_bug.cgi?id=1062484
   if (String.fromCodePoint.length !== 1) {
     var originalFromCodePoint = Function.apply.bind(String.fromCodePoint);
-    defineProperty(String, 'fromCodePoint', function (_) { return originalFromCodePoint(this, arguments); }, true);
+    defineProperty(String, 'fromCodePoint', function fromCodePoint(codePoints) { return originalFromCodePoint(this, arguments); }, true);
   }
 
   var StringShims = {
