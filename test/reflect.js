@@ -61,35 +61,84 @@ describe('Reflect', function () {
       expect(typeof Reflect.construct).to.equal('function');
     });
 
+    it('throws if target isn\'t callable', function () {
+      testCallableThrow(function (item) {
+        return Reflect.apply(item, null, []);
+      });
+    });
+
     expect(Reflect.construct(function (a, b, c) {
       this.qux = a + b + c;
     }, ['foo', 'bar', 'baz']).qux).to.equal('foobarbaz');
   });
 
   describe('Reflect.defineProperty()', function () {
+    // Compare our implementation with the below.
+    // Being much simpler, it would be preferable
+    // if the behaviour is equivalent.
+    var Object_defineProperty = function (o, k, d) {
+        try {
+          Object.defineProperty(o, k, d);
+          return true;
+        } catch (_) {
+          return false;
+        }
+    };
+
+    var expectDefine = function (args, res) {
+      expect(Reflect.defineProperty.apply(Reflect, args)).to.equal(res);
+      expect(Object_defineProperty.apply(null, args)).to.equal(res);
+    };
+
     it('is a function', function () {
       expect(typeof Reflect.defineProperty).to.equal('function');
+    });
+
+    it('throws if the target isn\'t an object', function () {
+      testPrimitiveThrow(function (item) {
+        return Reflect.defineProperty(item, 'prop', { value: true });
+      });
     });
 
     it('returns false for non-extensible objects', function () {
       var o = Object.preventExtensions({});
 
       expect(Reflect.defineProperty(o, 'prop', {})).to.equal(false);
+      expect(Object_defineProperty(o, 'prop', {})).to.equal(false);
     });
 
-    it('it will return true if the property is identi', function () {
+    it('can return true, even for non-configurable, non-writable properties', function () {
       var o = {}, desc = {
         value: 13,
         enumerable: false,
-        writable: true,
+        writable: false,
         configurable: false
       };
 
       expect(Reflect.defineProperty(o, 'prop', desc)).to.equal(true);
+      expect(Object_defineProperty(o, 'prop', desc)).to.equal(true);
 
       // Defined as non-configurable, but descriptor is identical.
       expect(Reflect.defineProperty(o, 'prop', desc)).to.equal(true);
+      expect(Object_defineProperty(o, 'prop', desc)).to.equal(true);
 
+      desc.value = 37; // Change
+
+      expect(Reflect.defineProperty(o, 'prop', desc)).to.equal(false);
+      expect(Object_defineProperty(o, 'prop', desc)).to.equal(false);
+    });
+
+    it('can change from one property type to another', function () {
+      var o = {};
+
+      expect(Reflect.defineProperty(o, 'prop', {
+        set: function () {},
+        configurable: true
+      })).to.equal(true);
+
+      expect(Reflect.defineProperty(o, 'prop', {
+        value: 13
+      })).to.equal(true);
     });
   });
 
