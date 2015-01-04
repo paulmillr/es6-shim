@@ -2193,63 +2193,6 @@
         };
       };
 
-      var isAccessorDescriptor = function (desc) {
-        return !!desc && ('set' in desc || 'get' in desc);
-      };
-
-      var isDataDescriptor = function (desc) {
-        return !!desc && ('value' in desc || 'writable' in desc);
-      };
-
-      var __defineOwnProperty = function (object, key, desc) {
-        var current = Object.getOwnPropertyDescriptor(object, key),
-          extensible = Object.isExtensible(object);
-
-        if (!current) {
-          if (!extensible) {
-            return false;
-          }
-
-          Object.defineProperty(object, key, desc);
-
-          return true;
-        }
-
-        var desc_fields = Object.getOwnPropertyNames(desc);
-
-        if (desc_fields.every(function (key) { return ES.SameValue(desc[key], current[key]); })) {
-          return true;
-        }
-
-        if (!current.configurable) {
-          if (desc.configurable || typeof desc.enumerable === 'boolean' &&
-              desc.enumerable !== current.enumerable) {
-            return false;
-          }
-        }
-
-        if (!isDataDescriptor(desc) && !isAccessorDescriptor(desc)) {
-          // isGenericDescriptor.
-          // No further validation required.
-        } else if (isDataDescriptor(desc) && isDataDescriptor(current)) {
-          if (!current.configurable && !current.writable &&
-              desc.writable || !ES.SameValue(desc.value, current.value)) {
-            return false;
-          }
-        } else if (isAccessorDescriptor(desc) && isAccessorDescriptor(current)) {
-          if (!current.configurable &&
-                (desc.set && desc.set !== current.set) ||
-                (desc.get && desc.get !== current.get)) {
-              return false;
-          }
-        } else if (!current.configurable) {
-          return false;
-        }
-
-        Object.defineProperty(object, key, desc);
-        return true;
-      };
-
       var internal_get = function get(target, key, receiver) {
         var desc = Object.getOwnPropertyDescriptor(target, key);
 
@@ -2349,9 +2292,7 @@
           return ES.Construct(constructor, args);
         },
 
-        defineProperty: throwUnlessTargetIsObject(__defineOwnProperty),
-        // alternatively:
-        // defineProperty: wrapObjectFunction(Object.defineProperty),
+        defineProperty: wrapObjectFunction(Object.defineProperty),
 
         // When deleting a non-existant or configurable property,
         // true is returned.

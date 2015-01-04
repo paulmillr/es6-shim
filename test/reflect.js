@@ -73,23 +73,6 @@ describe('Reflect', function () {
   });
 
   describe('Reflect.defineProperty()', function () {
-    // Compare our implementation with the below.
-    // Being much simpler, it would be preferable
-    // if the behaviour is equivalent.
-    var Object_defineProperty = function (o, k, d) {
-        try {
-          Object.defineProperty(o, k, d);
-          return true;
-        } catch (_) {
-          return false;
-        }
-    };
-
-    var expectDefine = function (args, res) {
-      expect(Reflect.defineProperty.apply(Reflect, args)).to.equal(res);
-      expect(Object_defineProperty.apply(null, args)).to.equal(res);
-    };
-
     it('is a function', function () {
       expect(typeof Reflect.defineProperty).to.equal('function');
     });
@@ -104,7 +87,6 @@ describe('Reflect', function () {
       var o = Object.preventExtensions({});
 
       expect(Reflect.defineProperty(o, 'prop', {})).to.equal(false);
-      expect(Object_defineProperty(o, 'prop', {})).to.equal(false);
     });
 
     it('can return true, even for non-configurable, non-writable properties', function () {
@@ -116,16 +98,13 @@ describe('Reflect', function () {
       };
 
       expect(Reflect.defineProperty(o, 'prop', desc)).to.equal(true);
-      expect(Object_defineProperty(o, 'prop', desc)).to.equal(true);
 
       // Defined as non-configurable, but descriptor is identical.
       expect(Reflect.defineProperty(o, 'prop', desc)).to.equal(true);
-      expect(Object_defineProperty(o, 'prop', desc)).to.equal(true);
 
       desc.value = 37; // Change
 
       expect(Reflect.defineProperty(o, 'prop', desc)).to.equal(false);
-      expect(Object_defineProperty(o, 'prop', desc)).to.equal(false);
     });
 
     it('can change from one property type to another, if configurable', function () {
@@ -146,13 +125,10 @@ describe('Reflect', function () {
       };
 
       expect(Reflect.defineProperty(o, 'prop', desc1)).to.equal(true);
-      expect(Object_defineProperty(o, 'prop', desc1)).to.equal(true);
 
       expect(Reflect.defineProperty(o, 'prop', desc2)).to.equal(true);
-      expect(Object_defineProperty(o, 'prop', desc2)).to.equal(true);
 
       expect(Reflect.defineProperty(o, 'prop', desc3)).to.equal(false);
-      expect(Object_defineProperty(o, 'prop', desc3)).to.equal(false);
     });
   });
 
