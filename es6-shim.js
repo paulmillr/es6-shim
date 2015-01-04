@@ -2301,13 +2301,50 @@
           return func.apply(context, args);
         },
 
+        setPrototypeOf: function setPrototypeOf(object, proto) {
+          if (!ES.TypeIsObject(object)) {
+            throw new TypeError('target must be an object');
+          }
+
+          if (proto !== null && !ES.TypeIsObject(proto)) {
+            throw new TypeError('proto must be an object or null');
+          }
+
+          // If they already are the same, we're done.
+          if (proto === Reflect.getPrototypeOf(object)) {
+            return true;
+          }
+
+          // Cannot alter prototype if object not extensible.
+          if (!Reflect.isExtensible(object)) {
+            return false;
+          }
+
+          // Ensure that we do not create
+          // a circular prototype chain.
+          if (proto !== null) {
+            var p = proto;
+
+            while (p) {
+              if (object === p) {
+                return false;
+              }
+
+              p = Reflect.getPrototypeOf(p);
+            }
+          }
+
+          Object.setPrototypeOf(object, proto);
+
+          return true;
+        },
+
         // Same as Object global.
         defineProperty: Object.defineProperty,
         getOwnPropertyDescriptor: Object.getOwnPropertyDescriptor,
         getPrototypeOf: Object.getPrototypeOf,
         isExtensible: Object.isExtensible,
         preventExtensions: Object.preventExtensions,
-        setPrototypeOf: Object.setPrototypeOf,
 
         // Different name.
         ownKeys: Object.keys
