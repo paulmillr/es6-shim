@@ -220,10 +220,6 @@ describe('Reflect', function () {
       expect(typeof Reflect.getPrototypeOf).to.equal('function');
     });
 
-    it('is the same as Object.getPrototypeOf()', function () {
-      expect(Reflect.getPrototypeOf).to.equal(Object.getPrototypeOf);
-    });
-
     it('can get prototypes', function () {
 
     });
@@ -279,10 +275,6 @@ describe('Reflect', function () {
       expect(typeof Reflect.isExtensible).to.equal('function');
     });
 
-    it('is the same as Object.isExtensible()', function () {
-      expect(Reflect.isExtensible).to.equal(Object.isExtensible);
-    });
-
     it('returns true for plain objects', function () {
       expect(Reflect.isExtensible({})).to.equal(true);
       expect(Reflect.isExtensible(Object.preventExtensions({}))).to.equal(false);
@@ -304,10 +296,6 @@ describe('Reflect', function () {
   describe('Reflect.preventExtensions()', function () {
     it('is a function', function () {
       expect(typeof Reflect.preventExtensions).to.equal('function');
-    });
-
-    it('is the same as Object.preventExtensions()', function () {
-      expect(Reflect.preventExtensions).to.equal(Object.preventExtensions);
     });
 
     it('prevents extensions on objects', function () {
