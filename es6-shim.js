@@ -720,7 +720,9 @@
     defineProperty(Array, 'from', ArrayShims.from, true);
   }
 
-  // iterator result
+  // Given an argument x, it will return an IteratorResult object,
+  // with value set to x and done to false.
+  // Given no arguments, it will return an iterator completion object.
   var iterator_result = function (x) {
     return { value: x, done: !arguments.length };
   };
