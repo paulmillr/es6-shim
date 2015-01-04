@@ -2222,7 +2222,8 @@
         }
 
         if (!current.configurable) {
-          if (desc.configurable || 'enumerable' in desc && desc.enumerable !== current.enumerable) {
+          if (desc.configurable || typeof desc.enumerable === 'boolean' &&
+              desc.enumerable !== current.enumerable) {
             return false;
           }
         }
@@ -2349,6 +2350,8 @@
         },
 
         defineProperty: throwUnlessTargetIsObject(__defineOwnProperty),
+        // alternatively:
+        // defineProperty: wrapObjectFunction(Object.defineProperty),
 
         // When deleting a non-existant or configurable property,
         // true is returned.
@@ -2417,6 +2420,8 @@
           return internal_set(target, key, value, receiver);
         },
 
+        // Sets the prototype of the given object.
+        // Returns true on success, otherwise false.
         setPrototypeOf: function setPrototypeOf(object, proto) {
           if (!ES.TypeIsObject(object)) {
             throw new TypeError('target must be an object');
@@ -2436,8 +2441,7 @@
             return false;
           }
 
-          // Ensure that we do not create
-          // a circular prototype chain.
+          // Ensure that we do not create a circular prototype chain.
           if (proto !== null) {
             var p = proto;
 
