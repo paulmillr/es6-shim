@@ -281,34 +281,41 @@ describe('Reflect', function () {
 
       a.b = 2;
 
-      var iter = Reflect.enumerate(a);
-
-      expect(iter.next()).to.deep.equal({
-        value: 'b',
-        done: false
-      });
-
-      expect(iter.next()).to.deep.equal({
-        value: undefined,
-        done: true
-      });
+      expect(Array.from(Reflect.enumerate(a))).to.deep.equal(['b']);
     });
 
     it('includes all enumerable properties of prototypes', function () {
       var a = { prop: true };
       var b = Object.create(a);
 
-      var iter = Reflect.enumerate(b);
+      expect(Array.from(Reflect.enumerate(b))).to.deep.equal(['prop']);
+    });
 
-      expect(iter.next()).to.deep.equal({
-        value: 'prop',
-        done: false
-      });
+    it('yields keys determined at first next() call', function () {
+      var obj = { a: 1, b: 2 },
+        iter = Reflect.enumerate(obj);
 
-      expect(iter.next()).to.deep.equal({
-        value: undefined,
-        done: true
-      });
+      expect(iter.next()).to.deep.equal({ value: "a", done: false });
+
+      obj.c = 3;
+      expect(iter.next()).to.deep.equal({ value: "b", done: false });
+      expect(iter.next()).to.deep.equal({ value: undefined, done: true });
+
+      obj = { a: 1, b: 2 };
+      iter = Reflect.enumerate(obj);
+
+      obj.c = 3;
+      expect(iter.next()).to.deep.equal({ value: "a", done: false });
+      expect(iter.next()).to.deep.equal({ value: "b", done: false });
+      expect(iter.next()).to.deep.equal({ value: "c", done: false });
+      expect(iter.next()).to.deep.equal({ value: undefined, done: true });
+
+      obj = { a: 1, b: 2 };
+      iter = Reflect.enumerate(obj);
+
+      expect(iter.next()).to.deep.equal({ value: "a", done: false });
+      delete obj.b;
+      expect(iter.next()).to.deep.equal({ value: undefined, done: true });
     });
   });
 
