@@ -206,7 +206,15 @@
     return result;
   };
 
+  var bindContext = function (func, context) {
+    return function () {
+      return func.apply(context, arguments);
+    };
+  };
+
   var ES = {
+    Call: bindContext(Function.prototype.call, Function.prototype.apply),
+
     RequireObjectCoercible: function (x, optMessage) {
       /* jshint eqnull:true */
       if (x == null) {
@@ -315,7 +323,7 @@
       // (see emulateES6construct)
       defineProperties(obj, { _es6construct: true });
       // Call the constructor.
-      var result = C.apply(obj, args);
+      var result = ES.Call(C, obj, args);
       return ES.TypeIsObject(result) ? result : obj;
     }
   };
@@ -2309,13 +2317,7 @@
       defineProperties(Reflect, {
 
         // Apply method in a functional form.
-        apply: function apply(func, context, args) {
-          if (!ES.IsCallable(func)) {
-            throw new TypeError('First argument must be callable.');
-          }
-
-          return func.apply(context, args);
-        },
+        apply: ES.Call,
 
         // New operator in a functional form.
         construct: function construct(constructor, args) {

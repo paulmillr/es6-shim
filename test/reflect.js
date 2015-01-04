@@ -53,7 +53,17 @@ describe('Reflect', function () {
       });
     });
 
-    expect(Reflect.apply(Array.prototype.push, [1, 2], [3, 4, 5])).to.equal(5);
+    it('works also with redefined apply', function () {
+      expect(Reflect.apply(Array.prototype.push, [1, 2], [3, 4, 5])).to.equal(5);
+
+      function F(a, b, c) {
+        return a + b + c;
+      }
+
+      F.apply = false;
+
+      expect(Reflect.apply(F, null, [1, 2, 3])).to.equal(6);
+    });
   });
 
   describe('Reflect.construct()', function () {
@@ -67,9 +77,15 @@ describe('Reflect', function () {
       });
     });
 
-    expect(Reflect.construct(function (a, b, c) {
-      this.qux = a + b + c;
-    }, ['foo', 'bar', 'baz']).qux).to.equal('foobarbaz');
+    it('works also with redefined apply', function () {
+      function C(a, b, c) {
+        this.qux = a + b + c;
+      }
+
+      C.apply = undefined;
+
+      expect(Reflect.construct(C, ['foo', 'bar', 'baz']).qux).to.equal('foobarbaz');
+    });
   });
 
   describe('Reflect.defineProperty()', function () {
