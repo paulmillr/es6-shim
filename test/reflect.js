@@ -222,18 +222,45 @@ describe('Reflect', function () {
       expect(typeof Reflect.setPrototypeOf).to.equal('function');
     });
 
-    it('is the same as Object.setPrototypeOf()', function () {
-      expect(Reflect.setPrototypeOf).to.equal(Object.setPrototypeOf);
+    it('throws if the target isn\'t an object', function () {
+      [null, undefined, 1, 'string', true].forEach(function (item) {
+        expect(function () {
+          return Reflect.setPrototypeOf(item, null);
+        }).to.throw(TypeError);
+      });
     });
 
-    it('can set prototypes', function () {
+    it('throws if the prototype is neither object nor null', function () {
+      var o = {};
+
+      [undefined, 1, 'string', true].forEach(function (item) {
+        expect(function () {
+          return Reflect.setPrototypeOf(o, item);
+        }).to.throw(TypeError);
+      });
+    });
+
+    it('can set prototypes, and returns true on success', function () {
       var obj = {};
-      Reflect.setPrototypeOf(obj, Array.prototype);
+
+      expect(Reflect.setPrototypeOf(obj, Array.prototype)).to.equal(true);
       expect(obj).to.be.an.instanceOf(Array);
 
       expect(obj.toString).not.to.equal(undefined);
-      Reflect.setPrototypeOf(obj, null);
+      expect(Reflect.setPrototypeOf(obj, null)).to.equal(true);
       expect(obj.toString).to.equal(undefined);
+    });
+
+    it('is returns false on failure', function () {
+      var obj = Object.freeze({});
+
+      expect(Reflect.setPrototypeOf(obj, null)).to.equal(false);
+    });
+
+    it('fails when attempting to create a circular prototype chain', function () {
+      var o = {};
+
+      expect(Reflect.setPrototypeOf(o, o)).to.equal(false);
     });
   });
 
