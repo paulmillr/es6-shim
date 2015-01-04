@@ -48,6 +48,117 @@ describe('Reflect', function () {
     }, ['foo', 'bar', 'baz']).qux).to.equal('foobarbaz');
   });
 
+  describe('Reflect.defineProperty()', function () {
+    it('is a function', function () {
+      expect(typeof Reflect.defineProperty).to.equal('function');
+    });
+
+    it('returns false for non-extensible objects', function () {
+      var o = Object.preventExtensions({});
+
+      expect(Reflect.defineProperty(o, 'prop', {})).to.equal(false);
+    });
+
+    it('it will return true if the property is identi', function () {
+      var o = {}, desc = {
+        value: 13,
+        enumerable: false,
+        writable: true,
+        configurable: false
+      };
+
+      expect(Reflect.defineProperty(o, 'prop', desc)).to.equal(true);
+
+      // Defined as non-configurable, but descriptor is identical.
+      expect(Reflect.defineProperty(o, 'prop', desc)).to.equal(true);
+
+    });
+  });
+
+  describe('Reflect.deleteProperty()', function () {
+    it('is a function', function () {
+      expect(typeof Reflect.deleteProperty).to.equal('function');
+    });
+
+    it('returns true for success and false for failure', function () {
+      var o = { a: 1 };
+
+      Object.defineProperty(o, 'b', { value: 2 });
+
+      expect(o).to.have.property('a');
+      expect(o).to.have.property('b');
+      expect(o.a).to.equal(1);
+      expect(o.b).to.equal(2);
+
+      expect(Reflect.deleteProperty(o, 'a')).to.equal(true);
+
+      expect(o).not.to.have.property('a');
+      expect(o.b).to.equal(2);
+
+      expect(Reflect.deleteProperty(o, 'b')).to.equal(false);
+
+      expect(o).to.have.property('b');
+      expect(o.b).to.equal(2);
+
+      expect(Reflect.deleteProperty(o, 'a')).to.equal(true);
+    });
+
+    it('cannot delete a function\'s name property', function () {
+      expect(Reflect.deleteProperty(function a() {}, 'name')).to.equal(false);
+    });
+  });
+
+  describe('Reflect.enumerate()', function () {
+    it('is a function', function () {
+      expect(typeof Reflect.enumerate).to.equal('function');
+    });
+
+    it('only includes enumerable properties', function () {
+      var a = Object.create(null, {
+        // Non-enumerable per default.
+        a: { value: 1 }
+      });
+
+      a.b = 2;
+
+      expect(Array.from(Reflect.enumerate(a))).to.deep.equal(['b']);
+    });
+
+    it('includes all enumerable properties of prototypes', function () {
+      var a = { prop: true };
+      var b = Object.create(a);
+
+      expect(Array.from(Reflect.enumerate(b))).to.deep.equal(['prop']);
+    });
+
+    it('yields keys determined at first next() call', function () {
+      var obj = { a: 1, b: 2 },
+      iter = Reflect.enumerate(obj);
+
+      expect(iter.next()).to.deep.equal({ value: 'a', done: false });
+
+      obj.c = 3;
+      expect(iter.next()).to.deep.equal({ value: 'b', done: false });
+      expect(iter.next()).to.deep.equal({ value: undefined, done: true });
+
+      obj = { a: 1, b: 2 };
+      iter = Reflect.enumerate(obj);
+
+      obj.c = 3;
+      expect(iter.next()).to.deep.equal({ value: 'a', done: false });
+      expect(iter.next()).to.deep.equal({ value: 'b', done: false });
+      expect(iter.next()).to.deep.equal({ value: 'c', done: false });
+      expect(iter.next()).to.deep.equal({ value: undefined, done: true });
+
+      obj = { a: 1, b: 2 };
+      iter = Reflect.enumerate(obj);
+
+      expect(iter.next()).to.deep.equal({ value: 'a', done: false });
+      delete obj.b;
+      expect(iter.next()).to.deep.equal({ value: undefined, done: true });
+    });
+  });
+
   describe('Reflect.get()', function () {
     it('is a function', function () {
       expect(typeof Reflect.get).to.equal('function');
@@ -97,17 +208,24 @@ describe('Reflect', function () {
     });
   });
 
-  describe('Reflect.set()', function () {
+  describe('Reflect.getOwnPropertyDescriptor()', function () {
     it('is a function', function () {
-      expect(typeof Reflect.set).to.equal('function');
+      expect(typeof Reflect.getOwnPropertyDescriptor).to.equal('function');
     });
 
-    it('throws on null and undefined', function () {
-      [null, undefined].forEach(function (item) {
-        expect(function () {
-          return Reflect.set(item, 'property', 'value');
-        }).to['throw'](TypeError);
-      });
+  });
+
+  describe('Reflect.getPrototypeOf()', function () {
+    it('is a function', function () {
+      expect(typeof Reflect.getPrototypeOf).to.equal('function');
+    });
+
+    it('is the same as Object.getPrototypeOf()', function () {
+      expect(Reflect.getPrototypeOf).to.equal(Object.getPrototypeOf);
+    });
+
+    xit('can get prototypes', function () {
+
     });
   });
 
@@ -146,7 +264,7 @@ describe('Reflect', function () {
 
     it('will search the prototype chain', function () {
       var intermediate = Object.create(object),
-        target = Object.create(intermediate);
+      target = Object.create(intermediate);
 
       intermediate.some_property = undefined;
 
@@ -156,64 +274,60 @@ describe('Reflect', function () {
     });
   });
 
-  describe('Reflect.deleteProperty()', function () {
+  describe('Reflect.isExtensible()', function () {
     it('is a function', function () {
-      expect(typeof Reflect.deleteProperty).to.equal('function');
+      expect(typeof Reflect.isExtensible).to.equal('function');
     });
 
-    it('returns true for success and false for failure', function () {
-      var o = { a: 1 };
-
-      Object.defineProperty(o, 'b', { value: 2 });
-
-      expect(o).to.have.property('a');
-      expect(o).to.have.property('b');
-      expect(o.a).to.equal(1);
-      expect(o.b).to.equal(2);
-
-      expect(Reflect.deleteProperty(o, 'a')).to.equal(true);
-
-      expect(o).not.to.have.property('a');
-      expect(o.b).to.equal(2);
-
-      expect(Reflect.deleteProperty(o, 'b')).to.equal(false);
-
-      expect(o).to.have.property('b');
-      expect(o.b).to.equal(2);
-
-      expect(Reflect.deleteProperty(o, 'a')).to.equal(true);
+    it('is the same as Object.isExtensible()', function () {
+      expect(Reflect.isExtensible).to.equal(Object.isExtensible);
     });
 
-    it('cannot delete a function\'s name property', function () {
-      expect(Reflect.deleteProperty(function a() {}, 'name')).to.equal(false);
+    it('returns true for plain objects', function () {
+      expect(Reflect.isExtensible({})).to.equal(true);
+      expect(Reflect.isExtensible(Object.preventExtensions({}))).to.equal(false);
     });
   });
 
-  describe('Reflect.getOwnPropertyDescriptor()', function () {
+  describe('Reflect.ownKeys()', function () {
     it('is a function', function () {
-      expect(typeof Reflect.getOwnPropertyDescriptor).to.equal('function');
+      expect(typeof Reflect.ownKeys).to.equal('function');
     });
 
+    it('should return the same result as Object.keys()', function () {
+      var obj = { foo: 1, bar: 2};
+
+      expect(Reflect.ownKeys(obj)).to.deep.equal(Object.keys(obj));
+    });
   });
 
-  describe('Reflect.defineProperty()', function () {
+  describe('Reflect.preventExtensions()', function () {
     it('is a function', function () {
-      expect(typeof Reflect.defineProperty).to.equal('function');
+      expect(typeof Reflect.preventExtensions).to.equal('function');
     });
 
+    it('is the same as Object.preventExtensions()', function () {
+      expect(Reflect.preventExtensions).to.equal(Object.preventExtensions);
+    });
+
+    it('prevents extensions on objects', function () {
+      var obj = {};
+      Reflect.preventExtensions(obj);
+      expect(Object.isExtensible(obj)).to.equal(false);
+    });
   });
 
-  describe('Reflect.getPrototypeOf()', function () {
+  describe('Reflect.set()', function () {
     it('is a function', function () {
-      expect(typeof Reflect.getPrototypeOf).to.equal('function');
+      expect(typeof Reflect.set).to.equal('function');
     });
 
-    it('is the same as Object.getPrototypeOf()', function () {
-      expect(Reflect.getPrototypeOf).to.equal(Object.getPrototypeOf);
-    });
-
-    it('can get prototypes', function () {
-
+    it('throws on null and undefined', function () {
+      [null, undefined].forEach(function (item) {
+        expect(function () {
+          return Reflect.set(item, 'property', 'value');
+        }).to.throw(TypeError);
+      });
     });
   });
 
@@ -261,100 +375,6 @@ describe('Reflect', function () {
       var o = {};
 
       expect(Reflect.setPrototypeOf(o, o)).to.equal(false);
-    });
-  });
-
-  describe('Reflect.isExtensible()', function () {
-    it('is a function', function () {
-      expect(typeof Reflect.isExtensible).to.equal('function');
-    });
-
-    it('is the same as Object.isExtensible()', function () {
-      expect(Reflect.isExtensible).to.equal(Object.isExtensible);
-    });
-
-    it('returns true for plain objects', function () {
-      expect(Reflect.isExtensible({})).to.equal(true);
-      expect(Reflect.isExtensible(Object.preventExtensions({}))).to.equal(false);
-    });
-  });
-
-  describe('Reflect.preventExtensions()', function () {
-    it('is a function', function () {
-      expect(typeof Reflect.preventExtensions).to.equal('function');
-    });
-
-    it('is the same as Object.preventExtensions()', function () {
-      expect(Reflect.preventExtensions).to.equal(Object.preventExtensions);
-    });
-
-    it('prevents extensions on objects', function () {
-      var obj = {};
-      Reflect.preventExtensions(obj);
-      expect(Object.isExtensible(obj)).to.equal(false);
-    });
-  });
-
-  describe('Reflect.enumerate()', function () {
-    it('is a function', function () {
-      expect(typeof Reflect.enumerate).to.equal('function');
-    });
-
-    it('only includes enumerable properties', function () {
-      var a = Object.create(null, {
-        // Non-enumerable per default.
-        a: { value: 1 }
-      });
-
-      a.b = 2;
-
-      expect(Array.from(Reflect.enumerate(a))).to.deep.equal(['b']);
-    });
-
-    it('includes all enumerable properties of prototypes', function () {
-      var a = { prop: true };
-      var b = Object.create(a);
-
-      expect(Array.from(Reflect.enumerate(b))).to.deep.equal(['prop']);
-    });
-
-    it('yields keys determined at first next() call', function () {
-      var obj = { a: 1, b: 2 },
-        iter = Reflect.enumerate(obj);
-
-      expect(iter.next()).to.deep.equal({ value: 'a', done: false });
-
-      obj.c = 3;
-      expect(iter.next()).to.deep.equal({ value: 'b', done: false });
-      expect(iter.next()).to.deep.equal({ value: undefined, done: true });
-
-      obj = { a: 1, b: 2 };
-      iter = Reflect.enumerate(obj);
-
-      obj.c = 3;
-      expect(iter.next()).to.deep.equal({ value: 'a', done: false });
-      expect(iter.next()).to.deep.equal({ value: 'b', done: false });
-      expect(iter.next()).to.deep.equal({ value: 'c', done: false });
-      expect(iter.next()).to.deep.equal({ value: undefined, done: true });
-
-      obj = { a: 1, b: 2 };
-      iter = Reflect.enumerate(obj);
-
-      expect(iter.next()).to.deep.equal({ value: 'a', done: false });
-      delete obj.b;
-      expect(iter.next()).to.deep.equal({ value: undefined, done: true });
-    });
-  });
-
-  describe('Reflect.ownKeys()', function () {
-    it('is a function', function () {
-      expect(typeof Reflect.ownKeys).to.equal('function');
-    });
-
-    it('should return the same result as Object.keys()', function () {
-      var obj = { foo: 1, bar: 2};
-
-      expect(Reflect.ownKeys(obj)).to.deep.equal(Object.keys(obj));
     });
   });
 });
