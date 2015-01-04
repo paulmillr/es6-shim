@@ -128,17 +128,31 @@ describe('Reflect', function () {
       expect(Object_defineProperty(o, 'prop', desc)).to.equal(false);
     });
 
-    it('can change from one property type to another', function () {
+    it('can change from one property type to another, if configurable', function () {
       var o = {};
 
-      expect(Reflect.defineProperty(o, 'prop', {
+      var desc1 = {
         set: function () {},
         configurable: true
-      })).to.equal(true);
+      };
 
-      expect(Reflect.defineProperty(o, 'prop', {
-        value: 13
-      })).to.equal(true);
+      var desc2 = {
+        value: 13,
+        configurable: false
+      };
+
+      var desc3 = {
+        get: function () {}
+      };
+
+      expect(Reflect.defineProperty(o, 'prop', desc1)).to.equal(true);
+      expect(Object_defineProperty(o, 'prop', desc1)).to.equal(true);
+
+      expect(Reflect.defineProperty(o, 'prop', desc2)).to.equal(true);
+      expect(Object_defineProperty(o, 'prop', desc2)).to.equal(true);
+
+      expect(Reflect.defineProperty(o, 'prop', desc3)).to.equal(false);
+      expect(Object_defineProperty(o, 'prop', desc3)).to.equal(false);
     });
   });
 
