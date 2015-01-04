@@ -2,7 +2,8 @@
 
 var exported = require('../');
 
-describe('Reflect', function () {
+// Reflect requires defineProperty
+(Object.defineProperty ? describe : xdescribe)('Reflect', function () {
   var object = {
     something: 1,
     _value: 0
@@ -193,6 +194,8 @@ describe('Reflect', function () {
     });
 
     it('only includes enumerable properties', function () {
+      /*jshint notypeof: true */
+
       var a = Object.create(null, {
         // Non-enumerable per default.
         a: { value: 1 }
@@ -200,7 +203,13 @@ describe('Reflect', function () {
 
       a.b = 2;
 
-      expect(Array.from(Reflect.enumerate(a))).to.deep.equal(['b']);
+      var iter = Reflect.enumerate(a);
+
+      if (typeof Symbol === 'function' && typeof Symbol.iterator === 'symbol') {
+        expect(Symbol.iterator in iter).to.equal(true);
+      }
+
+      expect(Array.from(iter)).to.deep.equal(['b']);
     });
 
     it('includes all enumerable properties of prototypes', function () {
@@ -297,6 +306,19 @@ describe('Reflect', function () {
         return Reflect.getOwnPropertyDescriptor(item, 'prop');
       });
     });
+
+    it('retrieves property descriptors', function () {
+      var obj = { a: 4711 };
+
+      var desc = Reflect.getOwnPropertyDescriptor(obj, 'a');
+
+      expect(desc).to.deep.equal({
+        value: 4711,
+        configurable: true,
+        writable: true,
+        enumerable: true
+      });
+    });
   });
 
   describe('Reflect.getPrototypeOf()', function () {
@@ -308,6 +330,12 @@ describe('Reflect', function () {
       testPrimitiveThrow(function (item) {
         return Reflect.getPrototypeOf(item);
       });
+    });
+
+    it('retrieves prototypes', function () {
+      expect(Reflect.getPrototypeOf(Object.create(null))).to.equal(null);
+
+      expect(Reflect.getPrototypeOf([])).to.equal(Array.prototype);
     });
   });
 
@@ -433,6 +461,37 @@ describe('Reflect', function () {
       testPrimitiveThrow(function (item) {
         return Reflect.set(item, 'prop', 'value');
       });
+    });
+
+    it('sets values on receiver', function () {
+      var target = {};
+      var receiver = {};
+
+      expect(Reflect.set(target, 'foo', 1, receiver)).to.equal(true);
+
+      expect('foo' in target).to.equal(false);
+      expect(receiver.foo).to.equal(1);
+
+      expect(Reflect.defineProperty(receiver, 'bar', {
+        value: 0,
+        writable: true,
+        enumerable: false,
+        configurable: true
+      })).to.equal(true);
+
+      expect(Reflect.set(target, 'bar', 1, receiver)).to.equal(true);
+      expect(receiver.bar).to.equal(1);
+      expect(Reflect.getOwnPropertyDescriptor(receiver, 'bar').enumerable).to.equal(false);
+
+      var out;
+      target = Object.create({}, {
+        o: {
+          set: function (v) { out = this; }
+        }
+      });
+
+      expect(Reflect.set(target, 'o', 17, receiver)).to.equal(true);
+      expect(out).to.equal(receiver);
     });
   });
 
