@@ -123,6 +123,37 @@ describe('Reflect', function () {
         }).to['throw'](TypeError);
       });
     });
+
+    it('will detect own properties', function () {
+      var target = Object.create(null);
+
+      expect(Reflect.has(target, 'prop')).to.equal(false);
+
+      target.prop = undefined;
+      expect(Reflect.has(target, 'prop')).to.equal(true);
+
+      delete target.prop;
+      expect(Reflect.has(target, 'prop')).to.equal(false);
+
+      Object.defineProperty(target, 'accessor', {
+        set: function () {}
+      });
+
+      expect(Reflect.has(target, 'accessor')).to.equal(true);
+
+      expect(Reflect.has(Reflect.has, 'length')).to.equal(true);
+    });
+
+    it('will search the prototype chain', function () {
+      var intermediate = Object.create(object),
+        target = Object.create(intermediate);
+
+      intermediate.some_property = undefined;
+
+      expect(Reflect.has(target, 'bool')).to.equal(true);
+      expect(Reflect.has(target, 'some_property')).to.equal(true);
+      expect(Reflect.has(target, 'undefined_property')).to.equal(false);
+    });
   });
 
   describe('Reflect.deleteProperty()', function () {
