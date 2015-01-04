@@ -2346,8 +2346,24 @@
 
         isExtensible: throwUnlessTargetIsObject(Object.isExtensible),
 
-        // Different name.
-        ownKeys: throwUnlessTargetIsObject(Object.keys),
+        // Basically the result of calling the internal [[OwnPropertyKeys]].
+        // Concatenating propertyNames and propertySymbols should do the trick.
+        // This should continue to work together with a Symbol shim
+        // which overrides Object.getOwnPropertyNames and implements
+        // Object.getOwnPropertySymbols.
+        ownKeys: function ownKeys(target) {
+          if (!ES.TypeIsObject(target)) {
+            throw new TypeError('target must be an object');
+          }
+
+          var keys = Object.getOwnPropertyNames(target);
+
+          if (ES.IsCallable(Object.getOwnPropertySymbols)) {
+            keys = keys.concat(Object.getOwnPropertySymbols(target));
+          }
+
+          return keys;
+        },
 
         preventExtensions: wrapObjectFunction(Object.preventExtensions),
 
