@@ -723,7 +723,7 @@
   // iterator result
   var iterator_result = function (x) {
     return { value: x, done: !arguments.length };
-  }
+  };
 
   // Our ArrayIterator is private; see
   // https://github.com/paulmillr/es6-shim/issues/252
@@ -786,7 +786,7 @@
           }
         }
 
-        var retval, len = ES.ToLength(array.length);
+        var len = ES.ToLength(array.length);
 
         // Find current index, then update i
         while (this.i < len) {
