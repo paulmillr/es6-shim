@@ -2358,36 +2358,31 @@
         return false;
       };
 
+      // Some Reflect methods are basically the same as
+      // those on the Object global, except that a TypeError is thrown if
+      // target isn't an object. As well as returning a boolean indicating
+      // the success of the operation.
       defineProperties(Reflect, {
 
-        // Syntax in a functional form.
-        get: function get(target, key) {
-          if (!ES.TypeIsObject(target)) {
-            throw new TypeError('target must be an object');
+        // Apply method in a functional form.
+        apply: function apply(func, context, args) {
+          if (!ES.IsCallable(func)) {
+            throw new TypeError('First argument must be callable.');
           }
 
-          var receiver = arguments.length > 2 ? arguments[2] : target;
-
-          return internal_get(target, key, receiver);
+          return func.apply(context, args);
         },
 
-        set: function set(target, key, value) {
-          if (!ES.TypeIsObject(target)) {
-            throw new TypeError('target must be an object');
+        // New operator in a functional form.
+        construct: function construct(constructor, args) {
+          if (!ES.IsCallable(constructor)) {
+            throw new TypeError('First argument must be callable.');
           }
 
-          var receiver = arguments.length > 2 ? arguments[2] : target;
-
-          return internal_set(target, key, value, receiver);
+          return ES.Construct(constructor, args);
         },
 
-        has: function has(target, key) {
-          if (!ES.TypeIsObject(target)) {
-            throw new TypeError('target must be an object');
-          }
-
-          return key in target;
-        },
+        defineProperty: throwUnlessTargetIsObject(__defineOwnProperty),
 
         // When deleting a non-existant or configurable property,
         // true is returned.
@@ -2416,22 +2411,44 @@
           return new ObjectIterator(target, 'key');
         },
 
-        // New operator in a functional form.
-        construct: function construct(constructor, args) {
-          if (!ES.IsCallable(constructor)) {
-            throw new TypeError('First argument must be callable.');
+        // Syntax in a functional form.
+        get: function get(target, key) {
+          if (!ES.TypeIsObject(target)) {
+            throw new TypeError('target must be an object');
           }
 
-          return ES.Construct(constructor, args);
+          var receiver = arguments.length > 2 ? arguments[2] : target;
+
+          return internal_get(target, key, receiver);
         },
 
-        // Apply method in a functional form.
-        apply: function apply(func, context, args) {
-          if (!ES.IsCallable(func)) {
-            throw new TypeError('First argument must be callable.');
+        getOwnPropertyDescriptor: throwUnlessTargetIsObject(Object.getOwnPropertyDescriptor),
+
+        getPrototypeOf: throwUnlessTargetIsObject(Object.getPrototypeOf),
+
+        has: function has(target, key) {
+          if (!ES.TypeIsObject(target)) {
+            throw new TypeError('target must be an object');
           }
 
-          return func.apply(context, args);
+          return key in target;
+        },
+
+        isExtensible: throwUnlessTargetIsObject(Object.isExtensible),
+
+        // Different name.
+        ownKeys: throwUnlessTargetIsObject(Object.keys),
+
+        preventExtensions: wrapObjectFunction(Object.preventExtensions),
+
+        set: function set(target, key, value) {
+          if (!ES.TypeIsObject(target)) {
+            throw new TypeError('target must be an object');
+          }
+
+          var receiver = arguments.length > 2 ? arguments[2] : target;
+
+          return internal_set(target, key, value, receiver);
         },
 
         setPrototypeOf: function setPrototypeOf(object, proto) {
@@ -2470,20 +2487,7 @@
           Object.setPrototypeOf(object, proto);
 
           return true;
-        },
-
-        defineProperty: throwUnlessTargetIsObject(__defineOwnProperty),
-
-        // Same as Object global, except that target isn't coerced
-        // to an object. Also false is returned rather than
-        // throwing exceptions.
-        getOwnPropertyDescriptor: throwUnlessTargetIsObject(Object.getOwnPropertyDescriptor),
-        getPrototypeOf: throwUnlessTargetIsObject(Object.getPrototypeOf),
-        isExtensible: throwUnlessTargetIsObject(Object.isExtensible),
-        preventExtensions: wrapObjectFunction(Object.preventExtensions),
-
-        // Different name.
-        ownKeys: throwUnlessTargetIsObject(Object.keys)
+        }
       });
 
       defineProperty(globals, 'Reflect', Reflect);
