@@ -2255,11 +2255,11 @@
           var existingDesc = Object.getOwnPropertyDescriptor(receiver, key);
 
           if (existingDesc) {
-            return __defineOwnProperty(receiver, key, {
+            return Reflect.defineProperty(receiver, key, {
               value: value
             });
           } else {
-            return __defineOwnProperty(receiver, key, {
+            return Reflect.defineProperty(receiver, key, {
               value: value,
               writable: true,
               enumerable: true,
@@ -2374,7 +2374,7 @@
             throw new TypeError('target must be an object');
           }
 
-          var receiver = arguments.length > 2 ? arguments[2] : target;
+          var receiver = arguments.length > 3 ? arguments[3] : target;
 
           return internal_set(target, key, value, receiver);
         },
