@@ -720,6 +720,11 @@
     defineProperty(Array, 'from', ArrayShims.from, true);
   }
 
+  // iterator result
+  var iterator_result = function (x) {
+    return { value: x, done: !arguments.length };
+  }
+
   // Our ArrayIterator is private; see
   // https://github.com/paulmillr/es6-shim/issues/252
   ArrayIterator = function (array, kind) {
@@ -755,6 +760,64 @@
     }
   });
   addIterator(ArrayIterator.prototype);
+
+  var ObjectIterator = function (object, kind) {
+    this.object = object;
+    this.i = 0;
+    // Don't generate keys yet.
+    this.array = null;
+    this.kind = kind;
+  };
+
+  defineProperties(ObjectIterator.prototype, {
+    next: function () {
+      var key, array = this.array;
+      if (!(this instanceof ObjectIterator)) {
+        throw new TypeError('Not an ObjectIterator');
+      }
+
+      if (typeof array !== 'undefined') {
+        // Keys not generated
+        if (array === null) {
+          array = this.array = [];
+
+          for (key in this.object) {
+            array.push(key);
+          }
+        }
+
+        var retval, len = ES.ToLength(array.length);
+
+        // Find current index, then update i
+        while (this.i < len) {
+          key = array[this.i];
+          this.i++;
+
+          // The candidate key isn't defined on object.
+          // Must have been deleted, or object[[Prototype]]
+          // has been modified.
+          if (!(key in this.object)) {
+            continue;
+          }
+
+          switch (this.kind) {
+          case 'key':
+            return iterator_result(key);
+          case 'value':
+            return iterator_result(this.object[key]);
+          case 'entry':
+            return iterator_result([key, this.object[key]]);
+          }
+        }
+
+        // End of key array.
+        this.array = void 0;
+      }
+
+      return iterator_result();
+    }
+  });
+  addIterator(ObjectIterator.prototype);
 
   var ArrayPrototypeShims = {
     copyWithin: function (target, start) {
@@ -2181,13 +2244,7 @@
             throw new TypeError('target must be an object');
           }
 
-          var keys = [];
-
-          for (var key in target) {
-            keys.push(key);
-          }
-
-          return new ArrayIterator(keys, 'value');
+          return new ObjectIterator(target, 'key');
         },
 
         // New operator in a functional form.
