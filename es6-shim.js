@@ -2165,11 +2165,93 @@
     if (!globals.Reflect) {
       var Reflect = {};
 
+      var wrapObjectFunction = function (func) {
+        return function (target) {
+          if (!ES.TypeIsObject(target)) {
+            throw new TypeError('target must be an object');
+          }
+
+          try {
+            func.apply(Object, arguments);
+          } catch (_) {
+            return false;
+          }
+
+          return true;
+        };
+      };
+
+      var throwUnlessTargetIsObject = function (func) {
+        return function (target) {
+          if (!ES.TypeIsObject(target)) {
+            throw new TypeError('target must be an object');
+          }
+
+          return func.apply(this, arguments);
+        };
+      };
+
+      var isAccessorDescriptor = function (desc) {
+        return !!desc && ('set' in desc || 'get' in desc);
+      };
+
+      var isDataDescriptor = function (desc) {
+        return !!desc && ('value' in desc || 'writable' in desc);
+      };
+
+      var __defineOwnProperty = function (object, key, desc) {
+        var current = Object.getOwnPropertyDescriptor(object, key),
+          extensible = Object.isExtensible(object);
+
+        if (!current) {
+          if (!extensible) {
+            return false;
+          }
+
+          Object.defineProperty(object, key, desc);
+
+          return true;
+        }
+
+        var desc_fields = Object.getOwnPropertyNames(desc);
+
+        if (desc_fields.every(function (key) { return ES.SameValue(desc[key], current[key]); })) {
+          return true;
+        }
+
+        if (!current.configurable) {
+          if (desc.configurable || 'enumerable' in desc && desc.enumerable !== current.enumerable) {
+            return false;
+          }
+        }
+
+        if (!isDataDescriptor(desc) && !isAccessorDescriptor(desc)) {
+          // isGenericDescriptor.
+          // No further validation required.
+        } else if (isDataDescriptor(desc) && isDataDescriptor(current)) {
+          if (!current.configurable && !current.writable &&
+              desc.writable || !ES.SameValue(desc.value, current.value)) {
+            return false;
+          }
+        } else if (isAccessorDescriptor(desc) && isAccessorDescriptor(current)) {
+          if (!current.configurable &&
+                (desc.set && desc.set !== current.set) ||
+                (desc.get && desc.get !== current.get)) {
+              return false;
+          }
+        } else if (!current.configurable) {
+          return false;
+        }
+
+        Object.defineProperty(object, key, desc);
+        return true;
+      };
+
       var internal_get = function get(target, key, receiver) {
         var desc = Object.getOwnPropertyDescriptor(target, key);
 
         if (!desc) {
-          var parent = Reflect.getPrototypeOf(target);
+          var parent = Object.getPrototypeOf(target);
 
           if (parent === null) {
             return undefined;
@@ -2189,27 +2271,78 @@
         return undefined;
       };
 
+      var internal_set = function set(target, key, value, receiver) {
+        var desc = Object.getOwnPropertyDescriptor(target, key);
+
+        if (!desc) {
+          var parent = Object.getPrototypeOf(target);
+
+          if (parent !== null) {
+            return internal_set(parent, key, value, receiver);
+          }
+
+          desc = {
+            value: void 0,
+            writable: true,
+            enumerable: true,
+            configurable: true
+          };
+        }
+
+        if ('value' in desc) {
+          if (!desc.writable) {
+            return false;
+          }
+
+          if (!ES.TypeIsObject(receiver)) {
+            return false;
+          }
+
+          var existingDesc = Object.getOwnPropertyDescriptor(receiver, key);
+
+          if (existingDesc) {
+            return __defineOwnProperty(receiver, key, {
+              value: value
+            });
+          } else {
+            return __defineOwnProperty(receiver, key, {
+              value: value,
+              writable: true,
+              enumerable: true,
+              configurable: true
+            });
+          }
+        }
+
+        if (desc.set) {
+          desc.set.call(receiver, value);
+          return true;
+        }
+
+        return false;
+      };
+
       defineProperties(Reflect, {
 
         // Syntax in a functional form.
-        get: function get(target, key, receiver) {
+        get: function get(target, key) {
           if (!ES.TypeIsObject(target)) {
             throw new TypeError('target must be an object');
           }
 
-          if (typeof receiver === 'undefined') {
-            receiver = target;
-          }
+          var receiver = arguments.length > 2 ? arguments[2] : target;
 
           return internal_get(target, key, receiver);
         },
 
-        set: function set(target, key, value, receiver) {
+        set: function set(target, key, value) {
           if (!ES.TypeIsObject(target)) {
             throw new TypeError('target must be an object');
           }
 
-          target[key] = value;
+          var receiver = arguments.length > 2 ? arguments[2] : target;
+
+          return internal_set(target, key, value, receiver);
         },
 
         has: function has(target, key) {
@@ -2303,15 +2436,18 @@
           return true;
         },
 
-        // Same as Object global.
-        defineProperty: Object.defineProperty,
-        getOwnPropertyDescriptor: Object.getOwnPropertyDescriptor,
-        getPrototypeOf: Object.getPrototypeOf,
-        isExtensible: Object.isExtensible,
-        preventExtensions: Object.preventExtensions,
+        defineProperty: throwUnlessTargetIsObject(__defineOwnProperty),
+
+        // Same as Object global, except that target isn't coerced
+        // to an object. Also false is returned rather than
+        // throwing exceptions.
+        getOwnPropertyDescriptor: throwUnlessTargetIsObject(Object.getOwnPropertyDescriptor),
+        getPrototypeOf: throwUnlessTargetIsObject(Object.getPrototypeOf),
+        isExtensible: throwUnlessTargetIsObject(Object.isExtensible),
+        preventExtensions: wrapObjectFunction(Object.preventExtensions),
 
         // Different name.
-        ownKeys: Object.keys
+        ownKeys: throwUnlessTargetIsObject(Object.keys)
       });
 
       defineProperty(globals, 'Reflect', Reflect);
