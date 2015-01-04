@@ -26,6 +26,18 @@ describe('Reflect', function () {
     }
   });
 
+  var testCallableThrow = function (func) {
+    [null, undefined, 1, 'string', true, [], {}].forEach(function (item) {
+      expect(func.bind(null, item)).to.throw(TypeError);
+    });
+  };
+
+  var testPrimitiveThrow = function (func) {
+    [null, undefined, 1, 'string', true].forEach(function (item) {
+      expect(func.bind(null, item)).to.throw(TypeError);
+    });
+  };
+
   it('is on the exported object', function () {
     expect(exported.Reflect).to.equal(Reflect);
   });
@@ -33,6 +45,12 @@ describe('Reflect', function () {
   describe('Reflect.apply()', function () {
     it('is a function', function () {
       expect(typeof Reflect.apply).to.equal('function');
+    });
+
+    it('throws if target isn\'t callable', function () {
+      testCallableThrow(function (item) {
+        return Reflect.apply(item, null, []);
+      });
     });
 
     expect(Reflect.apply(Array.prototype.push, [1, 2], [3, 4, 5])).to.equal(5);
@@ -78,6 +96,12 @@ describe('Reflect', function () {
   describe('Reflect.deleteProperty()', function () {
     it('is a function', function () {
       expect(typeof Reflect.deleteProperty).to.equal('function');
+    });
+
+    it('throws if the target isn\'t an object', function () {
+      testPrimitiveThrow(function (item) {
+        return Reflect.deleteProperty(item, 'prop');
+      });
     });
 
     it('returns true for success and false for failure', function () {
@@ -213,6 +237,11 @@ describe('Reflect', function () {
       expect(typeof Reflect.getOwnPropertyDescriptor).to.equal('function');
     });
 
+    it('throws if the target isn\'t an object', function () {
+      testPrimitiveThrow(function (item) {
+        return Reflect.getOwnPropertyDescriptor(item, 'prop');
+      });
+    });
   });
 
   describe('Reflect.getPrototypeOf()', function () {
@@ -220,8 +249,10 @@ describe('Reflect', function () {
       expect(typeof Reflect.getPrototypeOf).to.equal('function');
     });
 
-    it('can get prototypes', function () {
-
+    it('throws if the target isn\'t an object', function () {
+      testPrimitiveThrow(function (item) {
+        return Reflect.getPrototypeOf(item);
+      });
     });
   });
 
@@ -230,11 +261,9 @@ describe('Reflect', function () {
       expect(typeof Reflect.has).to.equal('function');
     });
 
-    it('throws on primitives', function () {
-      [null, undefined, 1, 'string', true].forEach(function (item) {
-        expect(function () {
-          return Reflect.has(item, 'property', 'value');
-        }).to.throw(TypeError);
+    it('throws if the target isn\'t an object', function () {
+      testPrimitiveThrow(function (item) {
+        return Reflect.has(item, 'prop');
       });
     });
 
@@ -279,11 +308,23 @@ describe('Reflect', function () {
       expect(Reflect.isExtensible({})).to.equal(true);
       expect(Reflect.isExtensible(Object.preventExtensions({}))).to.equal(false);
     });
+
+    it('throws if the target isn\'t an object', function () {
+      testPrimitiveThrow(function (item) {
+        return Reflect.isExtensible(item);
+      });
+    });
   });
 
   describe('Reflect.ownKeys()', function () {
     it('is a function', function () {
       expect(typeof Reflect.ownKeys).to.equal('function');
+    });
+
+    it('throws if the target isn\'t an object', function () {
+      testPrimitiveThrow(function (item) {
+        return Reflect.ownKeys(item);
+      });
     });
 
     it('should return the same result as Object.keys()', function () {
@@ -298,6 +339,12 @@ describe('Reflect', function () {
       expect(typeof Reflect.preventExtensions).to.equal('function');
     });
 
+    it('throws if the target isn\'t an object', function () {
+      testPrimitiveThrow(function (item) {
+        return Reflect.preventExtensions(item);
+      });
+    });
+
     it('prevents extensions on objects', function () {
       var obj = {};
       Reflect.preventExtensions(obj);
@@ -310,11 +357,9 @@ describe('Reflect', function () {
       expect(typeof Reflect.set).to.equal('function');
     });
 
-    it('throws on null and undefined', function () {
-      [null, undefined].forEach(function (item) {
-        expect(function () {
-          return Reflect.set(item, 'property', 'value');
-        }).to.throw(TypeError);
+    it('throws if the target isn\'t an object', function () {
+      testPrimitiveThrow(function (item) {
+        return Reflect.set(item, 'prop', 'value');
       });
     });
   });
@@ -325,10 +370,8 @@ describe('Reflect', function () {
     });
 
     it('throws if the target isn\'t an object', function () {
-      [null, undefined, 1, 'string', true].forEach(function (item) {
-        expect(function () {
-          return Reflect.setPrototypeOf(item, null);
-        }).to.throw(TypeError);
+      testPrimitiveThrow(function (item) {
+        return Reflect.setPrototypeOf(item, null);
       });
     });
 
