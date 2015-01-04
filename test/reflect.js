@@ -369,10 +369,27 @@ describe('Reflect', function () {
       });
     });
 
-    it('should return the same result as Object.keys()', function () {
-      var obj = { foo: 1, bar: 2};
+    it('should return the same result as Object.getOwnPropertyNames if there are no Symbols', function () {
+      var obj = { foo: 1, bar: 2 };
 
-      expect(Reflect.ownKeys(obj)).to.deep.equal(Object.keys(obj));
+      obj[1] = 'first';
+
+      var result = Object.getOwnPropertyNames(obj);
+
+      expect(Reflect.ownKeys(obj)).to.deep.equal(result);
+      expect(result).to.deep.equal(['1', 'foo', 'bar']);
+    });
+
+    (typeof Symbol === 'function' ? it : xit)('symbols come last', function () {
+      var s = Symbol();
+
+      var o = {
+        'non-symbol': true
+      };
+
+      o[s] = true;
+
+      expect(Reflect.ownKeys(o)).to.deep.equal(['non-symbol', s]);
     });
   });
 
