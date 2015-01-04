@@ -295,25 +295,25 @@ describe('Reflect', function () {
       var obj = { a: 1, b: 2 },
         iter = Reflect.enumerate(obj);
 
-      expect(iter.next()).to.deep.equal({ value: "a", done: false });
+      expect(iter.next()).to.deep.equal({ value: 'a', done: false });
 
       obj.c = 3;
-      expect(iter.next()).to.deep.equal({ value: "b", done: false });
+      expect(iter.next()).to.deep.equal({ value: 'b', done: false });
       expect(iter.next()).to.deep.equal({ value: undefined, done: true });
 
       obj = { a: 1, b: 2 };
       iter = Reflect.enumerate(obj);
 
       obj.c = 3;
-      expect(iter.next()).to.deep.equal({ value: "a", done: false });
-      expect(iter.next()).to.deep.equal({ value: "b", done: false });
-      expect(iter.next()).to.deep.equal({ value: "c", done: false });
+      expect(iter.next()).to.deep.equal({ value: 'a', done: false });
+      expect(iter.next()).to.deep.equal({ value: 'b', done: false });
+      expect(iter.next()).to.deep.equal({ value: 'c', done: false });
       expect(iter.next()).to.deep.equal({ value: undefined, done: true });
 
       obj = { a: 1, b: 2 };
       iter = Reflect.enumerate(obj);
 
-      expect(iter.next()).to.deep.equal({ value: "a", done: false });
+      expect(iter.next()).to.deep.equal({ value: 'a', done: false });
       delete obj.b;
       expect(iter.next()).to.deep.equal({ value: undefined, done: true });
     });
