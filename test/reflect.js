@@ -30,17 +30,24 @@ ifES5It('Reflect', function () {
     }
   });
 
-  var testCallableThrow = function (func) {
-    [null, undefined, 1, 'string', true, [], {}].forEach(function (item) {
-      expect(func.bind(null, item)).to['throw'](TypeError);
+  var testXThrow = function (values, func) {
+    function checker(item) {
+      try {
+        func(item);
+        return false;
+      } catch (e) {
+        return e instanceof TypeError;
+      }
+    }
+
+    values.forEach(function (item) {
+      expect(item).to.satisfy(checker);
     });
   };
 
-  var testPrimitiveThrow = function (func) {
-    [null, undefined, 1, 'string', true].forEach(function (item) {
-      expect(func.bind(null, item)).to['throw'](TypeError);
-    });
-  };
+  var testCallableThrow = testXThrow.bind(null, [null, undefined, 1, 'string', true, [], {}]);
+
+  var testPrimitiveThrow = testXThrow.bind(null, [null, undefined, 1, 'string', true]);
 
   it('is on the exported object', function () {
     expect(exported.Reflect).to.equal(Reflect);
