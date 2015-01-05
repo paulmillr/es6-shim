@@ -48,7 +48,7 @@ var exported = require('../');
       expect(typeof Reflect.apply).to.equal('function');
     });
 
-    it('throws if target isn\'t callable', function () {
+    it('throws if target isn’t callable', function () {
       testCallableThrow(function (item) {
         return Reflect.apply(item, null, []);
       });
@@ -72,7 +72,7 @@ var exported = require('../');
       expect(typeof Reflect.construct).to.equal('function');
     });
 
-    it('throws if target isn\'t callable', function () {
+    it('throws if target isn’t callable', function () {
       testCallableThrow(function (item) {
         return Reflect.apply(item, null, []);
       });
@@ -94,7 +94,7 @@ var exported = require('../');
       expect(typeof Reflect.defineProperty).to.equal('function');
     });
 
-    it('throws if the target isn\'t an object', function () {
+    it('throws if the target isn’t an object', function () {
       testPrimitiveThrow(function (item) {
         return Reflect.defineProperty(item, 'prop', { value: true });
       });
@@ -154,7 +154,7 @@ var exported = require('../');
       expect(typeof Reflect.deleteProperty).to.equal('function');
     });
 
-    it('throws if the target isn\'t an object', function () {
+    it('throws if the target isn’t an object', function () {
       testPrimitiveThrow(function (item) {
         return Reflect.deleteProperty(item, 'prop');
       });
@@ -183,7 +183,7 @@ var exported = require('../');
       expect(Reflect.deleteProperty(o, 'a')).to.equal(true);
     });
 
-    it('cannot delete a function\'s name property', function () {
+    it('cannot delete a function’s name property', function () {
       expect(Reflect.deleteProperty(function a() {}, 'name')).to.equal(false);
     });
   });
@@ -301,7 +301,7 @@ var exported = require('../');
       expect(typeof Reflect.getOwnPropertyDescriptor).to.equal('function');
     });
 
-    it('throws if the target isn\'t an object', function () {
+    it('throws if the target isn’t an object', function () {
       testPrimitiveThrow(function (item) {
         return Reflect.getOwnPropertyDescriptor(item, 'prop');
       });
@@ -326,7 +326,7 @@ var exported = require('../');
       expect(typeof Reflect.getPrototypeOf).to.equal('function');
     });
 
-    it('throws if the target isn\'t an object', function () {
+    it('throws if the target isn’t an object', function () {
       testPrimitiveThrow(function (item) {
         return Reflect.getPrototypeOf(item);
       });
@@ -344,7 +344,7 @@ var exported = require('../');
       expect(typeof Reflect.has).to.equal('function');
     });
 
-    it('throws if the target isn\'t an object', function () {
+    it('throws if the target isn’t an object', function () {
       testPrimitiveThrow(function (item) {
         return Reflect.has(item, 'prop');
       });
@@ -392,7 +392,7 @@ var exported = require('../');
       expect(Reflect.isExtensible(Object.preventExtensions({}))).to.equal(false);
     });
 
-    it('throws if the target isn\'t an object', function () {
+    it('throws if the target isn’t an object', function () {
       testPrimitiveThrow(function (item) {
         return Reflect.isExtensible(item);
       });
@@ -404,7 +404,7 @@ var exported = require('../');
       expect(typeof Reflect.ownKeys).to.equal('function');
     });
 
-    it('throws if the target isn\'t an object', function () {
+    it('throws if the target isn’t an object', function () {
       testPrimitiveThrow(function (item) {
         return Reflect.ownKeys(item);
       });
@@ -439,7 +439,7 @@ var exported = require('../');
       expect(typeof Reflect.preventExtensions).to.equal('function');
     });
 
-    it('throws if the target isn\'t an object', function () {
+    it('throws if the target isn’t an object', function () {
       testPrimitiveThrow(function (item) {
         return Reflect.preventExtensions(item);
       });
@@ -457,7 +457,7 @@ var exported = require('../');
       expect(typeof Reflect.set).to.equal('function');
     });
 
-    it('throws if the target isn\'t an object', function () {
+    it('throws if the target isn’t an object', function () {
       testPrimitiveThrow(function (item) {
         return Reflect.set(item, 'prop', 'value');
       });
@@ -500,7 +500,7 @@ var exported = require('../');
       expect(typeof Reflect.setPrototypeOf).to.equal('function');
     });
 
-    it('throws if the target isn\'t an object', function () {
+    it('throws if the target isn’t an object', function () {
       testPrimitiveThrow(function (item) {
         return Reflect.setPrototypeOf(item, null);
       });
