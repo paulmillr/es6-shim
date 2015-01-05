@@ -785,7 +785,6 @@
 
   var ObjectIterator = function (object, kind) {
     this.object = object;
-    this.i = 0;
     // Don't generate keys yet.
     this.array = null;
     this.kind = kind;
@@ -804,41 +803,34 @@
   defineProperties(ObjectIterator.prototype, {
     next: function () {
       var key, array = this.array;
+
       if (!(this instanceof ObjectIterator)) {
         throw new TypeError('Not an ObjectIterator');
       }
 
-      if (typeof array !== 'undefined') {
-        // Keys not generated
-        if (array === null) {
-          array = this.array = getAllKeys(this.object);
+      // Keys not generated
+      if (array === null) {
+        array = this.array = getAllKeys(this.object);
+      }
+
+      // Find next key in the object
+      while (ES.ToLength(array.length) > 0) {
+        key = array.shift();
+
+        // The candidate key isn't defined on object.
+        // Must have been deleted, or object[[Prototype]]
+        // has been modified.
+        if (!(key in this.object)) {
+          continue;
         }
 
-        var len = ES.ToLength(array.length);
-
-        // Find current index, then update i
-        while (this.i < len) {
-          key = array[this.i];
-          this.i++;
-
-          // The candidate key isn't defined on object.
-          // Must have been deleted, or object[[Prototype]]
-          // has been modified.
-          if (!(key in this.object)) {
-            continue;
-          }
-
-          if (this.kind === 'key') {
-            return iterator_result(key);
-          } else if (this.kind === 'value') {
-            return iterator_result(this.object[key]);
-          } else {
-            return iterator_result([key, this.object[key]]);
-          }
+        if (this.kind === 'key') {
+          return iterator_result(key);
+        } else if (this.kind === 'value') {
+          return iterator_result(this.object[key]);
+        } else {
+          return iterator_result([key, this.object[key]]);
         }
-
-        // End of key array.
-        this.array = void 0;
       }
 
       return iterator_result();

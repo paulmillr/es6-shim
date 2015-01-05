@@ -2,7 +2,7 @@
 
 var exported = require('../');
 
-var isSymbolsIt = typeof Symbol === 'function' ? it : xit;
+var ifSymbolsIt = typeof Symbol === 'function' ? it : xit;
 var ifES5It = Object.defineProperty ? describe : xdescribe;
 
 // Reflect requires defineProperty
