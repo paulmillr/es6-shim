@@ -4,7 +4,7 @@ var exported = require('../');
 
 var ifSymbolsIt = typeof Symbol === 'function' ? it : xit;
 var ifES5It = Object.defineProperty ? describe : xdescribe;
-var ifFreezeIt = typeof Object.freeze === 'function' : it : xit;
+var ifFreezeIt = typeof Object.freeze === 'function' ? it : xit;
 
 // Reflect requires defineProperty
 ifES5It('Reflect', function () {
