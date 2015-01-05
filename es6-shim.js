@@ -231,15 +231,22 @@
     },
 
     ToInt32: function (x) {
-      return x >> 0;
+      return ES.ToNumber(x) >> 0;
     },
 
     ToUint32: function (x) {
-      return x >>> 0;
+      return ES.ToNumber(x) >>> 0;
+    },
+
+    ToNumber: function (value) {
+      if (_toString(value) === '[object Symbol]') {
+        throw new TypeError('Cannot convert a Symbol value to a number');
+      }
+      return +value;
     },
 
     ToInteger: function (value) {
-      var number = +value;
+      var number = ES.ToNumber(value);
       if (Number.isNaN(number)) { return 0; }
       if (number === 0 || !Number.isFinite(number)) { return number; }
       return (number > 0 ? 1 : -1) * Math.floor(Math.abs(number));
