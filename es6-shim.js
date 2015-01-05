@@ -2213,7 +2213,7 @@
           }
 
           try {
-            func.apply(Object, arguments);
+            ES.Call(func, Object, arguments);
           } catch (_) {
             return false;
           }
@@ -2228,7 +2228,7 @@
             throw new TypeError('target must be an object');
           }
 
-          return func.apply(this, arguments);
+          return ES.Call(func, this, arguments);
         };
       };
 
