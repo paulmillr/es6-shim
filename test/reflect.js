@@ -67,6 +67,14 @@ ifES5It('Reflect', function () {
       F.apply = false;
 
       expect(Reflect.apply(F, null, [1, 2, 3])).to.equal(6);
+
+      function G(last) {
+        return this.x + 'lo' + last;
+      }
+
+      G.apply = function nop() {};
+
+      expect(Reflect.apply(G, { x: 'yel' }, ['!'])).to.equal('yello!');
     });
   });
 
