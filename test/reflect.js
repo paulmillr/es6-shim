@@ -4,6 +4,7 @@ var exported = require('../');
 
 var ifSymbolsIt = typeof Symbol === 'function' ? it : xit;
 var ifES5It = Object.defineProperty ? describe : xdescribe;
+var ifFreezeIt = typeof Object.freeze === 'function' ? it : xit;
 
 // Reflect requires defineProperty
 ifES5It('Reflect', function () {
@@ -544,7 +545,7 @@ ifES5It('Reflect', function () {
       expect(obj.toString).to.equal(undefined);
     });
 
-    it('is returns false on failure', function () {
+    ifFreezeIt('is returns false on failure', function () {
       var obj = Object.freeze({});
 
       expect(Reflect.setPrototypeOf(obj, null)).to.equal(false);
