@@ -2281,6 +2281,18 @@
         return false;
       };
 
+      var willCreateCircularPrototype = function (object, proto) {
+        while (proto) {
+          if (object === proto) {
+            return true;
+          }
+
+          proto = Reflect.getPrototypeOf(proto);
+        }
+
+        return false;
+      };
+
       // Some Reflect methods are basically the same as
       // those on the Object global, except that a TypeError is thrown if
       // target isn't an object. As well as returning a boolean indicating
@@ -2305,11 +2317,7 @@
         // true is returned.
         // When attempting to delete a non-configurable property,
         // it will return false.
-        deleteProperty: function deleteProperty(target, key) {
-          if (!ES.TypeIsObject(target)) {
-            throw new TypeError('target must be an object');
-          }
-
+        deleteProperty: throwUnlessTargetIsObject(function deleteProperty(target, key) {
           var desc = Object.getOwnPropertyDescriptor(target, key);
 
           if (desc && !desc.configurable) {
@@ -2318,38 +2326,26 @@
 
           // Will return true.
           return delete target[key];
-        },
+        }),
 
-        enumerate: function enumerate(target) {
-          if (!ES.TypeIsObject(target)) {
-            throw new TypeError('target must be an object');
-          }
-
+        enumerate: throwUnlessTargetIsObject(function enumerate(target) {
           return new ObjectIterator(target, 'key');
-        },
+        }),
 
         // Syntax in a functional form.
-        get: function get(target, key) {
-          if (!ES.TypeIsObject(target)) {
-            throw new TypeError('target must be an object');
-          }
-
+        get: throwUnlessTargetIsObject(function get(target, key) {
           var receiver = arguments.length > 2 ? arguments[2] : target;
 
           return internal_get(target, key, receiver);
-        },
+        }),
 
         getOwnPropertyDescriptor: throwUnlessTargetIsObject(Object.getOwnPropertyDescriptor),
 
         getPrototypeOf: throwUnlessTargetIsObject(Object.getPrototypeOf),
 
-        has: function has(target, key) {
-          if (!ES.TypeIsObject(target)) {
-            throw new TypeError('target must be an object');
-          }
-
+        has: throwUnlessTargetIsObject(function has(target, key) {
           return key in target;
-        },
+        }),
 
         isExtensible: throwUnlessTargetIsObject(Object.isExtensible),
 
@@ -2358,11 +2354,7 @@
         // This should continue to work together with a Symbol shim
         // which overrides Object.getOwnPropertyNames and implements
         // Object.getOwnPropertySymbols.
-        ownKeys: function ownKeys(target) {
-          if (!ES.TypeIsObject(target)) {
-            throw new TypeError('target must be an object');
-          }
-
+        ownKeys: throwUnlessTargetIsObject(function ownKeys(target) {
           var keys = Object.getOwnPropertyNames(target);
 
           if (ES.IsCallable(Object.getOwnPropertySymbols)) {
@@ -2370,27 +2362,19 @@
           }
 
           return keys;
-        },
+        }),
 
         preventExtensions: wrapObjectFunction(Object.preventExtensions),
 
-        set: function set(target, key, value) {
-          if (!ES.TypeIsObject(target)) {
-            throw new TypeError('target must be an object');
-          }
-
+        set: throwUnlessTargetIsObject(function set(target, key, value) {
           var receiver = arguments.length > 3 ? arguments[3] : target;
 
           return internal_set(target, key, value, receiver);
-        },
+        }),
 
         // Sets the prototype of the given object.
         // Returns true on success, otherwise false.
-        setPrototypeOf: function setPrototypeOf(object, proto) {
-          if (!ES.TypeIsObject(object)) {
-            throw new TypeError('target must be an object');
-          }
-
+        setPrototypeOf: throwUnlessTargetIsObject(function setPrototypeOf(object, proto) {
           if (proto !== null && !ES.TypeIsObject(proto)) {
             throw new TypeError('proto must be an object or null');
           }
@@ -2406,22 +2390,14 @@
           }
 
           // Ensure that we do not create a circular prototype chain.
-          if (proto !== null) {
-            var p = proto;
-
-            while (p) {
-              if (object === p) {
-                return false;
-              }
-
-              p = Reflect.getPrototypeOf(p);
-            }
+          if (willCreateCircularPrototype(object, proto)) {
+            return false;
           }
 
           Object.setPrototypeOf(object, proto);
 
           return true;
-        }
+        })
       });
 
       defineProperty(globals, 'Reflect', Reflect);
