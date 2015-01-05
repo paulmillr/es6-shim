@@ -2,8 +2,11 @@
 
 var exported = require('../');
 
+var isSymbolsIt = typeof Symbol === 'function' ? it : xit;
+var ifES5It = Object.defineProperty ? describe : xdescribe;
+
 // Reflect requires defineProperty
-(Object.defineProperty ? describe : xdescribe)('Reflect', function () {
+ifES5It('Reflect', function () {
   var object = {
     something: 1,
     _value: 0
@@ -420,7 +423,7 @@ var exported = require('../');
       expect(result).to.deep.equal(['1', 'foo', 'bar']);
     });
 
-    (typeof Symbol === 'function' ? it : xit)('symbols come last', function () {
+    ifSymbolsIt('symbols come last', function () {
       var s = Symbol();
 
       var o = {
