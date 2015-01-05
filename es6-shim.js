@@ -87,6 +87,7 @@
   var noop = function () {};
 
   var Symbol = globals.Symbol || {};
+  var symbolSpecies = Symbol.species || '@@species';
   var Type = {
     string: function (x) { return _toString(x) === '[object String]'; },
     regex: function (x) { return _toString(x) === '[object RegExp]'; },
@@ -304,8 +305,8 @@
     Construct: function (C, args) {
       // CreateFromConstructor
       var obj;
-      if (ES.IsCallable(C['@@create'])) {
-        obj = C['@@create']();
+      if (ES.IsCallable(C[symbolSpecies])) {
+        obj = C[symbolSpecies]();
       } else {
         // OrdinaryCreateFromConstructor
         obj = create(C.prototype || null);
@@ -322,12 +323,12 @@
   var emulateES6construct = function (o) {
     if (!ES.TypeIsObject(o)) { throw new TypeError('bad object'); }
     // es5 approximation to es6 subclass semantics: in es6, 'new Foo'
-    // would invoke Foo.@@create to allocation/initialize the new object.
+    // would invoke Foo.@@species to allocation/initialize the new object.
     // In es5 we just get the plain object.  So if we detect an
-    // uninitialized object, invoke o.constructor.@@create
+    // uninitialized object, invoke o.constructor.@@species
     if (!o._es6construct) {
-      if (o.constructor && ES.IsCallable(o.constructor['@@create'])) {
-        o = o.constructor['@@create'](o);
+      if (o.constructor && ES.IsCallable(o.constructor[symbolSpecies])) {
+        o = o.constructor[symbolSpecies](o);
       }
       defineProperties(o, { _es6construct: true });
     }
@@ -1469,25 +1470,24 @@
       };
     };
 
+    defineProperty(Promise, symbolSpecies, function (obj) {
+      var constructor = this;
+      // AllocatePromise
+      // The `obj` parameter is a hack we use for es5
+      // compatibility.
+      var prototype = constructor.prototype || Promise$prototype;
+      obj = obj || create(prototype);
+      defineProperties(obj, {
+        _status: void 0,
+        _result: void 0,
+        _resolveReactions: void 0,
+        _rejectReactions: void 0,
+        _promiseConstructor: void 0
+      });
+      obj._promiseConstructor = constructor;
+      return obj;
+    });
     defineProperties(Promise, {
-      '@@create': function (obj) {
-        var constructor = this;
-        // AllocatePromise
-        // The `obj` parameter is a hack we use for es5
-        // compatibility.
-        var prototype = constructor.prototype || Promise$prototype;
-        obj = obj || create(prototype);
-        defineProperties(obj, {
-          _status: void 0,
-          _result: void 0,
-          _resolveReactions: void 0,
-          _rejectReactions: void 0,
-          _promiseConstructor: void 0
-        });
-        obj._promiseConstructor = constructor;
-        return obj;
-      },
-
       all: function all(iterable) {
         var C = this;
         var capability = new PromiseCapability(C);
@@ -1776,14 +1776,12 @@
           return map;
         }
         var Map$prototype = Map.prototype;
-        defineProperties(Map, {
-          '@@create': function (obj) {
-            var constructor = this;
-            var prototype = constructor.prototype || Map$prototype;
-            obj = obj || create(prototype);
-            defineProperties(obj, { _es6map: true });
-            return obj;
-          }
+        defineProperty(Map, symbolSpecies, function (obj) {
+          var constructor = this;
+          var prototype = constructor.prototype || Map$prototype;
+          obj = obj || create(prototype);
+          defineProperties(obj, { _es6map: true });
+          return obj;
         });
 
         Value.getter(Map.prototype, 'size', function () {
@@ -1960,14 +1958,12 @@
           return set;
         };
         var Set$prototype = SetShim.prototype;
-        defineProperties(SetShim, {
-          '@@create': function (obj) {
-            var constructor = this;
-            var prototype = constructor.prototype || Set$prototype;
-            obj = obj || create(prototype);
-            defineProperties(obj, { _es6set: true });
-            return obj;
-          }
+        defineProperty(SetShim, symbolSpecies, function (obj) {
+          var constructor = this;
+          var prototype = constructor.prototype || Set$prototype;
+          obj = obj || create(prototype);
+          defineProperties(obj, { _es6set: true });
+          return obj;
         });
 
         // Switch from the object backing storage to a full Map.
