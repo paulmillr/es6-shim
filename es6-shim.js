@@ -732,7 +732,7 @@
   // with value set to x and done to false.
   // Given no arguments, it will return an iterator completion object.
   var iterator_result = function (x) {
-    return { value: x, done: !arguments.length };
+    return { value: x, done: arguments.length === 0 };
   };
 
   // Our ArrayIterator is private; see
@@ -779,6 +779,16 @@
     this.kind = kind;
   };
 
+  function getAllKeys(object) {
+    var keys = [];
+
+    for (var key in object) {
+      keys.push(key);
+    }
+
+    return keys;
+  }
+
   defineProperties(ObjectIterator.prototype, {
     next: function () {
       var key, array = this.array;
@@ -789,11 +799,7 @@
       if (typeof array !== 'undefined') {
         // Keys not generated
         if (array === null) {
-          array = this.array = [];
-
-          for (key in this.object) {
-            array.push(key);
-          }
+          array = this.array = getAllKeys(this.object);
         }
 
         var len = ES.ToLength(array.length);
@@ -810,12 +816,11 @@
             continue;
           }
 
-          switch (this.kind) {
-          case 'key':
+          if (this.kind === 'key') {
             return iterator_result(key);
-          case 'value':
+          } else if (this.kind === 'value') {
             return iterator_result(this.object[key]);
-          case 'entry':
+          } else {
             return iterator_result([key, this.object[key]]);
           }
         }
