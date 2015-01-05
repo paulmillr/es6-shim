@@ -80,12 +80,12 @@ var exported = require('../');
 
     it('works also with redefined apply', function () {
       function C(a, b, c) {
-        this.qux = a + b + c;
+        this.qux = [a, b, c].join('|');
       }
 
       C.apply = undefined;
 
-      expect(Reflect.construct(C, ['foo', 'bar', 'baz']).qux).to.equal('foobarbaz');
+      expect(Reflect.construct(C, ['foo', 'bar', 'baz']).qux).to.equal('foo|bar|baz');
     });
   });
 
