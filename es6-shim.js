@@ -207,12 +207,11 @@
   };
 
   var ES = {
-    CheckObjectCoercible: function (x, optMessage) {
+    RequireObjectCoercible: function (x, optMessage) {
       /* jshint eqnull:true */
       if (x == null) {
         throw new TypeError(optMessage || 'Cannot call method on ' + x);
       }
-      return x;
     },
 
     TypeIsObject: function (x) {
@@ -223,7 +222,8 @@
     },
 
     ToObject: function (o, optMessage) {
-      return Object(ES.CheckObjectCoercible(o, optMessage));
+      ES.RequireObjectCoercible(o, optMessage);
+      return Object(o);
     },
 
     IsCallable: function (x) {
@@ -544,7 +544,8 @@
       };
 
       return function (times) {
-        var thisStr = String(ES.CheckObjectCoercible(this));
+        ES.RequireObjectCoercible(this);
+        var thisStr = String(this);
         times = ES.ToInteger(times);
         if (times < 0 || times === Infinity) {
           throw new RangeError('Invalid String#repeat value');
@@ -554,7 +555,8 @@
     }()),
 
     startsWith: function (searchStr) {
-      var thisStr = String(ES.CheckObjectCoercible(this));
+      ES.RequireObjectCoercible(this);
+      var thisStr = String(this);
       if (Type.regex(searchStr)) {
         throw new TypeError('Cannot call method "startsWith" with a regex');
       }
@@ -565,7 +567,8 @@
     },
 
     endsWith: function (searchStr) {
-      var thisStr = String(ES.CheckObjectCoercible(this));
+      ES.RequireObjectCoercible(this);
+      var thisStr = String(this);
       if (Type.regex(searchStr)) {
         throw new TypeError('Cannot call method "endsWith" with a regex');
       }
@@ -584,7 +587,8 @@
     },
 
     codePointAt: function (pos) {
-      var thisStr = String(ES.CheckObjectCoercible(this));
+      ES.RequireObjectCoercible(this);
+      var thisStr = String(this);
       var position = ES.ToInteger(pos);
       var length = thisStr.length;
       if (position >= 0 && position < length) {
@@ -622,7 +626,8 @@
 
   // see https://people.mozilla.org/~jorendorff/es6-draft.html#sec-string.prototype-@@iterator
   var StringIterator = function (s) {
-    this._s = String(ES.CheckObjectCoercible(s));
+    ES.RequireObjectCoercible(s);
+    this._s = String(s);
     this._i = 0;
   };
   StringIterator.prototype.next = function () {
