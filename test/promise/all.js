@@ -69,7 +69,9 @@ describe('Promise.all', function () {
   });
 
   it('fulfills when passed an sparse array, giving `undefined` for the omitted values', function (done) {
+    /*jshint elision: true */
     var iterable = [Promise.resolve(0), , , Promise.resolve(1)];
+    /*jshint elision: false */
 
     Promise.all(iterable).then(function (value) {
       assert.deepEqual(value, [0, undefined, undefined, 1]);

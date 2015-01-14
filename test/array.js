@@ -211,8 +211,10 @@ var runArrayTests = function () {
       });
 
       it('removes holes', function () {
+        /*jshint elision: true */
         var input = [0, , 2];
         var result = Array.from([0, , 2]);
+        /*jshint elision: false */
         expect(1 in input).to.equal(false);
         expect(1 in result).to.equal(true);
         expect(result).to.eql([0, undefined, 2]);
@@ -320,7 +322,9 @@ var runArrayTests = function () {
       });
 
       it('should work with a sparse array', function () {
+        /*jshint elision: true */
         var obj = [1, , undefined];
+        /*jshint elision: false */
         expect(1 in obj).to.equal(false);
         var seen = [];
         var found = obj.find(function (item, idx) {
@@ -391,7 +395,9 @@ var runArrayTests = function () {
       });
 
       it('should work with a sparse array', function () {
+        /*jshint elision: true */
         var obj = [1, , undefined];
+        /*jshint elision: false */
         expect(1 in obj).to.equal(false);
         var seen = [];
         var foundIndex = obj.findIndex(function (item, idx) {
