@@ -2,7 +2,6 @@
 
 // Big thanks to V8 folks for test ideas.
 // v8/test/mjsunit/harmony/collections.js
-var exported = require('../');
 
 var Assertion = expect().constructor;
 Assertion.addMethod('theSameSet', function (otherArray) {
@@ -56,7 +55,8 @@ describe('Collections', function () {
       map = null;
     });
 
-    it('is on the exported object', function () {
+    (process.env.NO_ES6_SHIM ? it.skip : it)('is on the exported object', function () {
+      var exported = require('../');
       expect(exported.Map).to.equal(Map);
     });
 
@@ -455,7 +455,8 @@ describe('Collections', function () {
       set = null;
     });
 
-    it('is on the exported object', function () {
+    (process.env.NO_ES6_SHIM ? it.skip : it)('is on the exported object', function () {
+      var exported = require('../');
       expect(exported.Set).to.equal(Set);
     });
 

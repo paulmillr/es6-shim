@@ -1,7 +1,5 @@
 /*global describe, it, expect, require */
 
-var exported = require('../');
-
 var runStringTests = function () {
   'use strict';
   describe('String', function () {
@@ -15,7 +13,8 @@ var runStringTests = function () {
       expect(function () { return fn.apply(null); }).to['throw'](TypeError);
     };
 
-    it('is on the exported object', function () {
+    (process.env.NO_ES6_SHIM ? it.skip : it)('is on the exported object', function () {
+      var exported = require('../');
       expect(exported.String).to.equal(String);
     });
 

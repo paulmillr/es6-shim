@@ -1,6 +1,5 @@
 /*global describe, it, expect, require, beforeEach */
 
-var exported = require('../');
 
 var runArrayTests = function () {
   'use strict';
@@ -15,7 +14,8 @@ var runArrayTests = function () {
   describe('Array', function () {
     var list = [5, 10, 15, 20];
 
-    it('is on the exported object', function () {
+    (process.env.NO_ES6_SHIM ? it.skip : it)('is on the exported object', function () {
+      var exported = require('../');
       expect(exported.Array).to.equal(Array);
     });
 

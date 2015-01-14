@@ -1,7 +1,5 @@
 /*global describe, it, expect, require */
 
-var exported = require('../');
-
 var Assertion = expect().constructor;
 Assertion.prototype.almostEqual = function (obj, precision) {
   'use strict';
@@ -22,7 +20,8 @@ var valueOfIsNaN = { valueOf: function () { 'use strict'; return NaN; } };
 var valueOfIsInfinity = { valueOf: function () { 'use strict'; return Infinity; } };
 
 describe('Math', function () {
-  it('is on the exported object', function () {
+  (process.env.NO_ES6_SHIM ? it.skip : it)('is on the exported object', function () {
+    var exported = require('../');
     expect(exported.Math).to.equal(Math);
   });
 

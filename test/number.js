@@ -1,7 +1,5 @@
 /*global describe, it, expect, require */
 
-var exported = require('../');
-
 describe('Number', function (undefined) {
   var integers = [5295, -5295, -9007199254740991, 9007199254740991, 0, -0];
   var nonIntegers = [-9007199254741992, 9007199254741992, 5.9];
@@ -32,7 +30,8 @@ describe('Number', function (undefined) {
     expect(item).to.equal(false);
   };
 
-  it('is on the exported object', function () {
+  (process.env.NO_ES6_SHIM ? it.skip : it)('is on the exported object', function () {
+    var exported = require('../');
     expect(exported.Number).to.equal(Number);
   });
 
