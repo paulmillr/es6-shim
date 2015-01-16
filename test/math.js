@@ -36,6 +36,8 @@ describe('Math', function () {
       expect(Math.acosh(Infinity)).to.equal(Infinity);
       expect(Math.acosh(1234)).to.almostEqual(7.811163220849231);
       expect(Math.acosh(8.88)).to.almostEqual(2.8737631531629235);
+      expect(Math.acosh(1e160)).to.almostEqual(369.10676205960726);
+      expect(Math.acosh(Number.MAX_VALUE)).to.almostEqual(710.4758600739439);
     });
   });
 

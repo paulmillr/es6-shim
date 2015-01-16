@@ -1093,11 +1093,11 @@
 
   var MathShims = {
     acosh: function (value) {
-      value = Number(value);
-      if (Number.isNaN(value) || value < 1) { return NaN; }
-      if (value === 1) { return 0; }
-      if (value === Infinity) { return value; }
-      return Math.log(value + Math.sqrt(value * value - 1));
+      var x = Number(value);
+      if (Number.isNaN(x) || value < 1) { return NaN; }
+      if (x === 1) { return 0; }
+      if (x === Infinity) { return x; }
+      return Math.log(x / Math.E + Math.sqrt(x + 1) * Math.sqrt(x - 1) / Math.E) + 1;
     },
 
     asinh: function (value) {
