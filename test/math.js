@@ -179,6 +179,7 @@ describe('Math', function () {
       expect(Math.expm1(-Infinity)).to.equal(-1);
       expect(Math.expm1(10)).to.almostEqual(22025.465794806718);
       expect(Math.expm1(-10)).to.almostEqual(-0.9999546000702375);
+      expect(Math.expm1(-2e-17)).to.equal(-2e-17);
     });
 
     it('works with very negative numbers', function () {

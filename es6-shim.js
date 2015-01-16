@@ -1149,10 +1149,23 @@
     },
 
     expm1: function (value) {
-      value = Number(value);
-      if (value === -Infinity) { return -1; }
-      if (!global_isFinite(value) || value === 0) { return value; }
-      return Math.exp(value) - 1;
+      var x = Number(value);
+      if (x === -Infinity) { return -1; }
+      if (!global_isFinite(x) || value === 0) { return x; }
+      if (Math.abs(x) > 0.5) {
+        return Math.exp(x) - 1;
+      }
+      // A more precise approximation using Taylor series expansion
+      // from https://github.com/paulmillr/es6-shim/issues/314#issuecomment-70293986
+      var t = x;
+      var sum = 0;
+      var n = 1;
+      while (sum + t !== sum) {
+        sum += t;
+        n += 1;
+        t *= x / n;
+      }
+      return sum;
     },
 
     hypot: function (x, y) {
