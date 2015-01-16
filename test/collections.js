@@ -55,7 +55,7 @@ describe('Collections', function () {
       map = null;
     });
 
-    (process.env.NO_ES6_SHIM ? it.skip : it)('is on the exported object', function () {
+    (typeof process !== 'undefined' && process.env.NO_ES6_SHIM ? it.skip : it)('is on the exported object', function () {
       var exported = require('../');
       expect(exported.Map).to.equal(Map);
     });
@@ -455,7 +455,7 @@ describe('Collections', function () {
       set = null;
     });
 
-    (process.env.NO_ES6_SHIM ? it.skip : it)('is on the exported object', function () {
+    (typeof process !== 'undefined' && process.env.NO_ES6_SHIM ? it.skip : it)('is on the exported object', function () {
       var exported = require('../');
       expect(exported.Set).to.equal(Set);
     });

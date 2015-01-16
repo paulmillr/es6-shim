@@ -9,7 +9,7 @@ var getRegexLiteral = function (stringRegex) {
 };
 
 describe('RegExp', function () {
-  (process.env.NO_ES6_SHIM ? it.skip : it)('is on the exported object', function () {
+  (typeof process !== 'undefined' && process.env.NO_ES6_SHIM ? it.skip : it)('is on the exported object', function () {
     var exported = require('../');
     expect(exported.RegExp).to.equal(RegExp);
   });

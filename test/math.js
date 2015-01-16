@@ -20,7 +20,7 @@ var valueOfIsNaN = { valueOf: function () { 'use strict'; return NaN; } };
 var valueOfIsInfinity = { valueOf: function () { 'use strict'; return Infinity; } };
 
 describe('Math', function () {
-  (process.env.NO_ES6_SHIM ? it.skip : it)('is on the exported object', function () {
+  (typeof process !== 'undefined' && process.env.NO_ES6_SHIM ? it.skip : it)('is on the exported object', function () {
     var exported = require('../');
     expect(exported.Math).to.equal(Math);
   });

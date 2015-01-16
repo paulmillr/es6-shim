@@ -30,7 +30,7 @@ describe('Number', function (undefined) {
     expect(item).to.equal(false);
   };
 
-  (process.env.NO_ES6_SHIM ? it.skip : it)('is on the exported object', function () {
+  (typeof process !== 'undefined' && process.env.NO_ES6_SHIM ? it.skip : it)('is on the exported object', function () {
     var exported = require('../');
     expect(exported.Number).to.equal(Number);
   });

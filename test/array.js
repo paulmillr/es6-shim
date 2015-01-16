@@ -14,7 +14,7 @@ var runArrayTests = function () {
   describe('Array', function () {
     var list = [5, 10, 15, 20];
 
-    (process.env.NO_ES6_SHIM ? it.skip : it)('is on the exported object', function () {
+    (typeof process !== 'undefined' && process.env.NO_ES6_SHIM ? it.skip : it)('is on the exported object', function () {
       var exported = require('../');
       expect(exported.Array).to.equal(Array);
     });
