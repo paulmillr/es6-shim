@@ -1231,11 +1231,15 @@
     },
 
     tanh: function (value) {
-      value = Number(value);
-      if (Number.isNaN(value) || value === 0) { return value; }
-      if (value === Infinity) { return 1; }
-      if (value === -Infinity) { return -1; }
-      return (Math.exp(value) - Math.exp(-value)) / (Math.exp(value) + Math.exp(-value));
+      var x = Number(value);
+      if (Number.isNaN(value) || x === 0) { return x; }
+      if (x === Infinity) { return 1; }
+      if (x === -Infinity) { return -1; }
+      var a = Math.expm1(x);
+      var b = Math.expm1(-x);
+      if (a === Infinity) { return 1; }
+      if (b === Infinity) { return -1; }
+      return (a - b) / (Math.exp(x) + Math.exp(-x));
     },
 
     trunc: function (value) {

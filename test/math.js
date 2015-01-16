@@ -325,6 +325,7 @@ describe('Math', function () {
       expect(Math.tanh(-Infinity)).to.equal(-1);
       expect(Math.tanh(90)).to.almostEqual(1);
       expect(Math.tanh(10)).to.almostEqual(0.9999999958776927);
+      expect(Math.tanh(-2e-17)).to.equal(-2e-17);
     });
   });
 
