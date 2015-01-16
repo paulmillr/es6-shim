@@ -269,6 +269,8 @@ describe('Math', function () {
 
       expect(Math.log1p(5)).to.almostEqual(1.791759469228055);
       expect(Math.log1p(50)).to.almostEqual(3.9318256327243257);
+      expect(Math.log1p(-1e-17)).to.equal(-1e-17);
+      expect(Math.log1p(-2e-17)).to.equal(-2e-17);
     });
   });
 

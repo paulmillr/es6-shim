@@ -1196,23 +1196,12 @@
     },
 
     log1p: function (value) {
-      value = Number(value);
-      if (value < -1 || Number.isNaN(value)) { return NaN; }
-      if (value === 0 || value === Infinity) { return value; }
-      if (value === -1) { return -Infinity; }
-      var result = 0;
-      var n = 50;
+      var x = Number(value);
+      if (x < -1 || Number.isNaN(x)) { return NaN; }
+      if (x === 0 || x === Infinity) { return x; }
+      if (x === -1) { return -Infinity; }
 
-      if (value < 0 || value > 1) { return Math.log(1 + value); }
-      for (var i = 1; i < n; i++) {
-        if ((i % 2) === 0) {
-          result -= Math.pow(value, i) / i;
-        } else {
-          result += Math.pow(value, i) / i;
-        }
-      }
-
-      return result;
+      return (1 + x) - 1 === 0 ? x : x * (Math.log(1 + x) / ((1 + x) - 1));
     },
 
     sign: function (value) {
