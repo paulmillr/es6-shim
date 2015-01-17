@@ -409,6 +409,29 @@ describe('Math', function () {
     });
   });
 
+  describe('Math.round', function () {
+    it('works for edge cases', function () {
+      expect(Number.isNaN(Math.round(NaN))).to.equal(true);
+      expect(Object.is(Math.round(0), 0)).to.equal(true);
+      expect(Object.is(Math.round(-0), -0)).to.equal(true);
+      expect(Math.round(Infinity)).to.equal(Infinity);
+      expect(Math.round(-Infinity)).to.equal(-Infinity);
+    });
+
+    it('returns 0 for (0,0.5)', function () {
+      expect(Math.round(0.5)).not.to.equal(0);
+      expect(Math.round(0.5 - Number.EPSILON / 4)).to.equal(0);
+      expect(Math.round(0 + Number.EPSILON / 4)).to.equal(0);
+    });
+
+    it('returns -0 for (-0.5,0)', function () {
+      expect(Math.round(-0.5)).to.equal(0);
+      expect(Math.round(-0.5 - Number.EPSILON / 3.99)).not.to.equal(0);
+      expect(Object.is(-0, Math.round(-0.5 + Number.EPSILON / 3.99))).to.equal(true);
+      expect(Object.is(-0, Math.round(0 - Number.EPSILON / 3.99))).to.equal(true);
+    });
+  });
+
   describe('Math.fround', function () {
     // Mozilla's reference tests: https://bug900125.bugzilla.mozilla.org/attachment.cgi?id=793163
     it('returns NaN for undefined', function () {

@@ -1273,6 +1273,15 @@
     }
   };
   defineProperties(Math, MathShims);
+  var roundHandlesBoundaryConditions = Math.round(0.5 - Number.EPSILON / 4) === 0 && Math.round(-0.5 + Number.EPSILON / 3.99) === 1;
+
+  var origMathRound = Math.round;
+  defineProperty(Math, 'round', function round(x) {
+    if (-0.5 <= x && x < 0.5 && x !== 0) {
+      return Math.sign(x * 0);
+    }
+    return origMathRound(x);
+  }, !roundHandlesBoundaryConditions);
 
   if (Math.imul(0xffffffff, 5) !== -5) {
     // Safari 6.1, at least, reports "0" for this value
