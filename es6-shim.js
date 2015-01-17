@@ -1225,9 +1225,13 @@
     },
 
     sinh: function (value) {
-      value = Number(value);
+      var x = Number(value);
       if (!global_isFinite(value) || value === 0) { return value; }
-      return (Math.exp(value) - Math.exp(-value)) / 2;
+
+      if (Math.abs(x) < 1) {
+        return (Math.expm1(x) - Math.expm1(-x)) / 2;
+      }
+      return (Math.exp(x - 1) - Math.exp(-x - 1)) * Math.E / 2;
     },
 
     tanh: function (value) {

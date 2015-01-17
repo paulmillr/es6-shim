@@ -169,6 +169,7 @@ describe('Math', function () {
       expect(Math.cosh(22)).to.almostEqual(1792456423.065795780980053377, 1e-5);
       expect(Math.cosh(-10)).to.almostEqual(11013.23292010332313972137);
       expect(Math.cosh(-23)).to.almostEqual(4872401723.1244513000, 1e-5);
+      expect(Math.cosh(-2e-17)).to.equal(1);
     });
   });
 
@@ -315,6 +316,7 @@ describe('Math', function () {
       expect(Math.sinh(-Infinity)).to.equal(-Infinity);
       expect(Math.sinh(-5)).to.almostEqual(-74.20321057778875);
       expect(Math.sinh(2)).to.almostEqual(3.6268604078470186);
+      expect(Math.sinh(-2e-17)).to.equal(-2e-17);
     });
   });
 
