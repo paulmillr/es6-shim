@@ -206,14 +206,15 @@
     return result;
   };
 
-  var bindContext = function (func, context) {
-    return function () {
-      return func.apply(context, arguments);
-    };
-  };
-
   var ES = {
-    Call: bindContext(Function.prototype.call, Function.prototype.apply),
+    // https://people.mozilla.org/~jorendorff/es6-draft.html#sec-call-f-v-args
+    Call: function Call(F, V) {
+      var args = arguments.length > 2 ? arguments[2] : [];
+      if (!ES.IsCallable(F)) {
+        throw new TypeError(F + ' is not a function');
+      }
+      return F.apply(V, args);
+    },
 
     RequireObjectCoercible: function (x, optMessage) {
       /* jshint eqnull:true */
