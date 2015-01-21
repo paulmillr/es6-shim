@@ -205,6 +205,8 @@
     return result;
   };
 
+  var safeApply = Function.call.bind(Function.apply);
+
   var ES = {
     // https://people.mozilla.org/~jorendorff/es6-draft.html#sec-call-f-v-args
     Call: function Call(F, V) {
@@ -212,7 +214,7 @@
       if (!ES.IsCallable(F)) {
         throw new TypeError(F + ' is not a function');
       }
-      return F.apply(V, args);
+      return safeApply(F, V, args);
     },
 
     CheckObjectCoercible: function (x, optMessage) {
