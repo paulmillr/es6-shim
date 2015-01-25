@@ -1,11 +1,11 @@
 /*global describe, it, expect, require, Promise */
 
 /* This file is for testing implementation regressions of Promises. */
-var exported = require('../');
 var hasOwn = Object.prototype.hasOwnProperty;
 
 describe('Promise', function () {
-  it('is on the exported object', function () {
+  (typeof process !== 'undefined' && process.env.NO_ES6_SHIM ? it.skip : it)('is on the exported object', function () {
+    var exported = require('../');
     expect(exported.Promise).to.equal(Promise);
   });
 

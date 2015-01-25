@@ -1,21 +1,21 @@
 /*global describe, it, expect, require, beforeEach */
 
-var exported = require('../');
 
 var runArrayTests = function () {
   'use strict';
 
-  if (typeof Symbol === 'undefined') { var Symbol = {}; }
+  var Sym = typeof Symbol !== 'undefined' ? Symbol : {};
   var isSymbol = function (sym) {
     /*jshint notypeof: true */
-    return typeof Symbol === 'function' && typeof sym === 'symbol';
+    return typeof Sym === 'function' && typeof sym === 'symbol';
     /*jshint notypeof: false */
   };
 
   describe('Array', function () {
     var list = [5, 10, 15, 20];
 
-    it('is on the exported object', function () {
+    (typeof process !== 'undefined' && process.env.NO_ES6_SHIM ? it.skip : it)('is on the exported object', function () {
+      var exported = require('../');
       expect(exported.Array).to.equal(Array);
     });
 
@@ -23,8 +23,8 @@ var runArrayTests = function () {
       it('uses Symbol.iterator if available', function () {
         var a = [];
         var iterator;
-        if (isSymbol(Symbol && Symbol.iterator)) {
-          iterator = Symbol.iterator;
+        if (isSymbol(Sym.iterator)) {
+          iterator = Sym.iterator;
         } else {
           return;
         }
@@ -211,8 +211,10 @@ var runArrayTests = function () {
       });
 
       it('removes holes', function () {
+        /*jshint elision: true */
         var input = [0, , 2];
         var result = Array.from([0, , 2]);
+        /*jshint elision: false */
         expect(1 in input).to.equal(false);
         expect(1 in result).to.equal(true);
         expect(result).to.eql([0, undefined, 2]);
@@ -320,7 +322,9 @@ var runArrayTests = function () {
       });
 
       it('should work with a sparse array', function () {
+        /*jshint elision: true */
         var obj = [1, , undefined];
+        /*jshint elision: false */
         expect(1 in obj).to.equal(false);
         var seen = [];
         var found = obj.find(function (item, idx) {
@@ -391,7 +395,9 @@ var runArrayTests = function () {
       });
 
       it('should work with a sparse array', function () {
+        /*jshint elision: true */
         var obj = [1, , undefined];
+        /*jshint elision: false */
         expect(1 in obj).to.equal(false);
         var seen = [];
         var foundIndex = obj.findIndex(function (item, idx) {
@@ -483,8 +489,8 @@ var runArrayTests = function () {
       });
 
       it('should be unscopable if Symbols exist', function () {
-        if (isSymbol(Symbol && Symbol.unscopables)) {
-          var unscopables = mylist[Symbol.unscopables];
+        if (isSymbol(Sym.unscopables)) {
+          var unscopables = mylist[Sym.unscopables];
           expect(!!unscopables).to.equal(true);
           expect(unscopables.keys).to.equal(true);
         }
@@ -540,8 +546,8 @@ var runArrayTests = function () {
       });
 
       it('should be unscopable if Symbols exist', function () {
-        if (isSymbol(Symbol && Symbol.unscopables)) {
-          var unscopables = mylist[Symbol.unscopables];
+        if (isSymbol(Sym.unscopables)) {
+          var unscopables = mylist[Sym.unscopables];
           expect(!!unscopables).to.equal(true);
           expect(unscopables.values).to.equal(true);
         }
@@ -603,8 +609,8 @@ var runArrayTests = function () {
       });
 
       it('should be unscopable if Symbols exist', function () {
-        if (isSymbol(Symbol && Symbol.unscopables)) {
-          var unscopables = mylist[Symbol.unscopables];
+        if (isSymbol(Sym.unscopables)) {
+          var unscopables = mylist[Sym.unscopables];
           expect(!!unscopables).to.equal(true);
           expect(unscopables.entries).to.equal(true);
         }

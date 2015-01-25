@@ -1,7 +1,5 @@
 /*global describe, it, expect, require */
 
-var exported = require('../');
-
 describe('Number', function (undefined) {
   var integers = [5295, -5295, -9007199254740991, 9007199254740991, 0, -0];
   var nonIntegers = [-9007199254741992, 9007199254741992, 5.9];
@@ -32,7 +30,8 @@ describe('Number', function (undefined) {
     expect(item).to.equal(false);
   };
 
-  it('is on the exported object', function () {
+  (typeof process !== 'undefined' && process.env.NO_ES6_SHIM ? it.skip : it)('is on the exported object', function () {
+    var exported = require('../');
     expect(exported.Number).to.equal(Number);
   });
 
@@ -136,9 +135,9 @@ describe('Number', function (undefined) {
 
     it('should be true when abs(number) is less than 2^53', function () {
       var safeIntegers = [0, 1, Math.pow(2, 53) - 1];
-      safeIntegers.forEach(function (int) {
-        expect(Number.isInteger(int)).to.equal(true);
-        expect(Number.isInteger(-int)).to.equal(true);
+      safeIntegers.forEach(function (integer) {
+        expect(Number.isInteger(integer)).to.equal(true);
+        expect(Number.isInteger(-integer)).to.equal(true);
       });
     });
   });
@@ -180,9 +179,9 @@ describe('Number', function (undefined) {
 
     it('should be true when abs(number) is less than 2^53', function () {
       var safeIntegers = [0, 1, Math.pow(2, 53) - 1];
-      safeIntegers.forEach(function (int) {
-        expect(Number.isSafeInteger(int)).to.equal(true);
-        expect(Number.isSafeInteger(-int)).to.equal(true);
+      safeIntegers.forEach(function (integer) {
+        expect(Number.isSafeInteger(integer)).to.equal(true);
+        expect(Number.isSafeInteger(-integer)).to.equal(true);
       });
     });
   });

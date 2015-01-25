@@ -4,6 +4,10 @@
 (function () {
     'use strict';
 
+    if (typeof Promise === 'undefined') {
+      return;
+    }
+
     describe('Promises/ES6 Tests', function () {
 
         // an adapter that sets up global.Promise

@@ -1,7 +1,5 @@
 /*global describe, it, expect, require */
 
-var exported = require('../');
-
 var Assertion = expect().constructor;
 Assertion.prototype.almostEqual = function (obj, precision) {
   'use strict';
@@ -22,7 +20,8 @@ var valueOfIsNaN = { valueOf: function () { 'use strict'; return NaN; } };
 var valueOfIsInfinity = { valueOf: function () { 'use strict'; return Infinity; } };
 
 describe('Math', function () {
-  it('is on the exported object', function () {
+  (typeof process !== 'undefined' && process.env.NO_ES6_SHIM ? it.skip : it)('is on the exported object', function () {
+    var exported = require('../');
     expect(exported.Math).to.equal(Math);
   });
 
@@ -37,6 +36,8 @@ describe('Math', function () {
       expect(Math.acosh(Infinity)).to.equal(Infinity);
       expect(Math.acosh(1234)).to.almostEqual(7.811163220849231);
       expect(Math.acosh(8.88)).to.almostEqual(2.8737631531629235);
+      expect(Math.acosh(1e160)).to.almostEqual(369.10676205960726);
+      expect(Math.acosh(Number.MAX_VALUE)).to.almostEqual(710.4758600739439);
     });
   });
 
@@ -168,6 +169,7 @@ describe('Math', function () {
       expect(Math.cosh(22)).to.almostEqual(1792456423.065795780980053377, 1e-5);
       expect(Math.cosh(-10)).to.almostEqual(11013.23292010332313972137);
       expect(Math.cosh(-23)).to.almostEqual(4872401723.1244513000, 1e-5);
+      expect(Math.cosh(-2e-17)).to.equal(1);
     });
   });
 
@@ -180,6 +182,7 @@ describe('Math', function () {
       expect(Math.expm1(-Infinity)).to.equal(-1);
       expect(Math.expm1(10)).to.almostEqual(22025.465794806718);
       expect(Math.expm1(-10)).to.almostEqual(-0.9999546000702375);
+      expect(Math.expm1(-2e-17)).to.equal(-2e-17);
     });
 
     it('works with very negative numbers', function () {
@@ -270,6 +273,8 @@ describe('Math', function () {
 
       expect(Math.log1p(5)).to.almostEqual(1.791759469228055);
       expect(Math.log1p(50)).to.almostEqual(3.9318256327243257);
+      expect(Math.log1p(-1e-17)).to.equal(-1e-17);
+      expect(Math.log1p(-2e-17)).to.equal(-2e-17);
     });
   });
 
@@ -311,6 +316,7 @@ describe('Math', function () {
       expect(Math.sinh(-Infinity)).to.equal(-Infinity);
       expect(Math.sinh(-5)).to.almostEqual(-74.20321057778875);
       expect(Math.sinh(2)).to.almostEqual(3.6268604078470186);
+      expect(Math.sinh(-2e-17)).to.equal(-2e-17);
     });
   });
 
@@ -323,6 +329,7 @@ describe('Math', function () {
       expect(Math.tanh(-Infinity)).to.equal(-1);
       expect(Math.tanh(90)).to.almostEqual(1);
       expect(Math.tanh(10)).to.almostEqual(0.9999999958776927);
+      expect(Math.tanh(-2e-17)).to.equal(-2e-17);
     });
   });
 
@@ -399,6 +406,29 @@ describe('Math', function () {
      expect(Math.imul(x, 1)).to.equal(3);
      expect(Math.imul(1, x)).to.equal(4);
      expect(Math.imul(x, 1)).to.equal(5);
+    });
+  });
+
+  describe('Math.round', function () {
+    it('works for edge cases', function () {
+      expect(Number.isNaN(Math.round(NaN))).to.equal(true);
+      expect(Object.is(Math.round(0), 0)).to.equal(true);
+      expect(Object.is(Math.round(-0), -0)).to.equal(true);
+      expect(Math.round(Infinity)).to.equal(Infinity);
+      expect(Math.round(-Infinity)).to.equal(-Infinity);
+    });
+
+    it('returns 0 for (0,0.5)', function () {
+      expect(Math.round(0.5)).not.to.equal(0);
+      expect(Math.round(0.5 - Number.EPSILON / 4)).to.equal(0);
+      expect(Math.round(0 + Number.EPSILON / 4)).to.equal(0);
+    });
+
+    it('returns -0 for (-0.5,0)', function () {
+      expect(Math.round(-0.5)).to.equal(0);
+      expect(Math.round(-0.5 - Number.EPSILON / 3.99)).not.to.equal(0);
+      expect(Object.is(-0, Math.round(-0.5 + Number.EPSILON / 3.99))).to.equal(true);
+      expect(Object.is(-0, Math.round(0 - Number.EPSILON / 3.99))).to.equal(true);
     });
   });
 

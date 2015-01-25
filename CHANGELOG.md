@@ -1,5 +1,10 @@
 # es6-shim x.x.x (not yet released)
 
+# es6-shim 0.22.2 (4 Jan 2015)
+* Faster travis-ci builds
+* Better ES3 support: quoting/avoiding reserved words
+* Update `mocha`, `jscs`, `jshint`, `grunt-saucelabs`, `uglify-js`
+
 # es6-shim 0.22.1 (13 Dec 2014)
 * Make RegExp#flags generic, per spec (#310)
 

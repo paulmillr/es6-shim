@@ -2,8 +2,8 @@
   * https://github.com/paulmillr/es6-shim
   * @license es6-shim Copyright 2013-2014 by Paul Miller (http://paulmillr.com)
   *   and contributors,  MIT License
-  * es6-shim: v0.22.1
-  * see https://github.com/paulmillr/es6-shim/blob/0.22.1/LICENSE
+  * es6-shim: v0.22.2
+  * see https://github.com/paulmillr/es6-shim/blob/0.22.2/LICENSE
   * Details and documentation:
   * https://github.com/paulmillr/es6-shim/
   */
@@ -87,6 +87,7 @@
   var noop = function () {};
 
   var Symbol = globals.Symbol || {};
+  var symbolSpecies = Symbol.species || '@@species';
   var Type = {
     string: function (x) { return _toString(x) === '[object String]'; },
     regex: function (x) { return _toString(x) === '[object RegExp]'; },
@@ -217,12 +218,11 @@
       return safeApply(F, V, args);
     },
 
-    CheckObjectCoercible: function (x, optMessage) {
+    RequireObjectCoercible: function (x, optMessage) {
       /* jshint eqnull:true */
       if (x == null) {
         throw new TypeError(optMessage || 'Cannot call method on ' + x);
       }
-      return x;
     },
 
     TypeIsObject: function (x) {
@@ -233,7 +233,8 @@
     },
 
     ToObject: function (o, optMessage) {
-      return Object(ES.CheckObjectCoercible(o, optMessage));
+      ES.RequireObjectCoercible(o, optMessage);
+      return Object(o);
     },
 
     IsCallable: function (x) {
@@ -242,15 +243,22 @@
     },
 
     ToInt32: function (x) {
-      return x >> 0;
+      return ES.ToNumber(x) >> 0;
     },
 
     ToUint32: function (x) {
-      return x >>> 0;
+      return ES.ToNumber(x) >>> 0;
+    },
+
+    ToNumber: function (value) {
+      if (_toString(value) === '[object Symbol]') {
+        throw new TypeError('Cannot convert a Symbol value to a number');
+      }
+      return +value;
     },
 
     ToInteger: function (value) {
-      var number = +value;
+      var number = ES.ToNumber(value);
       if (Number.isNaN(number)) { return 0; }
       if (number === 0 || !Number.isFinite(number)) { return number; }
       return (number > 0 ? 1 : -1) * Math.floor(Math.abs(number));
@@ -308,8 +316,8 @@
     Construct: function (C, args) {
       // CreateFromConstructor
       var obj;
-      if (ES.IsCallable(C['@@create'])) {
-        obj = C['@@create']();
+      if (ES.IsCallable(C[symbolSpecies])) {
+        obj = C[symbolSpecies]();
       } else {
         // OrdinaryCreateFromConstructor
         obj = create(C.prototype || null);
@@ -326,12 +334,12 @@
   var emulateES6construct = function (o) {
     if (!ES.TypeIsObject(o)) { throw new TypeError('bad object'); }
     // es5 approximation to es6 subclass semantics: in es6, 'new Foo'
-    // would invoke Foo.@@create to allocation/initialize the new object.
+    // would invoke Foo.@@species to allocation/initialize the new object.
     // In es5 we just get the plain object.  So if we detect an
-    // uninitialized object, invoke o.constructor.@@create
+    // uninitialized object, invoke o.constructor.@@species
     if (!o._es6construct) {
-      if (o.constructor && ES.IsCallable(o.constructor['@@create'])) {
-        o = o.constructor['@@create'](o);
+      if (o.constructor && ES.IsCallable(o.constructor[symbolSpecies])) {
+        o = o.constructor[symbolSpecies](o);
       }
       defineProperties(o, { _es6construct: true });
     }
@@ -478,7 +486,7 @@
   }());
 
   defineProperties(String, {
-    fromCodePoint: function fromCodePoint(_) { // length = 1
+    fromCodePoint: function fromCodePoint(codePoints) {
       var result = [];
       var next;
       for (var i = 0, length = arguments.length; i < length; i++) {
@@ -498,7 +506,7 @@
       return result.join('');
     },
 
-    raw: function raw(callSite) { // raw.length===1
+    raw: function raw(callSite) {
       var cooked = ES.ToObject(callSite, 'bad callSite');
       var rawValue = cooked.raw;
       var rawString = ES.ToObject(rawValue, 'bad raw value');
@@ -532,7 +540,7 @@
   // https://bugzilla.mozilla.org/show_bug.cgi?id=1062484
   if (String.fromCodePoint.length !== 1) {
     var originalFromCodePoint = Function.apply.bind(String.fromCodePoint);
-    defineProperty(String, 'fromCodePoint', function (_) { return originalFromCodePoint(this, arguments); }, true);
+    defineProperty(String, 'fromCodePoint', function fromCodePoint(codePoints) { return originalFromCodePoint(this, arguments); }, true);
   }
 
   var StringShims = {
@@ -547,7 +555,8 @@
       };
 
       return function (times) {
-        var thisStr = String(ES.CheckObjectCoercible(this));
+        ES.RequireObjectCoercible(this);
+        var thisStr = String(this);
         times = ES.ToInteger(times);
         if (times < 0 || times === Infinity) {
           throw new RangeError('Invalid String#repeat value');
@@ -557,7 +566,8 @@
     }()),
 
     startsWith: function (searchStr) {
-      var thisStr = String(ES.CheckObjectCoercible(this));
+      ES.RequireObjectCoercible(this);
+      var thisStr = String(this);
       if (Type.regex(searchStr)) {
         throw new TypeError('Cannot call method "startsWith" with a regex');
       }
@@ -568,7 +578,8 @@
     },
 
     endsWith: function (searchStr) {
-      var thisStr = String(ES.CheckObjectCoercible(this));
+      ES.RequireObjectCoercible(this);
+      var thisStr = String(this);
       if (Type.regex(searchStr)) {
         throw new TypeError('Cannot call method "endsWith" with a regex');
       }
@@ -587,7 +598,8 @@
     },
 
     codePointAt: function (pos) {
-      var thisStr = String(ES.CheckObjectCoercible(this));
+      ES.RequireObjectCoercible(this);
+      var thisStr = String(this);
       var position = ES.ToInteger(pos);
       var length = thisStr.length;
       if (position >= 0 && position < length) {
@@ -625,7 +637,8 @@
 
   // see https://people.mozilla.org/~jorendorff/es6-draft.html#sec-string.prototype-@@iterator
   var StringIterator = function (s) {
-    this._s = String(ES.CheckObjectCoercible(s));
+    ES.RequireObjectCoercible(s);
+    this._s = String(s);
     this._i = 0;
   };
   StringIterator.prototype.next = function () {
@@ -985,12 +998,14 @@
   // implementations skipped holes in sparse arrays. (Note that the
   // implementations of find/findIndex indirectly use shimmed
   // methods of Number, so this test has to happen down here.)
+  /*jshint elision: true */
   if (![, 1].find(function (item, idx) { return idx === 0; })) {
     defineProperty(Array.prototype, 'find', ArrayPrototypeShims.find, true);
   }
   if ([, 1].findIndex(function (item, idx) { return idx === 0; }) !== 0) {
     defineProperty(Array.prototype, 'findIndex', ArrayPrototypeShims.findIndex, true);
   }
+  /*jshint elision: false */
 
   if (supportsDescriptors) {
     defineProperties(Object, {
@@ -1158,11 +1173,11 @@
 
   var MathShims = {
     acosh: function (value) {
-      value = Number(value);
-      if (Number.isNaN(value) || value < 1) { return NaN; }
-      if (value === 1) { return 0; }
-      if (value === Infinity) { return value; }
-      return Math.log(value + Math.sqrt(value * value - 1));
+      var x = Number(value);
+      if (Number.isNaN(x) || value < 1) { return NaN; }
+      if (x === 1) { return 0; }
+      if (x === Infinity) { return x; }
+      return Math.log(x / Math.E + Math.sqrt(x + 1) * Math.sqrt(x - 1) / Math.E) + 1;
     },
 
     asinh: function (value) {
@@ -1214,10 +1229,23 @@
     },
 
     expm1: function (value) {
-      value = Number(value);
-      if (value === -Infinity) { return -1; }
-      if (!global_isFinite(value) || value === 0) { return value; }
-      return Math.exp(value) - 1;
+      var x = Number(value);
+      if (x === -Infinity) { return -1; }
+      if (!global_isFinite(x) || value === 0) { return x; }
+      if (Math.abs(x) > 0.5) {
+        return Math.exp(x) - 1;
+      }
+      // A more precise approximation using Taylor series expansion
+      // from https://github.com/paulmillr/es6-shim/issues/314#issuecomment-70293986
+      var t = x;
+      var sum = 0;
+      var n = 1;
+      while (sum + t !== sum) {
+        sum += t;
+        n += 1;
+        t *= x / n;
+      }
+      return sum;
     },
 
     hypot: function (x, y) {
@@ -1261,23 +1289,12 @@
     },
 
     log1p: function (value) {
-      value = Number(value);
-      if (value < -1 || Number.isNaN(value)) { return NaN; }
-      if (value === 0 || value === Infinity) { return value; }
-      if (value === -1) { return -Infinity; }
-      var result = 0;
-      var n = 50;
+      var x = Number(value);
+      if (x < -1 || Number.isNaN(x)) { return NaN; }
+      if (x === 0 || x === Infinity) { return x; }
+      if (x === -1) { return -Infinity; }
 
-      if (value < 0 || value > 1) { return Math.log(1 + value); }
-      for (var i = 1; i < n; i++) {
-        if ((i % 2) === 0) {
-          result -= Math.pow(value, i) / i;
-        } else {
-          result += Math.pow(value, i) / i;
-        }
-      }
-
-      return result;
+      return (1 + x) - 1 === 0 ? x : x * (Math.log(1 + x) / ((1 + x) - 1));
     },
 
     sign: function (value) {
@@ -1288,17 +1305,25 @@
     },
 
     sinh: function (value) {
-      value = Number(value);
+      var x = Number(value);
       if (!global_isFinite(value) || value === 0) { return value; }
-      return (Math.exp(value) - Math.exp(-value)) / 2;
+
+      if (Math.abs(x) < 1) {
+        return (Math.expm1(x) - Math.expm1(-x)) / 2;
+      }
+      return (Math.exp(x - 1) - Math.exp(-x - 1)) * Math.E / 2;
     },
 
     tanh: function (value) {
-      value = Number(value);
-      if (Number.isNaN(value) || value === 0) { return value; }
-      if (value === Infinity) { return 1; }
-      if (value === -Infinity) { return -1; }
-      return (Math.exp(value) - Math.exp(-value)) / (Math.exp(value) + Math.exp(-value));
+      var x = Number(value);
+      if (Number.isNaN(value) || x === 0) { return x; }
+      if (x === Infinity) { return 1; }
+      if (x === -Infinity) { return -1; }
+      var a = Math.expm1(x);
+      var b = Math.expm1(-x);
+      if (a === Infinity) { return 1; }
+      if (b === Infinity) { return -1; }
+      return (a - b) / (Math.exp(x) + Math.exp(-x));
     },
 
     trunc: function (value) {
@@ -1328,6 +1353,15 @@
     }
   };
   defineProperties(Math, MathShims);
+  var roundHandlesBoundaryConditions = Math.round(0.5 - Number.EPSILON / 4) === 0 && Math.round(-0.5 + Number.EPSILON / 3.99) === 1;
+
+  var origMathRound = Math.round;
+  defineProperty(Math, 'round', function round(x) {
+    if (-0.5 <= x && x < 0.5 && x !== 0) {
+      return Math.sign(x * 0);
+    }
+    return origMathRound(x);
+  }, !roundHandlesBoundaryConditions);
 
   if (Math.imul(0xffffffff, 5) !== -5) {
     // Safari 6.1, at least, reports "0" for this value
@@ -1535,25 +1569,24 @@
       };
     };
 
+    defineProperty(Promise, symbolSpecies, function (obj) {
+      var constructor = this;
+      // AllocatePromise
+      // The `obj` parameter is a hack we use for es5
+      // compatibility.
+      var prototype = constructor.prototype || Promise$prototype;
+      obj = obj || create(prototype);
+      defineProperties(obj, {
+        _status: void 0,
+        _result: void 0,
+        _resolveReactions: void 0,
+        _rejectReactions: void 0,
+        _promiseConstructor: void 0
+      });
+      obj._promiseConstructor = constructor;
+      return obj;
+    });
     defineProperties(Promise, {
-      '@@create': function (obj) {
-        var constructor = this;
-        // AllocatePromise
-        // The `obj` parameter is a hack we use for es5
-        // compatibility.
-        var prototype = constructor.prototype || Promise$prototype;
-        obj = obj || create(prototype);
-        defineProperties(obj, {
-          _status: void 0,
-          _result: void 0,
-          _resolveReactions: void 0,
-          _rejectReactions: void 0,
-          _promiseConstructor: void 0
-        });
-        obj._promiseConstructor = constructor;
-        return obj;
-      },
-
       all: function all(iterable) {
         var C = this;
         var capability = new PromiseCapability(C);
@@ -1842,14 +1875,12 @@
           return map;
         }
         var Map$prototype = Map.prototype;
-        defineProperties(Map, {
-          '@@create': function (obj) {
-            var constructor = this;
-            var prototype = constructor.prototype || Map$prototype;
-            obj = obj || create(prototype);
-            defineProperties(obj, { _es6map: true });
-            return obj;
-          }
+        defineProperty(Map, symbolSpecies, function (obj) {
+          var constructor = this;
+          var prototype = constructor.prototype || Map$prototype;
+          obj = obj || create(prototype);
+          defineProperties(obj, { _es6map: true });
+          return obj;
         });
 
         Value.getter(Map.prototype, 'size', function () {
@@ -2026,14 +2057,12 @@
           return set;
         };
         var Set$prototype = SetShim.prototype;
-        defineProperties(SetShim, {
-          '@@create': function (obj) {
-            var constructor = this;
-            var prototype = constructor.prototype || Set$prototype;
-            obj = obj || create(prototype);
-            defineProperties(obj, { _es6set: true });
-            return obj;
-          }
+        defineProperty(SetShim, symbolSpecies, function (obj) {
+          var constructor = this;
+          var prototype = constructor.prototype || Set$prototype;
+          obj = obj || create(prototype);
+          defineProperties(obj, { _es6set: true });
+          return obj;
         });
 
         // Switch from the object backing storage to a full Map.

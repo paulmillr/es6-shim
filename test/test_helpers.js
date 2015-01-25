@@ -12,6 +12,6 @@ assert = (function () {
   return chai.assert;
 }());
 
-if (!process.env.NO_ES6_SHIM) {
+if (typeof process === 'undefined' || !process.env.NO_ES6_SHIM) {
   require('../');
 }
