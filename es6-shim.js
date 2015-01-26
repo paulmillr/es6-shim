@@ -1280,8 +1280,12 @@
     }
   };
   defineProperties(Math, MathShims);
-  var roundHandlesBoundaryConditions = Math.round(0.5 - Number.EPSILON / 4) === 0 && Math.round(-0.5 + Number.EPSILON / 3.99) === 1;
+  // Chrome 40 has an imprecise Math.tanh with very small numbers
+  defineProperty(Math, 'tanh', MathShims.tanh, Math.tanh(-2e-17) !== -2e-17);
+  // Chrome 40 loses Math.acosh precision with high numbers
+  defineProperty(Math, 'acosh', MathShims.acosh, Math.acosh(Number.MAX_VALUE) === Infinity);
 
+  var roundHandlesBoundaryConditions = Math.round(0.5 - Number.EPSILON / 4) === 0 && Math.round(-0.5 + Number.EPSILON / 3.99) === 1;
   var origMathRound = Math.round;
   defineProperty(Math, 'round', function round(x) {
     if (-0.5 <= x && x < 0.5 && x !== 0) {
