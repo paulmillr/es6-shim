@@ -1,5 +1,11 @@
 # es6-shim x.x.x (not yet released)
 
+# es6-shim 0.23.0 (26 Jan 2015)
+* Use Symbol.species when available, else fall back to "@@species" (renamed from "@@create")
+* Fix `npm run test-native`
+* Correct broken Math implementations: `log1p`, `exmp1`, `tanh`, `acosh`, `cosh`, `sinh`, `round` (#314)
+* Update `jscs`, `grunt-saucelabs`, `jshint`
+
 # es6-shim 0.22.2 (4 Jan 2015)
 * Faster travis-ci builds
 * Better ES3 support: quoting/avoiding reserved words
