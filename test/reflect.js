@@ -278,7 +278,7 @@ ifES5It('Reflect', function () {
       [null, undefined].forEach(function (item) {
         expect(function () {
           return Reflect.get(item, 'property');
-        }).to.throw(TypeError);
+        }).to['throw'](TypeError);
       });
     });
 
@@ -534,7 +534,7 @@ ifES5It('Reflect', function () {
       [undefined, 1, 'string', true].forEach(function (item) {
         expect(function () {
           return Reflect.setPrototypeOf(o, item);
-        }).to.throw(TypeError);
+        }).to['throw'](TypeError);
       });
     });
 
