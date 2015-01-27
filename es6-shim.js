@@ -2387,7 +2387,7 @@
           var keys = Object.getOwnPropertyNames(target);
 
           if (ES.IsCallable(Object.getOwnPropertySymbols)) {
-            keys = keys.concat(Object.getOwnPropertySymbols(target));
+            keys.push.apply(keys, Object.getOwnPropertySymbols(target));
           }
 
           return keys;
