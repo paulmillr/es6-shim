@@ -435,8 +435,12 @@ ifES5It('Reflect', function () {
 
       var result = Object.getOwnPropertyNames(obj);
 
+      // Reflect.ownKeys depends on the implementation of
+      // Object.getOwnPropertyNames, at least for non-symbol keys.
       expect(Reflect.ownKeys(obj)).to.deep.equal(result);
-      expect(result).to.deep.equal(['1', 'foo', 'bar']);
+
+      // We can only be sure of which keys should exist.
+      expect(result.sort()).to.deep.equal(['1', 'bar', 'foo']);
     });
 
     ifSymbolsIt('symbols come last', function () {
