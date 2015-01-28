@@ -548,7 +548,7 @@
         var thisStr = String(this);
         times = ES.ToInteger(times);
         if (times < 0 || times === Infinity) {
-          throw new RangeError('Invalid String#repeat value');
+          throw new RangeError('repeat count must be less than infinity and not overflow maximum string size');
         }
         return repeat(thisStr, times);
       };
