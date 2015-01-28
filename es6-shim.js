@@ -532,27 +532,26 @@
     defineProperty(String, 'fromCodePoint', function fromCodePoint(codePoints) { return originalFromCodePoint(this, arguments); }, true);
   }
 
-  var StringShims = {
-    // Fast repeat, uses the `Exponentiation by squaring` algorithm.
-    // Perf: http://jsperf.com/string-repeat2/2
-    repeat: (function () {
-      var repeat = function (s, times) {
-        if (times < 1) { return ''; }
-        if (times % 2) { return repeat(s, times - 1) + s; }
-        var half = repeat(s, times / 2);
-        return half + half;
-      };
+  // Fast repeat, uses the `Exponentiation by squaring` algorithm.
+  // Perf: http://jsperf.com/string-repeat2/2
+  var stringRepeat = function repeat(s, times) {
+    if (times < 1) { return ''; }
+    if (times % 2) { return repeat(s, times - 1) + s; }
+    var half = repeat(s, times / 2);
+    return half + half;
+  };
+  var stringMaxLength = Infinity;
 
-      return function (times) {
-        ES.RequireObjectCoercible(this);
-        var thisStr = String(this);
-        times = ES.ToInteger(times);
-        if (times < 0 || times === Infinity) {
-          throw new RangeError('repeat count must be less than infinity and not overflow maximum string size');
-        }
-        return repeat(thisStr, times);
-      };
-    }()),
+  var StringShims = {
+    repeat: function repeat(times) {
+      ES.RequireObjectCoercible(this);
+      var thisStr = String(this);
+      times = ES.ToInteger(times);
+      if (times < 0 || times >= stringMaxLength) {
+        throw new RangeError('repeat count must be less than infinity and not overflow maximum string size');
+      }
+      return stringRepeat(thisStr, times);
+    },
 
     startsWith: function (searchStr) {
       ES.RequireObjectCoercible(this);
