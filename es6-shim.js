@@ -2237,18 +2237,6 @@
     };
   };
 
-  var willCreateCircularPrototype = function (object, proto) {
-    while (proto) {
-      if (object === proto) {
-        return true;
-      }
-
-      proto = Reflect.getPrototypeOf(proto);
-    }
-
-    return false;
-  };
-
   if (supportsDescriptors) {
     var internal_get = function get(target, key, receiver) {
       var desc = Object.getOwnPropertyDescriptor(target, key);
@@ -2402,8 +2390,22 @@
         var receiver = arguments.length > 3 ? arguments[3] : target;
 
         return internal_set(target, key, value, receiver);
-      }),
+      })
+    });
+  }
 
+  if (Object.setPrototypeOf) {
+    var willCreateCircularPrototype = function (object, proto) {
+      while (proto) {
+        if (object === proto) {
+          return true;
+        }
+        proto = Reflect.getPrototypeOf(proto);
+      }
+      return false;
+    };
+
+    defineProperties(globals.Reflect, {
       // Sets the prototype of the given object.
       // Returns true on success, otherwise false.
       setPrototypeOf: throwUnlessTargetIsObject(function setPrototypeOf(object, proto) {
