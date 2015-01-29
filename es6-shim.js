@@ -2237,6 +2237,68 @@
     };
   };
 
+  // Some Reflect methods are basically the same as
+  // those on the Object global, except that a TypeError is thrown if
+  // target isn't an object. As well as returning a boolean indicating
+  // the success of the operation.
+  defineProperties(globals.Reflect, {
+    // Apply method in a functional form.
+    apply: ES.Call,
+
+    // New operator in a functional form.
+    construct: function construct(constructor, args) {
+      if (!ES.IsCallable(constructor)) {
+        throw new TypeError('First argument must be callable.');
+      }
+
+      return ES.Construct(constructor, args);
+    },
+
+    // When deleting a non-existent or configurable property,
+    // true is returned.
+    // When attempting to delete a non-configurable property,
+    // it will return false.
+    deleteProperty: throwUnlessTargetIsObject(function deleteProperty(target, key) {
+      if (supportsDescriptors) {
+        var desc = Object.getOwnPropertyDescriptor(target, key);
+
+        if (desc && !desc.configurable) {
+          return false;
+        }
+      }
+
+      // Will return true.
+      return delete target[key];
+    }),
+
+    enumerate: throwUnlessTargetIsObject(function enumerate(target) {
+      return new ObjectIterator(target, 'key');
+    }),
+
+    has: throwUnlessTargetIsObject(function has(target, key) {
+      return key in target;
+    }),
+
+    isExtensible: throwUnlessTargetIsObject(Object.isExtensible),
+
+    // Basically the result of calling the internal [[OwnPropertyKeys]].
+    // Concatenating propertyNames and propertySymbols should do the trick.
+    // This should continue to work together with a Symbol shim
+    // which overrides Object.getOwnPropertyNames and implements
+    // Object.getOwnPropertySymbols.
+    ownKeys: throwUnlessTargetIsObject(function ownKeys(target) {
+      var keys = Object.getOwnPropertyNames(target);
+
+      if (ES.IsCallable(Object.getOwnPropertySymbols)) {
+        keys.push.apply(keys, Object.getOwnPropertySymbols(target));
+      }
+
+      return keys;
+    }),
+
+    preventExtensions: wrapObjectFunction(Object.preventExtensions)
+  });
+
   if (supportsDescriptors) {
     var internal_get = function get(target, key, receiver) {
       var desc = Object.getOwnPropertyDescriptor(target, key);
@@ -2313,44 +2375,10 @@
       return false;
     };
 
-    // Some Reflect methods are basically the same as
-    // those on the Object global, except that a TypeError is thrown if
-    // target isn't an object. As well as returning a boolean indicating
-    // the success of the operation.
     defineProperties(globals.Reflect, {
-
-      // Apply method in a functional form.
-      apply: ES.Call,
-
-      // New operator in a functional form.
-      construct: function construct(constructor, args) {
-        if (!ES.IsCallable(constructor)) {
-          throw new TypeError('First argument must be callable.');
-        }
-
-        return ES.Construct(constructor, args);
-      },
-
       defineProperty: wrapObjectFunction(Object.defineProperty),
 
-      // When deleting a non-existant or configurable property,
-      // true is returned.
-      // When attempting to delete a non-configurable property,
-      // it will return false.
-      deleteProperty: throwUnlessTargetIsObject(function deleteProperty(target, key) {
-        var desc = Object.getOwnPropertyDescriptor(target, key);
-
-        if (desc && !desc.configurable) {
-          return false;
-        }
-
-        // Will return true.
-        return delete target[key];
-      }),
-
-      enumerate: throwUnlessTargetIsObject(function enumerate(target) {
-        return new ObjectIterator(target, 'key');
-      }),
+      getOwnPropertyDescriptor: throwUnlessTargetIsObject(Object.getOwnPropertyDescriptor),
 
       // Syntax in a functional form.
       get: throwUnlessTargetIsObject(function get(target, key) {
@@ -2358,31 +2386,6 @@
 
         return internal_get(target, key, receiver);
       }),
-
-      getOwnPropertyDescriptor: throwUnlessTargetIsObject(Object.getOwnPropertyDescriptor),
-
-      has: throwUnlessTargetIsObject(function has(target, key) {
-        return key in target;
-      }),
-
-      isExtensible: throwUnlessTargetIsObject(Object.isExtensible),
-
-      // Basically the result of calling the internal [[OwnPropertyKeys]].
-      // Concatenating propertyNames and propertySymbols should do the trick.
-      // This should continue to work together with a Symbol shim
-      // which overrides Object.getOwnPropertyNames and implements
-      // Object.getOwnPropertySymbols.
-      ownKeys: throwUnlessTargetIsObject(function ownKeys(target) {
-        var keys = Object.getOwnPropertyNames(target);
-
-        if (ES.IsCallable(Object.getOwnPropertySymbols)) {
-          keys.push.apply(keys, Object.getOwnPropertySymbols(target));
-        }
-
-        return keys;
-      }),
-
-      preventExtensions: wrapObjectFunction(Object.preventExtensions),
 
       set: throwUnlessTargetIsObject(function set(target, key, value) {
         var receiver = arguments.length > 3 ? arguments[3] : target;

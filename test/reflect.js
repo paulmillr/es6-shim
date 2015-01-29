@@ -1,9 +1,14 @@
-/*global describe, it, expect, require, Reflect */
+/*global describe, it, xit, expect, require, Reflect */
 
-var ifSymbolsIt = typeof Symbol === 'function' ? it : xit;
+/*jshint notypeof: true */
+var hasSymbols = typeof Symbol === 'function' && typeof Symbol() === 'symbol';
+/*jshint notypeof: false */
+var ifSymbolsIt = hasSymbols ? it : xit;
 var describeIfGetProto = Object.getPrototypeOf ? describe : xdescribe;
 var describeIfSetProto = Object.setPrototypeOf ? describe : xdescribe;
 var describeIfES5 = Object.defineProperty ? describe : xdescribe;
+var describeIfGetProto = Object.getPrototypeOf ? describe : xdescribe;
+var ifES5It = Object.defineProperty ? it : xit;
 var ifFreezeIt = typeof Object.freeze === 'function' ? it : xit;
 
 // Reflect requires defineProperty
@@ -55,7 +60,7 @@ describe('Reflect', function () {
     expect(exported.Reflect).to.equal(Reflect);
   });
 
-  describeIfES5('Reflect.apply()', function () {
+  describe('Reflect.apply()', function () {
     it('is a function', function () {
       expect(typeof Reflect.apply).to.equal('function');
     });
@@ -87,7 +92,7 @@ describe('Reflect', function () {
     });
   });
 
-  describeIfES5('Reflect.construct()', function () {
+  describe('Reflect.construct()', function () {
     it('is a function', function () {
       expect(typeof Reflect.construct).to.equal('function');
     });
@@ -169,7 +174,7 @@ describe('Reflect', function () {
     });
   });
 
-  describeIfES5('Reflect.deleteProperty()', function () {
+  describe('Reflect.deleteProperty()', function () {
     it('is a function', function () {
       expect(typeof Reflect.deleteProperty).to.equal('function');
     });
@@ -180,7 +185,7 @@ describe('Reflect', function () {
       });
     });
 
-    it('returns true for success and false for failure', function () {
+    ifES5It('returns true for success and false for failure', function () {
       var o = { a: 1 };
 
       Object.defineProperty(o, 'b', { value: 2 });
@@ -208,12 +213,12 @@ describe('Reflect', function () {
     });
   });
 
-  describeIfES5('Reflect.enumerate()', function () {
+  describe('Reflect.enumerate()', function () {
     it('is a function', function () {
       expect(typeof Reflect.enumerate).to.equal('function');
     });
 
-    it('only includes enumerable properties', function () {
+    ifES5It('only includes enumerable properties', function () {
       var a = Object.create(null, {
         // Non-enumerable per default.
         a: { value: 1 }
@@ -224,7 +229,7 @@ describe('Reflect', function () {
       var iter = Reflect.enumerate(a);
 
       /*jshint notypeof: true */
-      if (typeof Symbol === 'function' && typeof Symbol.iterator === 'symbol') {
+      if (hasSymbols && typeof Symbol.iterator === 'symbol') {
         expect(Symbol.iterator in iter).to.equal(true);
       }
 
@@ -232,10 +237,15 @@ describe('Reflect', function () {
     });
 
     it('includes all enumerable properties of prototypes', function () {
-      var a = { prop: true };
-      var b = Object.create(a);
+      var Parent = function () {};
+      Parent.prototype.prop = true;
 
-      expect(Array.from(Reflect.enumerate(b))).to.deep.equal(['prop']);
+      var Child = function () {};
+      Child.prototype = new Parent();
+      Child.prototype.childProp = true;
+      var child = new Child();
+
+      expect(Array.from(Reflect.enumerate(child)).sort()).to.deep.equal(['prop', 'childProp'].sort());
     });
 
     it('yields keys determined at first next() call', function () {
@@ -401,7 +411,7 @@ describe('Reflect', function () {
     });
   });
 
-  describeIfES5('Reflect.has()', function () {
+  describe('Reflect.has()', function () {
     it('is a function', function () {
       expect(typeof Reflect.has).to.equal('function');
     });
@@ -413,7 +423,7 @@ describe('Reflect', function () {
     });
 
     it('will detect own properties', function () {
-      var target = Object.create(null);
+      var target = Object.create ? Object.create(null) : {};
 
       expect(Reflect.has(target, 'prop')).to.equal(false);
 
@@ -423,28 +433,35 @@ describe('Reflect', function () {
       delete target.prop;
       expect(Reflect.has(target, 'prop')).to.equal(false);
 
+      expect(Reflect.has(Reflect.has, 'length')).to.equal(true);
+    });
+
+    ifES5It('will detect an own accessor property', function () {
+      var target = Object.create(null);
       Object.defineProperty(target, 'accessor', {
         set: function () {}
       });
 
       expect(Reflect.has(target, 'accessor')).to.equal(true);
-
-      expect(Reflect.has(Reflect.has, 'length')).to.equal(true);
     });
 
     it('will search the prototype chain', function () {
-      var intermediate = Object.create(object),
-      target = Object.create(intermediate);
+      var Parent = function () {};
+      Parent.prototype.someProperty = undefined;
 
-      intermediate.some_property = undefined;
+      var Child = function () {};
+      Child.prototype = new Parent();
+
+      var target = new Child();
+      target.bool = true;
 
       expect(Reflect.has(target, 'bool')).to.equal(true);
-      expect(Reflect.has(target, 'some_property')).to.equal(true);
-      expect(Reflect.has(target, 'undefined_property')).to.equal(false);
+      expect(Reflect.has(target, 'someProperty')).to.equal(true);
+      expect(Reflect.has(target, 'undefinedProperty')).to.equal(false);
     });
   });
 
-  describeIfES5('Reflect.isExtensible()', function () {
+  describe('Reflect.isExtensible()', function () {
     it('is a function', function () {
       expect(typeof Reflect.isExtensible).to.equal('function');
     });
@@ -461,7 +478,7 @@ describe('Reflect', function () {
     });
   });
 
-  describeIfES5('Reflect.ownKeys()', function () {
+  describe('Reflect.ownKeys()', function () {
     it('is a function', function () {
       expect(typeof Reflect.ownKeys).to.equal('function');
     });
@@ -500,7 +517,7 @@ describe('Reflect', function () {
     });
   });
 
-  describeIfES5('Reflect.preventExtensions()', function () {
+  describe('Reflect.preventExtensions()', function () {
     it('is a function', function () {
       expect(typeof Reflect.preventExtensions).to.equal('function');
     });
