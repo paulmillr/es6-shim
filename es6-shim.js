@@ -2204,233 +2204,233 @@
     // Shim incomplete iterator implementations.
     addIterator(Object.getPrototypeOf((new globals.Map()).keys()));
     addIterator(Object.getPrototypeOf((new globals.Set()).keys()));
+  }
 
-    // Reflect
-    if (!globals.Reflect) {
-      var Reflect = {};
+  // Reflect
+  if (!globals.Reflect) {
+    defineProperty(globals, 'Reflect', {});
+  }
+  var Reflect = globals.Reflect;
+  var wrapObjectFunction = function (func) {
+    return function (target) {
+      if (!ES.TypeIsObject(target)) {
+        throw new TypeError('target must be an object');
+      }
 
-      var wrapObjectFunction = function (func) {
-        return function (target) {
-          if (!ES.TypeIsObject(target)) {
-            throw new TypeError('target must be an object');
-          }
+      try {
+        ES.Call(func, Object, arguments);
+      } catch (_) {
+        return false;
+      }
 
-          try {
-            ES.Call(func, Object, arguments);
-          } catch (_) {
-            return false;
-          }
+      return true;
+    };
+  };
 
-          return true;
+  var throwUnlessTargetIsObject = function (func) {
+    return function (target) {
+      if (!ES.TypeIsObject(target)) {
+        throw new TypeError('target must be an object');
+      }
+
+      return ES.Call(func, this, arguments);
+    };
+  };
+
+  var willCreateCircularPrototype = function (object, proto) {
+    while (proto) {
+      if (object === proto) {
+        return true;
+      }
+
+      proto = Reflect.getPrototypeOf(proto);
+    }
+
+    return false;
+  };
+
+  if (supportsDescriptors) {
+    var internal_get = function get(target, key, receiver) {
+      var desc = Object.getOwnPropertyDescriptor(target, key);
+
+      if (!desc) {
+        var parent = Object.getPrototypeOf(target);
+
+        if (parent === null) {
+          return undefined;
+        }
+
+        return internal_get(parent, key, receiver);
+      }
+
+      if ('value' in desc) {
+        return desc.value;
+      }
+
+      if (desc.get) {
+        return desc.get.call(receiver);
+      }
+
+      return undefined;
+    };
+
+    var internal_set = function set(target, key, value, receiver) {
+      var desc = Object.getOwnPropertyDescriptor(target, key);
+
+      if (!desc) {
+        var parent = Object.getPrototypeOf(target);
+
+        if (parent !== null) {
+          return internal_set(parent, key, value, receiver);
+        }
+
+        desc = {
+          value: void 0,
+          writable: true,
+          enumerable: true,
+          configurable: true
         };
-      };
+      }
 
-      var throwUnlessTargetIsObject = function (func) {
-        return function (target) {
-          if (!ES.TypeIsObject(target)) {
-            throw new TypeError('target must be an object');
-          }
-
-          return ES.Call(func, this, arguments);
-        };
-      };
-
-      var internal_get = function get(target, key, receiver) {
-        var desc = Object.getOwnPropertyDescriptor(target, key);
-
-        if (!desc) {
-          var parent = Object.getPrototypeOf(target);
-
-          if (parent === null) {
-            return undefined;
-          }
-
-          return internal_get(parent, key, receiver);
+      if ('value' in desc) {
+        if (!desc.writable) {
+          return false;
         }
 
-        if ('value' in desc) {
-          return desc.value;
+        if (!ES.TypeIsObject(receiver)) {
+          return false;
         }
 
-        if (desc.get) {
-          return desc.get.call(receiver);
-        }
+        var existingDesc = Object.getOwnPropertyDescriptor(receiver, key);
 
-        return undefined;
-      };
-
-      var internal_set = function set(target, key, value, receiver) {
-        var desc = Object.getOwnPropertyDescriptor(target, key);
-
-        if (!desc) {
-          var parent = Object.getPrototypeOf(target);
-
-          if (parent !== null) {
-            return internal_set(parent, key, value, receiver);
-          }
-
-          desc = {
-            value: void 0,
+        if (existingDesc) {
+          return Reflect.defineProperty(receiver, key, {
+            value: value
+          });
+        } else {
+          return Reflect.defineProperty(receiver, key, {
+            value: value,
             writable: true,
             enumerable: true,
             configurable: true
-          };
+          });
+        }
+      }
+
+      if (desc.set) {
+        desc.set.call(receiver, value);
+        return true;
+      }
+
+      return false;
+    };
+
+    // Some Reflect methods are basically the same as
+    // those on the Object global, except that a TypeError is thrown if
+    // target isn't an object. As well as returning a boolean indicating
+    // the success of the operation.
+    defineProperties(globals.Reflect, {
+
+      // Apply method in a functional form.
+      apply: ES.Call,
+
+      // New operator in a functional form.
+      construct: function construct(constructor, args) {
+        if (!ES.IsCallable(constructor)) {
+          throw new TypeError('First argument must be callable.');
         }
 
-        if ('value' in desc) {
-          if (!desc.writable) {
-            return false;
-          }
+        return ES.Construct(constructor, args);
+      },
 
-          if (!ES.TypeIsObject(receiver)) {
-            return false;
-          }
+      defineProperty: wrapObjectFunction(Object.defineProperty),
 
-          var existingDesc = Object.getOwnPropertyDescriptor(receiver, key);
+      // When deleting a non-existant or configurable property,
+      // true is returned.
+      // When attempting to delete a non-configurable property,
+      // it will return false.
+      deleteProperty: throwUnlessTargetIsObject(function deleteProperty(target, key) {
+        var desc = Object.getOwnPropertyDescriptor(target, key);
 
-          if (existingDesc) {
-            return Reflect.defineProperty(receiver, key, {
-              value: value
-            });
-          } else {
-            return Reflect.defineProperty(receiver, key, {
-              value: value,
-              writable: true,
-              enumerable: true,
-              configurable: true
-            });
-          }
+        if (desc && !desc.configurable) {
+          return false;
         }
 
-        if (desc.set) {
-          desc.set.call(receiver, value);
+        // Will return true.
+        return delete target[key];
+      }),
+
+      enumerate: throwUnlessTargetIsObject(function enumerate(target) {
+        return new ObjectIterator(target, 'key');
+      }),
+
+      // Syntax in a functional form.
+      get: throwUnlessTargetIsObject(function get(target, key) {
+        var receiver = arguments.length > 2 ? arguments[2] : target;
+
+        return internal_get(target, key, receiver);
+      }),
+
+      getOwnPropertyDescriptor: throwUnlessTargetIsObject(Object.getOwnPropertyDescriptor),
+
+      getPrototypeOf: throwUnlessTargetIsObject(Object.getPrototypeOf),
+
+      has: throwUnlessTargetIsObject(function has(target, key) {
+        return key in target;
+      }),
+
+      isExtensible: throwUnlessTargetIsObject(Object.isExtensible),
+
+      // Basically the result of calling the internal [[OwnPropertyKeys]].
+      // Concatenating propertyNames and propertySymbols should do the trick.
+      // This should continue to work together with a Symbol shim
+      // which overrides Object.getOwnPropertyNames and implements
+      // Object.getOwnPropertySymbols.
+      ownKeys: throwUnlessTargetIsObject(function ownKeys(target) {
+        var keys = Object.getOwnPropertyNames(target);
+
+        if (ES.IsCallable(Object.getOwnPropertySymbols)) {
+          keys.push.apply(keys, Object.getOwnPropertySymbols(target));
+        }
+
+        return keys;
+      }),
+
+      preventExtensions: wrapObjectFunction(Object.preventExtensions),
+
+      set: throwUnlessTargetIsObject(function set(target, key, value) {
+        var receiver = arguments.length > 3 ? arguments[3] : target;
+
+        return internal_set(target, key, value, receiver);
+      }),
+
+      // Sets the prototype of the given object.
+      // Returns true on success, otherwise false.
+      setPrototypeOf: throwUnlessTargetIsObject(function setPrototypeOf(object, proto) {
+        if (proto !== null && !ES.TypeIsObject(proto)) {
+          throw new TypeError('proto must be an object or null');
+        }
+
+        // If they already are the same, we're done.
+        if (proto === Reflect.getPrototypeOf(object)) {
           return true;
         }
 
-        return false;
-      };
-
-      var willCreateCircularPrototype = function (object, proto) {
-        while (proto) {
-          if (object === proto) {
-            return true;
-          }
-
-          proto = Reflect.getPrototypeOf(proto);
+        // Cannot alter prototype if object not extensible.
+        if (!Reflect.isExtensible(object)) {
+          return false;
         }
 
-        return false;
-      };
+        // Ensure that we do not create a circular prototype chain.
+        if (willCreateCircularPrototype(object, proto)) {
+          return false;
+        }
 
-      // Some Reflect methods are basically the same as
-      // those on the Object global, except that a TypeError is thrown if
-      // target isn't an object. As well as returning a boolean indicating
-      // the success of the operation.
-      defineProperties(Reflect, {
+        Object.setPrototypeOf(object, proto);
 
-        // Apply method in a functional form.
-        apply: ES.Call,
-
-        // New operator in a functional form.
-        construct: function construct(constructor, args) {
-          if (!ES.IsCallable(constructor)) {
-            throw new TypeError('First argument must be callable.');
-          }
-
-          return ES.Construct(constructor, args);
-        },
-
-        defineProperty: wrapObjectFunction(Object.defineProperty),
-
-        // When deleting a non-existant or configurable property,
-        // true is returned.
-        // When attempting to delete a non-configurable property,
-        // it will return false.
-        deleteProperty: throwUnlessTargetIsObject(function deleteProperty(target, key) {
-          var desc = Object.getOwnPropertyDescriptor(target, key);
-
-          if (desc && !desc.configurable) {
-            return false;
-          }
-
-          // Will return true.
-          return delete target[key];
-        }),
-
-        enumerate: throwUnlessTargetIsObject(function enumerate(target) {
-          return new ObjectIterator(target, 'key');
-        }),
-
-        // Syntax in a functional form.
-        get: throwUnlessTargetIsObject(function get(target, key) {
-          var receiver = arguments.length > 2 ? arguments[2] : target;
-
-          return internal_get(target, key, receiver);
-        }),
-
-        getOwnPropertyDescriptor: throwUnlessTargetIsObject(Object.getOwnPropertyDescriptor),
-
-        getPrototypeOf: throwUnlessTargetIsObject(Object.getPrototypeOf),
-
-        has: throwUnlessTargetIsObject(function has(target, key) {
-          return key in target;
-        }),
-
-        isExtensible: throwUnlessTargetIsObject(Object.isExtensible),
-
-        // Basically the result of calling the internal [[OwnPropertyKeys]].
-        // Concatenating propertyNames and propertySymbols should do the trick.
-        // This should continue to work together with a Symbol shim
-        // which overrides Object.getOwnPropertyNames and implements
-        // Object.getOwnPropertySymbols.
-        ownKeys: throwUnlessTargetIsObject(function ownKeys(target) {
-          var keys = Object.getOwnPropertyNames(target);
-
-          if (ES.IsCallable(Object.getOwnPropertySymbols)) {
-            keys.push.apply(keys, Object.getOwnPropertySymbols(target));
-          }
-
-          return keys;
-        }),
-
-        preventExtensions: wrapObjectFunction(Object.preventExtensions),
-
-        set: throwUnlessTargetIsObject(function set(target, key, value) {
-          var receiver = arguments.length > 3 ? arguments[3] : target;
-
-          return internal_set(target, key, value, receiver);
-        }),
-
-        // Sets the prototype of the given object.
-        // Returns true on success, otherwise false.
-        setPrototypeOf: throwUnlessTargetIsObject(function setPrototypeOf(object, proto) {
-          if (proto !== null && !ES.TypeIsObject(proto)) {
-            throw new TypeError('proto must be an object or null');
-          }
-
-          // If they already are the same, we're done.
-          if (proto === Reflect.getPrototypeOf(object)) {
-            return true;
-          }
-
-          // Cannot alter prototype if object not extensible.
-          if (!Reflect.isExtensible(object)) {
-            return false;
-          }
-
-          // Ensure that we do not create a circular prototype chain.
-          if (willCreateCircularPrototype(object, proto)) {
-            return false;
-          }
-
-          Object.setPrototypeOf(object, proto);
-
-          return true;
-        })
-      });
-
-      defineProperty(globals, 'Reflect', Reflect);
-    }
+        return true;
+      })
+    });
   }
 
   return globals;

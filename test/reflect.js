@@ -1,11 +1,11 @@
 /*global describe, it, expect, require, Reflect */
 
 var ifSymbolsIt = typeof Symbol === 'function' ? it : xit;
-var ifES5It = Object.defineProperty ? describe : xdescribe;
+var describeIfES5 = Object.defineProperty ? describe : xdescribe;
 var ifFreezeIt = typeof Object.freeze === 'function' ? it : xit;
 
 // Reflect requires defineProperty
-ifES5It('Reflect', function () {
+describe('Reflect', function () {
   var object = {
     something: 1,
     _value: 0
@@ -53,7 +53,7 @@ ifES5It('Reflect', function () {
     expect(exported.Reflect).to.equal(Reflect);
   });
 
-  describe('Reflect.apply()', function () {
+  describeIfES5('Reflect.apply()', function () {
     it('is a function', function () {
       expect(typeof Reflect.apply).to.equal('function');
     });
@@ -85,7 +85,7 @@ ifES5It('Reflect', function () {
     });
   });
 
-  describe('Reflect.construct()', function () {
+  describeIfES5('Reflect.construct()', function () {
     it('is a function', function () {
       expect(typeof Reflect.construct).to.equal('function');
     });
@@ -107,7 +107,7 @@ ifES5It('Reflect', function () {
     });
   });
 
-  describe('Reflect.defineProperty()', function () {
+  describeIfES5('Reflect.defineProperty()', function () {
     it('is a function', function () {
       expect(typeof Reflect.defineProperty).to.equal('function');
     });
@@ -167,7 +167,7 @@ ifES5It('Reflect', function () {
     });
   });
 
-  describe('Reflect.deleteProperty()', function () {
+  describeIfES5('Reflect.deleteProperty()', function () {
     it('is a function', function () {
       expect(typeof Reflect.deleteProperty).to.equal('function');
     });
@@ -206,7 +206,7 @@ ifES5It('Reflect', function () {
     });
   });
 
-  describe('Reflect.enumerate()', function () {
+  describeIfES5('Reflect.enumerate()', function () {
     it('is a function', function () {
       expect(typeof Reflect.enumerate).to.equal('function');
     });
@@ -264,7 +264,7 @@ ifES5It('Reflect', function () {
     });
   });
 
-  describe('Reflect.get()', function () {
+  describeIfES5('Reflect.get()', function () {
     it('is a function', function () {
       expect(typeof Reflect.get).to.equal('function');
     });
@@ -313,7 +313,7 @@ ifES5It('Reflect', function () {
     });
   });
 
-  describe('Reflect.getOwnPropertyDescriptor()', function () {
+  describeIfES5('Reflect.getOwnPropertyDescriptor()', function () {
     it('is a function', function () {
       expect(typeof Reflect.getOwnPropertyDescriptor).to.equal('function');
     });
@@ -338,7 +338,7 @@ ifES5It('Reflect', function () {
     });
   });
 
-  describe('Reflect.getPrototypeOf()', function () {
+  describeIfES5('Reflect.getPrototypeOf()', function () {
     it('is a function', function () {
       expect(typeof Reflect.getPrototypeOf).to.equal('function');
     });
@@ -356,7 +356,7 @@ ifES5It('Reflect', function () {
     });
   });
 
-  describe('Reflect.has()', function () {
+  describeIfES5('Reflect.has()', function () {
     it('is a function', function () {
       expect(typeof Reflect.has).to.equal('function');
     });
@@ -399,7 +399,7 @@ ifES5It('Reflect', function () {
     });
   });
 
-  describe('Reflect.isExtensible()', function () {
+  describeIfES5('Reflect.isExtensible()', function () {
     it('is a function', function () {
       expect(typeof Reflect.isExtensible).to.equal('function');
     });
@@ -416,7 +416,7 @@ ifES5It('Reflect', function () {
     });
   });
 
-  describe('Reflect.ownKeys()', function () {
+  describeIfES5('Reflect.ownKeys()', function () {
     it('is a function', function () {
       expect(typeof Reflect.ownKeys).to.equal('function');
     });
@@ -455,7 +455,7 @@ ifES5It('Reflect', function () {
     });
   });
 
-  describe('Reflect.preventExtensions()', function () {
+  describeIfES5('Reflect.preventExtensions()', function () {
     it('is a function', function () {
       expect(typeof Reflect.preventExtensions).to.equal('function');
     });
@@ -473,7 +473,7 @@ ifES5It('Reflect', function () {
     });
   });
 
-  describe('Reflect.set()', function () {
+  describeIfES5('Reflect.set()', function () {
     it('is a function', function () {
       expect(typeof Reflect.set).to.equal('function');
     });
@@ -516,7 +516,7 @@ ifES5It('Reflect', function () {
     });
   });
 
-  describe('Reflect.setPrototypeOf()', function () {
+  describeIfES5('Reflect.setPrototypeOf()', function () {
     it('is a function', function () {
       expect(typeof Reflect.setPrototypeOf).to.equal('function');
     });
