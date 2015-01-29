@@ -220,8 +220,8 @@ describe('Reflect', function () {
       expect(Reflect.deleteProperty(o, 'a')).to.equal(true);
     });
 
-    it('cannot delete a function’s name property', function () {
-      expect(Reflect.deleteProperty(function a() {}, 'name')).to.equal(false);
+    it('cannot delete a function’s length property', function () {
+      expect(Reflect.deleteProperty(function a() {}, 'length')).to.equal(false);
     });
   });
 
