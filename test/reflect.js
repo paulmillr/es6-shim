@@ -1,20 +1,29 @@
 /*global describe, it, xit, expect, require, Reflect */
 
+var arePropertyDescriptorsSupported = function () {
+  try {
+    Object.defineProperty({}, 'x', {});
+    return true;
+  } catch (e) { /* this is IE 8. */
+    return false;
+  }
+};
+var supportsDescriptors = !!Object.defineProperty && arePropertyDescriptorsSupported();
+
 /*jshint notypeof: true */
 var hasSymbols = typeof Symbol === 'function' && typeof Symbol() === 'symbol';
 /*jshint notypeof: false */
 var ifSymbolsIt = hasSymbols ? it : xit;
 var describeIfGetProto = Object.getPrototypeOf ? describe : xdescribe;
 var describeIfSetProto = Object.setPrototypeOf ? describe : xdescribe;
-var describeIfES5 = Object.defineProperty ? describe : xdescribe;
+var describeIfES5 = supportsDescriptors ? describe : xdescribe;
 var describeIfGetProto = Object.getPrototypeOf ? describe : xdescribe;
 var describeIfExtensionsPreventible = Object.preventExtensions ? describe : xdescribe;
 var describeIfGetOwnPropertyNames = Object.getOwnPropertyNames ? describe : xdescribe;
 var ifExtensionsPreventibleIt = Object.preventExtensions ? it : xit;
-var ifES5It = Object.defineProperty ? it : xit;
+var ifES5It = supportsDescriptors ? it : xit;
 var ifFreezeIt = typeof Object.freeze === 'function' ? it : xit;
 
-// Reflect requires defineProperty
 describe('Reflect', function () {
   var object = {
     something: 1,
