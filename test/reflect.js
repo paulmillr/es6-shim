@@ -481,7 +481,7 @@ describe('Reflect', function () {
     });
   });
 
-  describe('Reflect.ownKeys()', function () {
+  describeIfGetOwnPropertyNames('Reflect.ownKeys()', function () {
     it('is a function', function () {
       expect(typeof Reflect.ownKeys).to.equal('function');
     });

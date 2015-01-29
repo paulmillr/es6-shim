@@ -2277,23 +2277,27 @@
 
     has: throwUnlessTargetIsObject(function has(target, key) {
       return key in target;
-    }),
-
-    // Basically the result of calling the internal [[OwnPropertyKeys]].
-    // Concatenating propertyNames and propertySymbols should do the trick.
-    // This should continue to work together with a Symbol shim
-    // which overrides Object.getOwnPropertyNames and implements
-    // Object.getOwnPropertySymbols.
-    ownKeys: throwUnlessTargetIsObject(function ownKeys(target) {
-      var keys = Object.getOwnPropertyNames(target);
-
-      if (ES.IsCallable(Object.getOwnPropertySymbols)) {
-        keys.push.apply(keys, Object.getOwnPropertySymbols(target));
-      }
-
-      return keys;
     })
   });
+
+  if (Object.getOwnPropertyNames) {
+    defineProperties(globals.Reflect, {
+      // Basically the result of calling the internal [[OwnPropertyKeys]].
+      // Concatenating propertyNames and propertySymbols should do the trick.
+      // This should continue to work together with a Symbol shim
+      // which overrides Object.getOwnPropertyNames and implements
+      // Object.getOwnPropertySymbols.
+      ownKeys: throwUnlessTargetIsObject(function ownKeys(target) {
+        var keys = Object.getOwnPropertyNames(target);
+
+        if (ES.IsCallable(Object.getOwnPropertySymbols)) {
+          keys.push.apply(keys, Object.getOwnPropertySymbols(target));
+        }
+
+        return keys;
+      })
+    });
+  }
 
   if (Object.preventExtensions) {
     defineProperties(globals.Reflect, {
