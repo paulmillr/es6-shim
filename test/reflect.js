@@ -1,7 +1,5 @@
 /*global describe, it, expect, require, Reflect */
 
-var exported = require('../');
-
 var ifSymbolsIt = typeof Symbol === 'function' ? it : xit;
 var ifES5It = Object.defineProperty ? describe : xdescribe;
 var ifFreezeIt = typeof Object.freeze === 'function' ? it : xit;
@@ -50,7 +48,8 @@ ifES5It('Reflect', function () {
 
   var testPrimitiveThrow = testXThrow.bind(null, [null, undefined, 1, 'string', true]);
 
-  it('is on the exported object', function () {
+  (typeof process !== 'undefined' && process.env.NO_ES6_SHIM ? it.skip : it)('is on the exported object', function () {
+    var exported = require('../');
     expect(exported.Reflect).to.equal(Reflect);
   });
 
