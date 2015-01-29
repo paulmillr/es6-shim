@@ -1,6 +1,7 @@
 /*global describe, it, expect, require, Reflect */
 
 var ifSymbolsIt = typeof Symbol === 'function' ? it : xit;
+var describeIfGetProto = Object.getPrototypeOf ? describe : xdescribe;
 var describeIfSetProto = Object.setPrototypeOf ? describe : xdescribe;
 var describeIfES5 = Object.defineProperty ? describe : xdescribe;
 var ifFreezeIt = typeof Object.freeze === 'function' ? it : xit;
@@ -339,7 +340,7 @@ describe('Reflect', function () {
     });
   });
 
-  describeIfES5('Reflect.getPrototypeOf()', function () {
+  describeIfGetProto('Reflect.getPrototypeOf()', function () {
     it('is a function', function () {
       expect(typeof Reflect.getPrototypeOf).to.equal('function');
     });

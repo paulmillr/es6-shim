@@ -2361,8 +2361,6 @@
 
       getOwnPropertyDescriptor: throwUnlessTargetIsObject(Object.getOwnPropertyDescriptor),
 
-      getPrototypeOf: throwUnlessTargetIsObject(Object.getPrototypeOf),
-
       has: throwUnlessTargetIsObject(function has(target, key) {
         return key in target;
       }),
@@ -2391,6 +2389,12 @@
 
         return internal_set(target, key, value, receiver);
       })
+    });
+  }
+
+  if (Object.getPrototypeOf) {
+    defineProperties(globals.Reflect, {
+      getPrototypeOf: throwUnlessTargetIsObject(Object.getPrototypeOf)
     });
   }
 
