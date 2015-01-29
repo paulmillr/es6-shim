@@ -7,6 +7,7 @@ var getRegexLiteral = function (stringRegex) {
     /*jshint evil: false */
   } catch (e) {}
 };
+var describeIfSupportsDescriptors = Object.getOwnPropertyDescriptor ? describe : xdescribe;
 
 describe('RegExp', function () {
   (typeof process !== 'undefined' && process.env.NO_ES6_SHIM ? it.skip : it)('is on the exported object', function () {
@@ -54,12 +55,12 @@ describe('RegExp', function () {
     });
   });
 
-  var regexpFlagsDescriptor = Object.getOwnPropertyDescriptor(RegExp.prototype, 'flags');
-  var testGenericRegExpFlags = function (object) {
-    return regexpFlagsDescriptor.get.call(object);
-  };
+  describeIfSupportsDescriptors('#flags', function () {
+    var regexpFlagsDescriptor = Object.getOwnPropertyDescriptor(RegExp.prototype, 'flags');
+    var testGenericRegExpFlags = function (object) {
+      return regexpFlagsDescriptor.get.call(object);
+    };
 
-  describe('#flags', function () {
     it('has the correct descriptor', function () {
       expect(regexpFlagsDescriptor.configurable).to.equal(true);
       expect(regexpFlagsDescriptor.enumerable).to.equal(false);
