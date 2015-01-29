@@ -8,6 +8,9 @@ var describeIfGetProto = Object.getPrototypeOf ? describe : xdescribe;
 var describeIfSetProto = Object.setPrototypeOf ? describe : xdescribe;
 var describeIfES5 = Object.defineProperty ? describe : xdescribe;
 var describeIfGetProto = Object.getPrototypeOf ? describe : xdescribe;
+var describeIfExtensionsPreventible = Object.preventExtensions ? describe : xdescribe;
+var describeIfGetOwnPropertyNames = Object.getOwnPropertyNames ? describe : xdescribe;
+var ifExtensionsPreventibleIt = Object.preventExtensions ? it : xit;
 var ifES5It = Object.defineProperty ? it : xit;
 var ifFreezeIt = typeof Object.freeze === 'function' ? it : xit;
 
@@ -125,7 +128,7 @@ describe('Reflect', function () {
       });
     });
 
-    it('returns false for non-extensible objects', function () {
+    ifExtensionsPreventibleIt('returns false for non-extensible objects', function () {
       var o = Object.preventExtensions({});
 
       expect(Reflect.defineProperty(o, 'prop', {})).to.equal(false);
@@ -461,7 +464,7 @@ describe('Reflect', function () {
     });
   });
 
-  describe('Reflect.isExtensible()', function () {
+  describeIfExtensionsPreventible('Reflect.isExtensible()', function () {
     it('is a function', function () {
       expect(typeof Reflect.isExtensible).to.equal('function');
     });
@@ -517,7 +520,7 @@ describe('Reflect', function () {
     });
   });
 
-  describe('Reflect.preventExtensions()', function () {
+  describeIfExtensionsPreventible('Reflect.preventExtensions()', function () {
     it('is a function', function () {
       expect(typeof Reflect.preventExtensions).to.equal('function');
     });

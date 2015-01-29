@@ -2279,8 +2279,6 @@
       return key in target;
     }),
 
-    isExtensible: throwUnlessTargetIsObject(Object.isExtensible),
-
     // Basically the result of calling the internal [[OwnPropertyKeys]].
     // Concatenating propertyNames and propertySymbols should do the trick.
     // This should continue to work together with a Symbol shim
@@ -2294,10 +2292,15 @@
       }
 
       return keys;
-    }),
-
-    preventExtensions: wrapObjectFunction(Object.preventExtensions)
+    })
   });
+
+  if (Object.preventExtensions) {
+    defineProperties(globals.Reflect, {
+      isExtensible: throwUnlessTargetIsObject(Object.isExtensible),
+      preventExtensions: wrapObjectFunction(Object.preventExtensions)
+    });
+  }
 
   if (supportsDescriptors) {
     var internal_get = function get(target, key, receiver) {
