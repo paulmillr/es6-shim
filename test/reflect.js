@@ -77,6 +77,10 @@ describe('Reflect', function () {
       expect(typeof Reflect.apply).to.equal('function');
     });
 
+    it('has the right name', function () {
+      expect(Reflect.apply.name).to.equal('apply');
+    });
+
     it('throws if target isn’t callable', function () {
       testCallableThrow(function (item) {
         return Reflect.apply(item, null, []);
@@ -109,6 +113,10 @@ describe('Reflect', function () {
       expect(typeof Reflect.construct).to.equal('function');
     });
 
+    it('has the right name', function () {
+      expect(Reflect.construct.name).to.equal('construct');
+    });
+
     it('throws if target isn’t callable', function () {
       testCallableThrow(function (item) {
         return Reflect.apply(item, null, []);
@@ -129,6 +137,10 @@ describe('Reflect', function () {
   describeIfES5('Reflect.defineProperty()', function () {
     it('is a function', function () {
       expect(typeof Reflect.defineProperty).to.equal('function');
+    });
+
+    it('has the right name', function () {
+      expect(Reflect.defineProperty.name).to.equal('defineProperty');
     });
 
     it('throws if the target isn’t an object', function () {
@@ -191,6 +203,10 @@ describe('Reflect', function () {
       expect(typeof Reflect.deleteProperty).to.equal('function');
     });
 
+    it('has the right name', function () {
+      expect(Reflect.deleteProperty.name).to.equal('deleteProperty');
+    });
+
     it('throws if the target isn’t an object', function () {
       testPrimitiveThrow(function (item) {
         return Reflect.deleteProperty(item, 'prop');
@@ -228,6 +244,10 @@ describe('Reflect', function () {
   describe('Reflect.enumerate()', function () {
     it('is a function', function () {
       expect(typeof Reflect.enumerate).to.equal('function');
+    });
+
+    it('has the right name', function () {
+      expect(Reflect.enumerate.name).to.equal('enumerate');
     });
 
     ifES5It('only includes enumerable properties', function () {
@@ -293,6 +313,10 @@ describe('Reflect', function () {
       expect(typeof Reflect.get).to.equal('function');
     });
 
+    it('has the right name', function () {
+      expect(Reflect.get.name).to.equal('get');
+    });
+
     it('throws on null and undefined', function () {
       [null, undefined].forEach(function (item) {
         expect(function () {
@@ -342,6 +366,10 @@ describe('Reflect', function () {
       expect(typeof Reflect.set).to.equal('function');
     });
 
+    it('has the right name', function () {
+      expect(Reflect.set.name).to.equal('set');
+    });
+
     it('throws if the target isn’t an object', function () {
       testPrimitiveThrow(function (item) {
         return Reflect.set(item, 'prop', 'value');
@@ -385,6 +413,10 @@ describe('Reflect', function () {
       expect(typeof Reflect.getOwnPropertyDescriptor).to.equal('function');
     });
 
+    it('has the right name', function () {
+      expect(Reflect.getOwnPropertyDescriptor.name).to.equal('getOwnPropertyDescriptor');
+    });
+
     it('throws if the target isn’t an object', function () {
       testPrimitiveThrow(function (item) {
         return Reflect.getOwnPropertyDescriptor(item, 'prop');
@@ -410,6 +442,10 @@ describe('Reflect', function () {
       expect(typeof Reflect.getPrototypeOf).to.equal('function');
     });
 
+    it('has the right name', function () {
+      expect(Reflect.getPrototypeOf.name).to.equal('getPrototypeOf');
+    });
+
     it('throws if the target isn’t an object', function () {
       testPrimitiveThrow(function (item) {
         return Reflect.getPrototypeOf(item);
@@ -426,6 +462,10 @@ describe('Reflect', function () {
   describe('Reflect.has()', function () {
     it('is a function', function () {
       expect(typeof Reflect.has).to.equal('function');
+    });
+
+    it('has the right name', function () {
+      expect(Reflect.has.name).to.equal('has');
     });
 
     it('throws if the target isn’t an object', function () {
@@ -478,6 +518,10 @@ describe('Reflect', function () {
       expect(typeof Reflect.isExtensible).to.equal('function');
     });
 
+    it('has the right name', function () {
+      expect(Reflect.isExtensible.name).to.equal('isExtensible');
+    });
+
     it('returns true for plain objects', function () {
       expect(Reflect.isExtensible({})).to.equal(true);
       expect(Reflect.isExtensible(Object.preventExtensions({}))).to.equal(false);
@@ -493,6 +537,10 @@ describe('Reflect', function () {
   describeIfGetOwnPropertyNames('Reflect.ownKeys()', function () {
     it('is a function', function () {
       expect(typeof Reflect.ownKeys).to.equal('function');
+    });
+
+    it('has the right name', function () {
+      expect(Reflect.ownKeys.name).to.equal('ownKeys');
     });
 
     it('throws if the target isn’t an object', function () {
@@ -534,6 +582,10 @@ describe('Reflect', function () {
       expect(typeof Reflect.preventExtensions).to.equal('function');
     });
 
+    it('has the right name', function () {
+      expect(Reflect.preventExtensions.name).to.equal('preventExtensions');
+    });
+
     it('throws if the target isn’t an object', function () {
       testPrimitiveThrow(function (item) {
         return Reflect.preventExtensions(item);
@@ -550,6 +602,10 @@ describe('Reflect', function () {
   describeIfSetProto('Reflect.setPrototypeOf()', function () {
     it('is a function', function () {
       expect(typeof Reflect.setPrototypeOf).to.equal('function');
+    });
+
+    it('has the right name', function () {
+      expect(Reflect.setPrototypeOf.name).to.equal('setPrototypeOf');
     });
 
     it('throws if the target isn’t an object', function () {

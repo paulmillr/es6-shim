@@ -2211,30 +2211,11 @@
     defineProperty(globals, 'Reflect', {});
   }
   var Reflect = globals.Reflect;
-  var wrapObjectFunction = function (func) {
-    return function (target) {
-      if (!ES.TypeIsObject(target)) {
-        throw new TypeError('target must be an object');
-      }
 
-      try {
-        ES.Call(func, Object, arguments);
-      } catch (_) {
-        return false;
-      }
-
-      return true;
-    };
-  };
-
-  var throwUnlessTargetIsObject = function (func) {
-    return function (target) {
-      if (!ES.TypeIsObject(target)) {
-        throw new TypeError('target must be an object');
-      }
-
-      return ES.Call(func, this, arguments);
-    };
+  var throwUnlessTargetIsObject = function throwUnlessTargetIsObject(target) {
+    if (!ES.TypeIsObject(target)) {
+      throw new TypeError('target must be an object');
+    }
   };
 
   // Some Reflect methods are basically the same as
@@ -2243,7 +2224,9 @@
   // the success of the operation.
   defineProperties(globals.Reflect, {
     // Apply method in a functional form.
-    apply: ES.Call,
+    apply: function apply() {
+      return ES.Call.apply(null, arguments);
+    },
 
     // New operator in a functional form.
     construct: function construct(constructor, args) {
@@ -2258,7 +2241,8 @@
     // true is returned.
     // When attempting to delete a non-configurable property,
     // it will return false.
-    deleteProperty: throwUnlessTargetIsObject(function deleteProperty(target, key) {
+    deleteProperty: function deleteProperty(target, key) {
+      throwUnlessTargetIsObject(target);
       if (supportsDescriptors) {
         var desc = Object.getOwnPropertyDescriptor(target, key);
 
@@ -2269,15 +2253,17 @@
 
       // Will return true.
       return delete target[key];
-    }),
+    },
 
-    enumerate: throwUnlessTargetIsObject(function enumerate(target) {
+    enumerate: function enumerate(target) {
+      throwUnlessTargetIsObject(target);
       return new ObjectIterator(target, 'key');
-    }),
+    },
 
-    has: throwUnlessTargetIsObject(function has(target, key) {
+    has: function has(target, key) {
+      throwUnlessTargetIsObject(target);
       return key in target;
-    })
+    }
   });
 
   if (Object.getOwnPropertyNames) {
@@ -2287,7 +2273,8 @@
       // This should continue to work together with a Symbol shim
       // which overrides Object.getOwnPropertyNames and implements
       // Object.getOwnPropertySymbols.
-      ownKeys: throwUnlessTargetIsObject(function ownKeys(target) {
+      ownKeys: function ownKeys(target) {
+        throwUnlessTargetIsObject(target);
         var keys = Object.getOwnPropertyNames(target);
 
         if (ES.IsCallable(Object.getOwnPropertySymbols)) {
@@ -2295,14 +2282,22 @@
         }
 
         return keys;
-      })
+      }
     });
   }
 
   if (Object.preventExtensions) {
     defineProperties(globals.Reflect, {
-      isExtensible: throwUnlessTargetIsObject(Object.isExtensible),
-      preventExtensions: wrapObjectFunction(Object.preventExtensions)
+      isExtensible: function isExtensible(target) {
+        throwUnlessTargetIsObject(target);
+        return Object.isExtensible(target);
+      },
+      preventExtensions: function preventExtensions(target) {
+        throwUnlessTargetIsObject(target);
+        return callAndCatchException(function () {
+          Object.preventExtensions(target);
+        });
+      }
     });
   }
 
@@ -2382,29 +2377,48 @@
       return false;
     };
 
-    defineProperties(globals.Reflect, {
-      defineProperty: wrapObjectFunction(Object.defineProperty),
+    var callAndCatchException = function ConvertExceptionToBoolean(func) {
+      try { func(); } catch (_) { return false; }
+      return true;
+    };
 
-      getOwnPropertyDescriptor: throwUnlessTargetIsObject(Object.getOwnPropertyDescriptor),
+    defineProperties(globals.Reflect, {
+      defineProperty: function defineProperty(target, propertyKey, attributes) {
+        throwUnlessTargetIsObject(target);
+        return callAndCatchException(function () {
+          Object.defineProperty(target, propertyKey, attributes);
+        });
+      },
+
+      getOwnPropertyDescriptor: function getOwnPropertyDescriptor(target, propertyKey) {
+        throwUnlessTargetIsObject(target);
+        return Object.getOwnPropertyDescriptor(target, propertyKey);
+      },
 
       // Syntax in a functional form.
-      get: throwUnlessTargetIsObject(function get(target, key) {
+      get: function get(target, key) {
+        throwUnlessTargetIsObject(target);
         var receiver = arguments.length > 2 ? arguments[2] : target;
 
         return internal_get(target, key, receiver);
-      }),
+      },
 
-      set: throwUnlessTargetIsObject(function set(target, key, value) {
+      set: function set(target, key, value) {
+        throwUnlessTargetIsObject(target);
         var receiver = arguments.length > 3 ? arguments[3] : target;
 
         return internal_set(target, key, value, receiver);
-      })
+      }
     });
   }
 
   if (Object.getPrototypeOf) {
+    var objectDotGetPrototypeOf = Object.getPrototypeOf;
     defineProperties(globals.Reflect, {
-      getPrototypeOf: throwUnlessTargetIsObject(Object.getPrototypeOf)
+      getPrototypeOf: function getPrototypeOf(target) {
+        throwUnlessTargetIsObject(target);
+        return objectDotGetPrototypeOf(target);
+      }
     });
   }
 
@@ -2422,7 +2436,8 @@
     defineProperties(globals.Reflect, {
       // Sets the prototype of the given object.
       // Returns true on success, otherwise false.
-      setPrototypeOf: throwUnlessTargetIsObject(function setPrototypeOf(object, proto) {
+      setPrototypeOf: function setPrototypeOf(object, proto) {
+        throwUnlessTargetIsObject(object);
         if (proto !== null && !ES.TypeIsObject(proto)) {
           throw new TypeError('proto must be an object or null');
         }
@@ -2445,7 +2460,7 @@
         Object.setPrototypeOf(object, proto);
 
         return true;
-      })
+      }
     });
   }
 
