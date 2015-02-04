@@ -174,12 +174,21 @@ describe('Math', function () {
   });
 
   describe('#expm1()', function () {
-    it('should be correct', function () {
+    it('should be correct for NaN', function () {
       expect(Number.isNaN(Math.expm1(NaN))).to.equal(true);
+    });
+
+    it('should be correct for zeroes', function () {
       expect(isPositiveZero(Math.expm1(+0))).to.equal(true);
       expect(isNegativeZero(Math.expm1(-0))).to.equal(true);
+    });
+
+    it('should be correct for Infinity', function () {
       expect(Math.expm1(Infinity)).to.equal(Infinity);
       expect(Math.expm1(-Infinity)).to.equal(-1);
+    });
+
+    it('should be correct for arbitrary numbers', function () {
       expect(Math.expm1(10)).to.almostEqual(22025.465794806718);
       expect(Math.expm1(-10)).to.almostEqual(-0.9999546000702375);
       expect(Math.expm1(-2e-17)).to.equal(-2e-17);
