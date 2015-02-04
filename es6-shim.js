@@ -663,10 +663,8 @@
 
   if (!startsWithIsCompliant) {
     // Firefox has a noncompliant startsWith implementation
-    defineProperties(String.prototype, {
-      startsWith: StringShims.startsWith,
-      endsWith: StringShims.endsWith
-    });
+    defineProperty(String.prototype, 'startsWith', StringShims.startsWith, true);
+    defineProperty(String.prototype, 'endsWith', StringShims.endsWith, true);
   }
 
   var ArrayShims = {
