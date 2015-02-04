@@ -183,31 +183,58 @@ describe('RegExp', function () {
       });
     });
 
-    it('updates RegExp globals', function () {
-      var re = /(b)(c)(d)(e)(f)(g)(h)(i)(j)(k)(l)(m)(n)(o)(p)/;
-      var str = 'abcdefghijklmnopq';
-      re.exec(str);
-      expect(RegExp.input).to.equal(str);
-      expect(RegExp.$_).to.equal(str);
-      expect(RegExp.multiline).to.equal(false);
-      expect(RegExp['$*']).to.equal(false);
-      expect(RegExp.lastMatch).to.equal('bcdefghijklmnop');
-      expect(RegExp['$&']).to.equal('bcdefghijklmnop');
-      expect(RegExp.lastParen).to.equal('p');
-      expect(RegExp['$+']).to.equal('p');
-      expect(RegExp.leftContext).to.equal('a');
-      expect(RegExp['$`']).to.equal('a');
-      expect(RegExp.rightContext).to.equal('q');
-      expect(RegExp["$'"]).to.equal('q');
-      expect(RegExp.$1).to.equal('b');
-      expect(RegExp.$2).to.equal('c');
-      expect(RegExp.$3).to.equal('d');
-      expect(RegExp.$4).to.equal('e');
-      expect(RegExp.$5).to.equal('f');
-      expect(RegExp.$6).to.equal('g');
-      expect(RegExp.$7).to.equal('h');
-      expect(RegExp.$8).to.equal('i');
-      expect(RegExp.$9).to.equal('j');
+    describe('updates RegExp globals', function () {
+      var re, str = 'abcdefghijklmnopq';
+      beforeEach(function () {
+        re = /(b)(c)(d)(e)(f)(g)(h)(i)(j)(k)(l)(m)(n)(o)(p)/;
+        re.exec(str);
+      });
+
+      it('has "input"', function () {
+        expect(RegExp.input).to.equal(str);
+        expect(RegExp.$_).to.equal(str);
+      });
+
+      it('has "multiline"', function () {
+        if (RegExp.hasOwnProperty('multiline')) {
+          expect(RegExp.multiline).to.equal(false);
+        }
+        if (RegExp.hasOwnProperty('$*')) {
+          expect(RegExp['$*']).to.equal(false);
+        }
+      });
+
+      it('has "lastMatch"', function () {
+        expect(RegExp.lastMatch).to.equal('bcdefghijklmnop');
+        expect(RegExp['$&']).to.equal('bcdefghijklmnop');
+      });
+
+      it('has "lastParen"', function () {
+        expect(RegExp.lastParen).to.equal('p');
+        expect(RegExp['$+']).to.equal('p');
+      });
+
+      it('has "leftContext"', function () {
+        expect(RegExp.leftContext).to.equal('a');
+        expect(RegExp['$`']).to.equal('a');
+      });
+
+      it('has "rightContext"', function () {
+        expect(RegExp.rightContext).to.equal('q');
+        expect(RegExp["$'"]).to.equal('q');
+      });
+
+      it('has $1 - $9', function () {
+        expect(RegExp.$1).to.equal('b');
+        expect(RegExp.$2).to.equal('c');
+        expect(RegExp.$3).to.equal('d');
+        expect(RegExp.$4).to.equal('e');
+        expect(RegExp.$5).to.equal('f');
+        expect(RegExp.$6).to.equal('g');
+        expect(RegExp.$7).to.equal('h');
+        expect(RegExp.$8).to.equal('i');
+        expect(RegExp.$9).to.equal('j');
+      });
     });
   });
 });
