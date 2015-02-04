@@ -8,6 +8,8 @@ var getRegexLiteral = function (stringRegex) {
   } catch (e) {}
 };
 var describeIfSupportsDescriptors = Object.getOwnPropertyDescriptor ? describe : xdescribe;
+var callAllowsPrimitives = (function () { return this === 3; }.call(3));
+var ifCallAllowsPrimitivesIt = callAllowsPrimitives ? it : xit;
 
 describe('RegExp', function () {
   (typeof process !== 'undefined' && process.env.NO_ES6_SHIM ? it.skip : it)('is on the exported object', function () {
@@ -68,7 +70,7 @@ describe('RegExp', function () {
       expect(regexpFlagsDescriptor.set).to.equal(undefined);
     });
 
-    it('throws when not called on an object', function () {
+    ifCallAllowsPrimitivesIt('throws when not called on an object', function () {
       var nonObjects = ['', false, true, 42, NaN, null, undefined];
       nonObjects.forEach(function (nonObject) {
         expect(function () { testGenericRegExpFlags(nonObject); }).to['throw'](TypeError);
