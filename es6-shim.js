@@ -1356,6 +1356,9 @@
   defineProperty(Math, 'acosh', MathShims.acosh, Math.acosh(Number.MAX_VALUE) === Infinity);
   // node 0.11 has an imprecise Math.sinh with very small numbers
   defineProperty(Math, 'sinh', MathShims.sinh, Math.sinh(-2e-17) !== -2e-17);
+  // FF 35 on Linux reports 22025.465794806725 for Math.expm1(10)
+  var expm1OfTen = Math.expm1(10);
+  defineProperty(Math, 'expm1', MathShims.expm1, expm1OfTen > 22025.465794806719 || expm1OfTen < 22025.4657948067165168);
 
   var roundHandlesBoundaryConditions = Math.round(0.5 - Number.EPSILON / 4) === 0 && Math.round(-0.5 + Number.EPSILON / 3.99) === 1;
   var origMathRound = Math.round;

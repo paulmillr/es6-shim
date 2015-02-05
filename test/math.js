@@ -189,9 +189,9 @@ describe('Math', function () {
     });
 
     it('should be correct for arbitrary numbers', function () {
-      expect(Math.expm1(10)).to.almostEqual(22025.465794806718);
-      expect(Math.expm1(-10)).to.almostEqual(-0.9999546000702375);
-      expect(Math.expm1(-2e-17)).to.equal(-2e-17);
+      expect(Math.expm1(10)).to.almostEqual(22025.465794806716516957900645284244366353512618556781);
+      expect(Math.expm1(-10)).to.almostEqual(-0.99995460007023751514846440848443944938976208191113);
+      expect(Math.expm1(-2e-17)).to.almostEqual(-2e-17);
     });
 
     it('works with very negative numbers', function () {
