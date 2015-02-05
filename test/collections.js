@@ -35,7 +35,7 @@ describe('Collections', function () {
   };
 
   var expectNotEnumerable = function (object) {
-    expect(Object.keys(object).length).to.equal(0);
+    expect(Object.keys(object)).to.be.empty();
   };
 
   describe('Map', function () {
