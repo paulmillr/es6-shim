@@ -2449,7 +2449,7 @@
         }
 
         // Cannot alter prototype if object not extensible.
-        if (!Reflect.isExtensible(object)) {
+        if (Reflect.isExtensible && !Reflect.isExtensible(object)) {
           return false;
         }
 
