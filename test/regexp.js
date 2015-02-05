@@ -21,7 +21,10 @@ describe('RegExp', function () {
     it('allows a regex as the pattern', function () {
       var a = /a/g;
       var b = new RegExp(a);
-      expect(a).not.to.equal(b);
+      if (typeof a !== 'function') {
+        // in browsers like Safari 5, new RegExp with a regex returns the same instance.
+        expect(a).not.to.equal(b);
+      }
       expect(a).to.eql(b);
     });
 
