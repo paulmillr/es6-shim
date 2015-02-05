@@ -1,5 +1,14 @@
 # es6-shim x.x.x (not yet released)
 
+# es6-shim 0.24.0 (5 Feb 2015)
+* Improving accuracy of Math.expm1 values, and ensuring a shim on Linux FF 35, which reports an inaccurate value for Math.expm1(10).
+* Fix bug from 7454db144e5aa251d599415cfb296b67aa3cf992 which prevented String#startsWith and String#endsWith from being overwritten in old Firefox.
+* Improve tests across a wider list of browsers
+* Ensure that individual Reflect methods are added when possible
+* Add Reflect (#313)
+* Fix node 0.11: it has an imprecise Math.sinh with very small numbers.
+* Alter String#repeat RangeError message to align with Firefox’s native implementation.
+
 # es6-shim 0.23.0 (26 Jan 2015)
 * Use Symbol.species when available, else fall back to "@@species" (renamed from "@@create")
 * Fix `npm run test-native`
