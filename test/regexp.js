@@ -132,40 +132,34 @@ describe('RegExp', function () {
     });
 
     it('has "input" property', function () {
-      expect(Object.getOwnPropertyNames(RegExp)).to.include('input');
-      expect(Object.getOwnPropertyNames(RegExp)).to.include('$_');
-      expect(Object.keys(RegExp)).not.to.include('$_');
+      expect(RegExp).to.have.ownProperty('input');
+      expect(RegExp).to.have.ownProperty('$_');
     });
 
     it('has "last match" property', function () {
-      expect(Object.getOwnPropertyNames(RegExp)).to.include('lastMatch');
-      expect(Object.getOwnPropertyNames(RegExp)).to.include('$+');
-      expect(Object.keys(RegExp)).not.to.include('$+');
+      expect(RegExp).to.have.ownProperty('lastMatch');
+      expect(RegExp).to.have.ownProperty('$+');
     });
 
     it('has "last paren" property', function () {
-      expect(Object.getOwnPropertyNames(RegExp)).to.include('lastParen');
-      expect(Object.getOwnPropertyNames(RegExp)).to.include('$&');
-      expect(Object.keys(RegExp)).not.to.include('$&');
+      expect(RegExp).to.have.ownProperty('lastParen');
+      expect(RegExp).to.have.ownProperty('$&');
     });
 
     it('has "leftContext" property', function () {
-      expect(Object.getOwnPropertyNames(RegExp)).to.include('leftContext');
-      expect(Object.getOwnPropertyNames(RegExp)).to.include('$`');
-      expect(Object.keys(RegExp)).not.to.include('$`');
+      expect(RegExp).to.have.ownProperty('leftContext');
+      expect(RegExp).to.have.ownProperty('$`');
     });
 
     it('has "rightContext" property', function () {
-      expect(Object.getOwnPropertyNames(RegExp)).to.include('rightContext');
-      expect(Object.getOwnPropertyNames(RegExp)).to.include("$'");
-      expect(Object.keys(RegExp)).not.to.include("$'");
+      expect(RegExp).to.have.ownProperty('rightContext');
+      expect(RegExp).to.have.ownProperty("$'");
     });
 
     xit('has "multiline" property', function () {
       // fails in IE 9, 10, 11
-      expect(Object.getOwnPropertyNames(RegExp)).to.include('multiline');
-      expect(Object.getOwnPropertyNames(RegExp)).to.include('$*');
-      expect(Object.keys(RegExp)).not.to.include('$*');
+      expect(RegExp).to.have.ownProperty('multiline');
+      expect(RegExp).to.have.ownProperty('$*');
     });
 
     it('has the right globals', function () {
