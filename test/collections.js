@@ -34,8 +34,13 @@ describe('Collections', function () {
     return result;
   };
 
+  var prototypePropIsEnumerable = (function () {}).propertyIsEnumerable('prototype');
   var expectNotEnumerable = function (object) {
-    expect(Object.keys(object)).to.be.empty();
+    if (prototypePropIsEnumerable && typeof object === 'function') {
+      expect(Object.keys(object)).to.eql(['prototype']);
+    } else {
+      expect(Object.keys(object)).to.be.empty();
+    }
   };
 
   describe('Map', function () {
