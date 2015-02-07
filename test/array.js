@@ -459,14 +459,14 @@ var runArrayTests = function () {
 
       var arrayIterator;
       beforeEach(function () {
-        arrayIterator = [1, 2, 3].values();
+        arrayIterator = [1, 2, 3].keys();
       });
 
       describe('ArrayIterator#next', function () {
         it('should work when applied to an ArrayIterator', function () {
+          expect(arrayIterator.next.apply(arrayIterator)).to.eql({value: 0, done: false});
           expect(arrayIterator.next.apply(arrayIterator)).to.eql({value: 1, done: false});
           expect(arrayIterator.next.apply(arrayIterator)).to.eql({value: 2, done: false});
-          expect(arrayIterator.next.apply(arrayIterator)).to.eql({value: 3, done: false});
           expect(arrayIterator.next.apply(arrayIterator)).to.eql({value: undefined, done: true});
         });
 
