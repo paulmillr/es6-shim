@@ -19,6 +19,12 @@ var runStringTests = function () {
     });
 
     describe('#repeat()', function () {
+      if (!String.prototype.hasOwnProperty('repeat')) {
+        return it('exists', function () {
+          expect(String.prototype).to.have.property('repeat');
+        });
+      }
+
       it('should throw a TypeError when called on null or undefined', function () {
         testObjectCoercible('repeat');
       });
@@ -53,6 +59,12 @@ var runStringTests = function () {
     });
 
     describe('#startsWith()', function () {
+      if (!String.prototype.hasOwnProperty('startsWith')) {
+        return it('exists', function () {
+          expect(String.prototype).to.have.property('startsWith');
+        });
+      }
+
       it('should throw a TypeError when called on null or undefined', function () {
         testObjectCoercible('startsWith');
       });
@@ -138,6 +150,12 @@ var runStringTests = function () {
     });
 
     describe('#endsWith()', function () {
+      if (!String.prototype.hasOwnProperty('endsWith')) {
+        return it('exists', function () {
+          expect(String.prototype).to.have.property('endsWith');
+        });
+      }
+
       it('should throw a TypeError when called on null or undefined', function () {
         testObjectCoercible('endsWith');
       });
@@ -226,6 +244,12 @@ var runStringTests = function () {
     });
 
     describe('#includes()', function () {
+      if (!String.prototype.hasOwnProperty('includes')) {
+        return it('exists', function () {
+          expect(String.prototype).to.have.property('includes');
+        });
+      }
+
       it('should throw a TypeError when called on null or undefined', function () {
         testObjectCoercible('includes');
       });
@@ -296,6 +320,12 @@ var runStringTests = function () {
     });
 
     describe('.fromCodePoint()', function () {
+      if (!String.hasOwnProperty('fromCodePoint')) {
+        return it('exists', function () {
+          expect(String).to.have.property('fromCodePoint');
+        });
+      }
+
       it('throws a RangeError', function () {
         var invalidValues = [
           'abc',
@@ -334,6 +364,12 @@ var runStringTests = function () {
     });
 
     describe('#codePointAt()', function () {
+      if (!String.prototype.hasOwnProperty('codePointAt')) {
+        return it('exists', function () {
+          expect(String.prototype).to.have.property('codePointAt');
+        });
+      }
+
       it('should throw a TypeError when called on null or undefined', function () {
         testObjectCoercible('codePointAt');
       });
@@ -363,6 +399,12 @@ var runStringTests = function () {
     });
 
     describe('#iterator()', function () {
+      if (!Array.hasOwnProperty('from')) {
+        return it('requires Array.from to test', function () {
+          expect(Array).to.have.property('from');
+        });
+      }
+
       it('should work with plain strings', function () {
         var str = 'abc';
         expect(Array.from(str)).to.eql(['a', 'b', 'c']);
@@ -377,6 +419,12 @@ var runStringTests = function () {
     });
 
     describe('.raw()', function () {
+      if (!String.hasOwnProperty('raw')) {
+        return it('exists', function () {
+          expect(String).to.have.property('raw');
+        });
+      }
+
       it('should have a length of 1', function () {
         expect(String.raw.length).to.equal(1);
       });
@@ -421,6 +469,12 @@ var runStringTests = function () {
     });
 
     describe('#trim()', function () {
+      if (!String.prototype.hasOwnProperty('trim')) {
+        return it('exists', function () {
+          expect(String.prototype).to.have.property('trim');
+        });
+      }
+
       it('should trim the correct characters', function () {
         var whitespace = '\u0009' + '\u000b' + '\u000c' + '\u0020' +
                          '\u00a0' + '\u1680' + '\u2000' + '\u2001' +

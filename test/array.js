@@ -33,6 +33,12 @@ var runArrayTests = function () {
     });
 
     describe('Array.from()', function () {
+      if (!Array.hasOwnProperty('from')) {
+        return it('exists', function () {
+          expect(Array).to.have.property('from');
+        });
+      }
+
       it('has a length of 1', function () {
         expect(Array.from.length).to.equal(1);
       });
@@ -226,12 +232,24 @@ var runArrayTests = function () {
     });
 
     describe('Array.of()', function () {
+      if (!Array.hasOwnProperty('of')) {
+        return it('exists', function () {
+          expect(Array).to.have.property('of');
+        });
+      }
+
       it('should create correct array from arguments', function () {
         expect(Array.of(1, null, undefined)).to.eql([1, null, undefined]);
       });
     });
 
     describe('Array#copyWithin', function () {
+      if (!Array.prototype.hasOwnProperty('copyWithin')) {
+        return it('exists', function () {
+          expect(Array.prototype).to.have.property('copyWithin');
+        });
+      }
+
       it('has the right arity', function () {
         expect(Array.prototype.copyWithin.length).to.equal(2);
       });
@@ -275,6 +293,12 @@ var runArrayTests = function () {
     });
 
     describe('Array#find', function () {
+      if (!Array.prototype.hasOwnProperty('find')) {
+        return it('exists', function () {
+          expect(Array.prototype).to.have.property('find');
+        });
+      }
+
       it('should have a length of 1', function () {
         expect(Array.prototype.find.length).to.equal(1);
       });
@@ -348,6 +372,12 @@ var runArrayTests = function () {
     });
 
     describe('Array#findIndex', function () {
+      if (!Array.prototype.hasOwnProperty('findIndex')) {
+        return it('exists', function () {
+          expect(Array.prototype).to.have.property('findIndex');
+        });
+      }
+
       it('should have a length of 1', function () {
         expect(Array.prototype.findIndex.length).to.equal(1);
       });
@@ -421,6 +451,12 @@ var runArrayTests = function () {
     });
 
     describe('ArrayIterator', function () {
+      if (!Array.prototype.hasOwnProperty('keys')) {
+        return it('can be tested', function () {
+          expect(Array.prototype).to.have.property('keys');
+        });
+      }
+
       var arrayIterator;
       beforeEach(function () {
         arrayIterator = [1, 2, 3].values();
@@ -441,6 +477,12 @@ var runArrayTests = function () {
     });
 
     describe('Array#keys', function () {
+      if (!Array.prototype.hasOwnProperty('keys')) {
+        return it('exists', function () {
+          expect(Array.prototype).to.have.property('keys');
+        });
+      }
+
       it('should have a length of zero', function () {
         expect(Array.prototype.keys.length).to.equal(0);
       });
@@ -498,6 +540,12 @@ var runArrayTests = function () {
     });
 
     describe('Array#values', function () {
+      if (!Array.prototype.hasOwnProperty('values')) {
+        return it('exists', function () {
+          expect(Array.prototype).to.have.property('values');
+        });
+      }
+
       it('should have a length of zero', function () {
         expect(Array.prototype.values.length).to.equal(0);
       });
@@ -555,6 +603,12 @@ var runArrayTests = function () {
     });
 
     describe('Array#entries', function () {
+      if (!Array.prototype.hasOwnProperty('entries')) {
+        return it('exists', function () {
+          expect(Array.prototype).to.have.property('entries');
+        });
+      }
+
       it('should have a length of zero', function () {
         expect(Array.prototype.entries.length).to.equal(0);
       });
@@ -618,6 +672,12 @@ var runArrayTests = function () {
     });
 
     describe('Array#fill', function () {
+      if (!Array.prototype.hasOwnProperty('fill')) {
+        return it('exists', function () {
+          expect(Array.prototype).to.have.property('fill');
+        });
+      }
+
       it('has the right length', function () {
         expect(Array.prototype.fill.length).to.equal(1);
       });

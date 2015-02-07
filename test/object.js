@@ -43,6 +43,12 @@ describe('Object', function (undefined) {
   });
 
   describe('Object.assign()', function () {
+    if (!Object.hasOwnProperty('assign')) {
+      return it('exists', function () {
+        expect(Object).to.have.property('assign');
+      });
+    }
+
     it('has the correct length', function () {
       expect(Object.assign.length).to.eql(2);
     });

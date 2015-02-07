@@ -27,6 +27,12 @@ var ifFreezeIt = typeof Object.freeze === 'function' ? it : xit;
 var ifFunctionNamesIt = functionsHaveNames ? it : xit;
 
 describe('Reflect', function () {
+  if (typeof Reflect === 'undefined') {
+    return it('exists', function () {
+      expect(this).to.have.property('Reflect');
+    });
+  }
+
   var object = {
     something: 1,
     _value: 0

@@ -61,6 +61,12 @@ describe('RegExp', function () {
   });
 
   describeIfSupportsDescriptors('#flags', function () {
+    if (!RegExp.prototype.hasOwnProperty('flags')) {
+      return it('exists', function () {
+        expect(RegExp.prototype).to.have.property('flags');
+      });
+    }
+
     var regexpFlagsDescriptor = Object.getOwnPropertyDescriptor(RegExp.prototype, 'flags');
     var testGenericRegExpFlags = function (object) {
       return regexpFlagsDescriptor.get.call(object);

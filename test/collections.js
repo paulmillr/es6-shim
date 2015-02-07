@@ -226,6 +226,8 @@ describe('Collections', function () {
     });
 
     it('should have an iterator that works with Array.from', function () {
+      expect(Array).to.have.property('from');
+
       expect(map.set('a', 1)).to.equal(map);
       expect(map.set('b', NaN)).to.equal(map);
       expect(map.set('c', false)).to.equal(map);
@@ -611,6 +613,12 @@ describe('Collections', function () {
     });
 
     describe('has an iterator that works with Array.from', function () {
+      if (!Array.hasOwnProperty('from')) {
+        return it('requires Array.from to exist', function () {
+          expect(Array).to.have.property('from');
+        });
+      }
+
       var set;
       beforeEach(function () {
         set = new Set([1, NaN, false]);
