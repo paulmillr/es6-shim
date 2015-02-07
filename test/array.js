@@ -28,7 +28,7 @@ var runArrayTests = function () {
         } else {
           return;
         }
-        expect(a[iterator]()).to.eql(a.values());
+        expect(a[iterator]).to.equal(a.values);
       });
     });
 
