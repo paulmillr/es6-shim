@@ -25,6 +25,20 @@ Assertion.addMethod('theSameSet', function (otherArray) {
   );
 });
 
+Assertion.addMethod('entries', function (expected) {
+  var collection = this._obj;
+
+  expect(Array.isArray(expected)).to.equal(true);
+  var expectedEntries = expected.slice(0);
+
+  var iterator = collection.entries();
+  var result;
+  do {
+    result = iterator.next();
+    expect(result.value).to.be.eql(expectedEntries.shift());
+  } while (!result.done);
+});
+
 describe('Collections', function () {
   var range = function (from, to) {
     var result = [];
@@ -87,7 +101,7 @@ describe('Collections', function () {
       var map2 = new Map(map);
       expect(map2.has('a')).to.equal(true);
       expect(map2.has('c')).to.equal(true);
-      expect(Array.from(map2.entries())).to.be.eql([['a', 'b'], ['c', 'd']]);
+      expect(map2).to.have.entries([['a', 'b'], ['c', 'd']]);
     });
 
     it('should not be callable without "new"', function () {
@@ -104,7 +118,7 @@ describe('Collections', function () {
 
       map = new MyMap();
       testMapping('c', 'd');
-      expect(Array.from(map)).to.be.eql([['a', 'b'], ['c', 'd']]);
+      expect(map).to.have.entries([['a', 'b'], ['c', 'd']]);
     });
 
     it('treats positive and negative zero the same', function () {
@@ -228,7 +242,7 @@ describe('Collections', function () {
       expect(Array.from(map)).to.eql([['a', 1], ['b', NaN], ['c', false]]);
       expect(Array.from(map.keys())).to.eql(['a', 'b', 'c']);
       expect(Array.from(map.values())).to.eql([1, NaN, false]);
-      expect(Array.from(map.entries())).to.eql(Array.from(map));
+      expect(map).to.have.entries(Array.from(map.entries()));
     });
 
     describe('#forEach', function () {
@@ -385,9 +399,10 @@ describe('Collections', function () {
       var arr2 = [3, 2, 'z', 'a', 1];
       var arr3 = [3, 2, 'z', {}, 'a', 1];
 
-      expect(Array.from(new Map(arr1.map(convertToPairs)).keys())).to.eql(arr1);
-      expect(Array.from(new Map(arr2.map(convertToPairs)).keys())).to.eql(arr2);
-      expect(Array.from(new Map(arr3.map(convertToPairs)).keys())).to.eql(arr3);
+      [arr1, arr2, arr3].forEach(function (array) {
+        var entries = array.map(convertToPairs);
+        expect(new Map(entries)).to.have.entries(entries);
+      });
     });
   });
 
@@ -488,13 +503,13 @@ describe('Collections', function () {
       var set2 = new Set(set);
       expect(set2.has('a')).to.equal(true);
       expect(set2.has('b')).to.equal(true);
-      expect(Array.from(set2.entries())).to.be.eql([['a', 'a'], ['b', 'b']]);
+      expect(set2).to.have.entries([['a', 'a'], ['b', 'b']]);
     });
 
     it('accepts an array as an argument', function () {
       var arr = ['a', 'b', 'c'];
       var set = new Set(arr);
-      expect(Array.from(set.values())).to.be.eql(arr);
+      expect(set).to.have.entries([['a', 'a'], ['b', 'b'], ['c', 'c']]);
     });
 
     it('should not be callable without "new"', function () {
@@ -510,8 +525,9 @@ describe('Collections', function () {
       });
 
       set = new MySet();
-      testSet('c'); testSet('d');
-      expect(Array.from(set)).to.be.eql(['a', 'b', 'c', 'd']);
+      testSet('c');
+      testSet('d');
+      expect(set).to.have.entries([['a', 'a'], ['b', 'b'], ['c', 'c'], ['d', 'd']]);
     });
 
     it('should has valid getter and setter calls', function () {
@@ -644,9 +660,11 @@ describe('Collections', function () {
       var arr2 = [3, 2, 'z', 'a', 1];
       var arr3 = [3, 2, 'z', {}, 'a', 1];
 
-      expect(Array.from(new Set(arr1))).to.eql(arr1);
-      expect(Array.from(new Set(arr2))).to.eql(arr2);
-      expect(Array.from(new Set(arr3))).to.eql(arr3);
+      var makeEntries = function (n) { return [n, n]; };
+      [arr1, arr2, arr3].forEach(function (array) {
+        var entries = array.map(makeEntries);
+        expect(new Set(array)).to.have.entries(entries);
+      });
     });
 
     describe('#forEach', function () {
