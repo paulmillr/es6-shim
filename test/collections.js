@@ -131,7 +131,7 @@ describe('Collections', function () {
           if (slowkeys) { testMapping(Object(String(number)), {}); }
         });
 
-        var testkeys = [+0, Infinity, -Infinity, NaN];
+        var testkeys = [Infinity, -Infinity, NaN];
         if (slowkeys) {
           testkeys.push(true, false, null, undefined);
         }
@@ -140,12 +140,6 @@ describe('Collections', function () {
           testMapping(String(key), {});
         });
         testMapping('', {});
-
-        // -0 and +0 should be the same key (Map uses SameValueZero)
-        expect(map.has(-0)).to.equal(true);
-        expect(map['delete'](+0)).to.equal(true);
-        testMapping(-0, {});
-        expect(map.has(+0)).to.equal(true);
 
         // verify that properties of Object don't peek through.
         ['hasOwnProperty', 'constructor', 'toString', 'isPrototypeOf',
