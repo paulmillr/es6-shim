@@ -16,9 +16,9 @@ describe('Promise', function () {
   });
 
   it('does not have extra methods (bad Chrome!)', function () {
-    expect(hasOwn.call(Promise, 'accept')).to.equal(false);
-    expect(hasOwn.call(Promise, 'defer')).to.equal(false);
-    expect(hasOwn.call(Promise.prototype, 'accept')).to.equal(false);
+    expect(Promise).not.to.have.property('accept');
+    expect(Promise).not.to.have.property('defer');
+    expect(Promise.prototype).not.to.have.property('chain');
   });
 });
 
