@@ -104,12 +104,11 @@ describe('Promise.all', function () {
   // test cases from
   // https://github.com/domenic/promises-unwrapping/issues/89#issuecomment-33110203
   var tamper = function (p) {
-    return Object.assign(p, {
-      then: function (fulfill, reject) {
-        fulfill('tampered');
-        return Promise.prototype.then.call(this, fulfill, reject);
-      }
-    });
+    p.then = function (fulfill, reject) {
+      fulfill('tampered');
+      return Promise.prototype.then.call(this, fulfill, reject);
+    };
+    return p;
   };
 
   it('should be robust against tampering (1)', function (done) {
