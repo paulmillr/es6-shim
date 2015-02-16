@@ -1098,13 +1098,19 @@
     }());
   }
 
-  try {
-    Object.keys('foo');
-  } catch (e) {
+  var objectKeysAcceptsPrimitives = (function () {
+    try {
+      Object.keys('foo');
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }());
+  if (!objectKeysAcceptsPrimitives) {
     var originalObjectKeys = Object.keys;
-    Object.keys = function (obj) {
-      return originalObjectKeys(ES.ToObject(obj));
-    };
+    defineProperty(Object, 'keys', function keys(value) {
+      return originalObjectKeys(ES.ToObject(value));
+    }, true);
   }
 
   if (!RegExp.prototype.flags && supportsDescriptors) {
