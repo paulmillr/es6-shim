@@ -1113,6 +1113,23 @@
     }, true);
   }
 
+  if (Object.getOwnPropertyNames) {
+    var objectGOPNAcceptsPrimitives = (function () {
+      try {
+        Object.getOwnPropertyNames('foo');
+        return true;
+      } catch (e) {
+        return false;
+      }
+    }());
+    if (!objectGOPNAcceptsPrimitives) {
+      var originalObjectGetOwnPropertyNames = Object.getOwnPropertyNames;
+      defineProperty(Object, 'getOwnPropertyNames', function getOwnPropertyNames(value) {
+        return originalObjectGetOwnPropertyNames(ES.ToObject(value));
+      }, true);
+    }
+  }
+
   if (!RegExp.prototype.flags && supportsDescriptors) {
     var regExpFlagsGetter = function flags() {
       if (!ES.TypeIsObject(this)) {

@@ -6,6 +6,20 @@ describe('Object', function (undefined) {
     expect(exported.Object).to.equal(Object);
   });
 
+  describe('Object.getOwnPropertyNames()', function () {
+    it('throws on null or undefined', function () {
+      expect(function () { Object.getOwnPropertyNames(); }).to['throw'](TypeError);
+      expect(function () { Object.getOwnPropertyNames(undefined); }).to['throw'](TypeError);
+      expect(function () { Object.getOwnPropertyNames(null); }).to['throw'](TypeError);
+    });
+
+    it('works on primitives', function () {
+      [true, false, NaN, 42, /a/g, 'foo'].forEach(function (item) {
+        expect(Object.getOwnPropertyNames(item)).to.eql(Object.getOwnPropertyNames(Object(item)));
+      });
+    });
+  });
+
   describe('Object.keys()', function () {
     it('works on strings', function () {
       expect(Object.keys('foo')).to.eql(['0', '1', '2']);
