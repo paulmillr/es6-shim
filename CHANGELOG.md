@@ -1,5 +1,10 @@
 # es6-shim x.x.x (not yet released)
 
+# es6-shim 0.25.0 (16 Feb 2015)
+* Ensure Object.getOwnPropertyNames accepts primitives.
+* Make sure the replaced `Object.keys` is non-enumerable.
+* Clean up lots of tests to make failures easier to read, and false negatives less common
+
 # es6-shim 0.24.0 (5 Feb 2015)
 * Improving accuracy of Math.expm1 values, and ensuring a shim on Linux FF 35, which reports an inaccurate value for Math.expm1(10).
 * Fix bug from 7454db144e5aa251d599415cfb296b67aa3cf992 which prevented String#startsWith and String#endsWith from being overwritten in old Firefox.
