@@ -2533,9 +2533,16 @@
   };
   defineProperties(String.prototype, stringHTMLshims);
   Object.keys(stringHTMLshims).forEach(function (key) {
-    var output = String.prototype[key].call('', ' " ');
-    var quotesCount = [].concat(output.match(/"/g)).length;
-    if (output !== output.toLowerCase() || quotesCount > 2) {
+    var method = String.prototype[key];
+    var shouldOverwrite = false;
+    if (ES.IsCallable(method)) {
+      var output = method.call('', ' " ');
+      var quotesCount = [].concat(output.match(/"/g)).length;
+      shouldOverwrite = output !== output.toLowerCase() || quotesCount > 2;
+    } else {
+      shouldOverwrite = true;
+    }
+    if (shouldOverwrite) {
       defineProperty(String.prototype, key, stringHTMLshims[key], true);
     }
   });
