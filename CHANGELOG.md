@@ -1,5 +1,8 @@
 # es6-shim x.x.x (not yet released)
 
+# es6-shim 0.25.2 (18 Feb 2015)
+* If someone (looking at you, chalk) has previously modified String.prototype with a non-function “bold”, don‘t break. (#315)
+
 # es6-shim 0.25.1 (18 Feb 2015)
 * Add Annex B String.prototype HTML methods.
 * Overwriting Annex B String.prototype HTML methods in IE 9, which both uppercases the tag names, and fails to escape double quotes.
