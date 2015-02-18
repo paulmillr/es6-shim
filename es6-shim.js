@@ -331,10 +331,10 @@
     },
 
     CreateHTML: function (string, tag, attribute, value) {
-      var S = ES.ToString(string);
+      var S = String(string);
       var p1 = '<' + tag;
       if (attribute !== '') {
-        var V = ES.toString(value);
+        var V = String(value);
         var escapedV = V.replace(/"/g, '&quot;');
         p1 += ' ' + attribute + '="' + escapedV + '"';
       }
@@ -2503,7 +2503,7 @@
 
   // Annex B HTML methods
   // https://people.mozilla.org/~jorendorff/es6-draft.html#sec-additional-properties-of-the-string.prototype-object
-  defineProperties(String.prototype, {
+  var stringHTMLshims = {
     anchor: function anchor(name) { return ES.CreateHTML(this, 'a', 'name', name); },
     big: function big() { return ES.CreateHTML(this, 'big', '', ''); },
     blink: function blink() { return ES.CreateHTML(this, 'blink', '', ''); },
@@ -2517,6 +2517,13 @@
     strike: function strike(url) { return ES.CreateHTML(this, 'strike', '', ''); },
     sub: function sub(url) { return ES.CreateHTML(this, 'sub', '', ''); },
     sup: function sub(url) { return ES.CreateHTML(this, 'sup', '', ''); }
+  };
+  defineProperties(String.prototype, stringHTMLshims);
+  Object.keys(stringHTMLshims).forEach(function (key) {
+    var output = String.prototype[key].call('', '"');
+    if (output !== output.toLowerCase()) {
+      defineProperty(String.prototype, key, stringHTMLshims[key], true);
+    }
   });
 
   return globals;
