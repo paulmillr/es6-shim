@@ -2533,8 +2533,9 @@
   };
   defineProperties(String.prototype, stringHTMLshims);
   Object.keys(stringHTMLshims).forEach(function (key) {
-    var output = String.prototype[key].call('', '"');
-    if (output !== output.toLowerCase()) {
+    var output = String.prototype[key].call('', ' " ');
+    var quotesCount = [].concat(output.match(/"/g)).length;
+    if (output !== output.toLowerCase() || quotesCount > 2) {
       defineProperty(String.prototype, key, stringHTMLshims[key], true);
     }
   });
