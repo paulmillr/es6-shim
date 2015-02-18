@@ -1,5 +1,12 @@
 # es6-shim x.x.x (not yet released)
 
+# es6-shim 0.25.1 (18 Feb 2015)
+* Add Annex B String.prototype HTML methods.
+* Overwriting Annex B String.prototype HTML methods in IE 9, which both uppercases the tag names, and fails to escape double quotes.
+* Overwriting Annex B String.prototype HTML methods in Safari 4-5, which fails to escape double quotes.
+* Ensuring that Date#toString returns “Invalid Date” when the date‘s value is NaN.
+* Test on `iojs-v1.2`
+
 # es6-shim 0.25.0 (16 Feb 2015)
 * Ensure Object.getOwnPropertyNames accepts primitives.
 * Make sure the replaced `Object.keys` is non-enumerable.
