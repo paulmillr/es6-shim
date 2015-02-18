@@ -502,6 +502,48 @@ var runStringTests = function () {
       });
     });
   });
+
+  describe('Annex B', function () {
+    it('has #anchor', function () {
+      expect('foo'.anchor('bar"baz"')).to.equal('<a name="bar&quot;baz&quot;">foo</a>');
+    });
+    it('has #big', function () {
+      expect('foo'.big()).to.equal('<big>foo</big>');
+    });
+    it('has #blink', function () {
+      expect('foo'.blink()).to.equal('<blink>foo</blink>');
+    });
+    it('has #bold', function () {
+      expect('foo'.bold()).to.equal('<b>foo</b>');
+    });
+    it('has #fixed', function () {
+      expect('foo'.fixed()).to.equal('<tt>foo</tt>');
+    });
+    it('has #fontcolor', function () {
+      expect('foo'.fontcolor('blue"red"green')).to.equal('<font color="blue&quot;red&quot;green">foo</font>');
+    });
+    it('has #fontsize', function () {
+      expect('foo'.fontsize('10"large"small')).to.equal('<font size="10&quot;large&quot;small">foo</font>');
+    });
+    it('has #italics', function () {
+	  expect('foo'.italics()).to.equal('<i>foo</i>');
+    });
+    it('has #link', function () {
+      expect('foo'.link('url"http://"')).to.equal('<a href="url&quot;http://&quot;">foo</a>');
+    });
+    it('has #small', function () {
+	  expect('foo'.small()).to.equal('<small>foo</small>');
+    });
+    it('has #strike', function () {
+	  expect('foo'.strike()).to.equal('<strike>foo</strike>');
+    });
+    it('has #sub', function () {
+	  expect('foo'.sub()).to.equal('<sub>foo</sub>');
+    });
+    it('has #sup', function () {
+	  expect('foo'.sup()).to.equal('<sup>foo</sup>');
+    });
+  });
 };
 
 describe('clean Object.prototype', runStringTests);

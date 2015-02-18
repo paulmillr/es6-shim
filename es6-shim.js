@@ -328,6 +328,19 @@
       // Call the constructor.
       var result = ES.Call(C, obj, args);
       return ES.TypeIsObject(result) ? result : obj;
+    },
+
+    CreateHTML: function (string, tag, attribute, value) {
+      var S = ES.ToString(string);
+      var p1 = '<' + tag;
+      if (attribute !== '') {
+        var V = ES.toString(value);
+        var escapedV = V.replace(/"/g, '&quot;');
+        p1 += ' ' + attribute + '="' + escapedV + '"';
+      }
+      var p2 = p1 + '>';
+      var p3 = p2 + S;
+      return p3 + '</' + tag + '>';
     }
   };
 
@@ -2487,6 +2500,24 @@
       }
     });
   }
+
+  // Annex B HTML methods
+  // https://people.mozilla.org/~jorendorff/es6-draft.html#sec-additional-properties-of-the-string.prototype-object
+  defineProperties(String.prototype, {
+    anchor: function anchor(name) { return ES.CreateHTML(this, 'a', 'name', name); },
+    big: function big() { return ES.CreateHTML(this, 'big', '', ''); },
+    blink: function blink() { return ES.CreateHTML(this, 'blink', '', ''); },
+    bold: function bold() { return ES.CreateHTML(this, 'b', '', ''); },
+    fixed: function fixed() { return ES.CreateHTML(this, 'tt', '', ''); },
+    fontcolor: function fontcolor(color) { return ES.CreateHTML(this, 'font', 'color', color); },
+    fontsize: function fontsize(size) { return ES.CreateHTML(this, 'font', 'size', size); },
+    italics: function italics() { return ES.CreateHTML(this, 'i', '', ''); },
+    link: function link(url) { return ES.CreateHTML(this, 'a', 'href', url); },
+    small: function small(url) { return ES.CreateHTML(this, 'small', '', ''); },
+    strike: function strike(url) { return ES.CreateHTML(this, 'strike', '', ''); },
+    sub: function sub(url) { return ES.CreateHTML(this, 'sub', '', ''); },
+    sup: function sub(url) { return ES.CreateHTML(this, 'sup', '', ''); }
+  });
 
   return globals;
 }));
