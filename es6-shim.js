@@ -2501,6 +2501,19 @@
     });
   }
 
+  if (String(new Date(NaN)) !== 'Invalid Date') {
+    var dateToString = Date.prototype.toString;
+    var shimmedDateToString = function toString() {
+      var valueOf = +this;
+      if (valueOf !== valueOf) {
+        return 'Invalid Date';
+      }
+      return dateToString.call(this);
+    };
+    defineProperty(shimmedDateToString, 'toString', dateToString.toString, true);
+    defineProperty(Date.prototype, 'toString', shimmedDateToString, true);
+  }
+
   // Annex B HTML methods
   // https://people.mozilla.org/~jorendorff/es6-draft.html#sec-additional-properties-of-the-string.prototype-object
   var stringHTMLshims = {
