@@ -9,7 +9,7 @@ describe('Promise.all', function () {
   'use strict';
 
   it('should not be enumerable', function () {
-    expect(Object.keys(Promise)).not.to.include('all');
+    expect(Object.getOwnPropertyDescriptor(Promise, 'all')).to.have.property('enumerable', false);
   });
 
   it('fulfills if passed an empty array', function (done) {
