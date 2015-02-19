@@ -526,22 +526,22 @@ var runStringTests = function () {
       expect('foo'.fontsize('10"large"small')).to.equal('<font size="10&quot;large&quot;small">foo</font>');
     });
     it('has #italics', function () {
-	  expect('foo'.italics()).to.equal('<i>foo</i>');
+      expect('foo'.italics()).to.equal('<i>foo</i>');
     });
     it('has #link', function () {
       expect('foo'.link('url"http://"')).to.equal('<a href="url&quot;http://&quot;">foo</a>');
     });
     it('has #small', function () {
-	  expect('foo'.small()).to.equal('<small>foo</small>');
+      expect('foo'.small()).to.equal('<small>foo</small>');
     });
     it('has #strike', function () {
-	  expect('foo'.strike()).to.equal('<strike>foo</strike>');
+      expect('foo'.strike()).to.equal('<strike>foo</strike>');
     });
     it('has #sub', function () {
-	  expect('foo'.sub()).to.equal('<sub>foo</sub>');
+      expect('foo'.sub()).to.equal('<sub>foo</sub>');
     });
     it('has #sup', function () {
-	  expect('foo'.sup()).to.equal('<sup>foo</sup>');
+      expect('foo'.sup()).to.equal('<sup>foo</sup>');
     });
   });
 };
