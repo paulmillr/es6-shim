@@ -2526,10 +2526,10 @@
     fontsize: function fontsize(size) { return ES.CreateHTML(this, 'font', 'size', size); },
     italics: function italics() { return ES.CreateHTML(this, 'i', '', ''); },
     link: function link(url) { return ES.CreateHTML(this, 'a', 'href', url); },
-    small: function small(url) { return ES.CreateHTML(this, 'small', '', ''); },
-    strike: function strike(url) { return ES.CreateHTML(this, 'strike', '', ''); },
-    sub: function sub(url) { return ES.CreateHTML(this, 'sub', '', ''); },
-    sup: function sub(url) { return ES.CreateHTML(this, 'sup', '', ''); }
+    small: function small() { return ES.CreateHTML(this, 'small', '', ''); },
+    strike: function strike() { return ES.CreateHTML(this, 'strike', '', ''); },
+    sub: function sub() { return ES.CreateHTML(this, 'sub', '', ''); },
+    sup: function sub() { return ES.CreateHTML(this, 'sup', '', ''); }
   };
   defineProperties(String.prototype, stringHTMLshims);
   Object.keys(stringHTMLshims).forEach(function (key) {
