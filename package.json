@@ -62,17 +62,17 @@
   },
   "dependencies": {},
   "devDependencies": {
-    "chai": "~1.10.0",
-    "es5-shim": "~4.1.0",
-    "grunt": "~0.4.5",
-    "grunt-contrib-connect": "~0.9.0",
-    "grunt-contrib-watch": "~0.6.1",
-    "grunt-saucelabs": "~8.5.0",
-    "jscs": "~1.11.0",
-    "jshint": "~2.6.0",
-    "mocha": "~2.1.0",
-    "promises-aplus-tests": "~2.1.0",
-    "promises-es6-tests": "~0.5.0",
-    "uglify-js": "~2.4.16"
+    "chai": "^1.10.0",
+    "es5-shim": "^4.1.0",
+    "grunt": "^0.4.5",
+    "grunt-contrib-connect": "^0.9.0",
+    "grunt-contrib-watch": "^0.6.1",
+    "grunt-saucelabs": "^8.6.0",
+    "jscs": "^1.11.3",
+    "jshint": "^2.6.0",
+    "mocha": "^2.1.0",
+    "promises-aplus-tests": "^2.1.0",
+    "promises-es6-tests": "^0.5.0",
+    "uglify-js": "^2.4.16"
   }
 }
