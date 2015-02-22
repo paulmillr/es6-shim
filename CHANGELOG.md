@@ -1,5 +1,12 @@
 # es6-shim x.x.x (not yet released)
 
+# es6-shim 0.25.3 (22 Feb 2015)
+* Removing nonexistent arguments from some String.prototype HTML methods
+* All grade A-supported `node`/`iojs` versions now ship with an `npm` that understands `^`.
+* Test on `iojs-v1.3`
+* Update `chai`
+* Add a LICENSE file
+
 # es6-shim 0.25.2 (18 Feb 2015)
 * If someone (looking at you, chalk) has previously modified String.prototype with a non-function “bold”, don‘t break. (#315)
 
