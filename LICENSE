@@ -1,6 +1,10 @@
+The project was initially based on [es6-shim by Axel Rauschmayer](https://github.com/rauschma/es6-shim).
+
+Current maintainers are: [Paul Miller](http://paulmillr.com), [Jordan Harband](https://github.com/ljharb), and [C. Scott Ananian](http://cscott.net).
+
 The MIT License (MIT)
 
-Copyright (C) 2011-2015 Paul Miller and contributors
+Copyright (c) 2013-2015 Paul Miller (http://paulmillr.com) and contributors
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
