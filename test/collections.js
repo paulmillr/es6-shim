@@ -53,7 +53,7 @@ describe('Collections', function () {
     if (prototypePropIsEnumerable && typeof object === 'function') {
       expect(Object.keys(object)).to.eql(['prototype']);
     } else {
-      expect(Object.keys(object)).to.be.empty();
+      expect(Object.keys(object)).to.eql([]);
     }
   };
 
