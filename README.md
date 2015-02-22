@@ -178,8 +178,8 @@ Promise.resolve(5).then(function (value) {
 
 Other stuff:
 
-* [ECMAScript 6 drafts](http://wiki.ecmascript.org/doku.php?id=harmony:specification_drafts)
-* [Harmony proposals](http://wiki.ecmascript.org/doku.php?id=harmony:harmony)
+* [HTML version of the latest ECMAScript 6 spec draft][spec-html-url]
+* [PDFs of ECMAScript 6 spec drafts][spec-drafts-url]
 
 ## [License][license-url]
 
@@ -190,3 +190,5 @@ Other stuff:
 [5]: https://david-dm.org/paulmillr/es6-shim/dev-status.svg
 [6]: https://david-dm.org/paulmillr/es6-shim#info=devDependencies
 [license-url]: https://github.com/paulmillr/es6-shim/blob/master/LICENSE
+[spec-html-url]: https://people.mozilla.org/~jorendorff/es6-draft.html
+[spec-drafts-url]: http://wiki.ecmascript.org/doku.php?id=harmony:specification_drafts
