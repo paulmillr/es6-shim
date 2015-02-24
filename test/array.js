@@ -1,4 +1,4 @@
-/*global describe, it, expect, require, beforeEach */
+/*global describe, it, xit, expect, require, beforeEach */
 
 
 var runArrayTests = function () {
@@ -10,6 +10,8 @@ var runArrayTests = function () {
     return typeof Sym === 'function' && typeof sym === 'symbol';
     /*jshint notypeof: false */
   };
+  var functionsHaveNames = (function foo() {}).name === 'foo';
+  var ifFunctionsHaveNamesIt = functionsHaveNames ? it : xit;
 
   describe('Array', function () {
     var list = [5, 10, 15, 20];
@@ -45,6 +47,10 @@ var runArrayTests = function () {
 
       it('is not enumerable', function () {
         expect(Array.propertyIsEnumerable('from')).to.equal(false);
+      });
+
+      ifFunctionsHaveNamesIt('has the correct name', function () {
+        expect(Array.from.name).to.equal('from');
       });
 
       it('works with primitives', function () {
@@ -238,6 +244,18 @@ var runArrayTests = function () {
         });
       }
 
+      it('has a length of 0', function () {
+        expect(Array.of.length).to.equal(0);
+      });
+
+      it('is not enumerable', function () {
+        expect(Array.propertyIsEnumerable('of')).to.equal(false);
+      });
+
+      ifFunctionsHaveNamesIt('has the correct name', function () {
+        expect(Array.of.name).to.equal('of');
+      });
+
       it('should create correct array from arguments', function () {
         expect(Array.of(1, null, undefined)).to.eql([1, null, undefined]);
       });
@@ -252,6 +270,10 @@ var runArrayTests = function () {
 
       it('has the right arity', function () {
         expect(Array.prototype.copyWithin.length).to.equal(2);
+      });
+
+      ifFunctionsHaveNamesIt('has the correct name', function () {
+        expect(Array.prototype.copyWithin.name).to.equal('copyWithin');
       });
 
       it('modifies the object in-place', function () {
@@ -298,6 +320,10 @@ var runArrayTests = function () {
           expect(Array.prototype).to.have.property('find');
         });
       }
+
+      ifFunctionsHaveNamesIt('has the correct name', function () {
+        expect(Array.prototype.find.name).to.equal('find');
+      });
 
       it('should have a length of 1', function () {
         expect(Array.prototype.find.length).to.equal(1);
@@ -377,6 +403,10 @@ var runArrayTests = function () {
           expect(Array.prototype).to.have.property('findIndex');
         });
       }
+
+      ifFunctionsHaveNamesIt('has the correct name', function () {
+        expect(Array.prototype.findIndex.name).to.equal('findIndex');
+      });
 
       it('should have a length of 1', function () {
         expect(Array.prototype.findIndex.length).to.equal(1);
@@ -483,8 +513,12 @@ var runArrayTests = function () {
         });
       }
 
-      it('should have a length of zero', function () {
+      it('should have the right arity ', function () {
         expect(Array.prototype.keys.length).to.equal(0);
+      });
+
+      ifFunctionsHaveNamesIt('has the correct name', function () {
+        expect(Array.prototype.keys.name).to.equal('keys');
       });
 
       var mylist = [5, 10, 15, 20];
@@ -546,8 +580,12 @@ var runArrayTests = function () {
         });
       }
 
-      it('should have a length of zero', function () {
+      it('should have the right arity', function () {
         expect(Array.prototype.values.length).to.equal(0);
+      });
+
+      ifFunctionsHaveNamesIt('has the correct name', function () {
+        expect(Array.prototype.values.name).to.equal('values');
       });
 
       var mylist = [5, 10, 15, 20];
@@ -609,8 +647,12 @@ var runArrayTests = function () {
         });
       }
 
-      it('should have a length of zero', function () {
+      it('should have the right arity', function () {
         expect(Array.prototype.entries.length).to.equal(0);
+      });
+
+      ifFunctionsHaveNamesIt('has the correct name', function () {
+        expect(Array.prototype.entries.name).to.equal('entries');
       });
 
       var mylist = [5, 10, 15, 20];
@@ -678,8 +720,12 @@ var runArrayTests = function () {
         });
       }
 
-      it('has the right length', function () {
+      it('has the right arity', function () {
         expect(Array.prototype.fill.length).to.equal(1);
+      });
+
+      ifFunctionsHaveNamesIt('has the correct name', function () {
+        expect(Array.prototype.fill.name).to.equal('fill');
       });
 
       it('works with just a value', function () {

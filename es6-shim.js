@@ -685,7 +685,7 @@
   }
 
   var ArrayShims = {
-    from: function (iterable) {
+    from: function from(iterable) {
       var mapFn = arguments.length > 1 ? arguments[1] : void 0;
 
       var list = ES.ToObject(iterable, 'bad iterable');
@@ -739,7 +739,7 @@
       return result;
     },
 
-    of: function () {
+    of: function of() {
       return Array.from(arguments);
     }
   };
@@ -857,7 +857,7 @@
   addIterator(ObjectIterator.prototype);
 
   var ArrayPrototypeShims = {
-    copyWithin: function (target, start) {
+    copyWithin: function copyWithin(target, start) {
       var end = arguments[2]; // copyWithin.length must be 2
       var o = ES.ToObject(this);
       var len = ES.ToLength(o.length);
@@ -887,7 +887,7 @@
       return o;
     },
 
-    fill: function (value) {
+    fill: function fill(value) {
       var start = arguments.length > 1 ? arguments[1] : void 0;
       var end = arguments.length > 2 ? arguments[2] : void 0;
       var O = ES.ToObject(this);
@@ -938,15 +938,15 @@
       return -1;
     },
 
-    keys: function () {
+    keys: function keys() {
       return new ArrayIterator(this, 'key');
     },
 
-    values: function () {
+    values: function values() {
       return new ArrayIterator(this, 'value');
     },
 
-    entries: function () {
+    entries: function entries() {
       return new ArrayIterator(this, 'entry');
     }
   };
