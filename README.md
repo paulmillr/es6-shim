@@ -88,6 +88,22 @@ details.
 
 Math functions’ accuracy is 1e-11.
 
+* `Reflect`
+    * `apply()`
+    * `construct()`
+    * `defineProperty()`
+    * `deleteProperty()`
+    * `enumerate()`
+    * `get()`
+    * `getOwnPropertyDescriptor()`
+    * `getPrototypeOf()`
+    * `has()`
+    * `isExtensible()`
+    * `ownKeys()`
+    * `preventExtensions()`
+    * `set()`
+    * `setPrototypeOf()`
+
 * `String.prototype` Annex B HTML methods
 These methods are part of "Annex B", which means that although they are a defacto standard, you shouldn't use them. None the less, the `es6-shim` provides them:
     * `anchor()`
