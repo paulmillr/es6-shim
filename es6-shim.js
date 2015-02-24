@@ -89,6 +89,7 @@
   var Symbol = globals.Symbol || {};
   var symbolSpecies = Symbol.species || '@@species';
   var Type = {
+    object: function (x) { return x !== null && typeof x === 'object'; },
     string: function (x) { return _toString(x) === '[object String]'; },
     regex: function (x) { return _toString(x) === '[object RegExp]'; },
     symbol: function (x) {
@@ -1145,6 +1146,148 @@
         return originalObjectGetOwnPropertyNames(ES.ToObject(value));
       }, true);
       Value.preserveToString(Object.getOwnPropertyNames, originalObjectGetOwnPropertyNames);
+    }
+  }
+  if (Object.getOwnPropertyDescriptor) {
+    var objectGOPDAcceptsPrimitives = (function () {
+      try {
+        Object.getOwnPropertyDescriptor('foo', 'bar');
+        return true;
+      } catch (e) {
+        return false;
+      }
+    }());
+    if (!objectGOPDAcceptsPrimitives) {
+      var originalObjectGetOwnPropertyDescriptor = Object.getOwnPropertyDescriptor;
+      defineProperty(Object, 'getOwnPropertyDescriptor', function getOwnPropertyDescriptor(value, property) {
+        return originalObjectGetOwnPropertyDescriptor(ES.ToObject(value), property);
+      }, true);
+      Value.preserveToString(Object.getOwnPropertyDescriptor, originalObjectGetOwnPropertyDescriptor);
+    }
+  }
+  if (Object.seal) {
+    var objectSealAcceptsPrimitives = (function () {
+      try {
+        Object.seal('foo');
+        return true;
+      } catch (e) {
+        return false;
+      }
+    }());
+    if (!objectSealAcceptsPrimitives) {
+      var originalObjectSeal = Object.seal;
+      defineProperty(Object, 'seal', function seal(value) {
+        if (!Type.object(value)) { return value; }
+        return originalObjectSeal(value);
+      }, true);
+      Value.preserveToString(Object.seal, originalObjectSeal);
+    }
+  }
+  if (Object.isSealed) {
+    var objectIsSealedAcceptsPrimitives = (function () {
+      try {
+        Object.isSealed('foo');
+        return true;
+      } catch (e) {
+        return false;
+      }
+    }());
+    if (!objectIsSealedAcceptsPrimitives) {
+      var originalObjectIsSealed = Object.isSealed;
+      defineProperty(Object, 'isSealed', function isSealed(value) {
+        if (!Type.object(value)) { return true; }
+        return originalObjectIsSealed(value);
+      }, true);
+      Value.preserveToString(Object.isSealed, originalObjectIsSealed);
+    }
+  }
+  if (Object.freeze) {
+    var objectFreezeAcceptsPrimitives = (function () {
+      try {
+        Object.freeze('foo');
+        return true;
+      } catch (e) {
+        return false;
+      }
+    }());
+    if (!objectFreezeAcceptsPrimitives) {
+      var originalObjectFreeze = Object.freeze;
+      defineProperty(Object, 'freeze', function freeze(value) {
+        if (!Type.object(value)) { return value; }
+        return originalObjectFreeze(value);
+      }, true);
+      Value.preserveToString(Object.freeze, originalObjectFreeze);
+    }
+  }
+  if (Object.isFrozen) {
+    var objectIsFrozenAcceptsPrimitives = (function () {
+      try {
+        Object.isFrozen('foo');
+        return true;
+      } catch (e) {
+        return false;
+      }
+    }());
+    if (!objectIsFrozenAcceptsPrimitives) {
+      var originalObjectIsFrozen = Object.isFrozen;
+      defineProperty(Object, 'isFrozen', function isFrozen(value) {
+        if (!Type.object(value)) { return true; }
+        return originalObjectIsFrozen(value);
+      }, true);
+      Value.preserveToString(Object.isFrozen, originalObjectIsFrozen);
+    }
+  }
+  if (Object.preventExtensions) {
+    var objectPreventExtensionsAcceptsPrimitives = (function () {
+      try {
+        Object.preventExtensions('foo');
+        return true;
+      } catch (e) {
+        return false;
+      }
+    }());
+    if (!objectPreventExtensionsAcceptsPrimitives) {
+      var originalObjectPreventExtensions = Object.preventExtensions;
+      defineProperty(Object, 'preventExtensions', function preventExtensions(value) {
+        if (!Type.object(value)) { return value; }
+        return originalObjectPreventExtensions(value);
+      }, true);
+      Value.preserveToString(Object.preventExtensions, originalObjectPreventExtensions);
+    }
+  }
+  if (Object.isExtensible) {
+    var objectIsExtensibleAcceptsPrimitives = (function () {
+      try {
+        Object.isExtensible('foo');
+        return true;
+      } catch (e) {
+        return false;
+      }
+    }());
+    if (!objectIsExtensibleAcceptsPrimitives) {
+      var originalObjectIsExtensible = Object.isExtensible;
+      defineProperty(Object, 'isExtensible', function isExtensible(value) {
+        if (!Type.object(value)) { return false; }
+        return originalObjectIsExtensible(value);
+      }, true);
+      Value.preserveToString(Object.isExtensible, originalObjectIsExtensible);
+    }
+  }
+  if (Object.getPrototypeOf) {
+    var objectGetProtoAcceptsPrimitives = (function () {
+      try {
+        Object.getPrototypeOf('foo');
+        return true;
+      } catch (e) {
+        return false;
+      }
+    }());
+    if (!objectGetProtoAcceptsPrimitives) {
+      var originalGetProto = Object.getPrototypeOf;
+      defineProperty(Object, 'getPrototypeOf', function getPrototypeOf(value) {
+        return originalGetProto(ES.ToObject(value));
+      }, true);
+      Value.preserveToString(Object.getPrototypeOf, originalGetProto);
     }
   }
 

@@ -6,19 +6,97 @@ describe('Object', function (undefined) {
     expect(exported.Object).to.equal(Object);
   });
 
-  describe('Object.getOwnPropertyNames()', function () {
-    it('throws on null or undefined', function () {
-      expect(function () { Object.getOwnPropertyNames(); }).to['throw'](TypeError);
-      expect(function () { Object.getOwnPropertyNames(undefined); }).to['throw'](TypeError);
-      expect(function () { Object.getOwnPropertyNames(null); }).to['throw'](TypeError);
-    });
+  if (Object.getOwnPropertyNames) {
+    describe('Object.getOwnPropertyNames()', function () {
+      it('throws on null or undefined', function () {
+        expect(function () { Object.getOwnPropertyNames(); }).to['throw'](TypeError);
+        expect(function () { Object.getOwnPropertyNames(undefined); }).to['throw'](TypeError);
+        expect(function () { Object.getOwnPropertyNames(null); }).to['throw'](TypeError);
+      });
 
-    it('works on primitives', function () {
-      [true, false, NaN, 42, /a/g, 'foo'].forEach(function (item) {
-        expect(Object.getOwnPropertyNames(item)).to.eql(Object.getOwnPropertyNames(Object(item)));
+      it('works on primitives', function () {
+        [true, false, NaN, 42, /a/g, 'foo'].forEach(function (item) {
+          expect(Object.getOwnPropertyNames(item)).to.eql(Object.getOwnPropertyNames(Object(item)));
+        });
       });
     });
-  });
+  }
+
+  if (Object.getOwnPropertyDescriptor) {
+    describe('Object.getOwnPropertyDescriptor()', function () {
+      it('throws on null or undefined', function () {
+        expect(function () { Object.getOwnPropertyDescriptor(); }).to['throw'](TypeError);
+        expect(function () { Object.getOwnPropertyDescriptor(undefined); }).to['throw'](TypeError);
+        expect(function () { Object.getOwnPropertyDescriptor(null); }).to['throw'](TypeError);
+      });
+
+      it('works on primitives', function () {
+        [true, false, NaN, 42, /a/g, 'foo'].forEach(function (item) {
+          expect(Object.getOwnPropertyDescriptor(item, 'foo')).to.eql(Object.getOwnPropertyDescriptor(Object(item), 'foo'));
+        });
+      });
+    });
+  }
+
+  if (Object.seal) {
+    describe('Object.seal()', function () {
+      it('works on primitives', function () {
+        [null, undefined, true, false, NaN, 42, 'foo'].forEach(function (item) {
+          expect(Object.seal(item)).to.eql(item);
+        });
+      });
+    });
+  }
+
+  if (Object.isSealed) {
+    describe('Object.isSealed()', function () {
+      it('works on primitives', function () {
+        [null, undefined, true, false, NaN, 42, 'foo'].forEach(function (item) {
+          expect(Object.isSealed(item)).to.equal(true);
+        });
+      });
+    });
+  }
+
+  if (Object.freeze) {
+    describe('Object.freeze()', function () {
+      it('works on primitives', function () {
+        [null, undefined, true, false, NaN, 42, 'foo'].forEach(function (item) {
+          expect(Object.freeze(item)).to.eql(item);
+        });
+      });
+    });
+  }
+
+  if (Object.isFrozen) {
+    describe('Object.isFrozen()', function () {
+      it('works on primitives', function () {
+        [null, undefined, true, false, NaN, 42, 'foo'].forEach(function (item) {
+          expect(Object.isFrozen(item)).to.equal(true);
+        });
+      });
+    });
+  }
+
+  if (Object.preventExtensions) {
+    describe('Object.preventExtensions()', function () {
+      it('works on primitives', function () {
+        [null, undefined, true, false, NaN, 42, 'foo'].forEach(function (item) {
+          expect(Object.preventExtensions(item)).to.eql(item);
+        });
+      });
+    });
+  }
+
+  if (Object.isExtensible) {
+    describe('Object.isExtensible()', function () {
+      it('works on primitives', function () {
+        [null, undefined, true, false, NaN, 42, 'foo'].forEach(function (item) {
+          expect(Object.isExtensible(item)).to.equal(false);
+        });
+      });
+    });
+  }
 
   describe('Object.keys()', function () {
     it('works on strings', function () {
