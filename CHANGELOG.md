@@ -1,5 +1,10 @@
 # es6-shim x.x.x (not yet released)
 
+# es6-shim 0.26.1 (25 Feb 2015)
+* Ensure `Array`/`Array.prototype` functions have the correct name.
+* Chrome 40 defines the incorrect name for `Array#values`
+* Make sure that `Array.of` works when subclassed.
+
 # es6-shim 0.26.0 (24 Feb 2015)
 * Ensure that remaining Object static methods accept primitives.
 * Update `chai`
