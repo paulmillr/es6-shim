@@ -143,6 +143,9 @@
       } else {
         object[property] = newValue;
       }
+    },
+    preserveToString: function (target, source) {
+      defineProperty(target, 'toString', source.toString.bind(source), true);
     }
   };
 
@@ -1124,6 +1127,7 @@
     defineProperty(Object, 'keys', function keys(value) {
       return originalObjectKeys(ES.ToObject(value));
     }, true);
+    Value.preserveToString(Object.keys, originalObjectKeys);
   }
 
   if (Object.getOwnPropertyNames) {
@@ -1140,6 +1144,7 @@
       defineProperty(Object, 'getOwnPropertyNames', function getOwnPropertyNames(value) {
         return originalObjectGetOwnPropertyNames(ES.ToObject(value));
       }, true);
+      Value.preserveToString(Object.getOwnPropertyNames, originalObjectGetOwnPropertyNames);
     }
   }
 
@@ -1186,7 +1191,7 @@
       }
       return new OrigRegExp(pattern, flags);
     };
-    defineProperty(RegExpShim, 'toString', OrigRegExp.toString.bind(OrigRegExp), true);
+    Value.preserveToString(RegExpShim, OrigRegExp);
     if (Object.setPrototypeOf) {
       // sets up proper prototype chain where possible
       Object.setPrototypeOf(OrigRegExp, RegExpShim);
