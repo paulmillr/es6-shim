@@ -740,7 +740,7 @@
     },
 
     of: function of() {
-      return Array.from(arguments);
+      return Array.from.call(this, arguments);
     }
   };
   defineProperties(Array, ArrayShims);
@@ -972,7 +972,8 @@
   if (Array.prototype.values && Array.prototype.values.name !== 'values') {
     var originalArrayPrototypeValues = Array.prototype.values;
     defineProperty(Array.prototype, 'values', function values() { return originalArrayPrototypeValues.call(this); }, true);
-    Array.prototype[$iterator$] = Array.prototype.values;
+    defineProperty(Array.prototype, $iterator$, Array.prototype.values, true);
+    Value.preserveToString(Array.prototype.values, originalArrayPrototypeValues);
   }
   defineProperties(Array.prototype, ArrayPrototypeShims);
 
