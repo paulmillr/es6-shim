@@ -86,7 +86,23 @@ details.
     * `imul()`
     * `fround()`
 
-Math functions accuracy is 1e-11.
+Math functions’ accuracy is 1e-11.
+
+* `String.prototype` Annex B HTML methods
+These methods are part of "Annex B", which means that although they are a defacto standard, you shouldn't use them. None the less, the `es6-shim` provides them:
+    * `anchor()`
+    * `big()`
+    * `blink()`
+    * `bold()`
+    * `fixed()`
+    * `fontcolor()`
+    * `fontsize()`
+    * `italics()`
+    * `link()`
+    * `small()`
+    * `strike()`
+    * `sub()`
+    * `sup()`
 
 ## Subclassing
 The `Map`, `Set`, and `Promise` implementations are subclassable.
