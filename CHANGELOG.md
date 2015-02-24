@@ -1,5 +1,10 @@
 # es6-shim x.x.x (not yet released)
 
+# es6-shim 0.26.0 (24 Feb 2015)
+* Ensure that remaining Object static methods accept primitives.
+* Update `chai`
+* Document `String.prototype` HTML methods and `Reflect` methods in README
+
 # es6-shim 0.25.3 (22 Feb 2015)
 * Removing nonexistent arguments from some String.prototype HTML methods
 * All grade A-supported `node`/`iojs` versions now ship with an `npm` that understands `^`.
