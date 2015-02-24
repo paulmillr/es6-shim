@@ -968,6 +968,12 @@
       Array.prototype[Symbol.unscopables].values = true;
     }
   }
+  // Chrome 40 defines Array#values with the incorrect name, although Array#{keys,entries} have the correct name
+  if (Array.prototype.values && Array.prototype.values.name !== 'values') {
+    var originalArrayPrototypeValues = Array.prototype.values;
+    defineProperty(Array.prototype, 'values', function values() { return originalArrayPrototypeValues.call(this); }, true);
+    Array.prototype[$iterator$] = Array.prototype.values;
+  }
   defineProperties(Array.prototype, ArrayPrototypeShims);
 
   addIterator(Array.prototype, function () { return this.values(); });
