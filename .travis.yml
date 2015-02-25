@@ -15,8 +15,10 @@ before_install:
   - '[ "${TRAVIS_RUN_SAUCE}" != "true" ] || npm install -g grunt-cli'
 script:
   - 'if [ "${TRAVIS_RUN_SAUCE}" == "true" ]; then npm run sauce ; elif [ "${TRAVIS_NODE_VERSION}" != "0.11" ] && [ "${TRAVIS_NODE_VERSION}" != "0.10" ]; then npm run test-shim && npm run test-sham ; else npm test ; fi'
-addons:
-  sauce_connect: true
+# NOTE: sauce_connect is disabled, because it applies to every test and we only need it on one of them.
+#  It's available inside `npm run sauce`
+# addons:
+#  sauce_connect: true
 matrix:
   fast_finish: true
   include:

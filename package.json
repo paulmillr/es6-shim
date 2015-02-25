@@ -39,7 +39,8 @@
     "minify": "npm run minify-shim && npm run minify-sham",
     "minify-shim": "uglifyjs es6-shim.js --comments --source-map=es6-shim.map -m -b ascii_only=true,beautify=false > es6-shim.min.js",
     "minify-sham": "uglifyjs es6-sham.js --comments --source-map=es6-sham.map -m -b ascii_only=true,beautify=false > es6-sham.min.js",
-    "sauce": "grunt sauce"
+    "sauce-connect": "curl -L https://gist.githubusercontent.com/henrikhodne/9322897/raw/sauce-connect.sh | bash && export TRAVIS_SAUCE_CONNECT=true",
+    "sauce": "npm run sauce-connect && grunt sauce"
   },
   "testling": {
     "html": "testling.html",
