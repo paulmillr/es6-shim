@@ -2037,7 +2037,7 @@
         function Map(iterable) {
           var map = this;
           if (!ES.TypeIsObject(map)) {
-            throw new TypeError('Map does not accept arguments when called as a function');
+            throw new TypeError("Constructor Map requires 'new'");
           }
           map = emulateES6construct(map);
           if (!map._es6map) {
@@ -2227,7 +2227,7 @@
         var SetShim = function Set(iterable) {
           var set = this;
           if (!ES.TypeIsObject(set)) {
-            throw new TypeError('Set does not accept arguments when called as a function');
+            throw new TypeError("Constructor Set requires 'new'");
           }
           set = emulateES6construct(set);
           if (!set._es6set) {
