@@ -21,6 +21,27 @@ var runArrayTests = function () {
       expect(exported.Array).to.equal(Array);
     });
 
+    var assertArrayLike = function (a, array) {
+      expect(a.length).to.equal(array.length);
+      expect(Array.from(a)).to.eql(array);
+    };
+
+    describe('#slice()', function () {
+      it('works on non-Arrays', function () {
+        var C = function C() {
+          var arr = Array.apply(null, arguments);
+          Object.assign(this, arr);
+          this.length = arr.length;
+        };
+        var c = new C(1, 2, 3, 4);
+        assertArrayLike(c, [1, 2, 3, 4]);
+        expect(c).to.be.an.instanceOf(C);
+        var c2 = Array.prototype.slice.call(c, 1, -1);
+        assertArrayLike(c2, [2, 3]);
+        expect(c2).to.be.an.instanceOf(C);
+      });
+    });
+
     describe('@@iterator', function () {
       it('uses Symbol.iterator if available', function () {
         var a = [];
