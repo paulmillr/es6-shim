@@ -1,5 +1,9 @@
 # es6-shim x.x.x (not yet released)
 
+# es6-shim 0.27.0 (26 Feb 2015)
+* Overwrite `Array#slice` so that it supports Array subclasses.
+* Improve `Map`/`Set` `TypeError` messages when called as a function. (#321)
+
 # es6-shim 0.26.1 (25 Feb 2015)
 * Ensure `Array`/`Array.prototype` functions have the correct name.
 * Chrome 40 defines the incorrect name for `Array#values`
