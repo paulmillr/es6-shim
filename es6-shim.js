@@ -1498,7 +1498,17 @@
     },
 
     log2: function (value) {
-      return Math.log(value) * Math.LOG2E;
+      value = Number(value);
+      var y = Math.log(value) * Math.LOG2E;
+      var n = y | 0;
+      if (y - n > 0.5) {
+        n += 1;
+      }
+      if (y - n < -0.5) {
+        n -= 1;
+      }
+      var p = Math.pow(2, n);
+      return p <= value && y < n || p >= value && y > n ? n : y;
     },
 
     log10: function (value) {
@@ -1592,6 +1602,10 @@
   if (Math.imul(0xffffffff, 5) !== -5) {
     // Safari 6.1, at least, reports "0" for this value
     Math.imul = MathShims.imul;
+  }
+
+  if (Math.log2(536870912.0) !== 29) {
+    Math.log2 = MathShims.log2;
   }
 
   // Promises
