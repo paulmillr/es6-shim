@@ -318,6 +318,28 @@
       return result;
     },
 
+    ArraySpeciesCreate: function (originalArray, length) {
+      if (!Number.isInteger(length) || length < 0) {
+        throw new TypeError('length must be 0 or greater');
+      }
+      var len = length === 0 ? 0 : length; // eliminate negative zero
+      var C;
+      var isArray = Array.isArray(originalArray);
+      if (isArray) {
+        C = originalArray.constructor;
+        if (ES.TypeIsObject(C)) {
+          C = C[symbolSpecies];
+          if (C === null) {
+            C = undefined;
+          }
+        }
+      }
+      if (typeof C === 'undefined') {
+        return new Array(len);
+      }
+      return ES.Construct(C, len);
+    },
+
     Construct: function (C, args) {
       // CreateFromConstructor
       var obj;
@@ -991,7 +1013,7 @@
       var relativeEnd = typeof end === 'undefined' ? len : ES.ToInteger(end);
       var finalEnd = relativeEnd < 0 ? Math.max(len + relativeEnd, 0) : Math.min(relativeEnd, len);
       var count = Math.max(finalEnd - k, 0);
-      var A = ES.Construct(O.constructor, [count]);
+      var A = ES.ArraySpeciesCreate(O, count);
       var n = 0;
       while (k < finalEnd) {
         if (_hasOwnProperty(O, k)) {
