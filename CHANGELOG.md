@@ -1,5 +1,9 @@
 # es6-shim x.x.x (not yet released)
 
+# es6-shim 0.27.1 (5 Mar 2015)
+* Revert `Array#slice` changes. (#322)
+* Test on `io.js` `v1.4`
+
 # es6-shim 0.27.0 (26 Feb 2015)
 * Overwrite `Array#slice` so that it supports Array subclasses.
 * Improve `Map`/`Set` `TypeError` messages when called as a function. (#321)
