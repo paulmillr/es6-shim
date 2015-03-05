@@ -5,7 +5,6 @@ var runArrayTests = function () {
   'use strict';
 
   var Sym = typeof Symbol !== 'undefined' ? Symbol : {};
-  var symbolSpecies = Sym.species || '@@species';
   var isSymbol = function (sym) {
     /*jshint notypeof: true */
     return typeof Sym === 'function' && typeof sym === 'symbol';
@@ -20,43 +19,6 @@ var runArrayTests = function () {
     (typeof process !== 'undefined' && process.env.NO_ES6_SHIM ? it.skip : it)('is on the exported object', function () {
       var exported = require('../');
       expect(exported.Array).to.equal(Array);
-    });
-
-    var assertArrayLike = function (a, array) {
-      expect(a.length).to.equal(array.length);
-      expect(Array.from(a)).to.eql(array);
-    };
-
-    describe('#slice()', function () {
-      var C;
-      beforeEach(function () {
-        C = function C() {
-          var arr = Array.apply(this, arguments);
-          Object.assign(this, arr);
-          this.length = arr.length;
-        };
-        C[symbolSpecies] = C;
-      });
-
-      it('works on non-Arrays', function () {
-        var c = new C(1, 2, 3, 4);
-        assertArrayLike(c, [1, 2, 3, 4]);
-        expect(c).to.be.an.instanceOf(C);
-        var c2 = Array.prototype.slice.call(c, 1, -1);
-        assertArrayLike(c2, [2, 3]);
-        expect(c2).to.be.an.instanceOf(Array);
-      });
-
-      it('works on Arrays', function () {
-        C.prototype = Array.prototype;
-        var c = new C(1, 2, 3, 4);
-        assertArrayLike(c, [1, 2, 3, 4]);
-        expect(c).to.be.an.instanceOf(C);
-        expect(Array.isArray(c)).to.equal(true);
-        var c2 = Array.prototype.slice.call(c, 1, -1);
-        assertArrayLike(c2, [2, 3]);
-        expect(c2).to.be.an.instanceOf(C);
-      });
     });
 
     describe('@@iterator', function () {
