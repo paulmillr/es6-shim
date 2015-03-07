@@ -12,21 +12,21 @@ closely as possible to ECMAScript 6 (Harmony).
 If you want to use it in browser:
 
 * Just include es6-shim before your scripts.
-* Include [es5-shim](https://github.com/kriskowal/es5-shim) if your browser doesn't support ECMAScript 5.
-* `component install paulmillr/es6-shim` if you’re using [component(1)](https://github.com/component/component).
-* `bower install es6-shim` if you’re using [Twitter Bower](http://bower.io/).
+* Include [es5-shim][es5-shim-url] especially if your browser doesn't support ECMAScript 5 - but every JS engine requires the `es5-shim` to correct broken implementations, so it's strongly recommended to always include it.
 
-For node.js:
+For `node.js`, `io.js`, or any `npm`-managed workflow (this is the recommended method):
 
     npm install es6-shim
 
-In both browser and node you may also want to include `unorm`; see the
-[`String.prototype.normalize`](#stringprototypenormalize) section for
-details.
+Alternative methods:
+* `component install paulmillr/es6-shim` if you’re using [component(1)](https://github.com/component/component).
+* `bower install es6-shim` if you’re using [Bower](http://bower.io/).
+
+In both browser and node you may also want to include `unorm`; see the [`String.prototype.normalize`](#stringprototypenormalize) section for details.
 
 ## Safe shims
 
-* `Map`, `Set` (requires ES5)
+* `Map`, `Set` (requires ES5 property descriptor support)
 * `Promise`
 * `String`:
     * `fromCodePoint()` ([a standalone shim is also available](http://mths.be/fromcodepoint))
@@ -178,23 +178,23 @@ Math.sign(400) // 1, 0 or -1 depending on sign. In this case 1.
 
 // Replacement for `{}` key-value storage.
 // Keys can be anything.
-var map = new Map()
-map.set('John', 25)
-map.set('Alice', 400)
-map.set(['meh'], 555)
-map.get(['meh']) // undefined because you need to use exactly the same object.
-map.delete('Alice')
-map.keys()
-map.values()
-map.size // 2
+var map = new Map();
+map.set('John', 25);
+map.set('Alice', 400);
+map.set(['meh'], 555);
+assert(map.get(['meh']) === undefined); // undefined because you need to use exactly the same object.
+map.delete('Alice');
+map.keys();
+map.values();
+assert(map.size === 2);
 
 // Useful for storing unique items.
-var set = new Set()
-set.add(1)
-set.add(5)
-set.has(1)
-set.has(4)  // => false
-set.delete(5)
+var set = new Set();
+set.add(1);
+set.add(5);
+assert(set.has(1) === true);
+assert(set.has(4) === false);
+set.delete(5);
 
 // Promises, see
 // http://www.slideshare.net/domenicdenicola/callbacks-promises-and-coroutines-oh-my-the-evolution-of-asynchronicity-in-javascript
@@ -224,3 +224,4 @@ Other stuff:
 [license-url]: https://github.com/paulmillr/es6-shim/blob/master/LICENSE
 [spec-html-url]: https://people.mozilla.org/~jorendorff/es6-draft.html
 [spec-drafts-url]: http://wiki.ecmascript.org/doku.php?id=harmony:specification_drafts
+[es5-shim-url]: https://github.com/es-shims/es5-shim
