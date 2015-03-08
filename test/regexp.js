@@ -1,4 +1,4 @@
-/*global describe, it, xit, expect, require */
+/*global beforeEach, describe, xdescribe, it, xit, expect, require */
 
 var getRegexLiteral = function (stringRegex) {
   try {

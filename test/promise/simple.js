@@ -1,6 +1,5 @@
 /*global describe, specify, assert, Promise */
 
-
 var failIfThrows = function (done) {
   'use strict';
   return function (e) { done(e || new Error()); };

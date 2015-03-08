@@ -1,6 +1,6 @@
 /*global describe, it, expect, Worker, location */
 
-describe('Worker', function (undefined) {
+describe('Worker', function () {
   var workerErrorEventToError = function (errorEvent) {
     var errorText = 'Error in Worker';
     if (errorEvent.filename !== undefined) {

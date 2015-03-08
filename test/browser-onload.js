@@ -10,7 +10,7 @@ if (typeof window !== 'undefined') {
       if (runner.stats.end) {
         window.testsPassed = (runner.stats.failures === 0);
       }
-      runner.on('pass', function (test) {
+      runner.on('pass', function () {
         window.completedTests++;
       });
       runner.on('fail', function (test, err) {

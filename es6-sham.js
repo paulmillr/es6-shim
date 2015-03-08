@@ -24,7 +24,7 @@
     // Browser globals (root is window)
     root.returnExports = factory();
   }
-}(this, function (undefined) {
+}(this, function () {
   'use strict';
 
   /*jshint evil: true */

@@ -1,7 +1,6 @@
 /*global describe, it, expect, require, Promise */
 
 /* This file is for testing implementation regressions of Promises. */
-var hasOwn = Object.prototype.hasOwnProperty;
 
 describe('Promise', function () {
   (typeof process !== 'undefined' && process.env.NO_ES6_SHIM ? it.skip : it)('is on the exported object', function () {

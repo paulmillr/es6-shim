@@ -1,4 +1,4 @@
-/*global describe, it, xit, expect, require, Reflect */
+/*global describe, xdescribe, it, xit, expect, require, Reflect */
 
 var arePropertyDescriptorsSupported = function () {
   try {
@@ -407,7 +407,7 @@ describe('Reflect', function () {
       var out;
       target = Object.create({}, {
         o: {
-          set: function (v) { out = this; }
+          set: function () { out = this; }
         }
       });
 
