@@ -109,8 +109,8 @@ describe('Collections', function () {
     });
 
     it('should be subclassable', function () {
-      var MyMap = function () { Map.call(this, [['a', 'b']]); };
       if (!Object.setPrototypeOf) { return; } // skip test if on IE < 11
+      var MyMap = function () { Map.call(this, [['a', 'b']]); };
       Object.setPrototypeOf(MyMap, Map);
       MyMap.prototype = Object.create(Map.prototype, {
         constructor: { value: MyMap }
@@ -122,7 +122,8 @@ describe('Collections', function () {
     });
 
     it('treats positive and negative zero the same', function () {
-      var value1 = {}, value2 = {};
+      var value1 = {};
+      var value2 = {};
       testMapping(+0, value1);
       expect(map.has(-0)).to.equal(true);
       expect(map.get(-0)).to.equal(value1);
@@ -200,7 +201,7 @@ describe('Collections', function () {
     });
 
     it('should allow common ecmascript idioms', function () {
-      expect(map instanceof Map).to.equal(true);
+      expect(map).to.be.an.instanceOf(Map);
       expect(typeof Map.prototype.get).to.equal('function');
       expect(typeof Map.prototype.set).to.equal('function');
       expect(typeof Map.prototype.has).to.equal('function');
