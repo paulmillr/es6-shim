@@ -534,52 +534,54 @@ var runArrayTests = function () {
         expect(Array.prototype.keys.name).to.equal('keys');
       });
 
-      var mylist = [5, 10, 15, 20];
-      var keys;
-      beforeEach(function () {
-        if (!keys) {
-          keys = mylist.keys();
-        }
-      });
+      describe('basic keys iteration', function () {
+        var mylist = [5, 10, 15, 20];
+        var keys;
+        beforeEach(function () {
+          if (!keys) {
+            keys = mylist.keys();
+          }
+        });
 
-      it('should return 0 on first object', function () {
-        expect(keys.next()).to.eql({value: 0, done: false});
-      });
+        it('should return 0 on first object', function () {
+          expect(keys.next()).to.eql({ value: 0, done: false });
+        });
 
-      it('should return 1 on second object', function () {
-        expect(keys.next()).to.eql({value: 1, done: false});
-      });
+        it('should return 1 on second object', function () {
+          expect(keys.next()).to.eql({ value: 1, done: false });
+        });
 
-      it('should return 2 on third object', function () {
-        expect(keys.next()).to.eql({value: 2, done: false});
-      });
+        it('should return 2 on third object', function () {
+          expect(keys.next()).to.eql({ value: 2, done: false });
+        });
 
-      it('should return 3 on fourth object', function () {
-        expect(keys.next()).to.eql({value: 3, done: false});
-      });
+        it('should return 3 on fourth object', function () {
+          expect(keys.next()).to.eql({ value: 3, done: false });
+        });
 
-      it('should set done on completing iteration', function () {
-        expect(keys.next()).to.eql({value: undefined, done: true});
-      });
+        it('should set done on completing iteration', function () {
+          expect(keys.next()).to.eql({ value: undefined, done: true });
+        });
 
-      it('once done it should stay done', function () {
-        mylist.push(4);
-        expect(keys.next()).to.eql({value: undefined, done: true});
+        it('once done it should stay done', function () {
+          mylist.push(4);
+          expect(keys.next()).to.eql({ value: undefined, done: true });
+        });
       });
 
       it('should not skip sparse keys', function () {
         var sparse = [1];
         sparse[2] = 3;
         var keys = sparse.keys();
-        expect(keys.next()).to.eql({value: 0, done: false});
-        expect(keys.next()).to.eql({value: 1, done: false});
-        expect(keys.next()).to.eql({value: 2, done: false});
-        expect(keys.next()).to.eql({value: undefined, done: true});
+        expect(keys.next()).to.eql({ value: 0, done: false });
+        expect(keys.next()).to.eql({ value: 1, done: false });
+        expect(keys.next()).to.eql({ value: 2, done: false });
+        expect(keys.next()).to.eql({ value: undefined, done: true });
       });
 
       it('should be unscopable if Symbols exist', function () {
         if (isSymbol(Sym.unscopables)) {
-          var unscopables = mylist[Sym.unscopables];
+          var unscopables = Array.prototype[Sym.unscopables];
           expect(!!unscopables).to.equal(true);
           expect(unscopables.keys).to.equal(true);
         }
@@ -601,52 +603,54 @@ var runArrayTests = function () {
         expect(Array.prototype.values.name).to.equal('values');
       });
 
-      var mylist = [5, 10, 15, 20];
-      var values;
-      beforeEach(function () {
-        if (!values) {
-          values = mylist.values();
-        }
-      });
+      describe('basic list iteration', function () {
+        var mylist = [5, 10, 15, 20];
+        var values;
+        beforeEach(function () {
+          if (!values) {
+            values = mylist.values();
+          }
+        });
 
-      it('should return 5 on first object', function () {
-        expect(values.next()).to.eql({value: 5, done: false});
-      });
+        it('should return 5 on first object', function () {
+          expect(values.next()).to.eql({ value: 5, done: false });
+        });
 
-      it('should return 10 on second object', function () {
-        expect(values.next()).to.eql({value: 10, done: false});
-      });
+        it('should return 10 on second object', function () {
+          expect(values.next()).to.eql({ value: 10, done: false });
+        });
 
-      it('should return 15 on third object', function () {
-        expect(values.next()).to.eql({value: 15, done: false});
-      });
+        it('should return 15 on third object', function () {
+          expect(values.next()).to.eql({ value: 15, done: false });
+        });
 
-      it('should return 20 on fourth object', function () {
-        expect(values.next()).to.eql({value: 20, done: false});
-      });
+        it('should return 20 on fourth object', function () {
+          expect(values.next()).to.eql({ value: 20, done: false });
+        });
 
-      it('should set done on completing iteration', function () {
-        expect(values.next()).to.eql({value: undefined, done: true});
-      });
+        it('should set done on completing iteration', function () {
+          expect(values.next()).to.eql({ value: undefined, done: true });
+        });
 
-      it('once done it should stay done', function () {
-        mylist.push(4);
-        expect(values.next()).to.eql({value: undefined, done: true});
+        it('once done it should stay done', function () {
+          mylist.push(4);
+          expect(values.next()).to.eql({ value: undefined, done: true });
+        });
       });
 
       it('should not skip sparse values', function () {
         var sparse = [1];
         sparse[2] = 3;
         var values = sparse.values();
-        expect(values.next()).to.eql({value: 1, done: false});
-        expect(values.next()).to.eql({value: undefined, done: false});
-        expect(values.next()).to.eql({value: 3, done: false});
-        expect(values.next()).to.eql({value: undefined, done: true});
+        expect(values.next()).to.eql({ value: 1, done: false });
+        expect(values.next()).to.eql({ value: undefined, done: false });
+        expect(values.next()).to.eql({ value: 3, done: false });
+        expect(values.next()).to.eql({ value: undefined, done: true });
       });
 
       it('should be unscopable if Symbols exist', function () {
         if (isSymbol(Sym.unscopables)) {
-          var unscopables = mylist[Sym.unscopables];
+          var unscopables = Array.prototype[Sym.unscopables];
           expect(!!unscopables).to.equal(true);
           expect(unscopables.values).to.equal(true);
         }
@@ -668,58 +672,60 @@ var runArrayTests = function () {
         expect(Array.prototype.entries.name).to.equal('entries');
       });
 
-      var mylist = [5, 10, 15, 20];
-      var entries;
-      beforeEach(function () {
-        if (!entries) {
-          entries = mylist.entries();
-        }
-      });
+      describe('basic list iteration', function () {
+        var mylist = [5, 10, 15, 20];
+        var entries;
+        beforeEach(function () {
+          if (!entries) {
+            entries = mylist.entries();
+          }
+        });
 
-      it('should return [0, 5] on first object', function () {
-        var val = entries.next();
-        expect(val).to.eql({value: [0, 5], done: false});
-      });
+        it('should return [0, 5] on first object', function () {
+          var val = entries.next();
+          expect(val).to.eql({ value: [0, 5], done: false });
+        });
 
-      it('should return [1, 10] on second object', function () {
-        var val = entries.next();
-        expect(val).to.eql({value: [1, 10], done: false});
-      });
+        it('should return [1, 10] on second object', function () {
+          var val = entries.next();
+          expect(val).to.eql({ value: [1, 10], done: false });
+        });
 
-      it('should return [2, 15] on third object', function () {
-        var val = entries.next();
-        expect(val).to.eql({value: [2, 15], done: false});
-      });
+        it('should return [2, 15] on third object', function () {
+          var val = entries.next();
+          expect(val).to.eql({ value: [2, 15], done: false });
+        });
 
-      it('should return [3, 20] on fourth object', function () {
-        var val = entries.next();
-        expect(val).to.eql({value: [3, 20], done: false});
-      });
+        it('should return [3, 20] on fourth object', function () {
+          var val = entries.next();
+          expect(val).to.eql({ value: [3, 20], done: false });
+        });
 
-      it('should set done on completing iteration', function () {
-        var val = entries.next();
-        expect(val).to.eql({value: undefined, done: true});
-      });
+        it('should set done on completing iteration', function () {
+          var val = entries.next();
+          expect(val).to.eql({ value: undefined, done: true });
+        });
 
-      it('once done it should stay done', function () {
-        mylist.push(4);
-        var val = entries.next();
-        expect(val).to.eql({value: undefined, done: true});
+        it('once done it should stay done', function () {
+          mylist.push(4);
+          var val = entries.next();
+          expect(val).to.eql({ value: undefined, done: true });
+        });
       });
 
       it('should not skip sparse entries', function () {
         var sparse = [1];
         sparse[2] = 3;
         var entries = sparse.entries();
-        expect(entries.next()).to.eql({value: [0, 1], done: false});
-        expect(entries.next()).to.eql({value: [1, undefined], done: false});
-        expect(entries.next()).to.eql({value: [2, 3], done: false});
-        expect(entries.next()).to.eql({value: undefined, done: true});
+        expect(entries.next()).to.eql({ value: [0, 1], done: false });
+        expect(entries.next()).to.eql({ value: [1, undefined], done: false });
+        expect(entries.next()).to.eql({ value: [2, 3], done: false });
+        expect(entries.next()).to.eql({ value: undefined, done: true });
       });
 
       it('should be unscopable if Symbols exist', function () {
         if (isSymbol(Sym.unscopables)) {
-          var unscopables = mylist[Sym.unscopables];
+          var unscopables = Array.prototype[Sym.unscopables];
           expect(!!unscopables).to.equal(true);
           expect(unscopables.entries).to.equal(true);
         }
