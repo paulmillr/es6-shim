@@ -1357,6 +1357,9 @@
     /*globals RegExp: false */
   }
 
+  var square = function (n) { return n * n; };
+  var add = function (a, b) { return a + b; };
+
   var MathShims = {
     acosh: function (value) {
       var x = Number(value);
@@ -1459,10 +1462,9 @@
       if (anyNaN) { return NaN; }
       if (allZero) { return 0; }
 
-      numbers.sort(function (a, b) { return b - a; });
-      var largest = numbers[0];
+      var largest = Math.max.apply(Math, numbers);
       var divided = numbers.map(function (number) { return number / largest; });
-      var sum = divided.reduce(function (sum, number) { return sum + (number * number); }, 0);
+      var sum = divided.map(square).reduce(add);
       return largest * Math.sqrt(sum);
     },
 
