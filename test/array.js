@@ -1,6 +1,5 @@
 /*global describe, it, xit, expect, require, beforeEach */
 
-
 var runArrayTests = function () {
   'use strict';
 
@@ -358,12 +357,12 @@ var runArrayTests = function () {
       });
 
       it('should receive all three parameters', function () {
-        var index = list.find(function (value, index, arr) {
+        var foundIndex = list.find(function (value, index, arr) {
           expect(list[index]).to.equal(value);
           expect(list).to.eql(arr);
           return false;
         });
-        expect(index).to.equal(undefined);
+        expect(foundIndex).to.equal(undefined);
       });
 
       it('should work with the context argument', function () {
@@ -441,12 +440,12 @@ var runArrayTests = function () {
       });
 
       it('should receive all three parameters', function () {
-        var index = list.findIndex(function (value, index, arr) {
+        var foundIndex = list.findIndex(function (value, index, arr) {
           expect(list[index]).to.equal(value);
           expect(list).to.eql(arr);
           return false;
         });
-        expect(index).to.equal(-1);
+        expect(foundIndex).to.equal(-1);
       });
 
       it('should work with the context argument', function () {
