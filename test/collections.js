@@ -57,17 +57,18 @@ describe('Collections', function () {
     }
   };
 
+  var testMapping = function (map, key, value) {
+    expect(map.has(key)).to.equal(false);
+    expect(map.get(key)).to.equal(undefined);
+    expect(map.set(key, value)).to.equal(map);
+    expect(map.get(key)).to.equal(value);
+    expect(map.has(key)).to.equal(true);
+  };
+
   describe('Map', function () {
-    var map, testMapping;
+    var map;
     beforeEach(function () {
       map = new Map();
-      testMapping = function (key, value) {
-        expect(map.has(key)).to.equal(false);
-        expect(map.get(key)).to.equal(undefined);
-        expect(map.set(key, value)).to.equal(map);
-        expect(map.get(key)).to.equal(value);
-        expect(map.has(key)).to.equal(true);
-      };
     });
 
     afterEach(function () {
@@ -96,8 +97,8 @@ describe('Collections', function () {
     });
 
     it('should accept an iterable as argument', function () {
-      testMapping('a', 'b');
-      testMapping('c', 'd');
+      testMapping(map, 'a', 'b');
+      testMapping(map, 'c', 'd');
       var map2 = new Map(map);
       expect(map2.has('a')).to.equal(true);
       expect(map2.has('c')).to.equal(true);
@@ -116,15 +117,15 @@ describe('Collections', function () {
         constructor: { value: MyMap }
       });
 
-      map = new MyMap();
-      testMapping('c', 'd');
-      expect(map).to.have.entries([['a', 'b'], ['c', 'd']]);
+      var myMap = new MyMap();
+      testMapping(myMap, 'c', 'd');
+      expect(myMap).to.have.entries([['a', 'b'], ['c', 'd']]);
     });
 
     it('treats positive and negative zero the same', function () {
       var value1 = {};
       var value2 = {};
-      testMapping(+0, value1);
+      testMapping(map, +0, value1);
       expect(map.has(-0)).to.equal(true);
       expect(map.get(-0)).to.equal(value1);
       expect(map.set(-0, value2)).to.equal(map);
@@ -139,11 +140,11 @@ describe('Collections', function () {
         map = new Map();
 
         range(1, 20).forEach(function (number) {
-          if (slowkeys) { testMapping(number, {}); }
-          testMapping(number / 100, {});
-          testMapping('key-' + number, {});
-          testMapping(String(number), {});
-          if (slowkeys) { testMapping(Object(String(number)), {}); }
+          if (slowkeys) { testMapping(map, number, {}); }
+          testMapping(map, number / 100, {});
+          testMapping(map, 'key-' + number, {});
+          testMapping(map, String(number), {});
+          if (slowkeys) { testMapping(map, Object(String(number)), {}); }
         });
 
         var testkeys = [Infinity, -Infinity, NaN];
@@ -151,31 +152,38 @@ describe('Collections', function () {
           testkeys.push(true, false, null, undefined);
         }
         testkeys.forEach(function (key) {
-          testMapping(key, {});
-          testMapping(String(key), {});
+          testMapping(map, key, {});
+          testMapping(map, String(key), {});
         });
-        testMapping('', {});
+        testMapping(map, '', {});
 
         // verify that properties of Object don't peek through.
-        ['hasOwnProperty', 'constructor', 'toString', 'isPrototypeOf',
-         '__proto__', '__parent__', '__count__'].forEach(function (key) {
-           testMapping(key, {});
+        [
+          'hasOwnProperty',
+          'constructor',
+          'toString',
+          'isPrototypeOf',
+         '__proto__',
+          '__parent__',
+          '__count__'
+         ].forEach(function (key) {
+           testMapping(map, key, {});
          });
       });
     });
 
     it('should map empty values correctly', function () {
-      testMapping({}, true);
-      testMapping(null, true);
-      testMapping(undefined, true);
-      testMapping('', true);
-      testMapping(NaN, true);
-      testMapping(0, true);
+      testMapping(map, {}, true);
+      testMapping(map, null, true);
+      testMapping(map, undefined, true);
+      testMapping(map, '', true);
+      testMapping(map, NaN, true);
+      testMapping(map, 0, true);
     });
 
     it('should has correct querying behavior', function () {
       var key = {};
-      testMapping(key, 'to-be-present');
+      testMapping(map, key, 'to-be-present');
       expect(map.has(key)).to.equal(true);
       expect(map.has({})).to.equal(false);
       expect(map.set(key, void 0)).to.equal(map);
@@ -453,19 +461,20 @@ describe('Collections', function () {
     expect(keys).to.eql(['a', 'd', 'e']);
   });
 
+  var testSet = function (set, key) {
+    expect(set.has(key)).to.equal(false);
+    expect(set['delete'](key)).to.equal(false);
+    expect(set.add(key)).to.equal(set);
+    expect(set.has(key)).to.equal(true);
+    expect(set['delete'](key)).to.equal(true);
+    expect(set.has(key)).to.equal(false);
+    expect(set.add(key)).to.equal(set); // add it back
+  };
+
   describe('Set', function () {
-    var set, testSet;
+    var set;
     beforeEach(function () {
       set = new Set();
-      testSet = function (key) {
-        expect(set.has(key)).to.equal(false);
-        expect(set['delete'](key)).to.equal(false);
-        expect(set.add(key)).to.equal(set);
-        expect(set.has(key)).to.equal(true);
-        expect(set['delete'](key)).to.equal(true);
-        expect(set.has(key)).to.equal(false);
-        expect(set.add(key)).to.equal(set); // add it back
-      };
     });
 
     afterEach(function () {
@@ -499,8 +508,8 @@ describe('Collections', function () {
     });
 
     it('should accept an iterable as argument', function () {
-      testSet('a');
-      testSet('b');
+      testSet(set, 'a');
+      testSet(set, 'b');
       var set2 = new Set(set);
       expect(set2.has('a')).to.equal(true);
       expect(set2.has('b')).to.equal(true);
@@ -526,8 +535,8 @@ describe('Collections', function () {
       });
 
       set = new MySet();
-      testSet('c');
-      testSet('d');
+      testSet(set, 'c');
+      testSet(set, 'd');
       expect(set).to.have.entries([['a', 'a'], ['b', 'b'], ['c', 'c'], ['d', 'd']]);
     });
 
@@ -546,12 +555,12 @@ describe('Collections', function () {
         set = new Set();
 
         range(1, 20).forEach(function (number) {
-          if (slowkeys) { testSet({}); }
-          testSet(number);
-          testSet(number / 100);
-          testSet('key-' + number);
-          testSet(String(number));
-          if (slowkeys) { testSet(Object(String(number))); }
+          if (slowkeys) { testSet(set, {}); }
+          testSet(set, number);
+          testSet(set, number / 100);
+          testSet(set, 'key-' + number);
+          testSet(set, String(number));
+          if (slowkeys) { testSet(set, Object(String(number))); }
         });
 
         var testkeys = [+0, Infinity, -Infinity, NaN];
@@ -559,20 +568,27 @@ describe('Collections', function () {
           testkeys.push(true, false, null, undefined);
         }
         testkeys.forEach(function (number) {
-          testSet(number);
-          testSet(String(number));
+          testSet(set, number);
+          testSet(set, String(number));
         });
-        testSet('');
+        testSet(set, '');
 
         // -0 and +0 should be the same key (Set uses SameValueZero)
         expect(set.has(-0)).to.equal(true);
         expect(set['delete'](+0)).to.equal(true);
-        testSet(-0);
+        testSet(set, -0);
         expect(set.has(+0)).to.equal(true);
 
         // verify that properties of Object don't peek through.
-        ['hasOwnProperty', 'constructor', 'toString', 'isPrototypeOf',
-         '__proto__', '__parent__', '__count__'].forEach(testSet);
+        [
+          'hasOwnProperty',
+          'constructor',
+          'toString',
+          'isPrototypeOf',
+          '__proto__',
+          '__parent__',
+          '__count__'
+        ].forEach(function (prop) { testSet(set, prop); });
       });
     });
 
