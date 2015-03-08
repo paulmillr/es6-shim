@@ -77,7 +77,7 @@
   /*jshint evil: false */
 
   var globals = getGlobal();
-  var global_isFinite = globals.isFinite;
+  var globalIsFinite = globals.isFinite;
   var supportsDescriptors = !!Object.defineProperty && arePropertyDescriptorsSupported();
   var startsWithIsCompliant = startsWithRejectsRegex();
   var _indexOf = Function.call.bind(String.prototype.indexOf);
@@ -759,7 +759,7 @@
   // Given an argument x, it will return an IteratorResult object,
   // with value set to x and done to false.
   // Given no arguments, it will return an iterator completion object.
-  var iterator_result = function (x) {
+  var iteratorResult = function (x) {
     return { value: x, done: arguments.length === 0 };
   };
 
@@ -841,15 +841,15 @@
         }
 
         if (this.kind === 'key') {
-          return iterator_result(key);
+          return iteratorResult(key);
         } else if (this.kind === 'value') {
-          return iterator_result(this.object[key]);
+          return iteratorResult(this.object[key]);
         } else {
-          return iterator_result([key, this.object[key]]);
+          return iteratorResult([key, this.object[key]]);
         }
       }
 
-      return iterator_result();
+      return iteratorResult();
     }
   });
   addIterator(ObjectIterator.prototype);
@@ -992,7 +992,7 @@
     parseFloat: globals.parseFloat,
 
     isFinite: function (value) {
-      return typeof value === 'number' && global_isFinite(value);
+      return typeof value === 'number' && globalIsFinite(value);
     },
 
     isInteger: function (value) {
@@ -1368,7 +1368,7 @@
 
     asinh: function (value) {
       value = Number(value);
-      if (value === 0 || !global_isFinite(value)) {
+      if (value === 0 || !globalIsFinite(value)) {
         return value;
       }
       return value < 0 ? -Math.asinh(-value) : Math.log(value + Math.sqrt(value * value + 1));
@@ -1408,7 +1408,7 @@
       value = Number(value);
       if (value === 0) { return 1; } // +0 or -0
       if (Number.isNaN(value)) { return NaN; }
-      if (!global_isFinite(value)) { return Infinity; }
+      if (!globalIsFinite(value)) { return Infinity; }
       if (value < 0) { value = -value; }
       if (value > 21) { return Math.exp(value) / 2; }
       return (Math.exp(value) + Math.exp(-value)) / 2;
@@ -1417,7 +1417,7 @@
     expm1: function (value) {
       var x = Number(value);
       if (x === -Infinity) { return -1; }
-      if (!global_isFinite(x) || value === 0) { return x; }
+      if (!globalIsFinite(x) || value === 0) { return x; }
       if (Math.abs(x) > 0.5) {
         return Math.exp(x) - 1;
       }
@@ -1492,7 +1492,7 @@
 
     sinh: function (value) {
       var x = Number(value);
-      if (!global_isFinite(value) || value === 0) { return value; }
+      if (!globalIsFinite(value) || value === 0) { return value; }
 
       if (Math.abs(x) < 1) {
         return (Math.expm1(x) - Math.expm1(-x)) / 2;
@@ -2492,7 +2492,7 @@
   }
 
   if (supportsDescriptors) {
-    var internal_get = function get(target, key, receiver) {
+    var internalGet = function get(target, key, receiver) {
       var desc = Object.getOwnPropertyDescriptor(target, key);
 
       if (!desc) {
@@ -2502,7 +2502,7 @@
           return undefined;
         }
 
-        return internal_get(parent, key, receiver);
+        return internalGet(parent, key, receiver);
       }
 
       if ('value' in desc) {
@@ -2516,14 +2516,14 @@
       return undefined;
     };
 
-    var internal_set = function set(target, key, value, receiver) {
+    var internalSet = function set(target, key, value, receiver) {
       var desc = Object.getOwnPropertyDescriptor(target, key);
 
       if (!desc) {
         var parent = Object.getPrototypeOf(target);
 
         if (parent !== null) {
-          return internal_set(parent, key, value, receiver);
+          return internalSet(parent, key, value, receiver);
         }
 
         desc = {
@@ -2590,14 +2590,14 @@
         throwUnlessTargetIsObject(target);
         var receiver = arguments.length > 2 ? arguments[2] : target;
 
-        return internal_get(target, key, receiver);
+        return internalGet(target, key, receiver);
       },
 
       set: function set(target, key, value) {
         throwUnlessTargetIsObject(target);
         var receiver = arguments.length > 3 ? arguments[3] : target;
 
-        return internal_set(target, key, value, receiver);
+        return internalSet(target, key, value, receiver);
       }
     });
   }

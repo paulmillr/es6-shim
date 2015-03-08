@@ -361,11 +361,11 @@ describe('Reflect', function () {
       var other = Object.create(object);
       other._value = 17;
 
-      var yet_another = { _value: 4711 };
+      var yetAnother = { _value: 4711 };
 
-      expect(Reflect.get(other, 'value', yet_another)).to.equal(4711);
+      expect(Reflect.get(other, 'value', yetAnother)).to.equal(4711);
 
-      expect(Reflect.get(other, 'bool', yet_another)).to.equal(true);
+      expect(Reflect.get(other, 'bool', yetAnother)).to.equal(true);
     });
   });
 
