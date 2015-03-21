@@ -18,7 +18,6 @@ var ifSymbolsIt = hasSymbols ? it : xit;
 var describeIfGetProto = Object.getPrototypeOf ? describe : xdescribe;
 var describeIfSetProto = Object.setPrototypeOf ? describe : xdescribe;
 var describeIfES5 = supportsDescriptors ? describe : xdescribe;
-var describeIfGetProto = Object.getPrototypeOf ? describe : xdescribe;
 var describeIfExtensionsPreventible = Object.preventExtensions ? describe : xdescribe;
 var describeIfGetOwnPropertyNames = Object.getOwnPropertyNames ? describe : xdescribe;
 var ifExtensionsPreventibleIt = Object.preventExtensions ? it : xit;
