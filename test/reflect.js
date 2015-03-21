@@ -243,8 +243,8 @@ describe('Reflect', function () {
       expect(Reflect.deleteProperty(o, 'a')).to.equal(true);
     });
 
-    it('cannot delete a function’s length property', function () {
-      expect(Reflect.deleteProperty(function a() {}, 'length')).to.equal(false);
+    it('cannot delete an array’s length property', function () {
+      expect(Reflect.deleteProperty([], 'length')).to.equal(false);
     });
   });
 
