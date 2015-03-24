@@ -764,20 +764,6 @@
   };
   defineProperties(Array, ArrayShims);
 
-  var arrayFromSwallowsNegativeLengths = function () {
-    try {
-      return Array.from({ length: -1 }).length === 0;
-    } catch (e) {
-      return false;
-    }
-  };
-  // Fixes a Firefox bug in v32
-  // https://bugzilla.mozilla.org/show_bug.cgi?id=1063993
-  if (!arrayFromSwallowsNegativeLengths()) {
-    defineProperty(Array, 'from', ArrayShims.from, true);
-    Value.preserveToString(Array.from, origArrayFrom);
-  }
-
   // Given an argument x, it will return an IteratorResult object,
   // with value set to x and done to false.
   // Given no arguments, it will return an iterator completion object.
@@ -875,6 +861,20 @@
     }
   });
   addIterator(ObjectIterator.prototype);
+
+  // note: this is positioned here because it depends on ArrayIterator
+  var arrayOfSupportsSubclassing = (function () {
+    // Detects a bug in Webkit nightly r181886
+    var Foo = function Foo(len) { this.length = len; };
+    Foo.prototype = [];
+    var fooArr = Array.of.apply(Foo, [1, 2]);
+    return fooArr instanceof Foo && fooArr.length === 2;
+  }());
+  if (!arrayOfSupportsSubclassing) {
+    var origArrayOf = Array.of;
+    defineProperty(Array, 'of', ArrayShims.of, true);
+    Value.preserveToString(Array.of, origArrayOf);
+  }
 
   var ArrayPrototypeShims = {
     copyWithin: function copyWithin(target, start) {
@@ -1002,6 +1002,27 @@
   // any way to identify its iterator.  So add our own shimmed field.
   if (Object.getPrototypeOf) {
     addIterator(Object.getPrototypeOf([].values()));
+  }
+
+  // note: this is positioned here because it relies on Array#entries
+  var arrayFromSwallowsNegativeLengths = function () {
+    // Detects a Firefox bug in v32
+    // https://bugzilla.mozilla.org/show_bug.cgi?id=1063993
+    try {
+      return Array.from({ length: -1 }).length === 0;
+    } catch (e) {
+      return false;
+    }
+  };
+  var arrayFromHandlesIterables = (function () {
+    // Detects a bug in Webkit nightly r181886
+    var arr = Array.from([0].entries());
+    return arr.length === 1 && arr[0][0] === 0 && arr[0][1] === 1;
+  }());
+  if (!arrayFromSwallowsNegativeLengths() || !arrayFromHandlesIterables) {
+    var origArrayFrom = Array.from;
+    defineProperty(Array, 'from', ArrayShims.from, true);
+    Value.preserveToString(Array.from, origArrayFrom);
   }
 
   var maxSafeInteger = Math.pow(2, 53) - 1;
