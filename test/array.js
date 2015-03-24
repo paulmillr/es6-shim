@@ -11,6 +11,8 @@ var runArrayTests = function () {
   };
   var functionsHaveNames = (function foo() {}).name === 'foo';
   var ifFunctionsHaveNamesIt = functionsHaveNames ? it : xit;
+  var ifSymbolIteratorIt = isSymbol(Sym.iterator) ? it : xit;
+  var ifSymbolUnscopablesIt = isSymbol(Sym.unscopables) ? it : xit;
 
   describe('Array', function () {
     var list = [5, 10, 15, 20];
@@ -21,15 +23,17 @@ var runArrayTests = function () {
     });
 
     describe('@@iterator', function () {
-      it('uses Symbol.iterator if available', function () {
-        var a = [];
-        var iterator;
-        if (isSymbol(Sym.iterator)) {
-          iterator = Sym.iterator;
-        } else {
-          return;
+      ifSymbolIteratorIt('uses Symbol.iterator if available', function () {
+        var b = {}, c = {};
+        var a = [b, c];
+        var iteratorFn = a[Sym.iterator];
+        var iterator = iteratorFn.call(a);
+        expect(iterator.next()).to.eql({ done: false, value: b });
+        expect(iterator.next()).to.eql({ done: false, value: c });
+        expect(iterator.next()).to.eql({ done: true, value: undefined });
+        if (Array.prototype.values) {
+          expect(iteratorFn).to.equal(a.values);
         }
-        expect(a[iterator]).to.equal(a.values);
       });
     });
 
@@ -579,12 +583,10 @@ var runArrayTests = function () {
         expect(keys.next()).to.eql({ value: undefined, done: true });
       });
 
-      it('should be unscopable if Symbols exist', function () {
-        if (isSymbol(Sym.unscopables)) {
-          var unscopables = Array.prototype[Sym.unscopables];
-          expect(!!unscopables).to.equal(true);
-          expect(unscopables.keys).to.equal(true);
-        }
+      ifSymbolUnscopablesIt('should be unscopable if Symbols exist', function () {
+        var unscopables = Array.prototype[Sym.unscopables];
+        expect(!!unscopables).to.equal(true);
+        expect(unscopables.keys).to.equal(true);
       });
     });
 
@@ -648,12 +650,10 @@ var runArrayTests = function () {
         expect(values.next()).to.eql({ value: undefined, done: true });
       });
 
-      it('should be unscopable if Symbols exist', function () {
-        if (isSymbol(Sym.unscopables)) {
-          var unscopables = Array.prototype[Sym.unscopables];
-          expect(!!unscopables).to.equal(true);
-          expect(unscopables.values).to.equal(true);
-        }
+      ifSymbolUnscopablesIt('should be unscopable if Symbols exist', function () {
+        var unscopables = Array.prototype[Sym.unscopables];
+        expect(!!unscopables).to.equal(true);
+        expect(unscopables.values).to.equal(true);
       });
     });
 
@@ -723,12 +723,10 @@ var runArrayTests = function () {
         expect(entries.next()).to.eql({ value: undefined, done: true });
       });
 
-      it('should be unscopable if Symbols exist', function () {
-        if (isSymbol(Sym.unscopables)) {
-          var unscopables = Array.prototype[Sym.unscopables];
-          expect(!!unscopables).to.equal(true);
-          expect(unscopables.entries).to.equal(true);
-        }
+      ifSymbolUnscopablesIt('should be unscopable if Symbols exist', function () {
+        var unscopables = Array.prototype[Sym.unscopables];
+        expect(!!unscopables).to.equal(true);
+        expect(unscopables.entries).to.equal(true);
       });
     });
 
