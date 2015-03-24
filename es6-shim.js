@@ -775,6 +775,7 @@
   // https://bugzilla.mozilla.org/show_bug.cgi?id=1063993
   if (!arrayFromSwallowsNegativeLengths()) {
     defineProperty(Array, 'from', ArrayShims.from, true);
+    Value.preserveToString(Array.from, origArrayFrom);
   }
 
   // Given an argument x, it will return an IteratorResult object,
