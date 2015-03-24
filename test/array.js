@@ -109,7 +109,7 @@ var runArrayTests = function () {
       });
 
       it('should work with other constructors', function () {
-        var Foo = function (length, args) {
+        var Foo = function FooBar(length, args) {
           this.args = args;
           this.length = length;
         };
@@ -118,6 +118,7 @@ var runArrayTests = function () {
         args.forEach(function (arg, index) {
           expected[index] = arg;
         });
+        expect(Array.from.call(Foo, args)).to.be.an.instanceOf(Foo);
         expect(Array.from.call(Foo, args)).to.eql(expected);
       });
 
@@ -266,7 +267,7 @@ var runArrayTests = function () {
       });
 
       it('should work with other constructors', function () {
-        var Foo = function (length) {
+        var Foo = function FooBar(length) {
           this.args = Array.prototype.slice.call(arguments, 1);
           this.length = length;
         };
@@ -275,6 +276,7 @@ var runArrayTests = function () {
         args.forEach(function (arg, index) {
           expected[index] = arg;
         });
+        expect(Array.of.apply(Foo, args)).to.be.an.instanceOf(Foo);
         expect(Array.of.apply(Foo, args)).to.eql(expected);
       });
 
