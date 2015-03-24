@@ -631,6 +631,12 @@
   };
   defineProperties(String.prototype, StringShims);
 
+  if ('a'.includes('a', Infinity) !== false) {
+    var origIncludes = String.prototype.includes;
+    defineProperty(String.prototype, 'includes', StringShims.includes, true);
+    Value.preserveToString(String.prototype.includes, origIncludes);
+  }
+
   var hasStringTrimBug = '\u0085'.trim().length !== 1;
   if (hasStringTrimBug) {
     delete String.prototype.trim;
