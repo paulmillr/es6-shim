@@ -102,6 +102,18 @@
     }
   };
 
+  var numberIsNaN = Number.isNaN || function isNaN(value) {
+    // NaN !== NaN, but they are identical.
+    // NaNs are the only non-reflexive value, i.e., if x !== x,
+    // then x is NaN.
+    // isNaN is broken: it converts its argument to number, so
+    // isNaN('foo') => true
+    return value !== value;
+  };
+  var numberIsFinite = Number.isFinite || function isFinite(value) {
+    return typeof value === 'number' && globalIsFinite(value);
+  };
+
   var defineProperty = function (object, name, value, force) {
     if (!force && name in object) { return; }
     if (supportsDescriptors) {
@@ -266,8 +278,8 @@
 
     ToInteger: function (value) {
       var number = ES.ToNumber(value);
-      if (Number.isNaN(number)) { return 0; }
-      if (number === 0 || !Number.isFinite(number)) { return number; }
+      if (numberIsNaN(number)) { return 0; }
+      if (number === 0 || !numberIsFinite(number)) { return number; }
       return (number > 0 ? 1 : -1) * Math.floor(Math.abs(number));
     },
 
@@ -284,12 +296,12 @@
         if (a === 0) { return 1 / a === 1 / b; }
         return true;
       }
-      return Number.isNaN(a) && Number.isNaN(b);
+      return numberIsNaN(a) && numberIsNaN(b);
     },
 
     SameValueZero: function (a, b) {
       // same as SameValue except for SameValueZero(+0, -0) == true
-      return (a === b) || (Number.isNaN(a) && Number.isNaN(b));
+      return (a === b) || (numberIsNaN(a) && numberIsNaN(b));
     },
 
     IsIterable: function (o) {
@@ -1000,26 +1012,17 @@
     parseInt: globals.parseInt,
     parseFloat: globals.parseFloat,
 
-    isFinite: function (value) {
-      return typeof value === 'number' && globalIsFinite(value);
-    },
+    isFinite: numberIsFinite,
 
     isInteger: function (value) {
-      return Number.isFinite(value) && ES.ToInteger(value) === value;
+      return numberIsFinite(value) && ES.ToInteger(value) === value;
     },
 
     isSafeInteger: function (value) {
       return Number.isInteger(value) && Math.abs(value) <= Number.MAX_SAFE_INTEGER;
     },
 
-    isNaN: function (value) {
-      // NaN !== NaN, but they are identical.
-      // NaNs are the only non-reflexive value, i.e., if x !== x,
-      // then x is NaN.
-      // isNaN is broken: it converts its argument to number, so
-      // isNaN('foo') => true
-      return value !== value;
-    }
+    isNaN: numberIsNaN
   });
 
   // Work around bugs in Array#find and Array#findIndex -- early
