@@ -71,6 +71,9 @@
     }
     return rejectsRegex;
   };
+  var startsWithHandlesInfinity = (function () {
+    return String.prototype.startsWith && 'abc'.startsWith('a', Infinity) === false;
+  }());
 
   /*jshint evil: true */
   var getGlobal = new Function('return this;');
@@ -79,7 +82,7 @@
   var globals = getGlobal();
   var globalIsFinite = globals.isFinite;
   var supportsDescriptors = !!Object.defineProperty && arePropertyDescriptorsSupported();
-  var startsWithIsCompliant = startsWithRejectsRegex();
+  var startsWithIsCompliant = startsWithRejectsRegex() && startsWithHandlesInfinity;
   var _indexOf = Function.call.bind(String.prototype.indexOf);
   var _toString = Function.call.bind(Object.prototype.toString);
   var _hasOwnProperty = Function.call.bind(Object.prototype.hasOwnProperty);
