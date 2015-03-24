@@ -75,9 +75,11 @@ var runArrayTests = function () {
           [null, undefined, 0.1248, -0, 0]
         );
 
-        expect(Array.from([null, undefined, 0.1248, -0, 0].values())).to.eql(
-          [null, undefined, 0.1248, -0, 0]
-        );
+        if (Array.prototype.values) {
+          expect(Array.from([null, undefined, 0.1248, -0, 0].values())).to.eql(
+            [null, undefined, 0.1248, -0, 0]
+          );
+        }
       });
 
       it('works with arraylike objects', function () {
