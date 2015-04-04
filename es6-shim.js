@@ -1580,14 +1580,13 @@
   var expm1OfTen = Math.expm1(10);
   defineProperty(Math, 'expm1', MathShims.expm1, expm1OfTen > 22025.465794806719 || expm1OfTen < 22025.4657948067165168);
 
+  // Safari 8, Internet Explorer 11, Opear 12
   var roundHandlesBoundaryConditions = Math.round(0.5 - Number.EPSILON / 4) === 0 && Math.round(-0.5 + Number.EPSILON / 3.99) === 1;
-  var origMathRound = Math.round;
+  var roundDoesNotIncreaseIntegers = Math.round(1 / Number.EPSILON + 1) === 1 / Number.EPSILON + 1;
   defineProperty(Math, 'round', function round(x) {
-    if (-0.5 <= x && x < 0.5 && x !== 0) {
-      return Math.sign(x * 0);
-    }
-    return origMathRound(x);
-  }, !roundHandlesBoundaryConditions);
+    var y = Math.floor(x);
+    return x - y < 0.5 ? y : (y === -1 ? -0 : y + 1);
+  }, !roundHandlesBoundaryConditions && !roundDoesNotIncreaseIntegers);
 
   if (Math.imul(0xffffffff, 5) !== -5) {
     // Safari 6.1, at least, reports "0" for this value
