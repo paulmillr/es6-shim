@@ -74,6 +74,6 @@
     "mocha": "^2.2.1",
     "promises-aplus-tests": "^2.1.0",
     "promises-es6-tests": "^0.5.0",
-    "uglify-js": "^2.4.17"
+    "uglify-js": "^2.4.19"
   }
 }
