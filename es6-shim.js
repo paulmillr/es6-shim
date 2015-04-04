@@ -1550,14 +1550,25 @@
   var expm1OfTen = Math.expm1(10);
   defineProperty(Math, 'expm1', MathShims.expm1, expm1OfTen > 22025.465794806719 || expm1OfTen < 22025.4657948067165168);
 
-  var roundHandlesBoundaryConditions = Math.round(0.5 - Number.EPSILON / 4) === 0 && Math.round(-0.5 + Number.EPSILON / 3.99) === 1;
   var origMathRound = Math.round;
+  // breaks in e.g. Safari 8, Internet Explorer 11, Opera 12
+  var roundHandlesBoundaryConditions = Math.round(0.5 - Number.EPSILON / 4) === 0 && Math.round(-0.5 + Number.EPSILON / 3.99) === 1;
+
+  // When engines use Math.floor(x + 0.5) internally, Math.round can be buggy for large integers.
+  // This behavior should be governed by "round to nearest, ties to even mode"
+  // see https://people.mozilla.org/~jorendorff/es6-draft.html#sec-ecmascript-language-types-number-type
+  // These are the boundary cases where it breaks.
+  var smallestPositiveNumberWhereRoundBreaks = 1 / Number.EPSILON + 1;
+  var largestPositiveNumberWhereRoundBreaks = 2 / Number.EPSILON - 1;
+  var roundDoesNotIncreaseIntegers = [smallestPositiveNumberWhereRoundBreaks, largestPositiveNumberWhereRoundBreaks].every(function (num) {
+    return Math.round(num) === num;
+  });
   defineProperty(Math, 'round', function round(x) {
-    if (-0.5 <= x && x < 0.5 && x !== 0) {
-      return Math.sign(x * 0);
-    }
-    return origMathRound(x);
-  }, !roundHandlesBoundaryConditions);
+    var floor = Math.floor(x);
+    var ceil = floor === -1 ? -0 : floor + 1;
+    return x - floor < 0.5 ? floor : ceil;
+  }, !roundHandlesBoundaryConditions || !roundDoesNotIncreaseIntegers);
+  Value.preserveToString(Math.round, origMathRound);
 
   if (Math.imul(0xffffffff, 5) !== -5) {
     // Safari 6.1, at least, reports "0" for this value

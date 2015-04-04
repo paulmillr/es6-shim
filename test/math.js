@@ -721,6 +721,16 @@ describe('Math', function () {
       expect(isNegativeZero(Math.round(-0.5 + EPSILON / 3.99))).to.equal(true);
       expect(isNegativeZero(Math.round(0 - EPSILON / 3.99))).to.equal(true);
     });
+
+    it('returns 1 / Number.EPSILON + 1 for 1 / Number.EPSILON + 1', function () {
+      var inverseEpsilonPlus1 = 1 / EPSILON + 1;
+      expect(Math.round(inverseEpsilonPlus1)).to.equal(inverseEpsilonPlus1);
+    });
+
+    it('returns 2 / Number.EPSILON - 1 for 2 / Number.EPSILON - 1', function () {
+      var twiceInverseEpsilonMinus1 = 2 / EPSILON - 1;
+      expect(Math.round(twiceInverseEpsilonMinus1)).to.equal(twiceInverseEpsilonMinus1);
+    });
   });
 
   describe('.fround()', function () {
