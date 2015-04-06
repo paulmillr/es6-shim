@@ -1584,9 +1584,13 @@
   var roundHandlesBoundaryConditions = Math.round(0.5 - Number.EPSILON / 4) === 0 && Math.round(-0.5 + Number.EPSILON / 3.99) === 1;
   var roundDoesNotIncreaseIntegers = Math.round(1 / Number.EPSILON + 1) === 1 / Number.EPSILON + 1;
   defineProperty(Math, 'round', function round(x) {
-    var y = Math.floor(x);
-    return x - y < 0.5 ? y : (y === -1 ? -0 : y + 1);
-  }, !roundHandlesBoundaryConditions && !roundDoesNotIncreaseIntegers);
+    var floor = Math.floor(x);
+    if (x - floor < 0.5) {
+      return floor;
+    }
+    var ceil = floor === -1 ? -0 : floor + 1;
+    return ceil;
+  }, !roundHandlesBoundaryConditions || !roundDoesNotIncreaseIntegers);
 
   if (Math.imul(0xffffffff, 5) !== -5) {
     // Safari 6.1, at least, reports "0" for this value
