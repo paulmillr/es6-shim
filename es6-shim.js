@@ -1498,17 +1498,11 @@
     },
 
     log2: function (value) {
-      value = Number(value);
-      var y = Math.log(value) * Math.LOG2E;
-      var n = y | 0;
-      if (y - n > 0.5) {
-        n += 1;
+      if (value === 0) {
+        return -1 / 0;
       }
-      if (y - n < -0.5) {
-        n -= 1;
-      }
-      var p = Math.pow(2, n);
-      return p <= value && y < n || p >= value && y > n ? n : y;
+      var e = Math.min(Math.floor(Math.log(x) / Math.LN2), 1023);
+      return Math.log(x / Math.pow(2, e)) * Math.LOG2E + e;
     },
 
     log10: function (value) {
