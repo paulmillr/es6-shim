@@ -1499,7 +1499,7 @@
 
     log2: function (value) {
       if (value === 0) {
-        return -1 / 0;
+        return -Infinity;
       }
       var e = Math.min(Math.floor(Math.log(value) / Math.LN2), 1023);
       return Math.log(value / Math.pow(2, e)) * Math.LOG2E + e;
