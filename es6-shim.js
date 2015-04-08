@@ -1503,7 +1503,14 @@
     },
 
     log2: function (value) {
-      return Math.log(value) * Math.LOG2E;
+      if (value === 0) {
+        return -Infinity;
+      }
+      if (value === Infinity) {
+        return Infinity;
+      }
+      var e = Math.trunc(Math.log(value) / Math.LN2 - Math.sign(value - 1) * 0.5);
+      return Math.log(value / Math.pow(2, e)) / Math.LN2 + e;
     },
 
     log10: function (value) {
@@ -1597,6 +1604,10 @@
   if (Math.imul(0xffffffff, 5) !== -5) {
     // Safari 6.1, at least, reports "0" for this value
     Math.imul = MathShims.imul;
+  }
+
+  if (Math.log2(536870912.0) !== 29) {
+    Math.log2 = MathShims.log2;
   }
 
   // Promises
