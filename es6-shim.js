@@ -1391,6 +1391,23 @@
     /*globals RegExp: false */
   }
 
+  if (supportsDescriptors) {
+    var regexGlobals = {
+      input: '$_',
+      lastMatch: '$&',
+      lastParen: '$+',
+      leftContext: '$`',
+      rightContext: '$\''
+    };
+    Object.keys(regexGlobals).forEach(function (prop) {
+      if (prop in RegExp && !(regexGlobals[prop] in RegExp)) {
+        Value.getter(RegExp, regexGlobals[prop], function get() {
+          return RegExp[prop];
+        });
+      }
+    });
+  }
+
   var square = function (n) { return n * n; };
   var add = function (a, b) { return a + b; };
 
