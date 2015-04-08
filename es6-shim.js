@@ -1438,7 +1438,7 @@
       if (number === 0) {
         return 32;
       }
-      return 32 - 1 - Math.floor(Math.log(number) * Math.LOG2E + (1 / 4294967296));
+      return 31 - Math.floor(Math.log(number) * Math.LOG2E + (1 / 2 / 4294967296));
     },
 
     cosh: function (value) {
