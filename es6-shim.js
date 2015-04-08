@@ -1504,8 +1504,8 @@
       if (value === Infinity) {
         return Infinity;
       }
-      var e = Math.trunc(Math.log(value) * Math.LOG2E - Math.sign(value - 1) * 0.5);
-      return Math.log(value / Math.pow(2, e)) * Math.LOG2E + e;
+      var e = Math.trunc(Math.log(value) / Math.LN2 - Math.sign(value - 1) * 0.5);
+      return Math.log(value / Math.pow(2, e)) / Math.LN2 + e;
     },
 
     log10: function (value) {
