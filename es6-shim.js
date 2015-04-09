@@ -1585,11 +1585,8 @@
   var roundDoesNotIncreaseIntegers = Math.round(1 / Number.EPSILON + 1) === 1 / Number.EPSILON + 1;
   defineProperty(Math, 'round', function round(x) {
     var floor = Math.floor(x);
-    if (x - floor < 0.5) {
-      return floor;
-    }
     var ceil = floor === -1 ? -0 : floor + 1;
-    return ceil;
+    return x - floor < 0.5 ? floor : ceil;
   }, !roundHandlesBoundaryConditions || !roundDoesNotIncreaseIntegers);
 
   if (Math.imul(0xffffffff, 5) !== -5) {
