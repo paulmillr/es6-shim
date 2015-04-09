@@ -27,19 +27,30 @@
 }(this, function () {
   'use strict';
 
-  var isCallableWithoutNew = function (func) {
+  var not = function notThunker(func) {
+    return function notThunk() { return !func.apply(this, arguments); };
+  };
+  var throwsError = function (func) {
     try {
       func();
+      return false;
+    } catch (e) {
+      return true;
+    }
+  };
+  var valueOrFalseIfThrows = function valueOrFalseIfThrows(func) {
+    try {
+      return func();
     } catch (e) {
       return false;
     }
-    return true;
   };
 
+  var isCallableWithoutNew = not(throwsError);
+
   var supportsSubclassing = function (C, f) {
-    /* jshint proto:true */
-    try {
-      if (!Object.setPrototypeOf) { return false; /* skip test on IE < 11 */ }
+    if (!Object.setPrototypeOf) { return false; /* skip test on IE < 11 */ }
+    return valueOrFalseIfThrows(function () {
       var Sub = function Subclass(arg) {
         var o = new C(arg);
         Object.setPrototypeOf(o, Subclass.prototype);
@@ -49,30 +60,19 @@
         constructor: { value: C }
       });
       return f(Sub);
-    } catch (e) {
-      return false;
-    }
+    });
   };
 
   var arePropertyDescriptorsSupported = function () {
-    try {
-      Object.defineProperty({}, 'x', {});
-      return true;
-    } catch (e) { /* this is IE 8. */
-      return false;
-    }
+    // if Object.defineProperty exists but throws, it's IE 8
+    return !throwsError(function () { Object.defineProperty({}, 'x', {}); });
   };
 
   var startsWithRejectsRegex = function () {
-    var rejectsRegex = false;
-    if (String.prototype.startsWith) {
-      try {
-        '/a/'.startsWith(/a/);
-      } catch (e) { /* this is spec compliant */
-        rejectsRegex = true;
-      }
-    }
-    return rejectsRegex;
+    return String.prototype.startsWith && !throwsError(function () {
+      /* this is spec-compliant */
+      '/a/'.startsWith(/a/);
+    });
   };
   var startsWithHandlesInfinity = (function () {
     return String.prototype.startsWith && 'abc'.startsWith('a', Infinity) === false;
@@ -1011,11 +1011,7 @@
   var arrayFromSwallowsNegativeLengths = function () {
     // Detects a Firefox bug in v32
     // https://bugzilla.mozilla.org/show_bug.cgi?id=1063993
-    try {
-      return Array.from({ length: -1 }).length === 0;
-    } catch (e) {
-      return false;
-    }
+    return valueOrFalseIfThrows(function () { return Array.from({ length: -1 }).length === 0; });
   };
   var arrayFromHandlesIterables = (function () {
     // Detects a bug in Webkit nightly r181886
@@ -1178,14 +1174,7 @@
     }());
   }
 
-  var objectKeysAcceptsPrimitives = (function () {
-    try {
-      Object.keys('foo');
-      return true;
-    } catch (e) {
-      return false;
-    }
-  }());
+  var objectKeysAcceptsPrimitives = !throwsError(function () { Object.keys('foo'); });
   if (!objectKeysAcceptsPrimitives) {
     var originalObjectKeys = Object.keys;
     defineProperty(Object, 'keys', function keys(value) {
@@ -1195,14 +1184,7 @@
   }
 
   if (Object.getOwnPropertyNames) {
-    var objectGOPNAcceptsPrimitives = (function () {
-      try {
-        Object.getOwnPropertyNames('foo');
-        return true;
-      } catch (e) {
-        return false;
-      }
-    }());
+    var objectGOPNAcceptsPrimitives = !throwsError(function () { Object.getOwnPropertyNames('foo'); });
     if (!objectGOPNAcceptsPrimitives) {
       var originalObjectGetOwnPropertyNames = Object.getOwnPropertyNames;
       defineProperty(Object, 'getOwnPropertyNames', function getOwnPropertyNames(value) {
@@ -1212,14 +1194,7 @@
     }
   }
   if (Object.getOwnPropertyDescriptor) {
-    var objectGOPDAcceptsPrimitives = (function () {
-      try {
-        Object.getOwnPropertyDescriptor('foo', 'bar');
-        return true;
-      } catch (e) {
-        return false;
-      }
-    }());
+    var objectGOPDAcceptsPrimitives = !throwsError(function () { Object.getOwnPropertyDescriptor('foo', 'bar'); });
     if (!objectGOPDAcceptsPrimitives) {
       var originalObjectGetOwnPropertyDescriptor = Object.getOwnPropertyDescriptor;
       defineProperty(Object, 'getOwnPropertyDescriptor', function getOwnPropertyDescriptor(value, property) {
@@ -1229,14 +1204,7 @@
     }
   }
   if (Object.seal) {
-    var objectSealAcceptsPrimitives = (function () {
-      try {
-        Object.seal('foo');
-        return true;
-      } catch (e) {
-        return false;
-      }
-    }());
+    var objectSealAcceptsPrimitives = !throwsError(function () { Object.seal('foo'); });
     if (!objectSealAcceptsPrimitives) {
       var originalObjectSeal = Object.seal;
       defineProperty(Object, 'seal', function seal(value) {
@@ -1247,14 +1215,7 @@
     }
   }
   if (Object.isSealed) {
-    var objectIsSealedAcceptsPrimitives = (function () {
-      try {
-        Object.isSealed('foo');
-        return true;
-      } catch (e) {
-        return false;
-      }
-    }());
+    var objectIsSealedAcceptsPrimitives = !throwsError(function () { Object.isSealed('foo'); });
     if (!objectIsSealedAcceptsPrimitives) {
       var originalObjectIsSealed = Object.isSealed;
       defineProperty(Object, 'isSealed', function isSealed(value) {
@@ -1265,14 +1226,7 @@
     }
   }
   if (Object.freeze) {
-    var objectFreezeAcceptsPrimitives = (function () {
-      try {
-        Object.freeze('foo');
-        return true;
-      } catch (e) {
-        return false;
-      }
-    }());
+    var objectFreezeAcceptsPrimitives = !throwsError(function () { Object.freeze('foo'); });
     if (!objectFreezeAcceptsPrimitives) {
       var originalObjectFreeze = Object.freeze;
       defineProperty(Object, 'freeze', function freeze(value) {
@@ -1283,14 +1237,7 @@
     }
   }
   if (Object.isFrozen) {
-    var objectIsFrozenAcceptsPrimitives = (function () {
-      try {
-        Object.isFrozen('foo');
-        return true;
-      } catch (e) {
-        return false;
-      }
-    }());
+    var objectIsFrozenAcceptsPrimitives = !throwsError(function () { Object.isFrozen('foo'); });
     if (!objectIsFrozenAcceptsPrimitives) {
       var originalObjectIsFrozen = Object.isFrozen;
       defineProperty(Object, 'isFrozen', function isFrozen(value) {
@@ -1301,14 +1248,7 @@
     }
   }
   if (Object.preventExtensions) {
-    var objectPreventExtensionsAcceptsPrimitives = (function () {
-      try {
-        Object.preventExtensions('foo');
-        return true;
-      } catch (e) {
-        return false;
-      }
-    }());
+    var objectPreventExtensionsAcceptsPrimitives = !throwsError(function () { Object.preventExtensions('foo'); });
     if (!objectPreventExtensionsAcceptsPrimitives) {
       var originalObjectPreventExtensions = Object.preventExtensions;
       defineProperty(Object, 'preventExtensions', function preventExtensions(value) {
@@ -1319,14 +1259,7 @@
     }
   }
   if (Object.isExtensible) {
-    var objectIsExtensibleAcceptsPrimitives = (function () {
-      try {
-        Object.isExtensible('foo');
-        return true;
-      } catch (e) {
-        return false;
-      }
-    }());
+    var objectIsExtensibleAcceptsPrimitives = !throwsError(function () { Object.isExtensible('foo'); });
     if (!objectIsExtensibleAcceptsPrimitives) {
       var originalObjectIsExtensible = Object.isExtensible;
       defineProperty(Object, 'isExtensible', function isExtensible(value) {
@@ -1337,14 +1270,7 @@
     }
   }
   if (Object.getPrototypeOf) {
-    var objectGetProtoAcceptsPrimitives = (function () {
-      try {
-        Object.getPrototypeOf('foo');
-        return true;
-      } catch (e) {
-        return false;
-      }
-    }());
+    var objectGetProtoAcceptsPrimitives = !throwsError(function () { Object.getPrototypeOf('foo'); });
     if (!objectGetProtoAcceptsPrimitives) {
       var originalGetProto = Object.getPrototypeOf;
       defineProperty(Object, 'getPrototypeOf', function getPrototypeOf(value) {
@@ -1381,13 +1307,9 @@
     Value.getter(RegExp.prototype, 'flags', regExpFlagsGetter);
   }
 
-  var regExpSupportsFlagsWithRegex = (function () {
-    try {
-      return String(new RegExp(/a/g, 'i')) === '/a/i';
-    } catch (e) {
-      return false;
-    }
-  }());
+  var regExpSupportsFlagsWithRegex = valueOrFalseIfThrows(function () {
+    return String(new RegExp(/a/g, 'i')) === '/a/i';
+  });
 
   if (!regExpSupportsFlagsWithRegex && supportsDescriptors) {
     var OrigRegExp = RegExp;
@@ -1997,19 +1919,8 @@
   var promiseSupportsSubclassing = supportsSubclassing(globals.Promise, function (S) {
     return S.resolve(42) instanceof S;
   });
-  var promiseIgnoresNonFunctionThenCallbacks = (function () {
-    try {
-      globals.Promise.reject(42).then(null, 5).then(null, noop);
-      return true;
-    } catch (ex) {
-      return false;
-    }
-  }());
-  var promiseRequiresObjectContext = (function () {
-    /*global Promise */
-    try { Promise.call(3, noop); } catch (e) { return true; }
-    return false;
-  }());
+  var promiseIgnoresNonFunctionThenCallbacks = !throwsError(function () { globals.Promise.reject(42).then(null, 5).then(null, noop); });
+  var promiseRequiresObjectContext = throwsError(function () { globals.Promise.call(3, noop); });
   if (!promiseSupportsSubclassing || !promiseIgnoresNonFunctionThenCallbacks || !promiseRequiresObjectContext) {
     /*globals Promise: true */
     Promise = PromiseShim;
@@ -2436,14 +2347,8 @@
     defineProperties(globals, collectionShims);
 
     if (globals.Map || globals.Set) {
-      var mapAcceptsArguments = (function () {
-        // Safari 8, for example, doesn't accept an iterable.
-        try {
-          return new Map([[1, 2]]).get(1) === 2;
-        } catch (e) {
-          return false;
-        }
-      }());
+      // Safari 8, for example, doesn't accept an iterable.
+      var mapAcceptsArguments = valueOrFalseIfThrows(function () { return new Map([[1, 2]]).get(1) === 2; });
       if (!mapAcceptsArguments) {
         var OrigMapNoArgs = globals.Map;
         globals.Map = function Map(iterable) {
@@ -2581,14 +2486,9 @@
         globals.Set.prototype = create(OrigSet.prototype);
         Value.preserveToString(globals.Set, OrigSet);
       }
-      var mapIterationThrowsStopIterator = !(function () {
-        var m = new Map();
-        try {
-          return m.keys().next().done;
-        } catch (e) {
-          return false;
-        }
-      }());
+      var mapIterationThrowsStopIterator = !valueOrFalseIfThrows(function () {
+        return (new Map()).keys().next().done;
+      });
       /*
         - In Firefox < 23, Map#size is a function.
         - In all current Firefox, Set#entries/keys/values & Map#clear do not exist
@@ -2798,8 +2698,7 @@
     };
 
     var callAndCatchException = function ConvertExceptionToBoolean(func) {
-      try { func(); } catch (_) { return false; }
-      return true;
+      return !throwsError(func);
     };
 
     defineProperties(globals.Reflect, {
