@@ -1064,7 +1064,7 @@
   /*jshint elision: false */
 
   if (supportsDescriptors) {
-    defineProperties(Object, {
+    var ObjectShims = {
       // 19.1.3.1
       assign: function (target, source) {
         if (!ES.TypeIsObject(target)) {
@@ -1134,7 +1134,27 @@
         }
         return setPrototypeOf;
       }(Object, '__proto__'))
-    });
+    };
+    defineProperties(Object, ObjectShims);
+
+    var assignHasPendingExceptions = supportsDescriptors && (function () {
+      // Firefox 37 still has "pending exception" logic in its Object.assign implementation,
+      // which is 72% slower than our shim, and Firefox 40's native implementation.
+      var thrower = { a: 1, b: 2, c: 3 };
+      var keys = Object.keys(thrower);
+      Object.defineProperty(thrower, keys[1], {
+        set: function setMiddle(v) {
+          throw new TypeError('middle key can not be set');
+        }
+      });
+      var semaphore = {};
+      try {
+        Object.assign(thrower, { a: semaphore, b: semaphore, c: semaphore });
+      } catch (e) {
+        return thrower[keys[0]] === semaphore && thrower[keys[2]] === semaphore;
+      }
+    }());
+    defineProperty(Object, 'assign', ObjectShims.assign, assignHasPendingExceptions);
   }
 
   // Workaround bug in Opera 12 where setPrototypeOf(x, null) doesn't work,
