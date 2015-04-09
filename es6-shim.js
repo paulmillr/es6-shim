@@ -381,7 +381,6 @@
     return o;
   };
 
-
   var numberConversion = (function () {
     // from https://github.com/inexorabletash/polyfill/blob/master/typedarray.js#L176-L266
     // with permission and license, per https://twitter.com/inexorabletash/status/372206509540659200
@@ -1064,18 +1063,19 @@
   /*jshint elision: false */
 
   if (supportsDescriptors) {
+    var assignReducer = function (target, source) {
+      return Object.keys(Object(source)).reduce(function (target, key) {
+        target[key] = source[key];
+        return target;
+      }, target);
+    };
     var ObjectShims = {
       // 19.1.3.1
       assign: function (target, source) {
         if (!ES.TypeIsObject(target)) {
           throw new TypeError('target must be an object');
         }
-        return Array.prototype.reduce.call(arguments, function (target, source) {
-          return Object.keys(Object(source)).reduce(function (target, key) {
-            target[key] = source[key];
-            return target;
-          }, target);
-        });
+        return Array.prototype.reduce.call(arguments, assignReducer);
       },
 
       is: function (a, b) {
