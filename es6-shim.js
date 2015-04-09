@@ -39,10 +39,13 @@
   var supportsSubclassing = function (C, f) {
     /* jshint proto:true */
     try {
-      var Sub = function () { C.apply(this, arguments); };
-      if (!Sub.__proto__) { return false; /* skip test on IE < 11 */ }
-      Object.setPrototypeOf(Sub, C);
-      Sub.prototype = Object.create(C.prototype, {
+      if (!Object.setPrototypeOf) { return false; /* skip test on IE < 11 */ }
+      var Sub = function Subclass(arg) {
+        var o = new C(arg);
+        Object.setPrototypeOf(o, Subclass.prototype);
+        return o;
+      };
+      Sub.prototype = create(C.prototype, {
         constructor: { value: C }
       });
       return f(Sub);
@@ -2412,6 +2415,159 @@
     defineProperties(globals, collectionShims);
 
     if (globals.Map || globals.Set) {
+      var mapAcceptsArguments = (function () {
+        // Safari 8, for example, doesn't accept an iterable.
+        try {
+          return new Map([[1, 2]]).get(1) === 2;
+        } catch (e) {
+          return false;
+        }
+      }());
+      if (!mapAcceptsArguments) {
+        var OrigMapNoArgs = globals.Map;
+        globals.Map = function Map(iterable) {
+          if (!(this instanceof Map)) {
+            throw new TypeError('Constructor Map requires "new"');
+          }
+          var m = new OrigMapNoArgs();
+          if (Array.isArray(iterable) || Type.string(iterable)) {
+            Array.prototype.forEach.call(iterable, function (entry) {
+              m.set(entry[0], entry[1]);
+            });
+          } else if (iterable instanceof Map) {
+            Map.prototype.forEach.call(iterable, function (value, key) {
+              m.set(key, value);
+            });
+          }
+          Object.setPrototypeOf(m, globals.Map.prototype);
+          defineProperty(m, 'constructor', Map, true);
+          return m;
+        };
+        globals.Map.prototype = create(OrigMapNoArgs.prototype);
+        Value.preserveToString(globals.Map, OrigMapNoArgs);
+      }
+      var m = new Map();
+      var mapUsesSameValueZero = (function (m) {
+        m['delete'](0);
+        m['delete'](-0);
+        m.set(0, 3);
+        m.get(-0, 4);
+        return m.get(0) === 3 && m.get(-0) === 4;
+      }(m));
+      var mapSupportsChaining = m.set(1, 2) === m;
+      if (!mapUsesSameValueZero || !mapSupportsChaining) {
+        var origMapSet = Map.prototype.set;
+        defineProperty(Map.prototype, 'set', function set(k, v) {
+          origMapSet.call(this, k === 0 ? 0 : k, v);
+          return this;
+        }, true);
+        Value.preserveToString(Map.prototype.set, origMapSet);
+      }
+      if (!mapUsesSameValueZero) {
+        var origMapGet = Map.prototype.get;
+        var origMapHas = Map.prototype.has;
+        defineProperties(Map.prototype, {
+          get: function get(k) {
+            return origMapGet.call(this, k === 0 ? 0 : k);
+          },
+          has: function has(k) {
+            return origMapHas.call(this, k === 0 ? 0 : k);
+          }
+        }, true);
+        Value.preserveToString(Map.prototype.get, origMapGet);
+        Value.preserveToString(Map.prototype.has, origMapHas);
+      }
+      var s = new Set();
+      var setUsesSameValueZero = (function (s) {
+        s['delete'](0);
+        s.add(-0);
+        return !s.has(0);
+      }(s));
+      var setSupportsChaining = s.add(1) === s;
+      if (!setUsesSameValueZero || !setSupportsChaining) {
+        var origSetAdd = Set.prototype.add;
+        Set.prototype.add = function add(v) {
+          origSetAdd.call(this, v === 0 ? 0 : v);
+          return this;
+        };
+        Value.preserveToString(Set.prototype.add, origSetAdd);
+      }
+      if (!setUsesSameValueZero) {
+        var origSetHas = Set.prototype.has;
+        Set.prototype.has = function has(v) {
+          return origSetHas.call(this, v === 0 ? 0 : v);
+        };
+        Value.preserveToString(Set.prototype.has, origSetHas);
+        var origSetDel = Set.prototype['delete'];
+        Set.prototype['delete'] = function SetDelete(v) {
+          return origSetDel.call(this, v === 0 ? 0 : v);
+        };
+        Value.preserveToString(Set.prototype['delete'], origSetDel);
+      }
+      var mapSupportsSubclassing = supportsSubclassing(globals.Map, function (M) {
+        var m = new M([]);
+        // Firefox 32 is ok with the instantiating the subclass but will
+        // throw when the map is used.
+        m.set(42, 42);
+        return m instanceof M;
+      });
+      var mapFailsToSupportSubclassing = Object.setPrototypeOf && !mapSupportsSubclassing; // without Object.setPrototypeOf, subclassing is not possible
+      var mapRequiresNew = (function () {
+        try {
+          return !(globals.Map() instanceof globals.Map);
+        } catch (e) {
+          return e instanceof TypeError;
+        }
+      }());
+      if (globals.Map.length !== 1 || mapFailsToSupportSubclassing || !mapRequiresNew) {
+        var OrigMap = globals.Map;
+        globals.Map = function Map(iterable) {
+          if (!(this instanceof Map)) {
+            throw new TypeError('Constructor Map requires "new"');
+          }
+          var m = new OrigMap(iterable);
+          Object.setPrototypeOf(m, Map.prototype);
+          defineProperty(m, 'constructor', Map, true);
+          return m;
+        };
+        globals.Map.prototype = create(OrigMap.prototype);
+        Value.preserveToString(globals.Map, OrigMap);
+      }
+      var setSupportsSubclassing = supportsSubclassing(globals.Set, function (S) {
+        var s = new S([]);
+        s.add(42, 42);
+        return s instanceof S;
+      });
+      var setFailsToSupportSubclassing = Object.setPrototypeOf && !setSupportsSubclassing; // without Object.setPrototypeOf, subclassing is not possible
+      var setRequiresNew = (function () {
+        try {
+          return !(globals.Set() instanceof globals.Set);
+        } catch (e) {
+          return e instanceof TypeError;
+        }
+      }());
+      if (globals.Set.length !== 1 || setFailsToSupportSubclassing || !setRequiresNew) {
+        var OrigSet = globals.Set;
+        globals.Set = function Set(iterable) {
+          if (!(this instanceof Set)) {
+            throw new TypeError('Constructor Set requires "new"');
+          }
+          var s = new OrigSet(iterable);
+          Object.setPrototypeOf(s, Set.prototype);
+          defineProperty(s, 'constructor', Set, true);
+          return s;
+        };
+        globals.Set.prototype = create(OrigSet.prototype);
+        Value.preserveToString(globals.Set, OrigSet);
+      }
+      var mapIterationThrowsStopIterator = !(function () {
+        var m = new Map();
+        try {
+          return m.keys().next().done;
+        } catch (e) {
+          return false;
+        }
+      }());
       /*
         - In Firefox < 23, Map#size is a function.
         - In all current Firefox, Set#entries/keys/values & Map#clear do not exist
@@ -2429,16 +2585,16 @@
         typeof globals.Set.prototype.forEach !== 'function' ||
         isCallableWithoutNew(globals.Map) ||
         isCallableWithoutNew(globals.Set) ||
-        !supportsSubclassing(globals.Map, function (M) {
-          var m = new M([]);
-          // Firefox 32 is ok with the instantiating the subclass but will
-          // throw when the map is used.
-          m.set(42, 42);
-          return m instanceof M;
-        })
+        typeof (new globals.Map().keys().next) !== 'function' || // Safari 8
+        mapIterationThrowsStopIterator || // Firefox 25
+        !mapSupportsSubclassing
       ) {
-        globals.Map = collectionShims.Map;
-        globals.Set = collectionShims.Set;
+        delete globals.Map; // necessary to overwrite in Safari 8
+        delete globals.Set; // necessary to overwrite in Safari 8
+        defineProperties(globals, {
+          Map: collectionShims.Map,
+          Set: collectionShims.Set
+        }, true);
       }
     }
     if (globals.Set.prototype.keys !== globals.Set.prototype.values) {
