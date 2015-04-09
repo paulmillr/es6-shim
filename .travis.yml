@@ -17,7 +17,7 @@ before_install:
   - '[ "${TRAVIS_NODE_VERSION}" == "0.6" ] || npm install -g npm@~1.4.6'
   - '[ "${TRAVIS_RUN_SAUCE}" != "true" ] || npm install -g grunt-cli'
 script:
-  - 'if [ "${TRAVIS_RUN_SAUCE}" == "true" ]; then npm run sauce ; elif [ "${TRAVIS_NODE_VERSION}" != "0.11" ] && [ "${TRAVIS_NODE_VERSION}" != "0.10" ]; then npm run test-shim && npm run test-sham ; else npm test ; fi'
+  - 'if [ "${TRAVIS_RUN_SAUCE}" == "true" ]; then npm run sauce ; elif [ "${TRAVIS_NODE_VERSION}" != "0.11" ] && [ "${TRAVIS_RUN_LINT_ONLY}" != "true" ]; then npm run test-shim && npm run test-sham ; else npm test ; fi'
 # NOTE: sauce_connect is disabled, because it applies to every test and we only need it on one of them.
 #  It's available inside `npm run sauce`
 # addons:
@@ -26,9 +26,11 @@ matrix:
   fast_finish: true
   include:
     - node_js: "0.12"
-      env: TRAVIS_RUN_SAUCE=true
+      env: TRAVIS_RUN_SAUCE=false TRAVIS_RUN_LINT_ONLY=true
     - node_js: "0.12"
-      env: TRAVIS_RUN_SAUCE=false
+      env: TRAVIS_RUN_SAUCE=true TRAVIS_RUN_LINT_ONLY=false
+    - node_js: "0.12"
+      env: TRAVIS_RUN_SAUCE=false TRAVIS_RUN_LINT_ONLY=false
   allow_failures:
     - node_js: "iojs-v1.4"
     - node_js: "iojs-v1.3"
@@ -41,7 +43,7 @@ matrix:
     - node_js: "0.6"
     - node_js: "0.4"
     - node_js: "0.12"
-      env: TRAVIS_RUN_SAUCE=true
+      env: TRAVIS_RUN_SAUCE=true TRAVIS_RUN_LINT_ONLY=false
 env:
   global:
     - secure: YD4HLTE93NhSxa+64MYHhnbJ2ZkREp/HGiFGE4q+AWShqAiehtqE/K3hQUe7p0+1/2/34avhm2bz31j508ayCobm6SSUhpleJH58IK3v4LI2o9qtM+2N/MPJFOIvbziHqOM6fPluowU0k3OSdEAp4U+6S23wKSuXzcUSK8upAiM=
