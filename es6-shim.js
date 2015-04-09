@@ -85,10 +85,7 @@
   var globals = getGlobal();
   var globalIsFinite = globals.isFinite;
   var supportsDescriptors = !!Object.defineProperty && arePropertyDescriptorsSupported();
-  var hasStrictMode = (function () {
-    'use strict';
-    return this === null;
-  }.call(null));
+  var hasStrictMode = (function () { return this === null; }.call(null));
   var startsWithIsCompliant = startsWithRejectsRegex() && startsWithHandlesInfinity;
   var _indexOf = Function.call.bind(String.prototype.indexOf);
   var _toString = Function.call.bind(Object.prototype.toString);
@@ -1142,7 +1139,6 @@
     defineProperties(Object, ObjectShims);
 
     var assignHasPendingExceptions = supportsDescriptors && hasStrictMode && (function () {
-      'use strict';
       // Firefox 37 still has "pending exception" logic in its Object.assign implementation,
       // which is 72% slower than our shim, and Firefox 40's native implementation.
       var thrower = { a: 1, b: 2, c: 3 };
