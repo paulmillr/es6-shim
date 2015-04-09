@@ -1155,7 +1155,11 @@
         return thrower[keys[0]] === semaphore && thrower[keys[2]] === semaphore;
       }
     }());
-    defineProperty(Object, 'assign', ObjectShims.assign, assignHasPendingExceptions);
+    if (assignHasPendingExceptions) {
+      var origAssign = Object.assign;
+      defineProperty(Object, 'assign', ObjectShims.assign, true);
+      Value.preserveToString(Object.assign, origAssign);
+    }
   }
 
   // Workaround bug in Opera 12 where setPrototypeOf(x, null) doesn't work,
