@@ -1455,7 +1455,7 @@
       if (number === 0) {
         return 32;
       }
-      return 32 - (number).toString(2).length;
+      return 31 - Math.floor(Math.log(number + 0.5) * Math.LOG2E);
     },
 
     cosh: function (value) {
