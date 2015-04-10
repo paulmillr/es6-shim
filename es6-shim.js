@@ -520,7 +520,14 @@
     return conversions;
   }());
 
-  defineProperties(String, {
+  // Firefox 31 reports this function's length as 0
+  // https://bugzilla.mozilla.org/show_bug.cgi?id=1062484
+  if (String.fromCodePoint && String.fromCodePoint.length !== 1) {
+    var originalFromCodePoint = Function.apply.bind(String.fromCodePoint);
+    defineProperty(String, 'fromCodePoint', function fromCodePoint(codePoints) { return originalFromCodePoint(this, arguments); }, true);
+  }
+
+  var StringShims = {
     fromCodePoint: function fromCodePoint(codePoints) {
       var result = [];
       var next;
@@ -567,13 +574,13 @@
       }
       return stringElements.join('');
     }
-  });
-
-  // Firefox 31 reports this function's length as 0
-  // https://bugzilla.mozilla.org/show_bug.cgi?id=1062484
-  if (String.fromCodePoint.length !== 1) {
-    var originalFromCodePoint = Function.apply.bind(String.fromCodePoint);
-    defineProperty(String, 'fromCodePoint', function fromCodePoint(codePoints) { return originalFromCodePoint(this, arguments); }, true);
+  };
+  defineProperties(String, StringShims);
+  if (String.raw({ raw: { 0: 'x', 1: 'y', length: 2 } }) !== 'xy') {
+    // IE 11 TP has a broken String.raw implementation
+    var origStringRaw = String.raw;
+    defineProperty(String, 'raw', StringShims.raw, true);
+    Value.preserveToString(String.raw, origStringRaw);
   }
 
   // Fast repeat, uses the `Exponentiation by squaring` algorithm.
@@ -586,7 +593,7 @@
   };
   var stringMaxLength = Infinity;
 
-  var StringShims = {
+  var StringPrototypeShims = {
     repeat: function repeat(times) {
       ES.RequireObjectCoercible(this);
       var thisStr = String(this);
@@ -644,11 +651,11 @@
       }
     }
   };
-  defineProperties(String.prototype, StringShims);
+  defineProperties(String.prototype, StringPrototypeShims);
 
   if ('a'.includes('a', Infinity) !== false) {
     var origIncludes = String.prototype.includes;
-    defineProperty(String.prototype, 'includes', StringShims.includes, true);
+    defineProperty(String.prototype, 'includes', StringPrototypeShims.includes, true);
     Value.preserveToString(String.prototype.includes, origIncludes);
   }
 
@@ -702,8 +709,8 @@
 
   if (!startsWithIsCompliant) {
     // Firefox (< 37?) and IE 11 TP have a noncompliant startsWith implementation
-    defineProperty(String.prototype, 'startsWith', StringShims.startsWith, true);
-    defineProperty(String.prototype, 'endsWith', StringShims.endsWith, true);
+    defineProperty(String.prototype, 'startsWith', StringPrototypeShims.startsWith, true);
+    defineProperty(String.prototype, 'endsWith', StringPrototypeShims.endsWith, true);
   }
 
   var ArrayShims = {
