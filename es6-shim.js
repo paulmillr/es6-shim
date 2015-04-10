@@ -1132,9 +1132,8 @@
         return setPrototypeOf;
       }(Object, '__proto__'))
     };
-    defineProperties(Object, ObjectShims);
 
-    var assignHasPendingExceptions = supportsDescriptors && hasStrictMode && (function () {
+    var assignHasPendingExceptions = supportsDescriptors && hasStrictMode && Object.assign && (function () {
       // Firefox 37 still has "pending exception" logic in its Object.assign implementation,
       // which is 72% slower than our shim, and Firefox 40's native implementation.
       var thrower = { a: 1, b: 2, c: 3 };
@@ -1152,6 +1151,7 @@
       defineProperty(Object, 'assign', ObjectShims.assign, true);
       Value.preserveToString(Object.assign, origAssign);
     }
+    defineProperties(Object, ObjectShims);
   }
 
   // Workaround bug in Opera 12 where setPrototypeOf(x, null) doesn't work,
