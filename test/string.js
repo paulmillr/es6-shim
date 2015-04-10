@@ -343,7 +343,7 @@ var runStringTests = function () {
       });
 
       it('has a length of one', function () {
-        expect(String.fromCodePoint.length).to.equal(1);
+        expect(String.fromCodePoint).to.have.property('length', 1);
       });
 
       it('works', function () {
@@ -426,7 +426,7 @@ var runStringTests = function () {
       }
 
       it('should have a length of 1', function () {
-        expect(String.raw.length).to.equal(1);
+        expect(String.raw).to.have.property('length', 1);
       });
 
       it('works with callSite.raw: Array', function () {
@@ -485,19 +485,19 @@ var runStringTests = function () {
         var lineTerminators = '\u000a' + '\u000d' + '\u2028' + '\u2029';
 
         var trimmed = (whitespace + lineTerminators).trim();
-        expect(trimmed.length).to.equal(0);
+        expect(trimmed).to.have.property('length', 0);
         expect(trimmed).to.equal('');
       });
 
       it('should not trim U+0085', function () {
         var trimmed = '\u0085'.trim();
-        expect(trimmed.length).to.equal(1);
+        expect(trimmed).to.have.property('length', 1);
         expect(trimmed).to.equal('\u0085');
       });
 
       it('should trim on both sides', function () {
         var trimmed = ' a '.trim();
-        expect(trimmed.length).to.equal(1);
+        expect(trimmed).to.have.property('length', 1);
         expect(trimmed).to.equal('a');
       });
     });

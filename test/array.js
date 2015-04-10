@@ -45,7 +45,7 @@ var runArrayTests = function () {
       }
 
       it('has a length of 1', function () {
-        expect(Array.from.length).to.equal(1);
+        expect(Array.from).to.have.property('length', 1);
       });
 
       it('is not enumerable', function () {
@@ -53,7 +53,7 @@ var runArrayTests = function () {
       });
 
       ifFunctionsHaveNamesIt('has the correct name', function () {
-        expect(Array.from.name).to.equal('from');
+        expect(Array.from).to.have.property('name', 'from');
       });
 
       it('works with primitives', function () {
@@ -88,10 +88,10 @@ var runArrayTests = function () {
       });
 
       it('swallows negative lengths', function () {
-        expect(Array.from({ length: -1 }).length).to.equal(0);
-        expect(Array.from({ length: -Infinity }).length).to.equal(0);
-        expect(Array.from({ length: -0 }).length).to.equal(0);
-        expect(Array.from({ length: -42 }).length).to.equal(0);
+        expect(Array.from({ length: -1 })).to.have.property('length', 0);
+        expect(Array.from({ length: -Infinity })).to.have.property('length', 0);
+        expect(Array.from({ length: -0 })).to.have.property('length', 0);
+        expect(Array.from({ length: -42 })).to.have.property('length', 0);
       });
 
       it('works with strings', function () {
@@ -142,7 +142,7 @@ var runArrayTests = function () {
           var mapper = function (item, index) {
             actualItems.push(item);
             actualIndices.push(index);
-            expect(arguments.length).to.equal(2);
+            expect(arguments).to.have.property('length', 2);
             return item;
           };
 
@@ -163,7 +163,7 @@ var runArrayTests = function () {
           var mapper = function (item, index) {
             actualItems.push(item);
             actualIndices.push(index);
-            expect(arguments.length).to.equal(2);
+            expect(arguments).to.have.property('length', 2);
             expect(this).to.eql(expectedContext);
             return item;
           };
@@ -251,7 +251,7 @@ var runArrayTests = function () {
       }
 
       it('has a length of 0', function () {
-        expect(Array.of.length).to.equal(0);
+        expect(Array.of).to.have.property('length', 0);
       });
 
       it('is not enumerable', function () {
@@ -259,7 +259,7 @@ var runArrayTests = function () {
       });
 
       ifFunctionsHaveNamesIt('has the correct name', function () {
-        expect(Array.of.name).to.equal('of');
+        expect(Array.of).to.have.property('name', 'of');
       });
 
       it('should create correct array from arguments', function () {
@@ -290,11 +290,11 @@ var runArrayTests = function () {
       }
 
       it('has the right arity', function () {
-        expect(Array.prototype.copyWithin.length).to.equal(2);
+        expect(Array.prototype.copyWithin).to.have.property('length', 2);
       });
 
       ifFunctionsHaveNamesIt('has the correct name', function () {
-        expect(Array.prototype.copyWithin.name).to.equal('copyWithin');
+        expect(Array.prototype.copyWithin).to.have.property('name', 'copyWithin');
       });
 
       it('modifies the object in-place', function () {
@@ -343,11 +343,11 @@ var runArrayTests = function () {
       }
 
       ifFunctionsHaveNamesIt('has the correct name', function () {
-        expect(Array.prototype.find.name).to.equal('find');
+        expect(Array.prototype.find).to.have.property('name', 'find');
       });
 
       it('should have a length of 1', function () {
-        expect(Array.prototype.find.length).to.equal(1);
+        expect(Array.prototype.find).to.have.property('length', 1);
       });
 
       it('should find item by predicate', function () {
@@ -366,7 +366,7 @@ var runArrayTests = function () {
 
       it('should receive all three parameters', function () {
         var foundIndex = list.find(function (value, index, arr) {
-          expect(list[index]).to.equal(value);
+          expect(list).to.have.property(index, value);
           expect(list).to.eql(arr);
           return false;
         });
@@ -426,11 +426,11 @@ var runArrayTests = function () {
       }
 
       ifFunctionsHaveNamesIt('has the correct name', function () {
-        expect(Array.prototype.findIndex.name).to.equal('findIndex');
+        expect(Array.prototype.findIndex).to.have.property('name', 'findIndex');
       });
 
       it('should have a length of 1', function () {
-        expect(Array.prototype.findIndex.length).to.equal(1);
+        expect(Array.prototype.findIndex).to.have.property('length', 1);
       });
 
       it('should find item key by predicate', function () {
@@ -539,7 +539,7 @@ var runArrayTests = function () {
       });
 
       ifFunctionsHaveNamesIt('has the correct name', function () {
-        expect(Array.prototype.keys.name).to.equal('keys');
+        expect(Array.prototype.keys).to.have.property('name', 'keys');
       });
 
       describe('basic keys iteration', function () {
@@ -602,11 +602,11 @@ var runArrayTests = function () {
       }
 
       it('should have the right arity', function () {
-        expect(Array.prototype.values.length).to.equal(0);
+        expect(Array.prototype.values).to.have.property('length', 0);
       });
 
       ifFunctionsHaveNamesIt('has the correct name', function () {
-        expect(Array.prototype.values.name).to.equal('values');
+        expect(Array.prototype.values).to.have.property('name', 'values');
       });
 
       describe('basic list iteration', function () {
@@ -669,11 +669,11 @@ var runArrayTests = function () {
       }
 
       it('should have the right arity', function () {
-        expect(Array.prototype.entries.length).to.equal(0);
+        expect(Array.prototype.entries).to.have.property('length', 0);
       });
 
       ifFunctionsHaveNamesIt('has the correct name', function () {
-        expect(Array.prototype.entries.name).to.equal('entries');
+        expect(Array.prototype.entries).to.have.property('name', 'entries');
       });
 
       describe('basic list iteration', function () {
@@ -742,11 +742,11 @@ var runArrayTests = function () {
       }
 
       it('has the right arity', function () {
-        expect(Array.prototype.fill.length).to.equal(1);
+        expect(Array.prototype.fill).to.have.property('length', 1);
       });
 
       ifFunctionsHaveNamesIt('has the correct name', function () {
-        expect(Array.prototype.fill.name).to.equal('fill');
+        expect(Array.prototype.fill).to.have.property('name', 'fill');
       });
 
       it('works with just a value', function () {
