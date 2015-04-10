@@ -1059,6 +1059,12 @@
   }
   /*jshint elision: false */
 
+  defineProperties(Object, {
+    is: function is(a, b) {
+      return ES.SameValue(a, b);
+    }
+  });
+
   if (supportsDescriptors) {
     var assignReducer = function (target, source) {
       return Object.keys(Object(source)).reduce(function (target, key) {
@@ -1073,10 +1079,6 @@
           throw new TypeError('target must be an object');
         }
         return Array.prototype.reduce.call(arguments, assignReducer);
-      },
-
-      is: function (a, b) {
-        return ES.SameValue(a, b);
       },
 
       // 19.1.3.9

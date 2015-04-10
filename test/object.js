@@ -6,6 +6,9 @@ describe('Object', function () {
     expect(exported.Object).to.equal(Object);
   });
 
+  var functionsHaveNames = (function foo() {}).name === 'foo';
+  var ifFunctionsHaveNamesIt = functionsHaveNames ? it : xit;
+
   if (Object.getOwnPropertyNames) {
     describe('Object.getOwnPropertyNames()', function () {
       it('throws on null or undefined', function () {
@@ -117,6 +120,14 @@ describe('Object', function () {
   });
 
   describe('Object.is()', function () {
+    ifFunctionsHaveNamesIt('has the right name', function () {
+      expect(Object.is).to.have.property('name', 'is');
+    });
+
+    it('should have the right arity', function () {
+      expect(Object.is).to.have.property('length', 2);
+    });
+
     it('should compare regular objects correctly', function () {
       [null, undefined, [0], 5, 'str', {a: null}].map(function (item) {
         return Object.is(item, item);
