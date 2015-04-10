@@ -7,25 +7,40 @@ Assertion.prototype.almostEqual = function (obj, precision) {
   return this.within(obj - allowedDiff, obj + allowedDiff);
 };
 
-var isPositiveZero = function (zero) {
-  'use strict';
-  return zero === 0 && 1 / zero === Infinity;
-};
-
-var isNegativeZero = function (zero) {
-  'use strict';
-  return zero === 0 && 1 / zero === -Infinity;
-};
-var valueOfIsNaN = { valueOf: function () { 'use strict'; return NaN; } };
-var valueOfIsInfinity = { valueOf: function () { 'use strict'; return Infinity; } };
-
 describe('Math', function () {
+  var functionsHaveNames = (function foo() {}).name === 'foo';
+  var ifFunctionsHaveNamesIt = functionsHaveNames ? it : xit;
+
+  var isPositiveZero = function (zero) {
+    'use strict';
+    return zero === 0 && 1 / zero === Infinity;
+  };
+
+  var isNegativeZero = function (zero) {
+    'use strict';
+    return zero === 0 && 1 / zero === -Infinity;
+  };
+  var valueOfIsNaN = { valueOf: function () { 'use strict'; return NaN; } };
+  var valueOfIsInfinity = { valueOf: function () { 'use strict'; return Infinity; } };
+
   (typeof process !== 'undefined' && process.env.NO_ES6_SHIM ? it.skip : it)('is on the exported object', function () {
     var exported = require('../');
     expect(exported.Math).to.equal(Math);
   });
 
-  describe('#acosh()', function () {
+  describe('.acosh()', function () {
+    ifFunctionsHaveNamesIt('has the right name', function () {
+      expect(Math.acosh).to.have.property('name', 'acosh');
+    });
+
+    it('is not enumerable', function () {
+      expect(Math.propertyIsEnumerable('acosh')).to.equal(false);
+    });
+
+    it('has the right arity', function () {
+      expect(Math.acosh).to.have.property('length', 1);
+    });
+
     it('should be correct', function () {
       expect(Number.isNaN(Math.acosh(NaN))).to.equal(true);
       expect(Number.isNaN(Math.acosh(0))).to.equal(true);
@@ -41,7 +56,19 @@ describe('Math', function () {
     });
   });
 
-  describe('#asinh()', function () {
+  describe('.asinh()', function () {
+    ifFunctionsHaveNamesIt('has the right name', function () {
+      expect(Math.asinh).to.have.property('name', 'asinh');
+    });
+
+    it('is not enumerable', function () {
+      expect(Math.propertyIsEnumerable('asinh')).to.equal(false);
+    });
+
+    it('has the right arity', function () {
+      expect(Math.asinh).to.have.property('length', 1);
+    });
+
     it('should be correct for NaN', function () {
       expect(Number.isNaN(Math.asinh(NaN))).to.equal(true);
     });
@@ -65,7 +92,19 @@ describe('Math', function () {
     });
   });
 
-  describe('#atanh()', function () {
+  describe('.atanh()', function () {
+    ifFunctionsHaveNamesIt('has the right name', function () {
+      expect(Math.atanh).to.have.property('name', 'atanh');
+    });
+
+    it('is not enumerable', function () {
+      expect(Math.propertyIsEnumerable('atanh')).to.equal(false);
+    });
+
+    it('has the right arity', function () {
+      expect(Math.atanh).to.have.property('length', 1);
+    });
+
     it('should be correct', function () {
       expect(Number.isNaN(Math.atanh(NaN))).to.equal(true);
       expect(Number.isNaN(Math.atanh(-1.00000001))).to.equal(true);
@@ -83,7 +122,19 @@ describe('Math', function () {
     });
   });
 
-  describe('#cbrt()', function () {
+  describe('.cbrt()', function () {
+    ifFunctionsHaveNamesIt('has the right name', function () {
+      expect(Math.cbrt).to.have.property('name', 'cbrt');
+    });
+
+    it('is not enumerable', function () {
+      expect(Math.propertyIsEnumerable('cbrt')).to.equal(false);
+    });
+
+    it('has the right arity', function () {
+      expect(Math.cbrt).to.have.property('length', 1);
+    });
+
     it('should be correct', function () {
       expect(isNaN(Math.cbrt(NaN))).to.equal(true);
       expect(isPositiveZero(Math.cbrt(+0))).to.equal(true);
@@ -98,6 +149,24 @@ describe('Math', function () {
   });
 
   describe('.clz32()', function () {
+    if (!Math.hasOwnProperty('clz32')) {
+      return it('exists', function () {
+        expect(Math).to.have.property('clz32');
+      });
+    }
+
+    ifFunctionsHaveNamesIt('has the right name', function () {
+      expect(Math.clz32).to.have.property('name', 'clz32');
+    });
+
+    it('is not enumerable', function () {
+      expect(Math.propertyIsEnumerable('clz32')).to.equal(false);
+    });
+
+    it('has the right arity', function () {
+      expect(Math.clz32).to.have.property('length', 1);
+    });
+
     it('should have proper uint32 conversion', function () {
       var integers = [5295, -5295, -9007199254740991, 9007199254740991, 0, -0];
       var nonNumbers = [undefined, true, null, {}, [], 'str'];
@@ -147,7 +216,25 @@ describe('Math', function () {
     });
   });
 
-  describe('#cosh()', function () {
+  describe('.cosh()', function () {
+    if (!Math.hasOwnProperty('cosh')) {
+      return it('exists', function () {
+        expect(Math).to.have.property('cosh');
+      });
+    }
+
+    ifFunctionsHaveNamesIt('has the right name', function () {
+      expect(Math.cosh).to.have.property('name', 'cosh');
+    });
+
+    it('is not enumerable', function () {
+      expect(Math.propertyIsEnumerable('cosh')).to.equal(false);
+    });
+
+    it('has the right arity', function () {
+      expect(Math.cosh).to.have.property('length', 1);
+    });
+
     it('should be correct for NaN', function () {
       expect(Number.isNaN(Math.cosh(NaN))).to.equal(true);
     });
@@ -173,7 +260,25 @@ describe('Math', function () {
     });
   });
 
-  describe('#expm1()', function () {
+  describe('.expm1()', function () {
+    if (!Math.hasOwnProperty('expm1')) {
+      return it('exists', function () {
+        expect(Math).to.have.property('expm1');
+      });
+    }
+
+    ifFunctionsHaveNamesIt('has the right name', function () {
+      expect(Math.expm1).to.have.property('name', 'expm1');
+    });
+
+    it('is not enumerable', function () {
+      expect(Math.propertyIsEnumerable('expm1')).to.equal(false);
+    });
+
+    it('has the right arity', function () {
+      expect(Math.expm1).to.have.property('length', 1);
+    });
+
     it('should be correct for NaN', function () {
       expect(Number.isNaN(Math.expm1(NaN))).to.equal(true);
     });
@@ -201,7 +306,25 @@ describe('Math', function () {
     });
   });
 
-  describe('#hypot()', function () {
+  describe('.hypot()', function () {
+    if (!Math.hasOwnProperty('hypot')) {
+      return it('exists', function () {
+        expect(Math).to.have.property('hypot');
+      });
+    }
+
+    ifFunctionsHaveNamesIt('has the right name', function () {
+      expect(Math.hypot).to.have.property('name', 'hypot');
+    });
+
+    it('is not enumerable', function () {
+      expect(Math.propertyIsEnumerable('hypot')).to.equal(false);
+    });
+
+    it('has the right arity', function () {
+      expect(Math.hypot).to.have.property('length', 2);
+    });
+
     it('should be correct', function () {
       expect(Math.hypot(Infinity)).to.equal(Infinity);
       expect(Math.hypot(-Infinity)).to.equal(Infinity);
@@ -239,7 +362,25 @@ describe('Math', function () {
     });
   });
 
-  describe('#log2()', function () {
+  describe('.log2()', function () {
+    if (!Math.hasOwnProperty('log2')) {
+      return it('exists', function () {
+        expect(Math).to.have.property('log2');
+      });
+    }
+
+    ifFunctionsHaveNamesIt('has the right name', function () {
+      expect(Math.log2).to.have.property('name', 'log2');
+    });
+
+    it('is not enumerable', function () {
+      expect(Math.propertyIsEnumerable('log2')).to.equal(false);
+    });
+
+    it('has the right arity', function () {
+      expect(Math.log2).to.have.property('length', 1);
+    });
+
     it('should be correct for edge cases', function () {
       expect(Number.isNaN(Math.log2(NaN))).to.equal(true);
       expect(Number.isNaN(Math.log2(-1e-50))).to.equal(true);
@@ -255,7 +396,25 @@ describe('Math', function () {
     });
   });
 
-  describe('#log10', function () {
+  describe('.log10', function () {
+    if (!Math.hasOwnProperty('log10')) {
+      return it('exists', function () {
+        expect(Math).to.have.property('log10');
+      });
+    }
+
+    ifFunctionsHaveNamesIt('has the right name', function () {
+      expect(Math.log10).to.have.property('name', 'log10');
+    });
+
+    it('is not enumerable', function () {
+      expect(Math.propertyIsEnumerable('log10')).to.equal(false);
+    });
+
+    it('has the right arity', function () {
+      expect(Math.log10).to.have.property('length', 1);
+    });
+
     it('should be correct for edge cases', function () {
       expect(Number.isNaN(Math.log10(NaN))).to.equal(true);
       expect(Number.isNaN(Math.log10(-1e-50))).to.equal(true);
@@ -271,7 +430,25 @@ describe('Math', function () {
     });
   });
 
-  describe('#log1p', function () {
+  describe('.log1p', function () {
+    if (!Math.hasOwnProperty('log1p')) {
+      return it('exists', function () {
+        expect(Math).to.have.property('log1p');
+      });
+    }
+
+    ifFunctionsHaveNamesIt('has the right name', function () {
+      expect(Math.log1p).to.have.property('name', 'log1p');
+    });
+
+    it('is not enumerable', function () {
+      expect(Math.propertyIsEnumerable('log1p')).to.equal(false);
+    });
+
+    it('has the right arity', function () {
+      expect(Math.log1p).to.have.property('length', 1);
+    });
+
     it('should be correct', function () {
       expect(Number.isNaN(Math.log1p(NaN))).to.equal(true);
       expect(Number.isNaN(Math.log1p(-1.000000001))).to.equal(true);
@@ -287,7 +464,25 @@ describe('Math', function () {
     });
   });
 
-  describe('#sign()', function () {
+  describe('.sign()', function () {
+    if (!Math.hasOwnProperty('sign')) {
+      return it('exists', function () {
+        expect(Math).to.have.property('sign');
+      });
+    }
+
+    ifFunctionsHaveNamesIt('has the right name', function () {
+      expect(Math.sign).to.have.property('name', 'sign');
+    });
+
+    it('is not enumerable', function () {
+      expect(Math.propertyIsEnumerable('sign')).to.equal(false);
+    });
+
+    it('has the right arity', function () {
+      expect(Math.sign).to.have.property('length', 1);
+    });
+
     it('should be correct', function () {
       // we also verify that [[ToNumber]] is being called
       [Infinity, 1].forEach(function (value) {
@@ -316,7 +511,25 @@ describe('Math', function () {
     });
   });
 
-  describe('#sinh()', function () {
+  describe('.sinh()', function () {
+    if (!Math.hasOwnProperty('sinh')) {
+      return it('exists', function () {
+        expect(Math).to.have.property('sinh');
+      });
+    }
+
+    ifFunctionsHaveNamesIt('has the right name', function () {
+      expect(Math.sinh).to.have.property('name', 'sinh');
+    });
+
+    it('is not enumerable', function () {
+      expect(Math.propertyIsEnumerable('sinh')).to.equal(false);
+    });
+
+    it('has the right arity', function () {
+      expect(Math.sinh).to.have.property('length', 1);
+    });
+
     it('should be correct', function () {
       expect(Number.isNaN(Math.sinh(NaN))).to.equal(true);
       expect(isPositiveZero(Math.sinh(+0))).to.equal(true);
@@ -329,7 +542,25 @@ describe('Math', function () {
     });
   });
 
-  describe('#tanh()', function () {
+  describe('.tanh()', function () {
+    if (!Math.hasOwnProperty('tanh')) {
+      return it('exists', function () {
+        expect(Math).to.have.property('tanh');
+      });
+    }
+
+    ifFunctionsHaveNamesIt('has the right name', function () {
+      expect(Math.tanh).to.have.property('name', 'tanh');
+    });
+
+    it('is not enumerable', function () {
+      expect(Math.propertyIsEnumerable('tanh')).to.equal(false);
+    });
+
+    it('has the right arity', function () {
+      expect(Math.tanh).to.have.property('length', 1);
+    });
+
     it('should be correct', function () {
       expect(Number.isNaN(Math.tanh(NaN))).to.equal(true);
       expect(isPositiveZero(Math.tanh(+0))).to.equal(true);
@@ -342,7 +573,25 @@ describe('Math', function () {
     });
   });
 
-  describe('#trunc()', function () {
+  describe('.trunc()', function () {
+    if (!Math.hasOwnProperty('trunc')) {
+      return it('exists', function () {
+        expect(Math).to.have.property('trunc');
+      });
+    }
+
+    ifFunctionsHaveNamesIt('has the right name', function () {
+      expect(Math.trunc).to.have.property('name', 'trunc');
+    });
+
+    it('is not enumerable', function () {
+      expect(Math.propertyIsEnumerable('trunc')).to.equal(false);
+    });
+
+    it('has the right arity', function () {
+      expect(Math.trunc).to.have.property('length', 1);
+    });
+
     it('should be correct', function () {
       expect(Number.isNaN(Math.trunc(NaN))).to.equal(true);
       expect(isNegativeZero(Math.trunc(-0))).to.equal(true);
@@ -361,7 +610,25 @@ describe('Math', function () {
     });
   });
 
-  describe('#imul()', function () {
+  describe('.imul()', function () {
+    if (!Math.hasOwnProperty('imul')) {
+      return it('exists', function () {
+        expect(Math).to.have.property('imul');
+      });
+    }
+
+    ifFunctionsHaveNamesIt('has the right name', function () {
+      expect(Math.imul).to.have.property('name', 'imul');
+    });
+
+    it('is not enumerable', function () {
+      expect(Math.propertyIsEnumerable('imul')).to.equal(false);
+    });
+
+    it('has the right arity', function () {
+      expect(Math.imul).to.have.property('length', 2);
+    });
+
     var str = 'str';
     var obj = {};
     var arr = [];
@@ -418,7 +685,19 @@ describe('Math', function () {
     });
   });
 
-  describe('Math.round', function () {
+  describe('.round()', function () {
+    ifFunctionsHaveNamesIt('has the right name', function () {
+      expect(Math.round).to.have.property('name', 'round');
+    });
+
+    it('is not enumerable', function () {
+      expect(Math.propertyIsEnumerable('round')).to.equal(false);
+    });
+
+    it('has the right arity', function () {
+      expect(Math.round).to.have.property('length', 1);
+    });
+
     it('works for edge cases', function () {
       expect(Number.isNaN(Math.round(NaN))).to.equal(true);
       expect(Object.is(Math.round(0), 0)).to.equal(true);
@@ -441,7 +720,19 @@ describe('Math', function () {
     });
   });
 
-  describe('Math.fround', function () {
+  describe('.fround()', function () {
+    ifFunctionsHaveNamesIt('has the right name', function () {
+      expect(Math.fround).to.have.property('name', 'fround');
+    });
+
+    it('is not enumerable', function () {
+      expect(Math.propertyIsEnumerable('fround')).to.equal(false);
+    });
+
+    it('has the right arity', function () {
+      expect(Math.fround).to.have.property('length', 1);
+    });
+
     // Mozilla's reference tests: https://bug900125.bugzilla.mozilla.org/attachment.cgi?id=793163
     it('returns NaN for undefined', function () {
       expect(Number.isNaN(Math.fround())).to.equal(true);

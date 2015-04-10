@@ -23,7 +23,7 @@ var describeIfGetOwnPropertyNames = Object.getOwnPropertyNames ? describe : xdes
 var ifExtensionsPreventibleIt = Object.preventExtensions ? it : xit;
 var ifES5It = supportsDescriptors ? it : xit;
 var ifFreezeIt = typeof Object.freeze === 'function' ? it : xit;
-var ifFunctionNamesIt = functionsHaveNames ? it : xit;
+var ifFunctionsHaveNamesIt = functionsHaveNames ? it : xit;
 
 describe('Reflect', function () {
   if (typeof Reflect === 'undefined') {
@@ -84,7 +84,7 @@ describe('Reflect', function () {
       expect(typeof Reflect.apply).to.equal('function');
     });
 
-    ifFunctionNamesIt('has the right name', function () {
+    ifFunctionsHaveNamesIt('has the right name', function () {
       expect(Reflect.apply.name).to.equal('apply');
     });
 
@@ -120,7 +120,7 @@ describe('Reflect', function () {
       expect(typeof Reflect.construct).to.equal('function');
     });
 
-    ifFunctionNamesIt('has the right name', function () {
+    ifFunctionsHaveNamesIt('has the right name', function () {
       expect(Reflect.construct.name).to.equal('construct');
     });
 
@@ -146,7 +146,7 @@ describe('Reflect', function () {
       expect(typeof Reflect.defineProperty).to.equal('function');
     });
 
-    ifFunctionNamesIt('has the right name', function () {
+    ifFunctionsHaveNamesIt('has the right name', function () {
       expect(Reflect.defineProperty.name).to.equal('defineProperty');
     });
 
@@ -210,7 +210,7 @@ describe('Reflect', function () {
       expect(typeof Reflect.deleteProperty).to.equal('function');
     });
 
-    ifFunctionNamesIt('has the right name', function () {
+    ifFunctionsHaveNamesIt('has the right name', function () {
       expect(Reflect.deleteProperty.name).to.equal('deleteProperty');
     });
 
@@ -253,7 +253,7 @@ describe('Reflect', function () {
       expect(typeof Reflect.enumerate).to.equal('function');
     });
 
-    ifFunctionNamesIt('has the right name', function () {
+    ifFunctionsHaveNamesIt('has the right name', function () {
       expect(Reflect.enumerate.name).to.equal('enumerate');
     });
 
@@ -320,7 +320,7 @@ describe('Reflect', function () {
       expect(typeof Reflect.get).to.equal('function');
     });
 
-    ifFunctionNamesIt('has the right name', function () {
+    ifFunctionsHaveNamesIt('has the right name', function () {
       expect(Reflect.get.name).to.equal('get');
     });
 
@@ -373,7 +373,7 @@ describe('Reflect', function () {
       expect(typeof Reflect.set).to.equal('function');
     });
 
-    ifFunctionNamesIt('has the right name', function () {
+    ifFunctionsHaveNamesIt('has the right name', function () {
       expect(Reflect.set.name).to.equal('set');
     });
 
@@ -420,7 +420,7 @@ describe('Reflect', function () {
       expect(typeof Reflect.getOwnPropertyDescriptor).to.equal('function');
     });
 
-    ifFunctionNamesIt('has the right name', function () {
+    ifFunctionsHaveNamesIt('has the right name', function () {
       expect(Reflect.getOwnPropertyDescriptor.name).to.equal('getOwnPropertyDescriptor');
     });
 
@@ -449,7 +449,7 @@ describe('Reflect', function () {
       expect(typeof Reflect.getPrototypeOf).to.equal('function');
     });
 
-    ifFunctionNamesIt('has the right name', function () {
+    ifFunctionsHaveNamesIt('has the right name', function () {
       expect(Reflect.getPrototypeOf.name).to.equal('getPrototypeOf');
     });
 
@@ -471,7 +471,7 @@ describe('Reflect', function () {
       expect(typeof Reflect.has).to.equal('function');
     });
 
-    ifFunctionNamesIt('has the right name', function () {
+    ifFunctionsHaveNamesIt('has the right name', function () {
       expect(Reflect.has.name).to.equal('has');
     });
 
@@ -525,7 +525,7 @@ describe('Reflect', function () {
       expect(typeof Reflect.isExtensible).to.equal('function');
     });
 
-    ifFunctionNamesIt('has the right name', function () {
+    ifFunctionsHaveNamesIt('has the right name', function () {
       expect(Reflect.isExtensible.name).to.equal('isExtensible');
     });
 
@@ -546,7 +546,7 @@ describe('Reflect', function () {
       expect(typeof Reflect.ownKeys).to.equal('function');
     });
 
-    ifFunctionNamesIt('has the right name', function () {
+    ifFunctionsHaveNamesIt('has the right name', function () {
       expect(Reflect.ownKeys.name).to.equal('ownKeys');
     });
 
@@ -589,7 +589,7 @@ describe('Reflect', function () {
       expect(typeof Reflect.preventExtensions).to.equal('function');
     });
 
-    ifFunctionNamesIt('has the right name', function () {
+    ifFunctionsHaveNamesIt('has the right name', function () {
       expect(Reflect.preventExtensions.name).to.equal('preventExtensions');
     });
 
@@ -611,7 +611,7 @@ describe('Reflect', function () {
       expect(typeof Reflect.setPrototypeOf).to.equal('function');
     });
 
-    ifFunctionNamesIt('has the right name', function () {
+    ifFunctionsHaveNamesIt('has the right name', function () {
       expect(Reflect.setPrototypeOf.name).to.equal('setPrototypeOf');
     });
 

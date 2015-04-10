@@ -2,6 +2,10 @@
 
 var runStringTests = function () {
   'use strict';
+
+  var functionsHaveNames = (function foo() {}).name === 'foo';
+  var ifFunctionsHaveNamesIt = functionsHaveNames ? it : xit;
+
   describe('String', function () {
     var hasStrictMode = (function () { return this === null; }.call(null));
     var testObjectCoercible = function (methodName) {
@@ -24,6 +28,18 @@ var runStringTests = function () {
           expect(String.prototype).to.have.property('repeat');
         });
       }
+
+      ifFunctionsHaveNamesIt('has the right name', function () {
+        expect(String.prototype.repeat).to.have.property('name', 'repeat');
+      });
+
+      it('is not enumerable', function () {
+        expect(String.prototype.propertyIsEnumerable('repeat')).to.equal(false);
+      });
+
+      it('has the right arity', function () {
+        expect(String.prototype.repeat).to.have.property('length', 1);
+      });
 
       it('should throw a TypeError when called on null or undefined', function () {
         testObjectCoercible('repeat');
@@ -64,6 +80,18 @@ var runStringTests = function () {
           expect(String.prototype).to.have.property('startsWith');
         });
       }
+
+      ifFunctionsHaveNamesIt('has the right name', function () {
+        expect(String.prototype.startsWith).to.have.property('name', 'startsWith');
+      });
+
+      it('is not enumerable', function () {
+        expect(String.prototype.propertyIsEnumerable('startsWith')).to.equal(false);
+      });
+
+      it('has the right arity', function () {
+        expect(String.prototype.startsWith).to.have.property('length', 1);
+      });
 
       it('should throw a TypeError when called on null or undefined', function () {
         testObjectCoercible('startsWith');
@@ -155,6 +183,18 @@ var runStringTests = function () {
           expect(String.prototype).to.have.property('endsWith');
         });
       }
+
+      ifFunctionsHaveNamesIt('has the right name', function () {
+        expect(String.prototype.endsWith).to.have.property('name', 'endsWith');
+      });
+
+      it('is not enumerable', function () {
+        expect(String.prototype.propertyIsEnumerable('endsWith')).to.equal(false);
+      });
+
+      it('has the right arity', function () {
+        expect(String.prototype.endsWith).to.have.property('length', 1);
+      });
 
       it('should throw a TypeError when called on null or undefined', function () {
         testObjectCoercible('endsWith');
@@ -250,6 +290,18 @@ var runStringTests = function () {
         });
       }
 
+      ifFunctionsHaveNamesIt('has the right name', function () {
+        expect(String.prototype.includes).to.have.property('name', 'includes');
+      });
+
+      it('is not enumerable', function () {
+        expect(String.prototype.propertyIsEnumerable('includes')).to.equal(false);
+      });
+
+      it('has the right arity', function () {
+        expect(String.prototype.includes).to.have.property('length', 1);
+      });
+
       it('should throw a TypeError when called on null or undefined', function () {
         testObjectCoercible('includes');
       });
@@ -326,6 +378,18 @@ var runStringTests = function () {
         });
       }
 
+      ifFunctionsHaveNamesIt('has the right name', function () {
+        expect(String.fromCodePoint).to.have.property('name', 'fromCodePoint');
+      });
+
+      it('is not enumerable', function () {
+        expect(String.propertyIsEnumerable('fromCodePoint')).to.equal(false);
+      });
+
+      it('has the right arity', function () {
+        expect(String.fromCodePoint).to.have.property('length', 1);
+      });
+
       it('throws a RangeError', function () {
         var invalidValues = [
           'abc',
@@ -370,6 +434,18 @@ var runStringTests = function () {
         });
       }
 
+      ifFunctionsHaveNamesIt('has the right name', function () {
+        expect(String.prototype.codePointAt).to.have.property('name', 'codePointAt');
+      });
+
+      it('is not enumerable', function () {
+        expect(String.prototype.propertyIsEnumerable('codePointAt')).to.equal(false);
+      });
+
+      it('has the right arity', function () {
+        expect(String.prototype.codePointAt).to.have.property('length', 1);
+      });
+
       it('should throw a TypeError when called on null or undefined', function () {
         testObjectCoercible('codePointAt');
       });
@@ -398,7 +474,7 @@ var runStringTests = function () {
       });
     });
 
-    describe('#iterator()', function () {
+    describe('#[Symbol.iterator]()', function () {
       if (!Array.hasOwnProperty('from')) {
         return it('requires Array.from to test', function () {
           expect(Array).to.have.property('from');
@@ -425,7 +501,15 @@ var runStringTests = function () {
         });
       }
 
-      it('should have a length of 1', function () {
+      ifFunctionsHaveNamesIt('has the right name', function () {
+        expect(String.raw).to.have.property('name', 'raw');
+      });
+
+      it('is not enumerable', function () {
+        expect(String.propertyIsEnumerable('raw')).to.equal(false);
+      });
+
+      it('has the right arity', function () {
         expect(String.raw).to.have.property('length', 1);
       });
 
@@ -474,6 +558,18 @@ var runStringTests = function () {
           expect(String.prototype).to.have.property('trim');
         });
       }
+
+      ifFunctionsHaveNamesIt('has the right name', function () {
+        expect(String.prototype.trim).to.have.property('name', 'trim');
+      });
+
+      it('is not enumerable', function () {
+        expect(String.prototype.propertyIsEnumerable('trim')).to.equal(false);
+      });
+
+      it('has the right arity', function () {
+        expect(String.prototype.trim).to.have.property('length', 0);
+      });
 
       it('should trim the correct characters', function () {
         var whitespace = '\u0009' + '\u000b' + '\u000c' + '\u0020' +

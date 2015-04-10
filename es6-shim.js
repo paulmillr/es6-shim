@@ -597,7 +597,7 @@
       return stringRepeat(thisStr, times);
     },
 
-    startsWith: function (searchStr) {
+    startsWith: function startsWith(searchStr) {
       ES.RequireObjectCoercible(this);
       var thisStr = String(this);
       if (Type.regex(searchStr)) {
@@ -609,7 +609,7 @@
       return thisStr.slice(start, start + searchStr.length) === searchStr;
     },
 
-    endsWith: function (searchStr) {
+    endsWith: function endsWith(searchStr) {
       ES.RequireObjectCoercible(this);
       var thisStr = String(this);
       if (Type.regex(searchStr)) {
@@ -629,7 +629,7 @@
       return _indexOf(this, searchString, position) !== -1;
     },
 
-    codePointAt: function (pos) {
+    codePointAt: function codePointAt(pos) {
       ES.RequireObjectCoercible(this);
       var thisStr = String(this);
       var position = ES.ToInteger(pos);
@@ -664,7 +664,7 @@
     ].join('');
     var trimRegexp = new RegExp('(^[' + ws + ']+)|([' + ws + ']+$)', 'g');
     defineProperties(String.prototype, {
-      trim: function () {
+      trim: function trim() {
         if (typeof this === 'undefined' || this === null) {
           throw new TypeError("can't convert " + this + ' to object');
         }
@@ -1035,11 +1035,11 @@
 
     isFinite: numberIsFinite,
 
-    isInteger: function (value) {
+    isInteger: function isInteger(value) {
       return numberIsFinite(value) && ES.ToInteger(value) === value;
     },
 
-    isSafeInteger: function (value) {
+    isSafeInteger: function isSafeInteger(value) {
       return Number.isInteger(value) && Math.abs(value) <= Number.MAX_SAFE_INTEGER;
     },
 
@@ -1360,7 +1360,7 @@
   var add = function (a, b) { return a + b; };
 
   var MathShims = {
-    acosh: function (value) {
+    acosh: function acosh(value) {
       var x = Number(value);
       if (Number.isNaN(x) || value < 1) { return NaN; }
       if (x === 1) { return 0; }
@@ -1368,7 +1368,7 @@
       return Math.log(x / Math.E + Math.sqrt(x + 1) * Math.sqrt(x - 1) / Math.E) + 1;
     },
 
-    asinh: function (value) {
+    asinh: function asinh(value) {
       value = Number(value);
       if (value === 0 || !globalIsFinite(value)) {
         return value;
@@ -1376,7 +1376,7 @@
       return value < 0 ? -Math.asinh(-value) : Math.log(value + Math.sqrt(value * value + 1));
     },
 
-    atanh: function (value) {
+    atanh: function atanh(value) {
       value = Number(value);
       if (Number.isNaN(value) || value < -1 || value > 1) {
         return NaN;
@@ -1387,7 +1387,7 @@
       return 0.5 * Math.log((1 + value) / (1 - value));
     },
 
-    cbrt: function (value) {
+    cbrt: function cbrt(value) {
       value = Number(value);
       if (value === 0) { return value; }
       var negate = value < 0, result;
@@ -1396,7 +1396,7 @@
       return negate ? -result : result;
     },
 
-    clz32: function (value) {
+    clz32: function clz32(value) {
       // See https://bugs.ecmascript.org/show_bug.cgi?id=2465
       value = Number(value);
       var number = ES.ToUint32(value);
@@ -1406,7 +1406,7 @@
       return 31 - Math.floor(Math.log(number + 0.5) * Math.LOG2E);
     },
 
-    cosh: function (value) {
+    cosh: function cosh(value) {
       value = Number(value);
       if (value === 0) { return 1; } // +0 or -0
       if (Number.isNaN(value)) { return NaN; }
@@ -1416,7 +1416,7 @@
       return (Math.exp(value) + Math.exp(-value)) / 2;
     },
 
-    expm1: function (value) {
+    expm1: function expm1(value) {
       var x = Number(value);
       if (x === -Infinity) { return -1; }
       if (!globalIsFinite(x) || value === 0) { return x; }
@@ -1436,7 +1436,7 @@
       return sum;
     },
 
-    hypot: function (x, y) {
+    hypot: function hypot(x, y) {
       var anyNaN = false;
       var allZero = true;
       var anyInfinity = false;
@@ -1467,15 +1467,15 @@
       return largest * Math.sqrt(sum);
     },
 
-    log2: function (value) {
+    log2: function log2(value) {
       return Math.log(value) * Math.LOG2E;
     },
 
-    log10: function (value) {
+    log10: function log10(value) {
       return Math.log(value) * Math.LOG10E;
     },
 
-    log1p: function (value) {
+    log1p: function log1p(value) {
       var x = Number(value);
       if (x < -1 || Number.isNaN(x)) { return NaN; }
       if (x === 0 || x === Infinity) { return x; }
@@ -1484,14 +1484,14 @@
       return (1 + x) - 1 === 0 ? x : x * (Math.log(1 + x) / ((1 + x) - 1));
     },
 
-    sign: function (value) {
+    sign: function sign(value) {
       var number = +value;
       if (number === 0) { return number; }
       if (Number.isNaN(number)) { return number; }
       return number < 0 ? -1 : 1;
     },
 
-    sinh: function (value) {
+    sinh: function sinh(value) {
       var x = Number(value);
       if (!globalIsFinite(value) || value === 0) { return value; }
 
@@ -1501,7 +1501,7 @@
       return (Math.exp(x - 1) - Math.exp(-x - 1)) * Math.E / 2;
     },
 
-    tanh: function (value) {
+    tanh: function tanh(value) {
       var x = Number(value);
       if (Number.isNaN(value) || x === 0) { return x; }
       if (x === Infinity) { return 1; }
@@ -1513,12 +1513,12 @@
       return (a - b) / (Math.exp(x) + Math.exp(-x));
     },
 
-    trunc: function (value) {
+    trunc: function trunc(value) {
       var number = Number(value);
       return number < 0 ? -Math.floor(-number) : Math.floor(number);
     },
 
-    imul: function (x, y) {
+    imul: function imul(x, y) {
       // taken from https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/imul
       x = ES.ToUint32(x);
       y = ES.ToUint32(y);
@@ -1531,7 +1531,7 @@
       return ((al * bl) + (((ah * bl + al * bh) << 16) >>> 0) | 0);
     },
 
-    fround: function (x) {
+    fround: function fround(x) {
       if (x === 0 || x === Infinity || x === -Infinity || Number.isNaN(x)) {
         return x;
       }
@@ -2166,7 +2166,7 @@
             return false;
           },
 
-          clear: function () {
+          clear: function clear() {
             this._size = 0;
             this._storage = emptyObject();
             var head = this._head, i = head, p = i.next;
@@ -2178,19 +2178,19 @@
             head.next = head.prev = head;
           },
 
-          keys: function () {
+          keys: function keys() {
             return new MapIterator(this, 'key');
           },
 
-          values: function () {
+          values: function values() {
             return new MapIterator(this, 'value');
           },
 
-          entries: function () {
+          entries: function entries() {
             return new MapIterator(this, 'key+value');
           },
 
-          forEach: function (callback) {
+          forEach: function forEach(callback) {
             var context = arguments.length > 1 ? arguments[1] : null;
             var it = this.entries();
             for (var entry = it.next(); !entry.done; entry = it.next()) {
@@ -2309,7 +2309,7 @@
             return this['[[SetData]]']['delete'](key);
           },
 
-          clear: function () {
+          clear: function clear() {
             if (this._storage) {
               this._storage = emptyObject();
             } else {
@@ -2317,17 +2317,17 @@
             }
           },
 
-          values: function () {
+          values: function values() {
             ensureMap(this);
             return this['[[SetData]]'].values();
           },
 
-          entries: function () {
+          entries: function entries() {
             ensureMap(this);
             return this['[[SetData]]'].entries();
           },
 
-          forEach: function (callback) {
+          forEach: function forEach(callback) {
             var context = arguments.length > 1 ? arguments[1] : null;
             var entireSet = this;
             ensureMap(entireSet);

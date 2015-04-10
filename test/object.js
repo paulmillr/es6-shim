@@ -120,6 +120,12 @@ describe('Object', function () {
   });
 
   describe('Object.is()', function () {
+    if (!Object.hasOwnProperty('is')) {
+      return it('exists', function () {
+        expect(Object).to.have.property('is');
+      });
+    }
+
     ifFunctionsHaveNamesIt('has the right name', function () {
       expect(Object.is).to.have.property('name', 'is');
     });

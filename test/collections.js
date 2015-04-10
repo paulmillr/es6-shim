@@ -40,6 +40,9 @@ Assertion.addMethod('entries', function (expected) {
 });
 
 describe('Collections', function () {
+  var functionsHaveNames = (function foo() {}).name === 'foo';
+  var ifFunctionsHaveNamesIt = functionsHaveNames ? it : xit;
+
   var range = function (from, to) {
     var result = [];
     for (var value = from; value < to; value++) {
@@ -219,6 +222,72 @@ describe('Collections', function () {
       expect(typeof Map.prototype['delete']).to.equal('function');
     });
 
+    describe('#clear()', function () {
+      ifFunctionsHaveNamesIt('has the right name', function () {
+        expect(Map.prototype.clear).to.have.property('name', 'clear');
+      });
+
+      it('is not enumerable', function () {
+        expect(Map.prototype.propertyIsEnumerable('clear')).to.equal(false);
+      });
+
+      it('has the right arity', function () {
+        expect(Map.prototype.clear).to.have.property('length', 0);
+      });
+
+      it('should have #clear method', function () {
+        expect(map.set(1, 2)).to.equal(map);
+        expect(map.set(5, 2)).to.equal(map);
+        expect(map.size).to.equal(2);
+        expect(map.has(5)).to.equal(true);
+        map.clear();
+        expect(map.size).to.equal(0);
+        expect(map.has(5)).to.equal(false);
+      });
+    });
+
+    describe('#keys()', function () {
+      ifFunctionsHaveNamesIt('has the right name', function () {
+        expect(Map.prototype.keys).to.have.property('name', 'keys');
+      });
+
+      it('is not enumerable', function () {
+        expect(Map.prototype.propertyIsEnumerable('keys')).to.equal(false);
+      });
+
+      it('has the right arity', function () {
+        expect(Map.prototype.keys).to.have.property('length', 0);
+      });
+    });
+
+    describe('#values()', function () {
+      ifFunctionsHaveNamesIt('has the right name', function () {
+        expect(Map.prototype.values).to.have.property('name', 'values');
+      });
+
+      it('is not enumerable', function () {
+        expect(Map.prototype.propertyIsEnumerable('values')).to.equal(false);
+      });
+
+      it('has the right arity', function () {
+        expect(Map.prototype.values).to.have.property('length', 0);
+      });
+    });
+
+    describe('#entries()', function () {
+      ifFunctionsHaveNamesIt('has the right name', function () {
+        expect(Map.prototype.entries).to.have.property('name', 'entries');
+      });
+
+      it('is not enumerable', function () {
+        expect(Map.prototype.propertyIsEnumerable('entries')).to.equal(false);
+      });
+
+      it('has the right arity', function () {
+        expect(Map.prototype.entries).to.have.property('length', 0);
+      });
+    });
+
     it('should has unique constructor', function () {
       expect(Map.prototype).to.not.equal(Object.prototype);
     });
@@ -269,6 +338,18 @@ describe('Collections', function () {
 
       afterEach(function () {
         map = null;
+      });
+
+      ifFunctionsHaveNamesIt('has the right name', function () {
+        expect(Map.prototype.forEach).to.have.property('name', 'forEach');
+      });
+
+      it('is not enumerable', function () {
+        expect(Map.prototype.propertyIsEnumerable('forEach')).to.equal(false);
+      });
+
+      it('has the right arity', function () {
+        expect(Map.prototype.forEach).to.have.property('length', 1);
       });
 
       it('should be iterable via forEach', function () {
@@ -497,10 +578,6 @@ describe('Collections', function () {
       expect(Set.length).to.equal(1);
     });
 
-    it('has #keys which is the same object as #values', function () {
-      expect(Set.prototype.keys).to.equal(Set.prototype.values);
-    });
-
     it('returns the set from #add() for chaining', function () {
       expect(set.add({})).to.equal(set);
     });
@@ -607,6 +684,18 @@ describe('Collections', function () {
     });
 
     describe('#clear()', function () {
+      ifFunctionsHaveNamesIt('has the right name', function () {
+        expect(Set.prototype.clear).to.have.property('name', 'clear');
+      });
+
+      it('is not enumerable', function () {
+        expect(Set.prototype.propertyIsEnumerable('clear')).to.equal(false);
+      });
+
+      it('has the right arity', function () {
+        expect(Set.prototype.clear).to.have.property('length', 0);
+      });
+
       it('should have #clear method', function () {
         expect(set.add(1)).to.equal(set);
         expect(set.add(5)).to.equal(set);
@@ -617,6 +706,53 @@ describe('Collections', function () {
         expect(set.has(5)).to.equal(false);
       });
     });
+
+    describe('#keys()', function () {
+      it('is the same object as #values()', function () {
+        expect(Set.prototype.keys).to.equal(Set.prototype.values);
+      });
+
+      ifFunctionsHaveNamesIt('has the right name', function () {
+        expect(Set.prototype.keys).to.have.property('name', 'values');
+      });
+
+      it('is not enumerable', function () {
+        expect(Set.prototype.propertyIsEnumerable('keys')).to.equal(false);
+      });
+
+      it('has the right arity', function () {
+        expect(Set.prototype.keys).to.have.property('length', 0);
+      });
+    });
+
+    describe('#values()', function () {
+      ifFunctionsHaveNamesIt('has the right name', function () {
+        expect(Set.prototype.values).to.have.property('name', 'values');
+      });
+
+      it('is not enumerable', function () {
+        expect(Set.prototype.propertyIsEnumerable('values')).to.equal(false);
+      });
+
+      it('has the right arity', function () {
+        expect(Set.prototype.values).to.have.property('length', 0);
+      });
+    });
+
+    describe('#entries()', function () {
+      ifFunctionsHaveNamesIt('has the right name', function () {
+        expect(Set.prototype.entries).to.have.property('name', 'entries');
+      });
+
+      it('is not enumerable', function () {
+        expect(Set.prototype.propertyIsEnumerable('entries')).to.equal(false);
+      });
+
+      it('has the right arity', function () {
+        expect(Set.prototype.entries).to.have.property('length', 0);
+      });
+    });
+
 
     it('should allow NaN values as keys', function () {
       expect(set.has(NaN)).to.equal(false);
@@ -701,6 +837,18 @@ describe('Collections', function () {
 
       afterEach(function () {
         set = null;
+      });
+
+      ifFunctionsHaveNamesIt('has the right name', function () {
+        expect(Set.prototype.forEach).to.have.property('name', 'forEach');
+      });
+
+      it('is not enumerable', function () {
+        expect(Set.prototype.propertyIsEnumerable('forEach')).to.equal(false);
+      });
+
+      it('has the right arity', function () {
+        expect(Set.prototype.forEach).to.have.property('length', 1);
       });
 
       it('should be iterable via forEach', function () {

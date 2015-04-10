@@ -1,6 +1,9 @@
 /*global describe, it, expect, require */
 
 describe('Number', function () {
+  var functionsHaveNames = (function foo() {}).name === 'foo';
+  var ifFunctionsHaveNamesIt = functionsHaveNames ? it : xit;
+
   var integers = [5295, -5295, -9007199254740991, 9007199254740991, 0, -0];
   var nonIntegers = [-9007199254741992, 9007199254741992, 5.9];
   var infinities = [Infinity, -Infinity];
@@ -22,7 +25,7 @@ describe('Number', function () {
       toString: function () { throw 42; }
     },
     /a/g
-];
+  ];
   var expectTrue = function (item) {
     expect(item).to.equal(true);
   };
@@ -37,31 +40,91 @@ describe('Number', function () {
 
   describe('Number constants', function () {
     it('should have max safe integer', function () {
+      expect(Number).to.have.property('MAX_SAFE_INTEGER');
+      expect(Number.propertyIsEnumerable('MAX_SAFE_INTEGER')).to.equal(false);
       expect(Number.MAX_SAFE_INTEGER).to.equal(Math.pow(2, 53) - 1);
     });
 
     it('should have min safe integer', function () {
+      expect(Number).to.have.property('MIN_SAFE_INTEGER');
+      expect(Number.propertyIsEnumerable('MIN_SAFE_INTEGER')).to.equal(false);
       expect(Number.MIN_SAFE_INTEGER).to.equal(-Math.pow(2, 53) + 1);
     });
 
-    it('should has epsilon', function () {
+    it('should have epsilon', function () {
+      expect(Number).to.have.property('EPSILON');
+      expect(Number.propertyIsEnumerable('EPSILON')).to.equal(false);
       expect(Number.EPSILON).to.equal(2.2204460492503130808472633361816e-16);
     });
   });
 
-  describe('Number.parseInt()', function () {
+  describe('.parseInt()', function () {
+    if (!Number.hasOwnProperty('parseInt')) {
+      return it('exists', function () {
+        expect(Number).to.have.property('parseInt');
+      });
+    }
+
     it('should work', function () {
       expect(Number.parseInt('601')).to.equal(601);
     });
-  });
 
-  describe('Number.parseFloat()', function () {
-    it('should work', function () {
-      expect(Number.parseFloat('5.5')).to.equal(5.5);
+    ifFunctionsHaveNamesIt('has the right name', function () {
+      expect(Number.parseInt).to.have.property('name', 'parseInt');
+    });
+
+    it('is not enumerable', function () {
+      expect(Number.propertyIsEnumerable('parseInt')).to.equal(false);
+    });
+
+    it('has the right arity', function () {
+      expect(Number.parseInt).to.have.property('length', 2);
     });
   });
 
-  describe('Number.isFinite()', function () {
+  describe('.parseFloat()', function () {
+    if (!Number.hasOwnProperty('parseFloat')) {
+      return it('exists', function () {
+        expect(Number).to.have.property('parseFloat');
+      });
+    }
+
+    it('should work', function () {
+      expect(Number.parseFloat('5.5')).to.equal(5.5);
+    });
+
+    ifFunctionsHaveNamesIt('has the right name', function () {
+      expect(Number.parseFloat).to.have.property('name', 'parseFloat');
+    });
+
+    it('is not enumerable', function () {
+      expect(Number.propertyIsEnumerable('parseFloat')).to.equal(false);
+    });
+
+    it('has the right arity', function () {
+      expect(Number.parseFloat).to.have.property('length', 1);
+    });
+  });
+
+  describe('.isFinite()', function () {
+    if (!Number.hasOwnProperty('isFinite')) {
+      return it('exists', function () {
+        expect(Number).to.have.property('isFinite');
+      });
+    }
+
+    ifFunctionsHaveNamesIt('has the right name', function () {
+      expect(Number.isFinite).to.have.property('name', 'isFinite');
+    });
+
+    it('is not enumerable', function () {
+      expect(Number.propertyIsEnumerable('isFinite')).to.equal(false);
+    });
+
+    it('has the right arity', function () {
+      expect(Number.isFinite).to.have.property('length', 1);
+    });
+
     it('should work', function () {
       integers.map(Number.isFinite).forEach(expectTrue);
       infinities.map(Number.isFinite).forEach(expectFalse);
@@ -98,7 +161,25 @@ describe('Number', function () {
     });
   });
 
-  describe('Number.isInteger()', function () {
+  describe('.isInteger()', function () {
+    if (!Number.hasOwnProperty('isInteger')) {
+      return it('exists', function () {
+        expect(Number).to.have.property('isInteger');
+      });
+    }
+
+    ifFunctionsHaveNamesIt('has the right name', function () {
+      expect(Number.isInteger).to.have.property('name', 'isInteger');
+    });
+
+    it('is not enumerable', function () {
+      expect(Number.propertyIsEnumerable('isInteger')).to.equal(false);
+    });
+
+    it('has the right arity', function () {
+      expect(Number.isInteger).to.have.property('length', 1);
+    });
+
     it('should be truthy on integers', function () {
       integers.map(Number.isInteger).forEach(expectTrue);
       expect(Number.isInteger(4)).to.equal(true);
@@ -142,7 +223,25 @@ describe('Number', function () {
     });
   });
 
-  describe('Number.isSafeInteger()', function () {
+  describe('.isSafeInteger()', function () {
+    if (!Number.hasOwnProperty('isSafeInteger')) {
+      return it('exists', function () {
+        expect(Number).to.have.property('isSafeInteger');
+      });
+    }
+
+    ifFunctionsHaveNamesIt('has the right name', function () {
+      expect(Number.isSafeInteger).to.have.property('name', 'isSafeInteger');
+    });
+
+    it('is not enumerable', function () {
+      expect(Number.propertyIsEnumerable('isSafeInteger')).to.equal(false);
+    });
+
+    it('has the right arity', function () {
+      expect(Number.isSafeInteger).to.have.property('length', 1);
+    });
+
     it('should be truthy on integers', function () {
       integers.map(Number.isSafeInteger).forEach(expectTrue);
       expect(Number.isSafeInteger(4)).to.equal(true);
@@ -186,7 +285,25 @@ describe('Number', function () {
     });
   });
 
-  describe('Number.isNaN()', function () {
+  describe('.isNaN()', function () {
+    if (!Number.hasOwnProperty('isNaN')) {
+      return it('exists', function () {
+        expect(Number).to.have.property('isNaN');
+      });
+    }
+
+    ifFunctionsHaveNamesIt('has the right name', function () {
+      expect(Number.isNaN).to.have.property('name', 'isNaN');
+    });
+
+    it('is not enumerable', function () {
+      expect(Number.propertyIsEnumerable('isNaN')).to.equal(false);
+    });
+
+    it('has the right arity', function () {
+      expect(Number.isNaN).to.have.property('length', 1);
+    });
+
     it('should be truthy only on NaN', function () {
       integers.concat(nonIntegers).map(Number.isNaN).forEach(expectFalse);
       nonNumbers.map(Number.isNaN).forEach(expectFalse);
