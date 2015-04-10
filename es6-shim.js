@@ -1570,9 +1570,18 @@
   }, !roundHandlesBoundaryConditions || !roundDoesNotIncreaseIntegers);
   Value.preserveToString(Math.round, origMathRound);
 
+  var origImul = Math.imul;
   if (Math.imul(0xffffffff, 5) !== -5) {
     // Safari 6.1, at least, reports "0" for this value
     Math.imul = MathShims.imul;
+    Value.preserveToString(Math.imul, origImul);
+  }
+  if (Math.imul.length !== 2) {
+    // Safari 8 has a length of 1
+    defineProperty(Math, 'imul', function imul(x, y) {
+      return origImul.apply(Math, arguments);
+    }, true);
+    Value.preserveToString(Math.imul, origImul);
   }
 
   // Promises
