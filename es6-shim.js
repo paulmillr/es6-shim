@@ -1135,17 +1135,16 @@
       }(Object, '__proto__'))
     };
 
-    var assignHasPendingExceptions = supportsDescriptors && hasStrictMode && Object.assign && (function () {
+    var assignHasPendingExceptions = Object.assign && Object.preventExtensions && (function () {
       // Firefox 37 still has "pending exception" logic in its Object.assign implementation,
       // which is 72% slower than our shim, and Firefox 40's native implementation.
-      var thrower = { a: 1, b: 2, c: 3 };
-      var keys = Object.keys(thrower);
-      Object.defineProperty(thrower, keys[1], { configurable: false, writable: false });
-      var semaphore = {};
+      /*jshint elision: true */
+      var thrower = Object.preventExtensions([,1]);
+      /*jshint elision: false */
       try {
-        Object.assign(thrower, { a: semaphore, b: semaphore, c: semaphore });
+        Object.assign(thrower, 'xy');
       } catch (e) {
-        return thrower[keys[0]] === semaphore && thrower[keys[2]] === semaphore;
+        return thrower[1] === 'y';
       }
     }());
     if (assignHasPendingExceptions) {
