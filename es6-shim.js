@@ -69,8 +69,8 @@
   };
 
   var startsWithRejectsRegex = function () {
-    return String.prototype.startsWith && !throwsError(function () {
-      /* this is spec-compliant */
+    return String.prototype.startsWith && throwsError(function () {
+      /* throws if spec-compliant */
       '/a/'.startsWith(/a/);
     });
   };
@@ -701,7 +701,7 @@
   });
 
   if (!startsWithIsCompliant) {
-    // Firefox has a noncompliant startsWith implementation
+    // Firefox (< 37?) and IE 11 TP have a noncompliant startsWith implementation
     defineProperty(String.prototype, 'startsWith', StringShims.startsWith, true);
     defineProperty(String.prototype, 'endsWith', StringShims.endsWith, true);
   }
