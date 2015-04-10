@@ -1138,9 +1138,7 @@
     var assignHasPendingExceptions = Object.assign && Object.preventExtensions && (function () {
       // Firefox 37 still has "pending exception" logic in its Object.assign implementation,
       // which is 72% slower than our shim, and Firefox 40's native implementation.
-      /*jshint elision: true */
-      var thrower = Object.preventExtensions([,1]);
-      /*jshint elision: false */
+      var thrower = Object.preventExtensions({ 1: 2 });
       try {
         Object.assign(thrower, 'xy');
       } catch (e) {

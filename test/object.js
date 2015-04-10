@@ -8,6 +8,7 @@ describe('Object', function () {
 
   var functionsHaveNames = (function foo() {}).name === 'foo';
   var ifFunctionsHaveNamesIt = functionsHaveNames ? it : xit;
+  var ifExtensionsPreventable = Object.preventExtensions ? it : xit;
 
   if (Object.getOwnPropertyNames) {
     describe('Object.getOwnPropertyNames()', function () {
@@ -201,6 +202,14 @@ describe('Object', function () {
       expect(Object.assign({ a: 1 }, null, { b: 2 })).to.eql({ a: 1, b: 2 });
       expect(Object.assign({ a: 1 }, undefined, { b: 2 })).to.eql({ a: 1, b: 2 });
       expect(Object.assign({ a: 1 }, { b: 2 }, null)).to.eql({ a: 1, b: 2 });
+    });
+
+    ifExtensionsPreventable('does not have pending exceptions', function () {
+      // Firefox 37 still has "pending exception" logic in its Object.assign implementation,
+      // which is 72% slower than our shim, and Firefox 40's native implementation.
+      var thrower = Object.preventExtensions({ 1: 2 });
+      try { Object.assign(thrower, 'xy'); } catch (e) {}
+      expect(thrower).to.have.property(1, 2);
     });
   });
 
