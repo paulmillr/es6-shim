@@ -1537,6 +1537,10 @@
     }
   };
   defineProperties(Math, MathShims);
+  // IE 11 TP has an imprecise log1p: reports Math.log1p(-1e-17) as 0
+  defineProperty(Math, 'log1p', MathShims.log1p, Math.log1p(-1e-17) !== -1e-17);
+  // IE 11 TP has an imprecise asinh: reports Math.asinh(-1e7) as not exactly equal to -Math.asinh(1e7)
+  defineProperty(Math, 'asinh', MathShims.asinh, Math.asinh(-1e7) !== -Math.asinh(1e7));
   // Chrome 40 has an imprecise Math.tanh with very small numbers
   defineProperty(Math, 'tanh', MathShims.tanh, Math.tanh(-2e-17) !== -2e-17);
   // Chrome 40 loses Math.acosh precision with high numbers
