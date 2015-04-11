@@ -37,23 +37,23 @@ var runArrayTests = function () {
       });
     });
 
-    describe('Array.from()', function () {
+    describe('.from()', function () {
       if (!Array.hasOwnProperty('from')) {
         return it('exists', function () {
           expect(Array).to.have.property('from');
         });
       }
 
-      it('has a length of 1', function () {
+      ifFunctionsHaveNamesIt('has the correct name', function () {
+        expect(Array.from).to.have.property('name', 'from');
+      });
+
+      it('has the right arity', function () {
         expect(Array.from).to.have.property('length', 1);
       });
 
       it('is not enumerable', function () {
         expect(Array.propertyIsEnumerable('from')).to.equal(false);
-      });
-
-      ifFunctionsHaveNamesIt('has the correct name', function () {
-        expect(Array.from).to.have.property('name', 'from');
       });
 
       it('works with primitives', function () {
@@ -243,23 +243,23 @@ var runArrayTests = function () {
       });
     });
 
-    describe('Array.of()', function () {
+    describe('.of()', function () {
       if (!Array.hasOwnProperty('of')) {
         return it('exists', function () {
           expect(Array).to.have.property('of');
         });
       }
 
-      it('has a length of 0', function () {
+      ifFunctionsHaveNamesIt('has the correct name', function () {
+        expect(Array.of).to.have.property('name', 'of');
+      });
+
+      it('has the right arity', function () {
         expect(Array.of).to.have.property('length', 0);
       });
 
       it('is not enumerable', function () {
         expect(Array.propertyIsEnumerable('of')).to.equal(false);
-      });
-
-      ifFunctionsHaveNamesIt('has the correct name', function () {
-        expect(Array.of).to.have.property('name', 'of');
       });
 
       it('should create correct array from arguments', function () {
@@ -289,12 +289,16 @@ var runArrayTests = function () {
         });
       }
 
+      ifFunctionsHaveNamesIt('has the correct name', function () {
+        expect(Array.prototype.copyWithin).to.have.property('name', 'copyWithin');
+      });
+
       it('has the right arity', function () {
         expect(Array.prototype.copyWithin).to.have.property('length', 2);
       });
 
-      ifFunctionsHaveNamesIt('has the correct name', function () {
-        expect(Array.prototype.copyWithin).to.have.property('name', 'copyWithin');
+      it('is not enumerable', function () {
+        expect(Array.prototype.propertyIsEnumerable('copyWithin')).to.equal(false);
       });
 
       it('modifies the object in-place', function () {
@@ -346,8 +350,12 @@ var runArrayTests = function () {
         expect(Array.prototype.find).to.have.property('name', 'find');
       });
 
-      it('should have a length of 1', function () {
+      it('should have the right arity', function () {
         expect(Array.prototype.find).to.have.property('length', 1);
+      });
+
+      it('is not enumerable', function () {
+        expect(Array.prototype.propertyIsEnumerable('find')).to.equal(false);
       });
 
       it('should find item by predicate', function () {
@@ -429,8 +437,12 @@ var runArrayTests = function () {
         expect(Array.prototype.findIndex).to.have.property('name', 'findIndex');
       });
 
-      it('should have a length of 1', function () {
+      it('should have the right arity', function () {
         expect(Array.prototype.findIndex).to.have.property('length', 1);
+      });
+
+      it('is not enumerable', function () {
+        expect(Array.prototype.propertyIsEnumerable('findIndex')).to.equal(false);
       });
 
       it('should find item key by predicate', function () {
@@ -534,12 +546,16 @@ var runArrayTests = function () {
         });
       }
 
+      ifFunctionsHaveNamesIt('has the correct name', function () {
+        expect(Array.prototype.keys).to.have.property('name', 'keys');
+      });
+
       it('should have the right arity ', function () {
         expect(Array.prototype.keys.length).to.equal(0);
       });
 
-      ifFunctionsHaveNamesIt('has the correct name', function () {
-        expect(Array.prototype.keys).to.have.property('name', 'keys');
+      it('is not enumerable', function () {
+        expect(Array.prototype.propertyIsEnumerable('keys')).to.equal(false);
       });
 
       describe('basic keys iteration', function () {
@@ -601,12 +617,16 @@ var runArrayTests = function () {
         });
       }
 
-      it('should have the right arity', function () {
+      ifFunctionsHaveNamesIt('has the correct name', function () {
+        expect(Array.prototype.values).to.have.property('name', 'values');
+      });
+
+      it('has the right arity', function () {
         expect(Array.prototype.values).to.have.property('length', 0);
       });
 
-      ifFunctionsHaveNamesIt('has the correct name', function () {
-        expect(Array.prototype.values).to.have.property('name', 'values');
+      it('is not enumerable', function () {
+        expect(Array.prototype.propertyIsEnumerable('values')).to.equal(false);
       });
 
       describe('basic list iteration', function () {
@@ -668,12 +688,16 @@ var runArrayTests = function () {
         });
       }
 
-      it('should have the right arity', function () {
+      ifFunctionsHaveNamesIt('has the correct name', function () {
+        expect(Array.prototype.entries).to.have.property('name', 'entries');
+      });
+
+      it('has the right arity', function () {
         expect(Array.prototype.entries).to.have.property('length', 0);
       });
 
-      ifFunctionsHaveNamesIt('has the correct name', function () {
-        expect(Array.prototype.entries).to.have.property('name', 'entries');
+      it('is not enumerable', function () {
+        expect(Array.prototype.propertyIsEnumerable('entries')).to.equal(false);
       });
 
       describe('basic list iteration', function () {
@@ -741,12 +765,16 @@ var runArrayTests = function () {
         });
       }
 
+      ifFunctionsHaveNamesIt('has the correct name', function () {
+        expect(Array.prototype.fill).to.have.property('name', 'fill');
+      });
+
       it('has the right arity', function () {
         expect(Array.prototype.fill).to.have.property('length', 1);
       });
 
-      ifFunctionsHaveNamesIt('has the correct name', function () {
-        expect(Array.prototype.fill).to.have.property('name', 'fill');
+      it('is not enumerable', function () {
+        expect(Array.prototype.propertyIsEnumerable('fill')).to.equal(false);
       });
 
       it('works with just a value', function () {
