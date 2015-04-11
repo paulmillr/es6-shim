@@ -406,10 +406,6 @@ var runStringTests = function () {
         expect(String.fromCodePoint()).to.equal('');
       });
 
-      it('has a length of one', function () {
-        expect(String.fromCodePoint).to.have.property('length', 1);
-      });
-
       it('works', function () {
         var codePoints = [];
         var chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789…?!';
