@@ -760,9 +760,13 @@ describe('Math', function () {
 
     it('works for zeroes and infinities', function () {
       expect(isPositiveZero(Math.fround(0))).to.equal(true);
+      expect(isPositiveZero(Math.fround({ valueOf: function () { return 0; } }))).to.equal(true);
       expect(isNegativeZero(Math.fround(-0))).to.equal(true);
+      expect(isNegativeZero(Math.fround({ valueOf: function () { return -0; } }))).to.equal(true);
       expect(Math.fround(Infinity)).to.equal(Infinity);
+      expect(Math.fround({ valueOf: function () { return Infinity; } })).to.equal(Infinity);
       expect(Math.fround(-Infinity)).to.equal(-Infinity);
+      expect(Math.fround({ valueOf: function () { return -Infinity; } })).to.equal(-Infinity);
     });
 
     it('returns infinity for large numbers', function () {
