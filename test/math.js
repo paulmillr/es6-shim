@@ -384,9 +384,12 @@ describe('Math', function () {
       expect(Math.log2).to.have.property('length', 1);
     });
 
-    it('should be correct for edge cases', function () {
-      expect(numberIsNaN(Math.log2(NaN))).to.equal(true);
+    it('is correct for small numbers', function () {
       expect(numberIsNaN(Math.log2(-1e-50))).to.equal(true);
+    });
+
+    it('is correct for edge cases', function () {
+      expect(numberIsNaN(Math.log2(NaN))).to.equal(true);
       expect(Math.log2(+0)).to.equal(-Infinity);
       expect(Math.log2(-0)).to.equal(-Infinity);
       expect(isPositiveZero(Math.log2(1))).to.equal(true);
