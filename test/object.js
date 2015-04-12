@@ -220,16 +220,19 @@ describe('Object', function () {
       expect(thrower).to.have.property(1, 2);
     });
 
-    ifSymbolsIt('includes symbols, after keys', function () {
+    ifSymbolsIt('includes enumerable symbols, after keys', function () {
       var visited = [];
       var obj = {};
       Object.defineProperty(obj, 'a', { get: function () { visited.push('a'); return 42; }, enumerable: true });
-      var symbol = Symbol();
+      var symbol = Symbol('enumerable');
       Object.defineProperty(obj, symbol, { get: function () { visited.push(symbol); return Infinity; }, enumerable: true });
+      var nonEnumSymbol = Symbol('non-enumerable');
+      Object.defineProperty(obj, nonEnumSymbol, { get: function () { visited.push(nonEnumSymbol); return -Infinity; }, enumerable: false });
       var target = Object.assign({}, obj);
-      expect(target[symbol]).to.equal(Infinity);
-      expect(target.a).to.equal(42);
       expect(visited).to.eql(['a', symbol]);
+      expect(target.a).to.equal(42);
+      expect(target[symbol]).to.equal(Infinity);
+      expect(target[nonEnumSymbol]).not.to.equal(-Infinity);
     });
   });
 

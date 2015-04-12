@@ -935,10 +935,14 @@
   });
 
   if (supportsDescriptors) {
+    var isEnumerableOn = Function.bind.call(Function.bind, Object.prototype.propertyIsEnumerable);
     var assignReducer = function (target, source) {
       var keys = Object.keys(Object(source));
-      var symbols = ES.IsCallable(Object.getOwnPropertySymbols) ? Object.getOwnPropertySymbols(Object(source)) : [];
-      return keys.concat(symbols).reduce(function (target, key) {
+      var symbols;
+      if (ES.IsCallable(Object.getOwnPropertySymbols)) {
+        symbols = Object.getOwnPropertySymbols(Object(source)).filter(isEnumerableOn(source));
+      }
+      return keys.concat(symbols || []).reduce(function (target, key) {
         target[key] = source[key];
         return target;
       }, target);
