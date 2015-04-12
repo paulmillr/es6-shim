@@ -936,7 +936,9 @@
 
   if (supportsDescriptors) {
     var assignReducer = function (target, source) {
-      return Object.keys(Object(source)).reduce(function (target, key) {
+      var keys = Object.keys(Object(source));
+      var symbols = ES.IsCallable(Object.getOwnPropertySymbols) ? Object.getOwnPropertySymbols(Object(source)) : [];
+      return keys.concat(symbols).reduce(function (target, key) {
         target[key] = source[key];
         return target;
       }, target);

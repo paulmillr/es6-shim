@@ -1,4 +1,4 @@
-/*global describe, it, expect, require */
+/*global describe, it, expect, require, Symbol */
 
 describe('Object', function () {
   (typeof process !== 'undefined' && process.env.NO_ES6_SHIM ? it.skip : it)('is on the exported object', function () {
@@ -9,6 +9,11 @@ describe('Object', function () {
   var functionsHaveNames = (function foo() {}).name === 'foo';
   var ifFunctionsHaveNamesIt = functionsHaveNames ? it : xit;
   var ifExtensionsPreventable = Object.preventExtensions ? it : xit;
+
+  /*jshint notypeof: true */
+  var hasSymbols = typeof Symbol === 'function' && typeof Symbol() === 'symbol';
+  /*jshint notypeof: false */
+  var ifSymbolsIt = hasSymbols ? it : xit;
 
   if (Object.getOwnPropertyNames) {
     describe('.getOwnPropertyNames()', function () {
@@ -213,6 +218,18 @@ describe('Object', function () {
       try { Object.assign(thrower, 'xy'); } catch (e) { error = e; }
       expect(error).to.be.an.instanceOf(TypeError);
       expect(thrower).to.have.property(1, 2);
+    });
+
+    ifSymbolsIt('includes symbols, after keys', function () {
+      var visited = [];
+      var obj = {};
+      Object.defineProperty(obj, 'a', { get: function () { visited.push('a'); return 42; }, enumerable: true });
+      var symbol = Symbol();
+      Object.defineProperty(obj, symbol, { get: function () { visited.push(symbol); return Infinity; }, enumerable: true });
+      var target = Object.assign({}, obj);
+      expect(target[symbol]).to.equal(Infinity);
+      expect(target.a).to.equal(42);
+      expect(visited).to.eql(['a', symbol]);
     });
   });
 
