@@ -11,7 +11,7 @@ describe('Object', function () {
   var ifExtensionsPreventable = Object.preventExtensions ? it : xit;
 
   if (Object.getOwnPropertyNames) {
-    describe('Object.getOwnPropertyNames()', function () {
+    describe('.getOwnPropertyNames()', function () {
       it('throws on null or undefined', function () {
         expect(function () { Object.getOwnPropertyNames(); }).to['throw'](TypeError);
         expect(function () { Object.getOwnPropertyNames(undefined); }).to['throw'](TypeError);
@@ -27,7 +27,7 @@ describe('Object', function () {
   }
 
   if (Object.getOwnPropertyDescriptor) {
-    describe('Object.getOwnPropertyDescriptor()', function () {
+    describe('.getOwnPropertyDescriptor()', function () {
       it('throws on null or undefined', function () {
         expect(function () { Object.getOwnPropertyDescriptor(); }).to['throw'](TypeError);
         expect(function () { Object.getOwnPropertyDescriptor(undefined); }).to['throw'](TypeError);
@@ -43,7 +43,7 @@ describe('Object', function () {
   }
 
   if (Object.seal) {
-    describe('Object.seal()', function () {
+    describe('.seal()', function () {
       it('works on primitives', function () {
         [null, undefined, true, false, NaN, 42, 'foo'].forEach(function (item) {
           expect(Object.seal(item)).to.eql(item);
@@ -53,7 +53,7 @@ describe('Object', function () {
   }
 
   if (Object.isSealed) {
-    describe('Object.isSealed()', function () {
+    describe('.isSealed()', function () {
       it('works on primitives', function () {
         [null, undefined, true, false, NaN, 42, 'foo'].forEach(function (item) {
           expect(Object.isSealed(item)).to.equal(true);
@@ -63,7 +63,7 @@ describe('Object', function () {
   }
 
   if (Object.freeze) {
-    describe('Object.freeze()', function () {
+    describe('.freeze()', function () {
       it('works on primitives', function () {
         [null, undefined, true, false, NaN, 42, 'foo'].forEach(function (item) {
           expect(Object.freeze(item)).to.eql(item);
@@ -73,7 +73,7 @@ describe('Object', function () {
   }
 
   if (Object.isFrozen) {
-    describe('Object.isFrozen()', function () {
+    describe('.isFrozen()', function () {
       it('works on primitives', function () {
         [null, undefined, true, false, NaN, 42, 'foo'].forEach(function (item) {
           expect(Object.isFrozen(item)).to.equal(true);
@@ -83,7 +83,7 @@ describe('Object', function () {
   }
 
   if (Object.preventExtensions) {
-    describe('Object.preventExtensions()', function () {
+    describe('.preventExtensions()', function () {
       it('works on primitives', function () {
         [null, undefined, true, false, NaN, 42, 'foo'].forEach(function (item) {
           expect(Object.preventExtensions(item)).to.eql(item);
@@ -93,7 +93,7 @@ describe('Object', function () {
   }
 
   if (Object.isExtensible) {
-    describe('Object.isExtensible()', function () {
+    describe('.isExtensible()', function () {
       it('works on primitives', function () {
         [null, undefined, true, false, NaN, 42, 'foo'].forEach(function (item) {
           expect(Object.isExtensible(item)).to.equal(false);
@@ -102,7 +102,7 @@ describe('Object', function () {
     });
   }
 
-  describe('Object.keys()', function () {
+  describe('.keys()', function () {
     it('works on strings', function () {
       expect(Object.keys('foo')).to.eql(['0', '1', '2']);
     });
@@ -120,7 +120,7 @@ describe('Object', function () {
     });
   });
 
-  describe('Object.is()', function () {
+  describe('.is()', function () {
     if (!Object.hasOwnProperty('is')) {
       return it('exists', function () {
         expect(Object).to.have.property('is');
@@ -152,7 +152,7 @@ describe('Object', function () {
     });
   });
 
-  describe('Object.assign()', function () {
+  describe('.assign()', function () {
     if (!Object.hasOwnProperty('assign')) {
       return it('exists', function () {
         expect(Object).to.have.property('assign');
