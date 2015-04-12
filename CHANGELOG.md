@@ -1,5 +1,8 @@
 # es6-shim x.x.x (not yet released)
 
+# es6-shim 0.28.1 (12 Apr 2015)
+* Ensure `Object.assign` only includes enumerable Symbols.
+
 # es6-shim 0.28.0 (12 Apr 2015)
 * Ensure `Object.assign` also includes Symbols.
 * Make sure to clobber Firefox 37's very slow native Object.assign, that has "pending exception" logic.
