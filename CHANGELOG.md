@@ -1,5 +1,34 @@
 # es6-shim x.x.x (not yet released)
 
+# es6-shim 0.28.0 (12 Apr 2015)
+* Ensure `Object.assign` also includes Symbols.
+* Make sure to clobber Firefox 37's very slow native Object.assign, that has "pending exception" logic.
+* Adding much more granular Set/Map acceptance tests and replacements, to preserve as much of the original implementation as possible. (#326, #328)
+* Lots of test additions and cleanup
+ * Fill in (and fix) missing name, arity, and enumerability tests.
+ * Using `property` matcher for a more helpful failure message.
+ * Make sure this test doesn't fail if `Array#values` doesn't exist yet.
+ * Make this `@@iterator` test not depend on `Array#values`, and properly skip tests if the symbol isn't available.
+* Update `Math.fround` with a much smaller implementation (#332)
+* Lock `uglify-js` down to v2.4.17, since v2.4.18 and v2.4.19 have a breaking change.
+* Update `es5-shim`, `mocha`, `grunt-contrib-connect`, `chai`, `jshint`
+* IE 11 TP has a broken `String.raw` implementation
+* Overwriting some imprecise Math functions on IE 11 TP.
+* Overwrite `Math.imul` in Safari 8 to report the correct length.
+* Fix Math.round for very large numbers
+* Don't rely on shims in tests, for better native failure checking.
+* Shim `Object.is` in ES3 environments, and add tests.
+* Test the native `Object.assign` prior to shimming it.
+* Tweak the `travis-ci` config to make a separate "lint only" test run.
+* Fix Firefox 4 test failures: ensure RegExp global aliases starting with "$" exist.
+* more efficient Math.clz32 (#327)
+* Fix Webkit nightly bugs with `Array.from` and `Array.of`.
+* Make sure shims that depend on `Number.isNaN` and `Number.isFinite` will always work.
+* The latest Webkit nightly has a bug with `String#includes` and a position arg of `Infinity`.
+* Webkit r181855 has a noncompliant `String#startsWith` and `String#endsWith`
+* Clean up README; add more accurate note about `es5-shim`.
+* Updating the `String.raw` code to be more in line with the changes in RC2/Rev 35 of the spec.
+
 # es6-shim 0.27.1 (5 Mar 2015)
 * Revert `Array#slice` changes. (#322)
 * Test on `io.js` `v1.4`
