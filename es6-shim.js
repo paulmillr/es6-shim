@@ -206,13 +206,13 @@
     $iterator$ = '@@iterator';
   }
   var addIterator = function (prototype, impl) {
-    if (!impl) { impl = function iterator() { return this; }; }
+    var implementation = impl || function iterator() { return this; };
     var o = {};
-    o[$iterator$] = impl;
+    o[$iterator$] = implementation;
     defineProperties(prototype, o);
     if (!prototype[$iterator$] && Type.symbol($iterator$)) {
       // implementations are buggy when $iterator$ is a Symbol
-      prototype[$iterator$] = impl;
+      prototype[$iterator$] = implementation;
     }
   };
 
@@ -372,17 +372,18 @@
 
   var emulateES6construct = function (o) {
     if (!ES.TypeIsObject(o)) { throw new TypeError('bad object'); }
+    var object = o;
     // es5 approximation to es6 subclass semantics: in es6, 'new Foo'
     // would invoke Foo.@@species to allocation/initialize the new object.
     // In es5 we just get the plain object.  So if we detect an
     // uninitialized object, invoke o.constructor.@@species
-    if (!o._es6construct) {
-      if (o.constructor && ES.IsCallable(o.constructor[symbolSpecies])) {
-        o = o.constructor[symbolSpecies](o);
+    if (!object._es6construct) {
+      if (object.constructor && ES.IsCallable(object.constructor[symbolSpecies])) {
+        object = object.constructor[symbolSpecies](object);
       }
-      defineProperties(o, { _es6construct: true });
+      defineProperties(object, { _es6construct: true });
     }
-    return o;
+    return object;
   };
 
   // Firefox 31 reports this function's length as 0
@@ -460,32 +461,32 @@
     repeat: function repeat(times) {
       ES.RequireObjectCoercible(this);
       var thisStr = String(this);
-      times = ES.ToInteger(times);
-      if (times < 0 || times >= stringMaxLength) {
+      var numTimes = ES.ToInteger(times);
+      if (numTimes < 0 || numTimes >= stringMaxLength) {
         throw new RangeError('repeat count must be less than infinity and not overflow maximum string size');
       }
-      return stringRepeat(thisStr, times);
+      return stringRepeat(thisStr, numTimes);
     },
 
-    startsWith: function startsWith(searchStr) {
+    startsWith: function startsWith(searchString) {
       ES.RequireObjectCoercible(this);
       var thisStr = String(this);
-      if (Type.regex(searchStr)) {
+      if (Type.regex(searchString)) {
         throw new TypeError('Cannot call method "startsWith" with a regex');
       }
-      searchStr = String(searchStr);
+      var searchStr = String(searchString);
       var startArg = arguments.length > 1 ? arguments[1] : void 0;
       var start = Math.max(ES.ToInteger(startArg), 0);
       return thisStr.slice(start, start + searchStr.length) === searchStr;
     },
 
-    endsWith: function endsWith(searchStr) {
+    endsWith: function endsWith(searchString) {
       ES.RequireObjectCoercible(this);
       var thisStr = String(this);
-      if (Type.regex(searchStr)) {
+      if (Type.regex(searchString)) {
         throw new TypeError('Cannot call method "endsWith" with a regex');
       }
-      searchStr = String(searchStr);
+      var searchStr = String(searchString);
       var thisLen = thisStr.length;
       var posArg = arguments.length > 1 ? arguments[1] : void 0;
       var pos = typeof posArg === 'undefined' ? thisLen : ES.ToInteger(posArg);
@@ -750,10 +751,10 @@
       var end = arguments[2]; // copyWithin.length must be 2
       var o = ES.ToObject(this);
       var len = ES.ToLength(o.length);
-      target = ES.ToInteger(target);
-      start = ES.ToInteger(start);
-      var to = target < 0 ? Math.max(len + target, 0) : Math.min(target, len);
-      var from = start < 0 ? Math.max(len + start, 0) : Math.min(start, len);
+      var relativeTarget = ES.ToInteger(target);
+      var relativeStart = ES.ToInteger(start);
+      var to = relativeTarget < 0 ? Math.max(len + relativeTarget, 0) : Math.min(relativeTarget, len);
+      var from = relativeStart < 0 ? Math.max(len + relativeStart, 0) : Math.min(relativeStart, len);
       end = typeof end === 'undefined' ? len : ES.ToInteger(end);
       var fin = end < 0 ? Math.max(len + end, 0) : Math.min(end, len);
       var count = Math.min(fin - from, len - to);
@@ -1053,8 +1054,8 @@
         return result === FAKENULL ? null : result;
       };
       Object.setPrototypeOf = function (o, p) {
-        if (p === null) { p = FAKENULL; }
-        return spo(o, p);
+        var proto = p === null ? FAKENULL : p;
+        return spo(o, proto);
       };
       Object.setPrototypeOf.polyfill = false;
     }());
@@ -1279,7 +1280,7 @@
       } else {
         result = Math.exp(Math.log(x) / 3);
         // from http://en.wikipedia.org/wiki/Cube_root#Numerical_methods
-        result = (x / (result * result) + 2 * result) / 3;
+        result = (x / (result * result) + (2 * result)) / 3;
       }
       return negate ? -result : result;
     },
@@ -1408,12 +1409,12 @@
 
     imul: function imul(x, y) {
       // taken from https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/imul
-      x = ES.ToUint32(x);
-      y = ES.ToUint32(y);
-      var ah = (x >>> 16) & 0xffff;
-      var al = x & 0xffff;
-      var bh = (y >>> 16) & 0xffff;
-      var bl = y & 0xffff;
+      var a = ES.ToUint32(x);
+      var b = ES.ToUint32(y);
+      var ah = (a >>> 16) & 0xffff;
+      var al = a & 0xffff;
+      var bh = (b >>> 16) & 0xffff;
+      var bl = b & 0xffff;
       // the shift by 0 fixes the sign on the high part
       // the final |0 converts the unsigned value into a signed value
       return ((al * bl) + (((ah * bl + al * bh) << 16) >>> 0) | 0);
@@ -1696,16 +1697,16 @@
       // The `obj` parameter is a hack we use for es5
       // compatibility.
       var prototype = constructor.prototype || Promise$prototype;
-      obj = obj || create(prototype);
-      defineProperties(obj, {
+      var object = obj || create(prototype);
+      defineProperties(object, {
         _status: void 0,
         _result: void 0,
         _resolveReactions: void 0,
         _rejectReactions: void 0,
         _promiseConstructor: void 0
       });
-      obj._promiseConstructor = constructor;
-      return obj;
+      object._promiseConstructor = constructor;
+      return object;
     });
     defineProperties(Promise, {
       all: function all(iterable) {
@@ -1991,9 +1992,9 @@
         defineProperty(Map, symbolSpecies, function (obj) {
           var constructor = this;
           var prototype = constructor.prototype || Map$prototype;
-          obj = obj || create(prototype);
-          defineProperties(obj, { _es6map: true });
-          return obj;
+          var object = obj || create(prototype);
+          defineProperties(object, { _es6map: true });
+          return object;
         });
 
         Value.getter(Map.prototype, 'size', function () {
@@ -2173,9 +2174,9 @@
         defineProperty(SetShim, symbolSpecies, function (obj) {
           var constructor = this;
           var prototype = constructor.prototype || Set$prototype;
-          obj = obj || create(prototype);
-          defineProperties(obj, { _es6set: true });
-          return obj;
+          var object = obj || create(prototype);
+          defineProperties(object, { _es6set: true });
+          return object;
         });
 
         // Switch from the object backing storage to a full Map.
