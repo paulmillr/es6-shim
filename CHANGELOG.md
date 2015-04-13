@@ -1,5 +1,8 @@
 # es6-shim x.x.x (not yet released)
 
+# es6-shim 0.28.2 (13 Apr 2015)
+* `Map` and `Set` should have an arity of 0.
+
 # es6-shim 0.28.1 (12 Apr 2015)
 * Ensure `Object.assign` only includes enumerable Symbols.
 
