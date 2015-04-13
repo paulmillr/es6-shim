@@ -1776,6 +1776,9 @@
       }
     });
 
+    var Identity = function (x) { return x; };
+    var Thrower = function (e) { throw e; };
+
     defineProperties(Promise$prototype, {
       'catch': function (onRejected) {
         return this.then(void 0, onRejected);
@@ -1789,10 +1792,10 @@
         var C = this.constructor;
         var capability = new PromiseCapability(C);
         if (!ES.IsCallable(onRejected)) {
-          onRejected = function (e) { throw e; };
+          onRejected = Thrower;
         }
         if (!ES.IsCallable(onFulfilled)) {
-          onFulfilled = function (x) { return x; };
+          onFulfilled = Identity;
         }
         var resolutionHandler = promiseResolutionHandler(promise, onFulfilled, onRejected);
         var resolveReaction = { capability: capability, handler: resolutionHandler };
