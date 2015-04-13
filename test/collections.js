@@ -88,7 +88,7 @@ describe('Collections', function () {
     });
 
     it('should have the right arity', function () {
-      expect(Map.length).to.equal(1);
+      expect(Map).to.have.property('length', 0);
     });
 
     it('should has valid getter and setter calls', function () {
@@ -575,7 +575,7 @@ describe('Collections', function () {
     });
 
     it('has the right arity', function () {
-      expect(Set.length).to.equal(1);
+      expect(Set).to.have.property('length', 0);
     });
 
     it('returns the set from #add() for chaining', function () {

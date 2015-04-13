@@ -1935,7 +1935,7 @@
         };
         addIterator(MapIterator.prototype);
 
-        function Map(iterable) {
+        function Map() {
           var map = this;
           if (!ES.TypeIsObject(map)) {
             throw new TypeError("Constructor Map requires 'new'");
@@ -1956,8 +1956,8 @@
           });
 
           // Optionally initialize map from iterable
-          if (typeof iterable !== 'undefined' && iterable !== null) {
-            var it = ES.GetIterator(iterable);
+          if (arguments.length > 0 && typeof arguments[0] !== 'undefined' && arguments[0] !== null) {
+            var it = ES.GetIterator(arguments[0]);
             var adder = map.set;
             if (!ES.IsCallable(adder)) { throw new TypeError('bad map'); }
             while (true) {
@@ -2125,7 +2125,7 @@
         // Sets containing only string or numeric keys, we use an object
         // as backing storage and lazily create a full Map only when
         // required.
-        var SetShim = function Set(iterable) {
+        var SetShim = function Set() {
           var set = this;
           if (!ES.TypeIsObject(set)) {
             throw new TypeError("Constructor Set requires 'new'");
@@ -2141,8 +2141,8 @@
           });
 
           // Optionally initialize map from iterable
-          if (typeof iterable !== 'undefined' && iterable !== null) {
-            var it = ES.GetIterator(iterable);
+          if (arguments.length > 0 && typeof arguments[0] !== 'undefined' && arguments[0] !== null) {
+            var it = ES.GetIterator(arguments[0]);
             var adder = set.add;
             if (!ES.IsCallable(adder)) { throw new TypeError('bad set'); }
             while (true) {
@@ -2266,11 +2266,15 @@
       var mapAcceptsArguments = valueOrFalseIfThrows(function () { return new Map([[1, 2]]).get(1) === 2; });
       if (!mapAcceptsArguments) {
         var OrigMapNoArgs = globals.Map;
-        globals.Map = function Map(iterable) {
+        globals.Map = function Map() {
           if (!(this instanceof Map)) {
             throw new TypeError('Constructor Map requires "new"');
           }
           var m = new OrigMapNoArgs();
+          var iterable;
+          if (arguments.length > 0) {
+            iterable = arguments[0];
+          }
           if (Array.isArray(iterable) || Type.string(iterable)) {
             Array.prototype.forEach.call(iterable, function (entry) {
               m.set(entry[0], entry[1]);
@@ -2360,13 +2364,13 @@
           return e instanceof TypeError;
         }
       }());
-      if (globals.Map.length !== 1 || mapFailsToSupportSubclassing || !mapRequiresNew) {
+      if (globals.Map.length !== 0 || mapFailsToSupportSubclassing || !mapRequiresNew) {
         var OrigMap = globals.Map;
-        globals.Map = function Map(iterable) {
+        globals.Map = function Map() {
           if (!(this instanceof Map)) {
             throw new TypeError('Constructor Map requires "new"');
           }
-          var m = new OrigMap(iterable);
+          var m = arguments.length > 0 ? new OrigMap(arguments[0]) : new OrigMap();
           Object.setPrototypeOf(m, Map.prototype);
           defineProperty(m, 'constructor', Map, true);
           return m;
@@ -2387,13 +2391,13 @@
           return e instanceof TypeError;
         }
       }());
-      if (globals.Set.length !== 1 || setFailsToSupportSubclassing || !setRequiresNew) {
+      if (globals.Set.length !== 0 || setFailsToSupportSubclassing || !setRequiresNew) {
         var OrigSet = globals.Set;
-        globals.Set = function Set(iterable) {
+        globals.Set = function Set() {
           if (!(this instanceof Set)) {
             throw new TypeError('Constructor Set requires "new"');
           }
-          var s = new OrigSet(iterable);
+          var s = arguments.length > 0 ? new OrigSet(arguments[0]) : new OrigSet();
           Object.setPrototypeOf(s, Set.prototype);
           defineProperty(s, 'constructor', Set, true);
           return s;
