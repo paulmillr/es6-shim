@@ -48,8 +48,16 @@
 
     /*jshint proto: true */
     // @author    Andrea Giammarchi - @WebReflection
-      // define into target descriptors from source
+
+    var getOwnPropertyNames = Object.getOwnPropertyNames;
+    var getOwnPropertyDescriptor = Object.getOwnPropertyDescriptor;
+    var create = Object.create;
+    var defineProperty = Object.defineProperty;
+    var getPrototypeOf = Object.getPrototypeOf;
+    var objProto = Object.prototype;
+
     var copyDescriptors = function (target, source) {
+      // define into target descriptors from source
       getOwnPropertyNames(source).forEach(function (key) {
         defineProperty(
           target,
@@ -63,17 +71,11 @@
     var createAndCopy = function (origin, proto) {
       return copyDescriptors(create(proto), origin);
     };
-    var create = Object.create;
-    var defineProperty = Object.defineProperty;
-    var getPrototypeOf = Object.getPrototypeOf;
-    var getOwnPropertyNames = Object.getOwnPropertyNames;
-    var getOwnPropertyDescriptor = Object.getOwnPropertyDescriptor;
-    var proto = Object.prototype;
     var set, setPrototypeOf;
     try {
       // this might fail for various reasons
       // ignore if Chrome cought it at runtime
-      set = getOwnPropertyDescriptor(proto, '__proto__').set;
+      set = getOwnPropertyDescriptor(objProto, '__proto__').set;
       set.call({}, null);
       // setter not poisoned, it can promote
       // Firefox, Chrome
@@ -90,7 +92,7 @@
         setPrototypeOf = createAndCopy;
       } else {
         // verify if null objects are buggy
-        set.__proto__ = proto;
+        set.__proto__ = objProto;
         // if null objects are buggy
         // nodejs 0.8 to 0.10
         if (set instanceof Object) {

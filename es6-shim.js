@@ -47,6 +47,46 @@
   };
 
   var isCallableWithoutNew = not(throwsError);
+  var arePropertyDescriptorsSupported = function () {
+    // if Object.defineProperty exists but throws, it's IE 8
+    return !throwsError(function () { Object.defineProperty({}, 'x', {}); });
+  };
+  var supportsDescriptors = !!Object.defineProperty && arePropertyDescriptorsSupported();
+
+  var defineProperty = function (object, name, value, force) {
+    if (!force && name in object) { return; }
+    if (supportsDescriptors) {
+      Object.defineProperty(object, name, {
+        configurable: true,
+        enumerable: false,
+        writable: true,
+        value: value
+      });
+    } else {
+      object[name] = value;
+    }
+  };
+
+  // Define configurable, writable and non-enumerable props
+  // if they don’t exist.
+  var defineProperties = function (object, map) {
+    Object.keys(map).forEach(function (name) {
+      var method = map[name];
+      defineProperty(object, name, method, false);
+    });
+  };
+
+  // Simple shim for Object.create on ES3 browsers
+  // (unlike real shim, no attempt to support `prototype === null`)
+  var create = Object.create || function (prototype, properties) {
+    function Prototype() {}
+    Prototype.prototype = prototype;
+    var object = new Prototype();
+    if (typeof properties !== 'undefined') {
+      defineProperties(object, properties);
+    }
+    return object;
+  };
 
   var supportsSubclassing = function (C, f) {
     if (!Object.setPrototypeOf) { return false; /* skip test on IE < 11 */ }
@@ -61,11 +101,6 @@
       });
       return f(Sub);
     });
-  };
-
-  var arePropertyDescriptorsSupported = function () {
-    // if Object.defineProperty exists but throws, it's IE 8
-    return !throwsError(function () { Object.defineProperty({}, 'x', {}); });
   };
 
   var startsWithRejectsRegex = function () {
@@ -84,7 +119,6 @@
 
   var globals = getGlobal();
   var globalIsFinite = globals.isFinite;
-  var supportsDescriptors = !!Object.defineProperty && arePropertyDescriptorsSupported();
   var hasStrictMode = (function () { return this === null; }.call(null));
   var startsWithIsCompliant = startsWithRejectsRegex() && startsWithHandlesInfinity;
   var _indexOf = Function.call.bind(String.prototype.indexOf);
@@ -114,20 +148,6 @@
   };
   var numberIsFinite = Number.isFinite || function isFinite(value) {
     return typeof value === 'number' && globalIsFinite(value);
-  };
-
-  var defineProperty = function (object, name, value, force) {
-    if (!force && name in object) { return; }
-    if (supportsDescriptors) {
-      Object.defineProperty(object, name, {
-        configurable: true,
-        enumerable: false,
-        writable: true,
-        value: value
-      });
-    } else {
-      object[name] = value;
-    }
   };
 
   var Value = {
@@ -165,27 +185,6 @@
     preserveToString: function (target, source) {
       defineProperty(target, 'toString', source.toString.bind(source), true);
     }
-  };
-
-  // Define configurable, writable and non-enumerable props
-  // if they don’t exist.
-  var defineProperties = function (object, map) {
-    Object.keys(map).forEach(function (name) {
-      var method = map[name];
-      defineProperty(object, name, method, false);
-    });
-  };
-
-  // Simple shim for Object.create on ES3 browsers
-  // (unlike real shim, no attempt to support `prototype === null`)
-  var create = Object.create || function (prototype, properties) {
-    function Prototype() {}
-    Prototype.prototype = prototype;
-    var object = new Prototype();
-    if (typeof properties !== 'undefined') {
-      defineProperties(object, properties);
-    }
-    return object;
   };
 
   // This is a private name in the es6 spec, equal to '[Symbol.iterator]'
@@ -2525,6 +2524,10 @@
     });
   }
 
+  var callAndCatchException = function ConvertExceptionToBoolean(func) {
+    return !throwsError(func);
+  };
+
   if (Object.preventExtensions) {
     defineProperties(globals.Reflect, {
       isExtensible: function isExtensible(target) {
@@ -2614,10 +2617,6 @@
       }
 
       return false;
-    };
-
-    var callAndCatchException = function ConvertExceptionToBoolean(func) {
-      return !throwsError(func);
     };
 
     defineProperties(globals.Reflect, {
