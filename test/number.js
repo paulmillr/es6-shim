@@ -7,6 +7,16 @@ describe('Number', function () {
   var integers = [5295, -5295, -9007199254740991, 9007199254740991, 0, -0];
   var nonIntegers = [-9007199254741992, 9007199254741992, 5.9];
   var infinities = [Infinity, -Infinity];
+
+  var valueOfThree = { valueOf: function () { return 3; } };
+  var valueOfNaN = { valueOf: function () { return NaN; } };
+  var valueOfThrows = { valueOf: function () { throw Object(17); } };
+  var toStringThrows = { toString: function () { throw Object(42); } };
+  var toPrimitiveThrows = {
+    valueOf: function () { throw Object(17); },
+    toString: function () { throw Object(42); }
+  };
+
   var nonNumbers = [
     undefined,
     true,
@@ -16,14 +26,11 @@ describe('Number', function () {
     [],
     'str',
     '',
-    { valueOf: function () { return 3; } },
-    { valueOf: function () { return 0 / 0; } },
-    { valueOf: function () { throw 17; } },
-    { toString: function () { throw 17; } },
-    {
-      valueOf: function () { throw 17; },
-      toString: function () { throw 42; }
-    },
+    valueOfThree,
+    valueOfNaN,
+    valueOfThrows,
+    toStringThrows,
+    toPrimitiveThrows,
     /a/g
   ];
   var expectTrue = function (item) {
@@ -138,22 +145,11 @@ describe('Number', function () {
       expect(Number.isFinite('51')).to.equal(false);
       expect(Number.isFinite(0)).to.equal(true);
       expect(Number.isFinite(-0)).to.equal(true);
-      expect(Number.isFinite({
-        valueOf: function () { return 3; }
-      })).to.equal(false);
-      expect(Number.isFinite({
-        valueOf: function () { return 0 / 0; }
-      })).to.equal(false);
-      expect(Number.isFinite({
-        valueOf: function () { throw 17; }
-      })).to.equal(false);
-      expect(Number.isFinite({
-        toString: function () { throw 17; }
-      })).to.equal(false);
-      expect(Number.isFinite({
-        valueOf: function () { throw 17; },
-        toString: function () { throw 42; }
-      })).to.equal(false);
+      expect(Number.isFinite(valueOfThree)).to.equal(false);
+      expect(Number.isFinite(valueOfNaN)).to.equal(false);
+      expect(Number.isFinite(valueOfThrows)).to.equal(false);
+      expect(Number.isFinite(toStringThrows)).to.equal(false);
+      expect(Number.isFinite(toPrimitiveThrows)).to.equal(false);
     });
 
     it('should not be confused by type coercion', function () {
@@ -317,14 +313,11 @@ describe('Number', function () {
       expect(Number.isNaN('51')).to.equal(false);
       expect(Number.isNaN(0)).to.equal(false);
       expect(Number.isNaN(-0)).to.equal(false);
-      expect(Number.isNaN({valueOf: function () { return 3; }})).to.equal(false);
-      expect(Number.isNaN({valueOf: function () { return 0 / 0; }})).to.equal(false);
-      expect(Number.isNaN({valueOf: function () { throw 17; } })).to.equal(false);
-      expect(Number.isNaN({toString: function () { throw 17; } })).to.equal(false);
-      expect(Number.isNaN({
-        valueOf: function () { throw 17; },
-        toString: function () { throw 42; }
-      })).to.equal(false);
+      expect(Number.isNaN(valueOfThree)).to.equal(false);
+      expect(Number.isNaN(valueOfNaN)).to.equal(false);
+      expect(Number.isNaN(valueOfThrows)).to.equal(false);
+      expect(Number.isNaN(toStringThrows)).to.equal(false);
+      expect(Number.isNaN(toPrimitiveThrows)).to.equal(false);
     });
   });
 });
