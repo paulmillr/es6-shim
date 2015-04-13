@@ -70,7 +70,7 @@
     "grunt-contrib-watch": "^0.6.1",
     "grunt-saucelabs": "^8.6.0",
     "jscs": "^1.11.3",
-    "jshint": "^2.6.3",
+    "jshint": "^2.7.0",
     "mocha": "^2.2.4",
     "promises-aplus-tests": "^2.1.0",
     "promises-es6-tests": "^0.5.0",

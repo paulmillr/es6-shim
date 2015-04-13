@@ -100,9 +100,7 @@
     string: function (x) { return _toString(x) === '[object String]'; },
     regex: function (x) { return _toString(x) === '[object RegExp]'; },
     symbol: function (x) {
-      /*jshint notypeof: true */
       return typeof globals.Symbol === 'function' && typeof x === 'symbol';
-      /*jshint notypeof: false */
     }
   };
 

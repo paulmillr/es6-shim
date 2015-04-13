@@ -1,3 +1,4 @@
 {
-	"es3": true
+	"es3": true,
+	"esnext": true
 }

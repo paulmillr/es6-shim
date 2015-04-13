@@ -11,9 +11,7 @@ var arePropertyDescriptorsSupported = function () {
 var supportsDescriptors = !!Object.defineProperty && arePropertyDescriptorsSupported();
 var functionsHaveNames = function f() {}.name === 'f';
 
-/*jshint notypeof: true */
 var hasSymbols = typeof Symbol === 'function' && typeof Symbol() === 'symbol';
-/*jshint notypeof: false */
 var ifSymbolsIt = hasSymbols ? it : xit;
 var describeIfGetProto = Object.getPrototypeOf ? describe : xdescribe;
 var describeIfSetProto = Object.setPrototypeOf ? describe : xdescribe;
@@ -267,7 +265,6 @@ describe('Reflect', function () {
 
       var iter = Reflect.enumerate(a);
 
-      /*jshint notypeof: true */
       if (hasSymbols && typeof Symbol.iterator === 'symbol') {
         expect(Symbol.iterator in iter).to.equal(true);
       }

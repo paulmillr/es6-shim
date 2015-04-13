@@ -10,9 +10,7 @@ describe('Object', function () {
   var ifFunctionsHaveNamesIt = functionsHaveNames ? it : xit;
   var ifExtensionsPreventable = Object.preventExtensions ? it : xit;
 
-  /*jshint notypeof: true */
   var hasSymbols = typeof Symbol === 'function' && typeof Symbol() === 'symbol';
-  /*jshint notypeof: false */
   var ifSymbolsIt = hasSymbols ? it : xit;
 
   if (Object.getOwnPropertyNames) {

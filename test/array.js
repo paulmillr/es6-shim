@@ -5,9 +5,7 @@ var runArrayTests = function () {
 
   var Sym = typeof Symbol !== 'undefined' ? Symbol : {};
   var isSymbol = function (sym) {
-    /*jshint notypeof: true */
     return typeof Sym === 'function' && typeof sym === 'symbol';
-    /*jshint notypeof: false */
   };
   var functionsHaveNames = (function foo() {}).name === 'foo';
   var ifFunctionsHaveNamesIt = functionsHaveNames ? it : xit;
