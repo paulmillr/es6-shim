@@ -1269,7 +1269,13 @@
       if (value === 0) { return value; }
       var negate = value < 0, result;
       if (negate) { value = -value; }
-      result = Math.pow(value, 1 / 3);
+      if (value === Infinity) {
+        result = Infinity;
+      } else {
+        result = Math.exp(Math.log(value) / 3);
+        // from http://en.wikipedia.org/wiki/Cube_root#Numerical_methods
+        result = (value / (result * result) + 2 * result) / 3;
+      }
       return negate ? -result : result;
     },
 
@@ -1436,6 +1442,8 @@
   defineProperty(Math, 'tanh', MathShims.tanh, Math.tanh(-2e-17) !== -2e-17);
   // Chrome 40 loses Math.acosh precision with high numbers
   defineProperty(Math, 'acosh', MathShims.acosh, Math.acosh(Number.MAX_VALUE) === Infinity);
+  // Firefox 38 on Windows
+  defineProperty(Math, 'cbrt', MathShims.cbrt, Math.abs(1 - Math.cbrt(1e-300) / 1e-100) / Number.EPSILON > 8);
   // node 0.11 has an imprecise Math.sinh with very small numbers
   defineProperty(Math, 'sinh', MathShims.sinh, Math.sinh(-2e-17) !== -2e-17);
   // FF 35 on Linux reports 22025.465794806725 for Math.expm1(10)

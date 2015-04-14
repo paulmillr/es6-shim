@@ -148,6 +148,10 @@ describe('Math', function () {
       expect(Math.cbrt(8)).to.almostEqual(2);
       expect(Math.cbrt(-1000)).to.almostEqual(-10);
       expect(Math.cbrt(1000)).to.almostEqual(10);
+      expect(Math.cbrt(-1e-300)).to.almostEqual(-1e-100);
+      expect(Math.cbrt(1e-300)).to.almostEqual(1e-100);
+      expect(Math.cbrt(-1e+300)).to.almostEqual(-1e+100);
+      expect(Math.cbrt(1e+300)).to.almostEqual(1e+100);
     });
   });
 
