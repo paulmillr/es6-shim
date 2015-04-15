@@ -911,6 +911,8 @@
 
     isNaN: numberIsNaN
   });
+  // Firefox 37 has a conforming Number.parseInt, but it's not === to the global parseInt (fixed in v40)
+  defineProperty(Number, 'parseInt', globals.parseInt, Number.parseInt !== globals.parseInt);
 
   // Work around bugs in Array#find and Array#findIndex -- early
   // implementations skipped holes in sparse arrays. (Note that the

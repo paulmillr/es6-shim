@@ -85,7 +85,12 @@ describe('Number', function () {
     });
 
     it('has the right arity', function () {
+      // WebKit nightly had the wrong length; fixed in https://bugs.webkit.org/show_bug.cgi?id=143657
       expect(Number.parseInt).to.have.property('length', 2);
+    });
+
+    it('is the same object as the global parseInt', function () {
+      expect(Number.parseInt).to.equal(parseInt);
     });
   });
 
