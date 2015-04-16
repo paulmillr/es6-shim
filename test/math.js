@@ -1,10 +1,10 @@
 /*global describe, it, expect, require */
 
 var Assertion = expect().constructor;
-Assertion.prototype.almostEqual = function (obj, precision) {
+Assertion.prototype.almostEqual = function (expected) {
   'use strict';
-  var allowedDiff = precision || 1e-11;
-  return this.within(obj - allowedDiff, obj + allowedDiff);
+  var ok = Math.abs(1 - this.__flags.object / expected) / Number.EPSILON < 384;
+  this.assert(ok, 'expected #{this} to be almost equal ' + expected, 'expected #{this} to not be almost equal' + expected);
 };
 
 describe('Math', function () {
@@ -56,6 +56,7 @@ describe('Math', function () {
       expect(Math.acosh(8.88)).to.almostEqual(2.8737631531629235);
       expect(Math.acosh(1e160)).to.almostEqual(369.10676205960726);
       expect(Math.acosh(Number.MAX_VALUE)).to.almostEqual(710.4758600739439);
+      expect(Math.acosh(1.0000000000000009)).to.almostEqual(4.214684851089403e-8);
     });
   });
 
@@ -92,6 +93,7 @@ describe('Math', function () {
       expect(Math.asinh(1e150)).to.almostEqual(346.0809111296668);
       expect(Math.asinh(1e7)).to.almostEqual(16.811242831518268);
       expect(Math.asinh(-1e7)).to.almostEqual(-16.811242831518268);
+      expect(Math.asinh(1.7976931348623157e+308)).to.almostEqual(710.475860073944);
     });
   });
 
@@ -122,6 +124,7 @@ describe('Math', function () {
       expect(Math.atanh(-0.5)).to.almostEqual(-0.5493061443340549);
       expect(Math.atanh(-0.5)).to.almostEqual(-0.5493061443340549);
       expect(Math.atanh(0.444)).to.almostEqual(0.47720201260109457);
+      expect(Math.atanh(Math.pow(2, -1021))).to.almostEqual(Math.pow(2, -1021));
     });
   });
 
@@ -257,13 +260,12 @@ describe('Math', function () {
     });
 
     it('should be correct', function () {
-      // Overridden precision values here are for Chrome, as of v25.0.1364.172
-      // Broadened slightly for Firefox 31
-      expect(Math.cosh(12)).to.almostEqual(81377.39571257407, 9e-11);
-      expect(Math.cosh(22)).to.almostEqual(1792456423.065795780980053377, 1e-5);
+      expect(Math.cosh(12)).to.almostEqual(81377.39571257407);
+      expect(Math.cosh(22)).to.almostEqual(1792456423.065795780980053377);
       expect(Math.cosh(-10)).to.almostEqual(11013.23292010332313972137);
-      expect(Math.cosh(-23)).to.almostEqual(4872401723.1244513000, 1e-5);
-      expect(Math.cosh(-2e-17)).to.equal(1);
+      expect(Math.cosh(-23)).to.almostEqual(4872401723.1244513000);
+      expect(Math.cosh(-2e-17)).to.almostEqual(1);
+      expect(Math.cosh(710)).to.almostEqual(1.1169973830808555e+308);
     });
   });
 
@@ -548,7 +550,8 @@ describe('Math', function () {
       expect(Math.sinh(-Infinity)).to.equal(-Infinity);
       expect(Math.sinh(-5)).to.almostEqual(-74.20321057778875);
       expect(Math.sinh(2)).to.almostEqual(3.6268604078470186);
-      expect(Math.sinh(-2e-17)).to.equal(-2e-17);
+      expect(Math.sinh(-2e-17)).to.almostEqual(-2e-17);
+      expect(Math.sinh(710)).to.almostEqual(1.1169973830808555e+308);
     });
   });
 
