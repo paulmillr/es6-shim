@@ -90,6 +90,7 @@ var runStringTests = function () {
       });
 
       it('has the right arity', function () {
+        // WebKit nightly had this bug, fixed in https://bugs.webkit.org/show_bug.cgi?id=143659
         expect(String.prototype.startsWith).to.have.property('length', 1);
       });
 
@@ -193,6 +194,7 @@ var runStringTests = function () {
       });
 
       it('has the right arity', function () {
+        // WebKit nightly had this bug, fixed in https://bugs.webkit.org/show_bug.cgi?id=143659
         expect(String.prototype.endsWith).to.have.property('length', 1);
       });
 
@@ -299,6 +301,7 @@ var runStringTests = function () {
       });
 
       it('has the right arity', function () {
+        // WebKit nightly had this bug, fixed in https://bugs.webkit.org/show_bug.cgi?id=143659
         expect(String.prototype.includes).to.have.property('length', 1);
       });
 

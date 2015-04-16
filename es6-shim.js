@@ -1479,7 +1479,8 @@
     Value.preserveToString(Math.imul, origImul);
   }
   if (Math.imul.length !== 2) {
-    // Safari 8 has a length of 1
+    // Safari 8.0.4 has a length of 1
+    // fixed in https://bugs.webkit.org/show_bug.cgi?id=143658
     defineProperty(Math, 'imul', function imul(x, y) {
       return origImul.apply(Math, arguments);
     }, true);
