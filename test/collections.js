@@ -60,6 +60,12 @@ describe('Collections', function () {
     }
   };
 
+  var Sym = typeof Symbol !== 'undefined' ? Symbol : {};
+  var isSymbol = function (sym) {
+    return typeof Sym === 'function' && typeof sym === 'symbol';
+  };
+  var ifSymbolIteratorIt = isSymbol(Sym.iterator) ? it : xit;
+
   var testMapping = function (map, key, value) {
     expect(map.has(key)).to.equal(false);
     expect(map.get(key)).to.equal(undefined);
@@ -324,6 +330,11 @@ describe('Collections', function () {
       expect(Array.from(map.keys())).to.eql(['a', 'b', 'c']);
       expect(Array.from(map.values())).to.eql([1, NaN, false]);
       expect(map).to.have.entries(Array.from(map.entries()));
+    });
+
+    ifSymbolIteratorIt('has the right default iteration function', function () {
+      // fixed in Webkit https://bugs.webkit.org/show_bug.cgi?id=143838
+      expect(Map.prototype).to.have.property(Sym.iterator, Map.prototype.entries);
     });
 
     describe('#forEach', function () {
@@ -812,6 +823,11 @@ describe('Collections', function () {
       it('works with Set#entries()', function () {
         expect(Array.from(set.entries())).to.eql([[1, 1], [NaN, NaN], [false, false]]);
       });
+    });
+
+    ifSymbolIteratorIt('has the right default iteration function', function () {
+      // fixed in Webkit https://bugs.webkit.org/show_bug.cgi?id=143838
+      expect(Set.prototype).to.have.property(Sym.iterator, Set.prototype.values);
     });
 
     it('should preserve insertion order', function () {

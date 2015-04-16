@@ -10,6 +10,7 @@ var runArrayTests = function () {
   var functionsHaveNames = (function foo() {}).name === 'foo';
   var ifFunctionsHaveNamesIt = functionsHaveNames ? it : xit;
   var ifSymbolIteratorIt = isSymbol(Sym.iterator) ? it : xit;
+  var ifSymbolIteratorAndArrayValuesIt = isSymbol(Sym.iterator) && Array.prototype.values ? it : xit;
   var ifSymbolUnscopablesIt = isSymbol(Sym.unscopables) ? it : xit;
 
   describe('Array', function () {
@@ -29,9 +30,11 @@ var runArrayTests = function () {
         expect(iterator.next()).to.eql({ done: false, value: b });
         expect(iterator.next()).to.eql({ done: false, value: c });
         expect(iterator.next()).to.eql({ done: true, value: undefined });
-        if (Array.prototype.values) {
-          expect(iteratorFn).to.equal(a.values);
-        }
+      });
+
+      ifSymbolIteratorAndArrayValuesIt('has the right default iteration function', function () {
+        // fixed in Webkit https://bugs.webkit.org/show_bug.cgi?id=143838
+      	expect(Array.prototype).to.have.property(Sym.iterator, Array.prototype.values);
       });
     });
 
