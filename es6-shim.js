@@ -1248,43 +1248,43 @@
     },
 
     asinh: function asinh(value) {
-      value = Number(value);
-      if (value === 0 || !globalIsFinite(value)) {
-        return value;
+      var x = Number(value);
+      if (x === 0 || !globalIsFinite(x)) {
+        return x;
       }
-      return value < 0 ? -Math.asinh(-value) : Math.log(value + Math.sqrt(value * value + 1));
+      return x < 0 ? -Math.asinh(-x) : Math.log(x + Math.sqrt(x * x + 1));
     },
 
     atanh: function atanh(value) {
-      value = Number(value);
-      if (Number.isNaN(value) || value < -1 || value > 1) {
+      var x = Number(value);
+      if (Number.isNaN(x) || x < -1 || x > 1) {
         return NaN;
       }
-      if (value === -1) { return -Infinity; }
-      if (value === 1) { return Infinity; }
-      if (value === 0) { return value; }
-      return 0.5 * Math.log((1 + value) / (1 - value));
+      if (x === -1) { return -Infinity; }
+      if (x === 1) { return Infinity; }
+      if (x === 0) { return x; }
+      return 0.5 * Math.log((1 + x) / (1 - x));
     },
 
     cbrt: function cbrt(value) {
-      value = Number(value);
-      if (value === 0) { return value; }
-      var negate = value < 0, result;
-      if (negate) { value = -value; }
-      if (value === Infinity) {
+      var x = Number(value);
+      if (x === 0) { return x; }
+      var negate = x < 0, result;
+      if (negate) { x = -x; }
+      if (x === Infinity) {
         result = Infinity;
       } else {
-        result = Math.exp(Math.log(value) / 3);
+        result = Math.exp(Math.log(x) / 3);
         // from http://en.wikipedia.org/wiki/Cube_root#Numerical_methods
-        result = (value / (result * result) + 2 * result) / 3;
+        result = (x / (result * result) + 2 * result) / 3;
       }
       return negate ? -result : result;
     },
 
     clz32: function clz32(value) {
       // See https://bugs.ecmascript.org/show_bug.cgi?id=2465
-      value = Number(value);
-      var number = ES.ToUint32(value);
+      var x = Number(value);
+      var number = ES.ToUint32(x);
       if (number === 0) {
         return 32;
       }
@@ -1292,19 +1292,19 @@
     },
 
     cosh: function cosh(value) {
-      value = Number(value);
-      if (value === 0) { return 1; } // +0 or -0
-      if (Number.isNaN(value)) { return NaN; }
-      if (!globalIsFinite(value)) { return Infinity; }
-      if (value < 0) { value = -value; }
-      if (value > 21) { return Math.exp(value) / 2; }
-      return (Math.exp(value) + Math.exp(-value)) / 2;
+      var x = Number(value);
+      if (x === 0) { return 1; } // +0 or -0
+      if (Number.isNaN(x)) { return NaN; }
+      if (!globalIsFinite(x)) { return Infinity; }
+      if (x < 0) { x = -x; }
+      if (x > 21) { return Math.exp(x) / 2; }
+      return (Math.exp(x) + Math.exp(-x)) / 2;
     },
 
     expm1: function expm1(value) {
       var x = Number(value);
       if (x === -Infinity) { return -1; }
-      if (!globalIsFinite(x) || value === 0) { return x; }
+      if (!globalIsFinite(x) || x === 0) { return x; }
       if (Math.abs(x) > 0.5) {
         return Math.exp(x) - 1;
       }
@@ -1370,7 +1370,7 @@
     },
 
     sign: function sign(value) {
-      var number = +value;
+      var number = Number(value);
       if (number === 0) { return number; }
       if (Number.isNaN(number)) { return number; }
       return number < 0 ? -1 : 1;
@@ -1378,7 +1378,7 @@
 
     sinh: function sinh(value) {
       var x = Number(value);
-      if (!globalIsFinite(value) || value === 0) { return value; }
+      if (!globalIsFinite(x) || x === 0) { return x; }
 
       if (Math.abs(x) < 1) {
         return (Math.expm1(x) - Math.expm1(-x)) / 2;
@@ -1388,7 +1388,7 @@
 
     tanh: function tanh(value) {
       var x = Number(value);
-      if (Number.isNaN(value) || x === 0) { return x; }
+      if (Number.isNaN(x) || x === 0) { return x; }
       if (x === Infinity) { return 1; }
       if (x === -Infinity) { return -1; }
       var a = Math.expm1(x);
@@ -1399,8 +1399,8 @@
     },
 
     trunc: function trunc(value) {
-      var number = Number(value);
-      return number < 0 ? -Math.floor(-number) : Math.floor(number);
+      var x = Number(value);
+      return x < 0 ? -Math.floor(-x) : Math.floor(x);
     },
 
     imul: function imul(x, y) {
