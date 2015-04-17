@@ -90,6 +90,7 @@ describe('Number', function () {
     });
 
     it('is the same object as the global parseInt', function () {
+      // fixed in WebKit nightly in https://bugs.webkit.org/show_bug.cgi?id=143799#add_comment
       expect(Number.parseInt).to.equal(parseInt);
     });
   });
