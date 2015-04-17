@@ -338,6 +338,12 @@ var runArrayTests = function () {
         expect(Array.prototype.slice.call(args)).to.eql([1, 1, 2]);
         expect(Object.prototype.toString.call(args)).to.equal(argsClass);
       });
+
+      ifSymbolUnscopablesIt('should be unscopable if Symbols exist', function () {
+        var unscopables = Array.prototype[Sym.unscopables];
+        expect(!!unscopables).to.equal(true);
+        expect(unscopables.copyWithin).to.equal(true);
+      });
     });
 
     describe('Array#find', function () {
@@ -425,6 +431,12 @@ var runArrayTests = function () {
         expect(found).to.equal(undefined);
         expect(seen).to.eql([[0, 1], [1, undefined], [2, undefined]]);
       });
+
+      ifSymbolUnscopablesIt('should be unscopable if Symbols exist', function () {
+        var unscopables = Array.prototype[Sym.unscopables];
+        expect(!!unscopables).to.equal(true);
+        expect(unscopables.find).to.equal(true);
+      });
     });
 
     describe('Array#findIndex', function () {
@@ -511,6 +523,12 @@ var runArrayTests = function () {
         });
         expect(foundIndex).to.equal(-1);
         expect(seen).to.eql([[0, 1], [1, undefined], [2, undefined]]);
+      });
+
+      ifSymbolUnscopablesIt('should be unscopable if Symbols exist', function () {
+        var unscopables = Array.prototype[Sym.unscopables];
+        expect(!!unscopables).to.equal(true);
+        expect(unscopables.findIndex).to.equal(true);
       });
     });
 
@@ -811,6 +829,12 @@ var runArrayTests = function () {
         var filled = [1, 2, 3, 4, 5, 6];
 
         expect(original.fill(-1, 9)).to.eql(filled);
+      });
+
+      ifSymbolUnscopablesIt('should be unscopable if Symbols exist', function () {
+        var unscopables = Array.prototype[Sym.unscopables];
+        expect(!!unscopables).to.equal(true);
+        expect(unscopables.fill).to.equal(true);
       });
     });
   });
