@@ -187,6 +187,12 @@
     }
   };
 
+  var overrideNative = function overrideNative(object, property, replacement) {
+    var original = object[property];
+    defineProperty(object, property, replacement, true);
+    Value.preserveToString(object[property], original);
+  };
+
   // This is a private name in the es6 spec, equal to '[Symbol.iterator]'
   // we're going to use an arbitrary _-prefixed name to make our shims
   // work properly with each other, even though we don't have full Iterator
@@ -383,7 +389,7 @@
   // https://bugzilla.mozilla.org/show_bug.cgi?id=1062484
   if (String.fromCodePoint && String.fromCodePoint.length !== 1) {
     var originalFromCodePoint = Function.apply.bind(String.fromCodePoint);
-    defineProperty(String, 'fromCodePoint', function fromCodePoint(codePoints) { return originalFromCodePoint(this, arguments); }, true);
+    overrideNative(String, 'fromCodePoint', function fromCodePoint(codePoints) { return originalFromCodePoint(this, arguments); });
   }
 
   var StringShims = {
@@ -437,9 +443,7 @@
   defineProperties(String, StringShims);
   if (String.raw({ raw: { 0: 'x', 1: 'y', length: 2 } }) !== 'xy') {
     // IE 11 TP has a broken String.raw implementation
-    var origStringRaw = String.raw;
-    defineProperty(String, 'raw', StringShims.raw, true);
-    Value.preserveToString(String.raw, origStringRaw);
+    overrideNative(String, 'raw', StringShims.raw);
   }
 
   // Fast repeat, uses the `Exponentiation by squaring` algorithm.
@@ -513,9 +517,7 @@
   defineProperties(String.prototype, StringPrototypeShims);
 
   if ('a'.includes('a', Infinity) !== false) {
-    var origIncludes = String.prototype.includes;
-    defineProperty(String.prototype, 'includes', StringPrototypeShims.includes, true);
-    Value.preserveToString(String.prototype.includes, origIncludes);
+    overrideNative(String.prototype, 'includes', StringPrototypeShims.includes);
   }
 
   var hasStringTrimBug = '\u0085'.trim().length !== 1;
@@ -568,8 +570,8 @@
 
   if (!startsWithIsCompliant) {
     // Firefox (< 37?) and IE 11 TP have a noncompliant startsWith implementation
-    defineProperty(String.prototype, 'startsWith', StringPrototypeShims.startsWith, true);
-    defineProperty(String.prototype, 'endsWith', StringPrototypeShims.endsWith, true);
+    overrideNative(String.prototype, 'startsWith', StringPrototypeShims.startsWith);
+    overrideNative(String.prototype, 'endsWith', StringPrototypeShims.endsWith);
   }
 
   var ArrayShims = {
@@ -740,9 +742,7 @@
     return fooArr instanceof Foo && fooArr.length === 2;
   }());
   if (!arrayOfSupportsSubclassing) {
-    var origArrayOf = Array.of;
-    defineProperty(Array, 'of', ArrayShims.of, true);
-    Value.preserveToString(Array.of, origArrayOf);
+    overrideNative(Array, 'of', ArrayShims.of);
   }
 
   var ArrayPrototypeShims = {
@@ -860,9 +860,8 @@
   // Chrome 40 defines Array#values with the incorrect name, although Array#{keys,entries} have the correct name
   if (Array.prototype.values && Array.prototype.values.name !== 'values') {
     var originalArrayPrototypeValues = Array.prototype.values;
-    defineProperty(Array.prototype, 'values', function values() { return originalArrayPrototypeValues.call(this); }, true);
+    overrideNative(Array.prototype, 'values', function values() { return originalArrayPrototypeValues.call(this); });
     defineProperty(Array.prototype, $iterator$, Array.prototype.values, true);
-    Value.preserveToString(Array.prototype.values, originalArrayPrototypeValues);
   }
   defineProperties(Array.prototype, ArrayPrototypeShims);
 
@@ -874,20 +873,18 @@
   }
 
   // note: this is positioned here because it relies on Array#entries
-  var arrayFromSwallowsNegativeLengths = function () {
+  var arrayFromSwallowsNegativeLengths = (function () {
     // Detects a Firefox bug in v32
     // https://bugzilla.mozilla.org/show_bug.cgi?id=1063993
     return valueOrFalseIfThrows(function () { return Array.from({ length: -1 }).length === 0; });
-  };
+  }());
   var arrayFromHandlesIterables = (function () {
     // Detects a bug in Webkit nightly r181886
     var arr = Array.from([0].entries());
     return arr.length === 1 && arr[0][0] === 0 && arr[0][1] === 1;
   }());
-  if (!arrayFromSwallowsNegativeLengths() || !arrayFromHandlesIterables) {
-    var origArrayFrom = Array.from;
-    defineProperty(Array, 'from', ArrayShims.from, true);
-    Value.preserveToString(Array.from, origArrayFrom);
+  if (!arrayFromSwallowsNegativeLengths || !arrayFromHandlesIterables) {
+    overrideNative(Array, 'from', ArrayShims.from);
   }
 
   var maxSafeInteger = Math.pow(2, 53) - 1;
@@ -920,10 +917,10 @@
   // methods of Number, so this test has to happen down here.)
   /*jshint elision: true */
   if (![, 1].find(function (item, idx) { return idx === 0; })) {
-    defineProperty(Array.prototype, 'find', ArrayPrototypeShims.find, true);
+    overrideNative(Array.prototype, 'find', ArrayPrototypeShims.find);
   }
   if ([, 1].findIndex(function (item, idx) { return idx === 0; }) !== 0) {
-    defineProperty(Array.prototype, 'findIndex', ArrayPrototypeShims.findIndex, true);
+    overrideNative(Array.prototype, 'findIndex', ArrayPrototypeShims.findIndex);
   }
   /*jshint elision: false */
 
@@ -976,9 +973,7 @@
     }
   }());
   if (assignHasPendingExceptions) {
-    var origAssign = Object.assign;
-    defineProperty(Object, 'assign', ObjectShims.assign, true);
-    Value.preserveToString(Object.assign, origAssign);
+    overrideNative(Object, 'assign', ObjectShims.assign);
   }
   defineProperties(Object, ObjectShims);
 
@@ -1064,106 +1059,96 @@
   var objectKeysAcceptsPrimitives = !throwsError(function () { Object.keys('foo'); });
   if (!objectKeysAcceptsPrimitives) {
     var originalObjectKeys = Object.keys;
-    defineProperty(Object, 'keys', function keys(value) {
+    overrideNative(Object, 'keys', function keys(value) {
       return originalObjectKeys(ES.ToObject(value));
-    }, true);
-    Value.preserveToString(Object.keys, originalObjectKeys);
+    });
   }
 
   if (Object.getOwnPropertyNames) {
     var objectGOPNAcceptsPrimitives = !throwsError(function () { Object.getOwnPropertyNames('foo'); });
     if (!objectGOPNAcceptsPrimitives) {
       var originalObjectGetOwnPropertyNames = Object.getOwnPropertyNames;
-      defineProperty(Object, 'getOwnPropertyNames', function getOwnPropertyNames(value) {
+      overrideNative(Object, 'getOwnPropertyNames', function getOwnPropertyNames(value) {
         return originalObjectGetOwnPropertyNames(ES.ToObject(value));
-      }, true);
-      Value.preserveToString(Object.getOwnPropertyNames, originalObjectGetOwnPropertyNames);
+      });
     }
   }
   if (Object.getOwnPropertyDescriptor) {
     var objectGOPDAcceptsPrimitives = !throwsError(function () { Object.getOwnPropertyDescriptor('foo', 'bar'); });
     if (!objectGOPDAcceptsPrimitives) {
       var originalObjectGetOwnPropertyDescriptor = Object.getOwnPropertyDescriptor;
-      defineProperty(Object, 'getOwnPropertyDescriptor', function getOwnPropertyDescriptor(value, property) {
+      overrideNative(Object, 'getOwnPropertyDescriptor', function getOwnPropertyDescriptor(value, property) {
         return originalObjectGetOwnPropertyDescriptor(ES.ToObject(value), property);
-      }, true);
-      Value.preserveToString(Object.getOwnPropertyDescriptor, originalObjectGetOwnPropertyDescriptor);
+      });
     }
   }
   if (Object.seal) {
     var objectSealAcceptsPrimitives = !throwsError(function () { Object.seal('foo'); });
     if (!objectSealAcceptsPrimitives) {
       var originalObjectSeal = Object.seal;
-      defineProperty(Object, 'seal', function seal(value) {
+      overrideNative(Object, 'seal', function seal(value) {
         if (!Type.object(value)) { return value; }
         return originalObjectSeal(value);
-      }, true);
-      Value.preserveToString(Object.seal, originalObjectSeal);
+      });
     }
   }
   if (Object.isSealed) {
     var objectIsSealedAcceptsPrimitives = !throwsError(function () { Object.isSealed('foo'); });
     if (!objectIsSealedAcceptsPrimitives) {
       var originalObjectIsSealed = Object.isSealed;
-      defineProperty(Object, 'isSealed', function isSealed(value) {
+      overrideNative(Object, 'isSealed', function isSealed(value) {
         if (!Type.object(value)) { return true; }
         return originalObjectIsSealed(value);
-      }, true);
-      Value.preserveToString(Object.isSealed, originalObjectIsSealed);
+      });
     }
   }
   if (Object.freeze) {
     var objectFreezeAcceptsPrimitives = !throwsError(function () { Object.freeze('foo'); });
     if (!objectFreezeAcceptsPrimitives) {
       var originalObjectFreeze = Object.freeze;
-      defineProperty(Object, 'freeze', function freeze(value) {
+      overrideNative(Object, 'freeze', function freeze(value) {
         if (!Type.object(value)) { return value; }
         return originalObjectFreeze(value);
-      }, true);
-      Value.preserveToString(Object.freeze, originalObjectFreeze);
+      });
     }
   }
   if (Object.isFrozen) {
     var objectIsFrozenAcceptsPrimitives = !throwsError(function () { Object.isFrozen('foo'); });
     if (!objectIsFrozenAcceptsPrimitives) {
       var originalObjectIsFrozen = Object.isFrozen;
-      defineProperty(Object, 'isFrozen', function isFrozen(value) {
+      overrideNative(Object, 'isFrozen', function isFrozen(value) {
         if (!Type.object(value)) { return true; }
         return originalObjectIsFrozen(value);
-      }, true);
-      Value.preserveToString(Object.isFrozen, originalObjectIsFrozen);
+      });
     }
   }
   if (Object.preventExtensions) {
     var objectPreventExtensionsAcceptsPrimitives = !throwsError(function () { Object.preventExtensions('foo'); });
     if (!objectPreventExtensionsAcceptsPrimitives) {
       var originalObjectPreventExtensions = Object.preventExtensions;
-      defineProperty(Object, 'preventExtensions', function preventExtensions(value) {
+      overrideNative(Object, 'preventExtensions', function preventExtensions(value) {
         if (!Type.object(value)) { return value; }
         return originalObjectPreventExtensions(value);
-      }, true);
-      Value.preserveToString(Object.preventExtensions, originalObjectPreventExtensions);
+      });
     }
   }
   if (Object.isExtensible) {
     var objectIsExtensibleAcceptsPrimitives = !throwsError(function () { Object.isExtensible('foo'); });
     if (!objectIsExtensibleAcceptsPrimitives) {
       var originalObjectIsExtensible = Object.isExtensible;
-      defineProperty(Object, 'isExtensible', function isExtensible(value) {
+      overrideNative(Object, 'isExtensible', function isExtensible(value) {
         if (!Type.object(value)) { return false; }
         return originalObjectIsExtensible(value);
-      }, true);
-      Value.preserveToString(Object.isExtensible, originalObjectIsExtensible);
+      });
     }
   }
   if (Object.getPrototypeOf) {
     var objectGetProtoAcceptsPrimitives = !throwsError(function () { Object.getPrototypeOf('foo'); });
     if (!objectGetProtoAcceptsPrimitives) {
       var originalGetProto = Object.getPrototypeOf;
-      defineProperty(Object, 'getPrototypeOf', function getPrototypeOf(value) {
+      overrideNative(Object, 'getPrototypeOf', function getPrototypeOf(value) {
         return originalGetProto(ES.ToObject(value));
-      }, true);
-      Value.preserveToString(Object.getPrototypeOf, originalGetProto);
+      });
     }
   }
 
@@ -1495,10 +1480,9 @@
   if (Math.imul.length !== 2) {
     // Safari 8.0.4 has a length of 1
     // fixed in https://bugs.webkit.org/show_bug.cgi?id=143658
-    defineProperty(Math, 'imul', function imul(x, y) {
+    overrideNative(Math, 'imul', function imul(x, y) {
       return origImul.apply(Math, arguments);
-    }, true);
-    Value.preserveToString(Math.imul, origImul);
+    });
   }
 
   // Promises
@@ -1867,7 +1851,7 @@
     /*globals Promise: true */
     Promise = PromiseShim;
     /*globals Promise: false */
-    defineProperty(globals, 'Promise', PromiseShim, true);
+    overrideNative(globals, 'Promise', PromiseShim);
   }
 
   // Map and Set require a true ES5 environment
@@ -2329,11 +2313,10 @@
       var mapSupportsChaining = m.set(1, 2) === m;
       if (!mapUsesSameValueZero || !mapSupportsChaining) {
         var origMapSet = Map.prototype.set;
-        defineProperty(Map.prototype, 'set', function set(k, v) {
+        overrideNative(Map.prototype, 'set', function set(k, v) {
           origMapSet.call(this, k === 0 ? 0 : k, v);
           return this;
-        }, true);
-        Value.preserveToString(Map.prototype.set, origMapSet);
+        });
       }
       if (!mapUsesSameValueZero) {
         var origMapGet = Map.prototype.get;
@@ -2738,8 +2721,7 @@
       }
       return dateToString.call(this);
     };
-    defineProperty(shimmedDateToString, 'toString', dateToString.toString, true);
-    defineProperty(Date.prototype, 'toString', shimmedDateToString, true);
+    overrideNative(Date.prototype, 'toString', shimmedDateToString);
   }
 
   // Annex B HTML methods
