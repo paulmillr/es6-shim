@@ -935,6 +935,18 @@
 
   if (supportsDescriptors) {
     var isEnumerableOn = Function.bind.call(Function.bind, Object.prototype.propertyIsEnumerable);
+    var sliceArgs = function sliceArgs() {
+      // per https://github.com/petkaantonov/bluebird/wiki/Optimization-killers#32-leaking-arguments
+      // and https://gist.github.com/WebReflection/4327762cb87a8c634a29
+      var initial = Number(this);
+      var len = arguments.length;
+      var desiredArgCount = len - initial;
+      var args = new Array(desiredArgCount < 0 ? 0 : desiredArgCount);
+      for (var i = initial; i < len; ++i) {
+        args[i - initial] = arguments[i];
+      }
+      return args;
+    };
     var assignReducer = function (target, source) {
       var keys = Object.keys(Object(source));
       var symbols;
@@ -952,7 +964,7 @@
         if (!ES.TypeIsObject(target)) {
           throw new TypeError('target must be an object');
         }
-        return Array.prototype.reduce.call(arguments, assignReducer);
+        return Array.prototype.reduce.call(sliceArgs.apply(0, arguments), assignReducer);
       },
 
       // 19.1.3.9
