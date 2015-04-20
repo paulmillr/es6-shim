@@ -958,6 +958,7 @@
       return Array.prototype.reduce.call(sliceArgs.apply(0, arguments), assignReducer);
     },
 
+    // Added in WebKit in https://bugs.webkit.org/show_bug.cgi?id=143865
     is: function is(a, b) {
       return ES.SameValue(a, b);
     }
