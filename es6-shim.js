@@ -937,16 +937,19 @@
     }
     return args;
   };
+  var assignTo = function assignTo(source) {
+    return function assignToSource(target, key) {
+      target[key] = source[key];
+      return target;
+    };
+  };
   var assignReducer = function (target, source) {
     var keys = Object.keys(Object(source));
     var symbols;
     if (ES.IsCallable(Object.getOwnPropertySymbols)) {
       symbols = Object.getOwnPropertySymbols(Object(source)).filter(isEnumerableOn(source));
     }
-    return keys.concat(symbols || []).reduce(function (target, key) {
-      target[key] = source[key];
-      return target;
-    }, target);
+    return keys.concat(symbols || []).reduce(assignTo(source), target);
   };
 
   var ObjectShims = {
