@@ -34,7 +34,7 @@ var runArrayTests = function () {
 
       ifSymbolIteratorAndArrayValuesIt('has the right default iteration function', function () {
         // fixed in Webkit https://bugs.webkit.org/show_bug.cgi?id=143838
-      	expect(Array.prototype).to.have.property(Sym.iterator, Array.prototype.values);
+        expect(Array.prototype).to.have.property(Sym.iterator, Array.prototype.values);
       });
     });
 
