@@ -2156,9 +2156,10 @@
             _storage: emptyObject()
           });
 
-          // Optionally initialize map from iterable
+          // Optionally initialize Set from iterable
           if (arguments.length > 0 && typeof arguments[0] !== 'undefined' && arguments[0] !== null) {
-            var it = ES.GetIterator(arguments[0]);
+            var iterable = arguments[0];
+            var it = ES.GetIterator(iterable);
             var adder = set.add;
             if (!ES.IsCallable(adder)) { throw new TypeError('bad set'); }
             while (true) {
