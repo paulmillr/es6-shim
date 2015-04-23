@@ -77,7 +77,7 @@ describe('Reflect', function () {
     expect(exported.Reflect).to.equal(Reflect);
   });
 
-  describe('Reflect.apply()', function () {
+  describe('.apply()', function () {
     it('is a function', function () {
       expect(typeof Reflect.apply).to.equal('function');
     });
@@ -113,7 +113,7 @@ describe('Reflect', function () {
     });
   });
 
-  describe('Reflect.construct()', function () {
+  describe('.construct()', function () {
     it('is a function', function () {
       expect(typeof Reflect.construct).to.equal('function');
     });
@@ -139,7 +139,7 @@ describe('Reflect', function () {
     });
   });
 
-  describeIfES5('Reflect.defineProperty()', function () {
+  describeIfES5('.defineProperty()', function () {
     it('is a function', function () {
       expect(typeof Reflect.defineProperty).to.equal('function');
     });
@@ -203,7 +203,7 @@ describe('Reflect', function () {
     });
   });
 
-  describe('Reflect.deleteProperty()', function () {
+  describe('.deleteProperty()', function () {
     it('is a function', function () {
       expect(typeof Reflect.deleteProperty).to.equal('function');
     });
@@ -246,7 +246,7 @@ describe('Reflect', function () {
     });
   });
 
-  describe('Reflect.enumerate()', function () {
+  describe('.enumerate()', function () {
     it('is a function', function () {
       expect(typeof Reflect.enumerate).to.equal('function');
     });
@@ -312,7 +312,7 @@ describe('Reflect', function () {
     });
   });
 
-  describeIfES5('Reflect.get()', function () {
+  describeIfES5('.get()', function () {
     it('is a function', function () {
       expect(typeof Reflect.get).to.equal('function');
     });
@@ -365,7 +365,7 @@ describe('Reflect', function () {
     });
   });
 
-  describeIfES5('Reflect.set()', function () {
+  describeIfES5('.set()', function () {
     it('is a function', function () {
       expect(typeof Reflect.set).to.equal('function');
     });
@@ -412,7 +412,7 @@ describe('Reflect', function () {
     });
   });
 
-  describeIfES5('Reflect.getOwnPropertyDescriptor()', function () {
+  describeIfES5('.getOwnPropertyDescriptor()', function () {
     it('is a function', function () {
       expect(typeof Reflect.getOwnPropertyDescriptor).to.equal('function');
     });
@@ -441,7 +441,7 @@ describe('Reflect', function () {
     });
   });
 
-  describeIfGetProto('Reflect.getPrototypeOf()', function () {
+  describeIfGetProto('.getPrototypeOf()', function () {
     it('is a function', function () {
       expect(typeof Reflect.getPrototypeOf).to.equal('function');
     });
@@ -463,7 +463,7 @@ describe('Reflect', function () {
     });
   });
 
-  describe('Reflect.has()', function () {
+  describe('.has()', function () {
     it('is a function', function () {
       expect(typeof Reflect.has).to.equal('function');
     });
@@ -517,7 +517,7 @@ describe('Reflect', function () {
     });
   });
 
-  describeIfExtensionsPreventible('Reflect.isExtensible()', function () {
+  describeIfExtensionsPreventible('.isExtensible()', function () {
     it('is a function', function () {
       expect(typeof Reflect.isExtensible).to.equal('function');
     });
@@ -538,7 +538,7 @@ describe('Reflect', function () {
     });
   });
 
-  describeIfGetOwnPropertyNames('Reflect.ownKeys()', function () {
+  describeIfGetOwnPropertyNames('.ownKeys()', function () {
     it('is a function', function () {
       expect(typeof Reflect.ownKeys).to.equal('function');
     });
@@ -581,7 +581,7 @@ describe('Reflect', function () {
     });
   });
 
-  describeIfExtensionsPreventible('Reflect.preventExtensions()', function () {
+  describeIfExtensionsPreventible('.preventExtensions()', function () {
     it('is a function', function () {
       expect(typeof Reflect.preventExtensions).to.equal('function');
     });
@@ -603,7 +603,7 @@ describe('Reflect', function () {
     });
   });
 
-  describeIfSetProto('Reflect.setPrototypeOf()', function () {
+  describeIfSetProto('.setPrototypeOf()', function () {
     it('is a function', function () {
       expect(typeof Reflect.setPrototypeOf).to.equal('function');
     });
