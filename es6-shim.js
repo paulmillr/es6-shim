@@ -2454,6 +2454,7 @@
       }
     }
     if (globals.Set.prototype.keys !== globals.Set.prototype.values) {
+      // Fixed in WebKit with https://bugs.webkit.org/show_bug.cgi?id=144190
       defineProperty(globals.Set.prototype, 'keys', globals.Set.prototype.values, true);
     }
     // Shim incomplete iterator implementations.
