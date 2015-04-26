@@ -1241,6 +1241,8 @@
   var BINARY_32_EPSILON = Math.pow(2, -23);
   var BINARY_32_MAX_VALUE = Math.pow(2, 127) * (2 - BINARY_32_EPSILON);
   var BINARY_32_MIN_VALUE = Math.pow(2, -126);
+  var numberCLZ = Number.prototype.clz;
+  delete Number.prototype.clz; // Safari 8 has Number#clz
 
   var MathShims = {
     acosh: function acosh(value) {
@@ -1292,7 +1294,7 @@
       if (number === 0) {
         return 32;
       }
-      return 31 - Math.floor(Math.log(number + 0.5) * Math.LOG2E);
+      return numberCLZ ? numberCLZ.call(number) : 31 - Math.floor(Math.log(number + 0.5) * Math.LOG2E);
     },
 
     cosh: function cosh(value) {
