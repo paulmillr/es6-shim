@@ -1,5 +1,18 @@
 # es6-shim x.x.x (not yet released)
 
+# es6-shim 0.29.0 (26 Apr 2015)
+* Test on `io.js` `v1.7` and `v1.8`
+* Ensure that shallowly wrapped Maps’ and Sets’ prototypes aren't one level too far away.
+* Update `chai` and use new matchers
+* Avoid reassigning argument variables to avoid deoptimizations
+* Ensure that ES3 browsers get both `Object.is` and `Object.assign`
+* Improve `Object.assign` to avoid leaking arguments in v8
+* Ensuring `Number.parseInt === parseInt` (failed in FF 37)
+* a little more accurate Math.cbrt (#335)
+* Test cleanups
+* Adding `Symbol.unscopables` tests
+* Adding tests to ensure that default iterators on builtins === the appropriate prototype function.
+
 # es6-shim 0.28.2 (13 Apr 2015)
 * `Map` and `Set` should have an arity of 0.
 
