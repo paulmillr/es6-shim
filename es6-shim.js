@@ -2391,7 +2391,7 @@
           defineProperty(m, 'constructor', Map, true);
           return m;
         };
-        globals.Map.prototype = create(OrigMap.prototype);
+        globals.Map.prototype = OrigMap.prototype;
         Value.preserveToString(globals.Map, OrigMap);
       }
       var setSupportsSubclassing = supportsSubclassing(globals.Set, function (S) {
@@ -2418,7 +2418,7 @@
           defineProperty(s, 'constructor', Set, true);
           return s;
         };
-        globals.Set.prototype = create(OrigSet.prototype);
+        globals.Set.prototype = OrigSet.prototype;
         Value.preserveToString(globals.Set, OrigSet);
       }
       var mapIterationThrowsStopIterator = !valueOrFalseIfThrows(function () {
