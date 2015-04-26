@@ -8,7 +8,7 @@ var failIfThrows = function (done) {
 describe('Promise.resolve', function () {
   'use strict';
   it('should not be enumerable', function () {
-    expect(Object.getOwnPropertyDescriptor(Promise, 'resolve')).to.have.property('enumerable', false);
+    expect(Promise).ownPropertyDescriptor('resolve').to.have.property('enumerable', false);
   });
 
   it('should return a resolved promise', function (done) {

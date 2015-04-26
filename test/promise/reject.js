@@ -8,7 +8,7 @@ var failIfThrows = function (done) {
 describe('Promise.reject', function () {
   'use strict';
   it('should not be enumerable', function () {
-    expect(Object.getOwnPropertyDescriptor(Promise, 'reject')).to.have.property('enumerable', false);
+    expect(Promise).ownPropertyDescriptor('reject').to.have.property('enumerable', false);
   });
 
   it('should return a rejected promise', function (done) {

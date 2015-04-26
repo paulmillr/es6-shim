@@ -54,7 +54,7 @@ var runArrayTests = function () {
       });
 
       it('is not enumerable', function () {
-        expect(Array.propertyIsEnumerable('from')).to.equal(false);
+        expect(Array).ownPropertyDescriptor('from').to.have.property('enumerable', false);
       });
 
       it('works with primitives', function () {
@@ -260,7 +260,7 @@ var runArrayTests = function () {
       });
 
       it('is not enumerable', function () {
-        expect(Array.propertyIsEnumerable('of')).to.equal(false);
+        expect(Array).ownPropertyDescriptor('of').to.have.property('enumerable', false);
       });
 
       it('should create correct array from arguments', function () {
@@ -299,7 +299,7 @@ var runArrayTests = function () {
       });
 
       it('is not enumerable', function () {
-        expect(Array.prototype.propertyIsEnumerable('copyWithin')).to.equal(false);
+        expect(Array.prototype).ownPropertyDescriptor('copyWithin').to.have.property('enumerable', false);
       });
 
       it('modifies the object in-place', function () {
@@ -362,7 +362,7 @@ var runArrayTests = function () {
       });
 
       it('is not enumerable', function () {
-        expect(Array.prototype.propertyIsEnumerable('find')).to.equal(false);
+        expect(Array.prototype).ownPropertyDescriptor('find').to.have.property('enumerable', false);
       });
 
       it('should find item by predicate', function () {
@@ -455,7 +455,7 @@ var runArrayTests = function () {
       });
 
       it('is not enumerable', function () {
-        expect(Array.prototype.propertyIsEnumerable('findIndex')).to.equal(false);
+        expect(Array.prototype).ownPropertyDescriptor('findIndex').to.have.property('enumerable', false);
       });
 
       it('should find item key by predicate', function () {
@@ -574,7 +574,7 @@ var runArrayTests = function () {
       });
 
       it('is not enumerable', function () {
-        expect(Array.prototype.propertyIsEnumerable('keys')).to.equal(false);
+        expect(Array.prototype).ownPropertyDescriptor('keys').to.have.property('enumerable', false);
       });
 
       describe('basic keys iteration', function () {
@@ -645,7 +645,7 @@ var runArrayTests = function () {
       });
 
       it('is not enumerable', function () {
-        expect(Array.prototype.propertyIsEnumerable('values')).to.equal(false);
+        expect(Array.prototype).ownPropertyDescriptor('values').to.have.property('enumerable', false);
       });
 
       describe('basic list iteration', function () {
@@ -716,7 +716,7 @@ var runArrayTests = function () {
       });
 
       it('is not enumerable', function () {
-        expect(Array.prototype.propertyIsEnumerable('entries')).to.equal(false);
+        expect(Array.prototype).ownPropertyDescriptor('entries').to.have.property('enumerable', false);
       });
 
       describe('basic list iteration', function () {
@@ -793,7 +793,7 @@ var runArrayTests = function () {
       });
 
       it('is not enumerable', function () {
-        expect(Array.prototype.propertyIsEnumerable('fill')).to.equal(false);
+        expect(Array.prototype).ownPropertyDescriptor('fill').to.have.property('enumerable', false);
       });
 
       it('works with just a value', function () {

@@ -81,7 +81,7 @@ describe('Number', function () {
     });
 
     it('is not enumerable', function () {
-      expect(Number.propertyIsEnumerable('parseInt')).to.equal(false);
+      expect(Number).ownPropertyDescriptor('parseInt').to.have.property('enumerable', false);
     });
 
     it('has the right arity', function () {
@@ -111,7 +111,7 @@ describe('Number', function () {
     });
 
     it('is not enumerable', function () {
-      expect(Number.propertyIsEnumerable('parseFloat')).to.equal(false);
+      expect(Number).ownPropertyDescriptor('parseFloat').to.have.property('enumerable', false);
     });
 
     it('has the right arity', function () {
@@ -131,7 +131,7 @@ describe('Number', function () {
     });
 
     it('is not enumerable', function () {
-      expect(Number.propertyIsEnumerable('isFinite')).to.equal(false);
+      expect(Number).ownPropertyDescriptor('isFinite').to.have.property('enumerable', false);
     });
 
     it('has the right arity', function () {
@@ -175,7 +175,7 @@ describe('Number', function () {
     });
 
     it('is not enumerable', function () {
-      expect(Number.propertyIsEnumerable('isInteger')).to.equal(false);
+      expect(Number).ownPropertyDescriptor('isInteger').to.have.property('enumerable', false);
     });
 
     it('has the right arity', function () {
@@ -237,7 +237,7 @@ describe('Number', function () {
     });
 
     it('is not enumerable', function () {
-      expect(Number.propertyIsEnumerable('isSafeInteger')).to.equal(false);
+      expect(Number).ownPropertyDescriptor('isSafeInteger').to.have.property('enumerable', false);
     });
 
     it('has the right arity', function () {
@@ -299,7 +299,7 @@ describe('Number', function () {
     });
 
     it('is not enumerable', function () {
-      expect(Number.propertyIsEnumerable('isNaN')).to.equal(false);
+      expect(Number).ownPropertyDescriptor('isNaN').to.have.property('enumerable', false);
     });
 
     it('has the right arity', function () {

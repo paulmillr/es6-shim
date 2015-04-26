@@ -34,7 +34,7 @@ var runStringTests = function () {
       });
 
       it('is not enumerable', function () {
-        expect(String.prototype.propertyIsEnumerable('repeat')).to.equal(false);
+        expect(String.prototype).ownPropertyDescriptor('repeat').to.have.property('enumerable', false);
       });
 
       it('has the right arity', function () {
@@ -86,7 +86,7 @@ var runStringTests = function () {
       });
 
       it('is not enumerable', function () {
-        expect(String.prototype.propertyIsEnumerable('startsWith')).to.equal(false);
+        expect(String.prototype).ownPropertyDescriptor('startsWith').to.have.property('enumerable', false);
       });
 
       it('has the right arity', function () {
@@ -190,7 +190,7 @@ var runStringTests = function () {
       });
 
       it('is not enumerable', function () {
-        expect(String.prototype.propertyIsEnumerable('endsWith')).to.equal(false);
+        expect(String.prototype).ownPropertyDescriptor('endsWith').to.have.property('enumerable', false);
       });
 
       it('has the right arity', function () {
@@ -297,7 +297,7 @@ var runStringTests = function () {
       });
 
       it('is not enumerable', function () {
-        expect(String.prototype.propertyIsEnumerable('includes')).to.equal(false);
+        expect(String.prototype).ownPropertyDescriptor('includes').to.have.property('enumerable', false);
       });
 
       it('has the right arity', function () {
@@ -386,7 +386,7 @@ var runStringTests = function () {
       });
 
       it('is not enumerable', function () {
-        expect(String.propertyIsEnumerable('fromCodePoint')).to.equal(false);
+        expect(String).ownPropertyDescriptor('fromCodePoint').to.have.property('enumerable', false);
       });
 
       it('has the right arity', function () {
@@ -438,7 +438,7 @@ var runStringTests = function () {
       });
 
       it('is not enumerable', function () {
-        expect(String.prototype.propertyIsEnumerable('codePointAt')).to.equal(false);
+        expect(String.prototype).ownPropertyDescriptor('codePointAt').to.have.property('enumerable', false);
       });
 
       it('has the right arity', function () {
@@ -505,7 +505,7 @@ var runStringTests = function () {
       });
 
       it('is not enumerable', function () {
-        expect(String.propertyIsEnumerable('raw')).to.equal(false);
+        expect(String).ownPropertyDescriptor('raw').to.have.property('enumerable', false);
       });
 
       it('has the right arity', function () {
@@ -563,7 +563,7 @@ var runStringTests = function () {
       });
 
       it('is not enumerable', function () {
-        expect(String.prototype.propertyIsEnumerable('trim')).to.equal(false);
+        expect(String.prototype).ownPropertyDescriptor('trim').to.have.property('enumerable', false);
       });
 
       it('has the right arity', function () {

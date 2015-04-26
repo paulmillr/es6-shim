@@ -37,7 +37,7 @@ describe('Math', function () {
     });
 
     it('is not enumerable', function () {
-      expect(Math.propertyIsEnumerable('acosh')).to.equal(false);
+      expect(Math).ownPropertyDescriptor('acosh').to.have.property('enumerable', false);
     });
 
     it('has the right arity', function () {
@@ -65,7 +65,7 @@ describe('Math', function () {
     });
 
     it('is not enumerable', function () {
-      expect(Math.propertyIsEnumerable('asinh')).to.equal(false);
+      expect(Math).ownPropertyDescriptor('asinh').to.have.property('enumerable', false);
     });
 
     it('has the right arity', function () {
@@ -101,7 +101,7 @@ describe('Math', function () {
     });
 
     it('is not enumerable', function () {
-      expect(Math.propertyIsEnumerable('atanh')).to.equal(false);
+      expect(Math).ownPropertyDescriptor('atanh').to.have.property('enumerable', false);
     });
 
     it('has the right arity', function () {
@@ -131,7 +131,7 @@ describe('Math', function () {
     });
 
     it('is not enumerable', function () {
-      expect(Math.propertyIsEnumerable('cbrt')).to.equal(false);
+      expect(Math).ownPropertyDescriptor('cbrt').to.have.property('enumerable', false);
     });
 
     it('has the right arity', function () {
@@ -167,7 +167,7 @@ describe('Math', function () {
     });
 
     it('is not enumerable', function () {
-      expect(Math.propertyIsEnumerable('clz32')).to.equal(false);
+      expect(Math).ownPropertyDescriptor('clz32').to.have.property('enumerable', false);
     });
 
     it('has the right arity', function () {
@@ -235,7 +235,7 @@ describe('Math', function () {
     });
 
     it('is not enumerable', function () {
-      expect(Math.propertyIsEnumerable('cosh')).to.equal(false);
+      expect(Math).ownPropertyDescriptor('cosh').to.have.property('enumerable', false);
     });
 
     it('has the right arity', function () {
@@ -279,7 +279,7 @@ describe('Math', function () {
     });
 
     it('is not enumerable', function () {
-      expect(Math.propertyIsEnumerable('expm1')).to.equal(false);
+      expect(Math).ownPropertyDescriptor('expm1').to.have.property('enumerable', false);
     });
 
     it('has the right arity', function () {
@@ -325,7 +325,7 @@ describe('Math', function () {
     });
 
     it('is not enumerable', function () {
-      expect(Math.propertyIsEnumerable('hypot')).to.equal(false);
+      expect(Math).ownPropertyDescriptor('hypot').to.have.property('enumerable', false);
     });
 
     it('has the right arity', function () {
@@ -381,7 +381,7 @@ describe('Math', function () {
     });
 
     it('is not enumerable', function () {
-      expect(Math.propertyIsEnumerable('log2')).to.equal(false);
+      expect(Math).ownPropertyDescriptor('log2').to.have.property('enumerable', false);
     });
 
     it('has the right arity', function () {
@@ -418,7 +418,7 @@ describe('Math', function () {
     });
 
     it('is not enumerable', function () {
-      expect(Math.propertyIsEnumerable('log10')).to.equal(false);
+      expect(Math).ownPropertyDescriptor('log10').to.have.property('enumerable', false);
     });
 
     it('has the right arity', function () {
@@ -452,7 +452,7 @@ describe('Math', function () {
     });
 
     it('is not enumerable', function () {
-      expect(Math.propertyIsEnumerable('log1p')).to.equal(false);
+      expect(Math).ownPropertyDescriptor('log1p').to.have.property('enumerable', false);
     });
 
     it('has the right arity', function () {
@@ -486,7 +486,7 @@ describe('Math', function () {
     });
 
     it('is not enumerable', function () {
-      expect(Math.propertyIsEnumerable('sign')).to.equal(false);
+      expect(Math).ownPropertyDescriptor('sign').to.have.property('enumerable', false);
     });
 
     it('has the right arity', function () {
@@ -533,7 +533,7 @@ describe('Math', function () {
     });
 
     it('is not enumerable', function () {
-      expect(Math.propertyIsEnumerable('sinh')).to.equal(false);
+      expect(Math).ownPropertyDescriptor('sinh').to.have.property('enumerable', false);
     });
 
     it('has the right arity', function () {
@@ -564,7 +564,7 @@ describe('Math', function () {
     });
 
     it('is not enumerable', function () {
-      expect(Math.propertyIsEnumerable('tanh')).to.equal(false);
+      expect(Math).ownPropertyDescriptor('tanh').to.have.property('enumerable', false);
     });
 
     it('has the right arity', function () {
@@ -595,7 +595,7 @@ describe('Math', function () {
     });
 
     it('is not enumerable', function () {
-      expect(Math.propertyIsEnumerable('trunc')).to.equal(false);
+      expect(Math).ownPropertyDescriptor('trunc').to.have.property('enumerable', false);
     });
 
     it('has the right arity', function () {
@@ -632,7 +632,7 @@ describe('Math', function () {
     });
 
     it('is not enumerable', function () {
-      expect(Math.propertyIsEnumerable('imul')).to.equal(false);
+      expect(Math).ownPropertyDescriptor('imul').to.have.property('enumerable', false);
     });
 
     it('has the right arity', function () {
@@ -701,7 +701,7 @@ describe('Math', function () {
     });
 
     it('is not enumerable', function () {
-      expect(Math.propertyIsEnumerable('round')).to.equal(false);
+      expect(Math).ownPropertyDescriptor('round').to.have.property('enumerable', false);
     });
 
     it('has the right arity', function () {
@@ -746,7 +746,7 @@ describe('Math', function () {
     });
 
     it('is not enumerable', function () {
-      expect(Math.propertyIsEnumerable('fround')).to.equal(false);
+      expect(Math).ownPropertyDescriptor('fround').to.have.property('enumerable', false);
     });
 
     it('has the right arity', function () {

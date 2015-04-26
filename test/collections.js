@@ -234,7 +234,7 @@ describe('Collections', function () {
       });
 
       it('is not enumerable', function () {
-        expect(Map.prototype.propertyIsEnumerable('clear')).to.equal(false);
+        expect(Map.prototype).ownPropertyDescriptor('clear').to.have.property('enumerable', false);
       });
 
       it('has the right arity', function () {
@@ -258,7 +258,7 @@ describe('Collections', function () {
       });
 
       it('is not enumerable', function () {
-        expect(Map.prototype.propertyIsEnumerable('keys')).to.equal(false);
+        expect(Map.prototype).ownPropertyDescriptor('keys').to.have.property('enumerable', false);
       });
 
       it('has the right arity', function () {
@@ -272,7 +272,7 @@ describe('Collections', function () {
       });
 
       it('is not enumerable', function () {
-        expect(Map.prototype.propertyIsEnumerable('values')).to.equal(false);
+        expect(Map.prototype).ownPropertyDescriptor('values').to.have.property('enumerable', false);
       });
 
       it('has the right arity', function () {
@@ -286,7 +286,7 @@ describe('Collections', function () {
       });
 
       it('is not enumerable', function () {
-        expect(Map.prototype.propertyIsEnumerable('entries')).to.equal(false);
+        expect(Map.prototype).ownPropertyDescriptor('entries').to.have.property('enumerable', false);
       });
 
       it('has the right arity', function () {
@@ -356,7 +356,7 @@ describe('Collections', function () {
       });
 
       it('is not enumerable', function () {
-        expect(Map.prototype.propertyIsEnumerable('forEach')).to.equal(false);
+        expect(Map.prototype).ownPropertyDescriptor('forEach').to.have.property('enumerable', false);
       });
 
       it('has the right arity', function () {
@@ -700,7 +700,7 @@ describe('Collections', function () {
       });
 
       it('is not enumerable', function () {
-        expect(Set.prototype.propertyIsEnumerable('clear')).to.equal(false);
+        expect(Set.prototype).ownPropertyDescriptor('clear').to.have.property('enumerable', false);
       });
 
       it('has the right arity', function () {
@@ -728,7 +728,7 @@ describe('Collections', function () {
       });
 
       it('is not enumerable', function () {
-        expect(Set.prototype.propertyIsEnumerable('keys')).to.equal(false);
+        expect(Set.prototype).ownPropertyDescriptor('keys').to.have.property('enumerable', false);
       });
 
       it('has the right arity', function () {
@@ -742,7 +742,7 @@ describe('Collections', function () {
       });
 
       it('is not enumerable', function () {
-        expect(Set.prototype.propertyIsEnumerable('values')).to.equal(false);
+        expect(Set.prototype).ownPropertyDescriptor('values').to.have.property('enumerable', false);
       });
 
       it('has the right arity', function () {
@@ -756,7 +756,7 @@ describe('Collections', function () {
       });
 
       it('is not enumerable', function () {
-        expect(Set.prototype.propertyIsEnumerable('entries')).to.equal(false);
+        expect(Set.prototype).ownPropertyDescriptor('entries').to.have.property('enumerable', false);
       });
 
       it('has the right arity', function () {
@@ -860,7 +860,7 @@ describe('Collections', function () {
       });
 
       it('is not enumerable', function () {
-        expect(Set.prototype.propertyIsEnumerable('forEach')).to.equal(false);
+        expect(Set.prototype).ownPropertyDescriptor('forEach').to.have.property('enumerable', false);
       });
 
       it('has the right arity', function () {

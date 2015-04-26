@@ -17,7 +17,7 @@ var delayPromise = function (value, ms) {
 describe('Promise.race', function () {
   'use strict';
   it('should not be enumerable', function () {
-    expect(Object.getOwnPropertyDescriptor(Promise, 'race')).to.have.property('enumerable', false);
+    expect(Promise).ownPropertyDescriptor('race').to.have.property('enumerable', false);
   });
 
   it('should fulfill if all promises are settled and the ordinally-first is fulfilled', function (done) {
