@@ -105,8 +105,9 @@
         Object.setPrototypeOf(o, Subclass.prototype);
         return o;
       };
+      Object.setPrototypeOf(Sub, C);
       Sub.prototype = create(C.prototype, {
-        constructor: { value: C }
+        constructor: { value: Sub }
       });
       return f(Sub);
     });
@@ -1925,7 +1926,7 @@
   // implementation is buggy in a number of ways.  Let's check subclassing
   // support to see if we have a buggy implementation.
   var promiseSupportsSubclassing = supportsSubclassing(globals.Promise, function (S) {
-    return S.resolve(42) instanceof S;
+    return S.resolve(42).then(function () {}) instanceof S;
   });
   var promiseIgnoresNonFunctionThenCallbacks = !throwsError(function () { globals.Promise.reject(42).then(null, 5).then(null, noop); });
   var promiseRequiresObjectContext = throwsError(function () { globals.Promise.call(3, noop); });

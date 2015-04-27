@@ -4,11 +4,13 @@ describe('Support user subclassing of Promise', function () {
   'use strict';
 
   it('should work if you do it right', function (done) {
-    // This is the "correct" es6-compatible way; see gh #170
-    // (Thanks, @domenic!)
+    // This is the "correct" es6-compatible way.
+    // (Thanks, @domenic and @zloirock!)
     var MyPromise = function (executor) {
-      Promise.call(this, executor);
-      this.mine = 'yeah';
+      var self = new Promise(executor);
+      Object.setPrototypeOf(self, MyPromise.prototype);
+      self.mine = 'yeah';
+      return self;
     };
     if (!Object.setPrototypeOf) { return done(); } // skip test if on IE < 11
     Object.setPrototypeOf(MyPromise, Promise);
