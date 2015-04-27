@@ -292,6 +292,14 @@ describe('Collections', function () {
       it('has the right arity', function () {
         expect(Map.prototype.entries).to.have.property('length', 0);
       });
+
+      it('throws when called on a non-Map', function () {
+        var expectedMessage = /^(Method )?Map.prototype.entries called on incompatible receiver |^entries method called on incompatible /;
+        var nonMaps = [true, false, 'abc', NaN, new Set([1, 2]), { a: true }, [1], Object('abc'), Object(NaN)];
+        nonMaps.forEach(function (nonMap) {
+          expect(function () { return Map.prototype.entries.call(nonMap); }).to['throw'](TypeError, expectedMessage);
+        });
+      });
     });
 
     it('should has unique constructor', function () {
@@ -747,6 +755,14 @@ describe('Collections', function () {
 
       it('has the right arity', function () {
         expect(Set.prototype.values).to.have.property('length', 0);
+      });
+
+      it('throws when called on a non-Set', function () {
+        var expectedMessage = /^(Method )?Set.prototype.values called on incompatible receiver |^values method called on incompatible /;
+        var nonSets = [true, false, 'abc', NaN, new Map([[1, 2]]), { a: true }, [1], Object('abc'), Object(NaN)];
+        nonSets.forEach(function (nonSet) {
+          expect(function () { return Set.prototype.values.call(nonSet); }).to['throw'](TypeError, expectedMessage);
+        });
       });
     });
 

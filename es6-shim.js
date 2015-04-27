@@ -1915,7 +1915,18 @@
           return this.key === empty;
         };
 
+        var isMap = function isMap(map) {
+          return !!map._es6map;
+        };
+
+        var requireMapSlot = function requireMapSlot(map, method) {
+          if (!ES.TypeIsObject(map) || !isMap(map)) {
+            throw new TypeError('Method Map.prototype.' + method + ' called on incompatible receiver ' + String(map));
+          }
+        };
+
         function MapIterator(map, kind) {
+          requireMapSlot(map, '[[MapIterator]]');
           this.head = map._head;
           this.i = this.head;
           this.kind = kind;
@@ -2008,6 +2019,7 @@
 
         defineProperties(Map.prototype, {
           get: function (key) {
+		    requireMapSlot(this, 'get');
             var fkey = fastkey(key);
             if (fkey !== null) {
               // fast O(1) path
@@ -2027,6 +2039,7 @@
           },
 
           has: function (key) {
+            requireMapSlot(this, 'has');
             var fkey = fastkey(key);
             if (fkey !== null) {
               // fast O(1) path
@@ -2042,6 +2055,7 @@
           },
 
           set: function (key, value) {
+		    requireMapSlot(this, 'set');
             var head = this._head, i = head, entry;
             var fkey = fastkey(key);
             if (fkey !== null) {
@@ -2074,6 +2088,7 @@
           },
 
           'delete': function (key) {
+		    requireMapSlot(this, 'delete');
             var head = this._head, i = head;
             var fkey = fastkey(key);
             if (fkey !== null) {
@@ -2098,6 +2113,7 @@
           },
 
           clear: function clear() {
+		    requireMapSlot(this, 'clear');
             this._size = 0;
             this._storage = emptyObject();
             var head = this._head, i = head, p = i.next;
@@ -2110,18 +2126,22 @@
           },
 
           keys: function keys() {
+		    requireMapSlot(this, 'keys');
             return new MapIterator(this, 'key');
           },
 
           values: function values() {
+		    requireMapSlot(this, 'values');
             return new MapIterator(this, 'value');
           },
 
           entries: function entries() {
+		    requireMapSlot(this, 'entries');
             return new MapIterator(this, 'key+value');
           },
 
           forEach: function forEach(callback) {
+		    requireMapSlot(this, 'forEach');
             var context = arguments.length > 1 ? arguments[1] : null;
             var it = this.entries();
             for (var entry = it.next(); !entry.done; entry = it.next()) {
@@ -2139,6 +2159,16 @@
       }()),
 
       Set: (function () {
+        var isSet = function isSet(set) {
+          return set._es6set && typeof set._storage !== 'undefined';
+        };
+        var requireSetSlot = function requireSetSlot(set, method) {
+          if (!ES.TypeIsObject(set) || !isSet(set)) {
+            // https://github.com/paulmillr/es6-shim/issues/176
+            throw new TypeError('Set.prototype.' + method + ' called on incompatible receiver ' + String(set));
+          }
+        };
+
         // Creating a Map is expensive.  To speed up the common case of
         // Sets containing only string or numeric keys, we use an object
         // as backing storage and lazily create a full Map only when
@@ -2202,16 +2232,14 @@
         };
 
         Value.getter(SetShim.prototype, 'size', function () {
-          if (typeof this._storage === 'undefined') {
-            // https://github.com/paulmillr/es6-shim/issues/176
-            throw new TypeError('size method called on incompatible Set');
-          }
+          requireSetSlot(this, 'size');
           ensureMap(this);
           return this['[[SetData]]'].size;
         });
 
         defineProperties(SetShim.prototype, {
           has: function (key) {
+            requireSetSlot(this, 'has');
             var fkey;
             if (this._storage && (fkey = fastkey(key)) !== null) {
               return !!this._storage[fkey];
@@ -2221,6 +2249,7 @@
           },
 
           add: function (key) {
+            requireSetSlot(this, 'add');
             var fkey;
             if (this._storage && (fkey = fastkey(key)) !== null) {
               this._storage[fkey] = true;
@@ -2232,6 +2261,7 @@
           },
 
           'delete': function (key) {
+            requireSetSlot(this, 'delete');
             var fkey;
             if (this._storage && (fkey = fastkey(key)) !== null) {
               var hasFKey = _hasOwnProperty(this._storage, fkey);
@@ -2242,6 +2272,7 @@
           },
 
           clear: function clear() {
+            requireSetSlot(this, 'clear');
             if (this._storage) {
               this._storage = emptyObject();
             } else {
@@ -2250,16 +2281,19 @@
           },
 
           values: function values() {
+            requireSetSlot(this, 'values');
             ensureMap(this);
             return this['[[SetData]]'].values();
           },
 
           entries: function entries() {
+            requireSetSlot(this, 'entries');
             ensureMap(this);
             return this['[[SetData]]'].entries();
           },
 
           forEach: function forEach(callback) {
+            requireSetSlot(this, 'forEach');
             var context = arguments.length > 1 ? arguments[1] : null;
             var entireSet = this;
             ensureMap(entireSet);
