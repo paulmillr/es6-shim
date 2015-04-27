@@ -1,5 +1,9 @@
 # es6-shim x.x.x (not yet released)
 
+# es6-shim 0.30.0 (26 Apr 2015)
+* `Map` and `Set` methods are not generic, and must only be called on valid `Map` and `Set` objects.
+* Use the native `Number#clz` (in Safari 8, eg) inside `Math.clz32`
+
 # es6-shim 0.29.0 (26 Apr 2015)
 * Test on `io.js` `v1.7` and `v1.8`
 * Ensure that shallowly wrapped Maps’ and Sets’ prototypes aren't one level too far away.
