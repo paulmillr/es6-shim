@@ -2,11 +2,13 @@
 
 var failIfThrows = function (done) {
   'use strict';
+
   return function (e) { done(e || new Error()); };
 };
 
 describe('Promise.reject', function () {
   'use strict';
+
   it('should not be enumerable', function () {
     expect(Promise).ownPropertyDescriptor('reject').to.have.property('enumerable', false);
   });

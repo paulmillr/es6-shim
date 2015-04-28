@@ -844,6 +844,7 @@ describe('clean Object.prototype', runArrayTests);
 
 describe('polluted Object.prototype', function () {
   'use strict';
+
   Object.prototype[1] = 42;
   runArrayTests();
   delete Object.prototype[1];

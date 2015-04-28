@@ -3,6 +3,7 @@
 var Assertion = expect().constructor;
 Assertion.prototype.almostEqual = function (obj, precision) {
   'use strict';
+
   var allowedDiff = precision || 1e-11;
   return this.within(obj - allowedDiff, obj + allowedDiff);
 };
@@ -13,17 +14,19 @@ describe('Math', function () {
 
   var isPositiveZero = function (zero) {
     'use strict';
+
     return zero === 0 && 1 / zero === Infinity;
   };
   var isNegativeZero = function (zero) {
     'use strict';
+
     return zero === 0 && 1 / zero === -Infinity;
   };
   var numberIsNaN = Number.isNaN || function (value) {
     return value !== value;
   };
-  var valueOfIsNaN = { valueOf: function () { 'use strict'; return NaN; } };
-  var valueOfIsInfinity = { valueOf: function () { 'use strict'; return Infinity; } };
+  var valueOfIsNaN = { valueOf: function () { return NaN; } };
+  var valueOfIsInfinity = { valueOf: function () { return Infinity; } };
   var EPSILON = Number.EPSILON || 2.2204460492503130808472633361816e-16;
 
   (typeof process !== 'undefined' && process.env.NO_ES6_SHIM ? it.skip : it)('is on the exported object', function () {

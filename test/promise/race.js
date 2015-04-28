@@ -2,11 +2,13 @@
 
 var failIfThrows = function (done) {
   'use strict';
+
   return function (e) { done(e || new Error()); };
 };
 
 var delayPromise = function (value, ms) {
   'use strict';
+
   return new Promise(function (resolve) {
     setTimeout(function () {
       resolve(value);
@@ -16,6 +18,7 @@ var delayPromise = function (value, ms) {
 
 describe('Promise.race', function () {
   'use strict';
+
   it('should not be enumerable', function () {
     expect(Promise).ownPropertyDescriptor('race').to.have.property('enumerable', false);
   });

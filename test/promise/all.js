@@ -2,6 +2,7 @@
 
 var failIfThrows = function (done) {
   'use strict';
+
   return function (e) { done(e || new Error()); };
 };
 

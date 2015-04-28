@@ -209,6 +209,7 @@ describe('Object', function () {
 
     ifExtensionsPreventable('does not have pending exceptions', function () {
       'use strict';
+
       // Firefox 37 still has "pending exception" logic in its Object.assign implementation,
       // which is 72% slower than our shim, and Firefox 40's native implementation.
       var thrower = Object.preventExtensions({ 1: 2 });

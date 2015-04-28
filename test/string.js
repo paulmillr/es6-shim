@@ -338,7 +338,7 @@ var runStringTests = function () {
         expect('abc'.includes('cd', NaN)).to.equal(false);
 
         var myobj = {
-          toString: function () {return 'abc';},
+          toString: function () { return 'abc'; },
           includes: String.prototype.includes
         };
 

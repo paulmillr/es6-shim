@@ -2,11 +2,13 @@
 
 var failIfThrows = function (done) {
   'use strict';
+
   return function (e) { done(e || new Error()); };
 };
 
 describe('Promise', function () {
   'use strict';
+
 
   specify('sanity check: a fulfilled promise calls its fulfillment handler', function (done) {
     Promise.resolve(5).then(function (value) {
