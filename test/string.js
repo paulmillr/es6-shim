@@ -123,8 +123,6 @@ var runStringTests = function () {
         expect('abc'.startsWith('c', 2)).to.equal(true);
         expect('abc'.startsWith('d', 2)).to.equal(false);
         expect('abc'.startsWith('dcd', 2)).to.equal(false);
-        expect('abc'.startsWith('a', 42)).to.equal(false);
-        expect('abc'.startsWith('a', Infinity)).to.equal(false);
         expect('abc'.startsWith('a', NaN)).to.equal(true);
         expect('abc'.startsWith('b', NaN)).to.equal(false);
         expect('abc'.startsWith('ab', -43)).to.equal(true);
@@ -165,6 +163,11 @@ var runStringTests = function () {
         };
         myobj.startsWith('elephant', idx);
         expect(gotPos).to.equal(true);
+      });
+
+      it('should handle large positions', function () {
+        expect('abc'.startsWith('a', 42)).to.equal(false);
+        expect('abc'.startsWith('a', Infinity)).to.equal(false);
       });
 
       it('should coerce to a string', function () {
@@ -224,12 +227,7 @@ var runStringTests = function () {
         expect('abc'.endsWith('b', 2)).to.equal(true);
         expect('abc'.endsWith('d', 2)).to.equal(false);
         expect('abc'.endsWith('dcd', 2)).to.equal(false);
-        expect('abc'.endsWith('a', 42)).to.equal(false);
-        expect('abc'.endsWith('bc', Infinity)).to.equal(true);
-        expect('abc'.endsWith('a', Infinity)).to.equal(false);
         expect('abc'.endsWith('bc', undefined)).to.equal(true);
-        expect('abc'.endsWith('bc', -43)).to.equal(false);
-        expect('abc'.endsWith('bc', -Infinity)).to.equal(false);
         expect('abc'.endsWith('bc', NaN)).to.equal(false);
         if (hasStrictMode) {
           expect(function () {
@@ -277,11 +275,19 @@ var runStringTests = function () {
         expect(function () { return 'abcd'.endsWith(new RegExp('abc')); }).to['throw'](TypeError);
       });
 
-      it('should handle negative and zero positions properly', function () {
+      it('should handle negative and zero endPositions properly', function () {
         expect('abcd'.endsWith('bcd', 0)).to.equal(false);
         expect('abcd'.endsWith('bcd', -2)).to.equal(false);
         expect('abcd'.endsWith('b', -2)).to.equal(false);
         expect('abcd'.endsWith('ab', -2)).to.equal(false);
+        expect('abc'.endsWith('bc', -43)).to.equal(false);
+        expect('abc'.endsWith('bc', -Infinity)).to.equal(false);
+      });
+
+      it('should handle large endPositions properly', function () {
+        expect('abc'.endsWith('a', 42)).to.equal(false);
+        expect('abc'.endsWith('bc', Infinity)).to.equal(true);
+        expect('abc'.endsWith('a', Infinity)).to.equal(false);
       });
     });
 
@@ -328,12 +334,6 @@ var runStringTests = function () {
         expect('abc'.includes('c', 2)).to.equal(true);
         expect('abc'.includes('d', 2)).to.equal(false);
         expect('abc'.includes('dcd', 2)).to.equal(false);
-        expect('abc'.includes('a', 42)).to.equal(false);
-        expect('abc'.includes('a', Infinity)).to.equal(false);
-        expect('abc'.includes('ab', -43)).to.equal(true);
-        expect('abc'.includes('cd', -42)).to.equal(false);
-        expect('abc'.includes('ab', -Infinity)).to.equal(true);
-        expect('abc'.includes('cd', -Infinity)).to.equal(false);
         expect('abc'.includes('ab', NaN)).to.equal(true);
         expect('abc'.includes('cd', NaN)).to.equal(false);
 
@@ -367,6 +367,18 @@ var runStringTests = function () {
 
         myobj.includes('elephant', idx);
         expect(gotPos).to.equal(true);
+      });
+
+      it('should handle large positions', function () {
+        expect('abc'.includes('a', 42)).to.equal(false);
+        expect('abc'.includes('a', Infinity)).to.equal(false);
+      });
+
+      it('should handle negative positions', function () {
+        expect('abc'.includes('ab', -43)).to.equal(true);
+        expect('abc'.includes('cd', -42)).to.equal(false);
+        expect('abc'.includes('ab', -Infinity)).to.equal(true);
+        expect('abc'.includes('cd', -Infinity)).to.equal(false);
       });
 
       it('should be falsy on incorrect results', function () {
