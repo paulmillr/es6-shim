@@ -893,6 +893,60 @@
     overrideNative(Array, 'from', ArrayShims.from);
   }
 
+  var toLengthsCorrectly = function (method, reversed) {
+    var obj = { length: -1 };
+    obj[reversed ? ((-1 >>> 0) - 1) : 0] = true;
+    return valueOrFalseIfThrows(function () {
+      method.call(obj, function () {
+        // note: in nonconforming browsers, this will be called
+        // -1 >>> 0 times, which is 4294967295, so the throw matters.
+        throw new RangeError('should not reach here');
+      }, []);
+    });
+  };
+  if (!toLengthsCorrectly(Array.prototype.forEach)) {
+    var originalForEach = Array.prototype.forEach;
+    overrideNative(Array.prototype, 'forEach', function forEach(callbackFn) {
+      if (this.length >= 0) { return originalForEach.apply(this, arguments); }
+    }, true);
+  }
+  if (!toLengthsCorrectly(Array.prototype.map)) {
+    var originalMap = Array.prototype.map;
+    overrideNative(Array.prototype, 'map', function map(callbackFn) {
+      if (this.length >= 0) { return originalMap.apply(this, arguments); }
+    }, true);
+  }
+  if (!toLengthsCorrectly(Array.prototype.filter)) {
+    var originalFilter = Array.prototype.filter;
+    overrideNative(Array.prototype, 'filter', function filter(callbackFn) {
+      if (this.length >= 0) { return originalFilter.apply(this, arguments); }
+    }, true);
+  }
+  if (!toLengthsCorrectly(Array.prototype.some)) {
+    var originalSome = Array.prototype.some;
+    overrideNative(Array.prototype, 'some', function some(callbackFn) {
+      if (this.length >= 0) { return originalSome.apply(this, arguments); }
+    }, true);
+  }
+  if (!toLengthsCorrectly(Array.prototype.every)) {
+    var originalEvery = Array.prototype.every;
+    overrideNative(Array.prototype, 'every', function every(callbackFn) {
+      if (this.length >= 0) { return originalEvery.apply(this, arguments); }
+    }, true);
+  }
+  if (!toLengthsCorrectly(Array.prototype.reduce)) {
+    var originalReduce = Array.prototype.reduce;
+    overrideNative(Array.prototype, 'reduce', function reduce(callbackFn) {
+      if (this.length >= 0) { return originalReduce.apply(this, arguments); }
+    }, true);
+  }
+  if (!toLengthsCorrectly(Array.prototype.reduceRight, true)) {
+    var originalReduceRight = Array.prototype.reduceRight;
+    overrideNative(Array.prototype, 'reduceRight', function reduceRight(callbackFn) {
+      if (this.length >= 0) { return originalReduceRight.apply(this, arguments); }
+    }, true);
+  }
+
   var maxSafeInteger = Math.pow(2, 53) - 1;
   defineProperties(Number, {
     MAX_SAFE_INTEGER: maxSafeInteger,

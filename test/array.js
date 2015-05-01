@@ -837,6 +837,72 @@ var runArrayTests = function () {
         expect(unscopables.fill).to.equal(true);
       });
     });
+
+    var negativeLength = { 0: 1, length: -1 };
+    var throwRangeError = function () {
+      // note: in nonconforming browsers, this will be called
+      // -1 >>> 0 times, which is 4294967295, so the throw matters.
+      throw new RangeError('should not reach here: length of -1 should clamp to length of 0');
+    };
+
+    describe('#forEach()', function () {
+      it('uses ToLength to clamp negative values to zero', function () {
+        expect(function () {
+          Array.prototype.forEach.call(negativeLength, throwRangeError);
+        }).not.to['throw'](RangeError);
+      });
+    });
+
+    describe('#map()', function () {
+      it('uses ToLength to clamp negative values to zero', function () {
+        expect(function () {
+          Array.prototype.map.call(negativeLength, throwRangeError);
+        }).not.to['throw'](RangeError);
+      });
+    });
+
+    describe('#filter()', function () {
+      it('uses ToLength to clamp negative values to zero', function () {
+        expect(function () {
+          Array.prototype.filter.call(negativeLength, throwRangeError);
+        }).not.to['throw'](RangeError);
+      });
+    });
+
+    describe('#some()', function () {
+      it('uses ToLength to clamp negative values to zero', function () {
+        expect(function () {
+          Array.prototype.some.call(negativeLength, throwRangeError);
+        }).not.to['throw'](RangeError);
+      });
+    });
+
+    describe('#every()', function () {
+      it('uses ToLength to clamp negative values to zero', function () {
+        expect(function () {
+          Array.prototype.every.call(negativeLength, throwRangeError);
+        }).not.to['throw'](RangeError);
+      });
+    });
+
+    describe('#reduce()', function () {
+      it('uses ToLength to clamp negative values to zero', function () {
+        expect(function () {
+          Array.prototype.reduce.call(negativeLength, throwRangeError, {});
+        }).not.to['throw'](RangeError);
+      });
+    });
+
+    describe('#reduceRight()', function () {
+      it('uses ToLength to clamp negative values to zero', function () {
+        var negativeOneToUint32minusOne = (-1 >>> 0) - 1;
+        var obj = { length: -1 };
+        obj[negativeOneToUint32minusOne] = true;
+        expect(function () {
+          Array.prototype.reduceRight.call(obj, throwRangeError, {});
+        }).not.to['throw'](RangeError);
+      });
+    });
   });
 };
 
