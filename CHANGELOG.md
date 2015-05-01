@@ -1,5 +1,12 @@
 # es6-shim x.x.x (not yet released)
 
+# es6-shim 0.31.0 (1 May 2015)
+* All Array.prototype methods should use `ToLength`, not `ToUint32`, on `this.length`.
+* Preserve and use original Array.prototype functions (for later shimming)
+* Make String#{startsWith, endsWith, includes} tests a bit more granular.
+* Fix Map/Set invalid receiver error messages for WebKit
+* Update `grunt-saucelabs`, `jscs`
+
 # es6-shim 0.30.0 (26 Apr 2015)
 * `Map` and `Set` methods are not generic, and must only be called on valid `Map` and `Set` objects.
 * Use the native `Number#clz` (in Safari 8, eg) inside `Math.clz32`
