@@ -283,7 +283,7 @@ var runArrayTests = function () {
 
     });
 
-    describe('Array#copyWithin', function () {
+    describe('#copyWithin()', function () {
       if (!Array.prototype.hasOwnProperty('copyWithin')) {
         return it('exists', function () {
           expect(Array.prototype).to.have.property('copyWithin');
@@ -346,7 +346,7 @@ var runArrayTests = function () {
       });
     });
 
-    describe('Array#find', function () {
+    describe('#find()', function () {
       if (!Array.prototype.hasOwnProperty('find')) {
         return it('exists', function () {
           expect(Array.prototype).to.have.property('find');
@@ -439,7 +439,7 @@ var runArrayTests = function () {
       });
     });
 
-    describe('Array#findIndex', function () {
+    describe('#findIndex()', function () {
       if (!Array.prototype.hasOwnProperty('findIndex')) {
         return it('exists', function () {
           expect(Array.prototype).to.have.property('findIndex');
@@ -544,7 +544,7 @@ var runArrayTests = function () {
         arrayIterator = [1, 2, 3].keys();
       });
 
-      describe('ArrayIterator#next', function () {
+      describe('#next()', function () {
         it('should work when applied to an ArrayIterator', function () {
           expect(arrayIterator.next.apply(arrayIterator)).to.eql({value: 0, done: false});
           expect(arrayIterator.next.apply(arrayIterator)).to.eql({value: 1, done: false});
@@ -558,7 +558,7 @@ var runArrayTests = function () {
       });
     });
 
-    describe('Array#keys', function () {
+    describe('#keys()', function () {
       if (!Array.prototype.hasOwnProperty('keys')) {
         return it('exists', function () {
           expect(Array.prototype).to.have.property('keys');
@@ -629,7 +629,7 @@ var runArrayTests = function () {
       });
     });
 
-    describe('Array#values', function () {
+    describe('#values()', function () {
       if (!Array.prototype.hasOwnProperty('values')) {
         return it('exists', function () {
           expect(Array.prototype).to.have.property('values');
@@ -700,7 +700,7 @@ var runArrayTests = function () {
       });
     });
 
-    describe('Array#entries', function () {
+    describe('#entries()', function () {
       if (!Array.prototype.hasOwnProperty('entries')) {
         return it('exists', function () {
           expect(Array.prototype).to.have.property('entries');
@@ -777,7 +777,7 @@ var runArrayTests = function () {
       });
     });
 
-    describe('Array#fill', function () {
+    describe('#fill()', function () {
       if (!Array.prototype.hasOwnProperty('fill')) {
         return it('exists', function () {
           expect(Array.prototype).to.have.property('fill');
