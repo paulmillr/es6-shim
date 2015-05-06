@@ -1,5 +1,6 @@
 language: node_js
 node_js:
+  - "iojs-v2.0"
   - "iojs-v1.8"
   - "iojs-v1.7"
   - "iojs-v1.6"
@@ -34,6 +35,7 @@ matrix:
     - node_js: "0.12"
       env: TRAVIS_RUN_SAUCE=false TRAVIS_RUN_LINT_ONLY=false
   allow_failures:
+    - node_js: "iojs-v1.7"
     - node_js: "iojs-v1.6"
     - node_js: "iojs-v1.5"
     - node_js: "iojs-v1.4"
