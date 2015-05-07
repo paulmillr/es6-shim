@@ -1,5 +1,8 @@
 # es6-shim x.x.x (not yet released)
 
+# es6-shim 0.31.1 (7 May 2015)
+* `RegExp` should work properly as a wrapper (#340)
+
 # es6-shim 0.31.0 (1 May 2015)
 * All Array.prototype methods should use `ToLength`, not `ToUint32`, on `this.length`.
 * Preserve and use original Array.prototype functions (for later shimming)
