@@ -58,6 +58,11 @@ describe('RegExp', function () {
       expect(Object.prototype.toString.call(new RegExp('a', 'g'))).to.equal('[object RegExp]');
       expect(Object.prototype.toString.call(new RegExp(/a/g, 'im'))).to.equal('[object RegExp]');
     });
+
+    it('functions as a boxed primitive wrapper', function () {
+      var regex = /a/g;
+      expect(RegExp(regex)).to.equal(regex);
+    });
   });
 
   describeIfSupportsDescriptors('#flags', function () {

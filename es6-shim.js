@@ -1250,6 +1250,10 @@
   if (!regExpSupportsFlagsWithRegex && supportsDescriptors) {
     var OrigRegExp = RegExp;
     var RegExpShim = function RegExp(pattern, flags) {
+      var calledWithNew = this instanceof RegExp;
+      if (!calledWithNew && (Type.regex(pattern) || pattern.constructor === RegExp)) {
+        return pattern;
+      }
       if (Type.regex(pattern) && Type.string(flags)) {
         return new RegExp(pattern.source, flags);
       }
