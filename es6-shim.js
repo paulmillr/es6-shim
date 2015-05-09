@@ -907,43 +907,43 @@
   if (!toLengthsCorrectly(Array.prototype.forEach)) {
     var originalForEach = Array.prototype.forEach;
     overrideNative(Array.prototype, 'forEach', function forEach(callbackFn) {
-      if (this.length >= 0) { return originalForEach.apply(this, arguments); }
+      return originalForEach.apply(this.length >= 0 ? this : [], arguments);
     }, true);
   }
   if (!toLengthsCorrectly(Array.prototype.map)) {
     var originalMap = Array.prototype.map;
     overrideNative(Array.prototype, 'map', function map(callbackFn) {
-      if (this.length >= 0) { return originalMap.apply(this, arguments); }
+      return originalMap.apply(this.length >= 0 ? this : [], arguments);
     }, true);
   }
   if (!toLengthsCorrectly(Array.prototype.filter)) {
     var originalFilter = Array.prototype.filter;
     overrideNative(Array.prototype, 'filter', function filter(callbackFn) {
-      if (this.length >= 0) { return originalFilter.apply(this, arguments); }
+      return originalFilter.apply(this.length >= 0 ? this : [], arguments);
     }, true);
   }
   if (!toLengthsCorrectly(Array.prototype.some)) {
     var originalSome = Array.prototype.some;
     overrideNative(Array.prototype, 'some', function some(callbackFn) {
-      if (this.length >= 0) { return originalSome.apply(this, arguments); }
+      return originalSome.apply(this.length >= 0 ? this : [], arguments);
     }, true);
   }
   if (!toLengthsCorrectly(Array.prototype.every)) {
     var originalEvery = Array.prototype.every;
     overrideNative(Array.prototype, 'every', function every(callbackFn) {
-      if (this.length >= 0) { return originalEvery.apply(this, arguments); }
+      return originalEvery.apply(this.length >= 0 ? this : [], arguments);
     }, true);
   }
   if (!toLengthsCorrectly(Array.prototype.reduce)) {
     var originalReduce = Array.prototype.reduce;
     overrideNative(Array.prototype, 'reduce', function reduce(callbackFn) {
-      if (this.length >= 0) { return originalReduce.apply(this, arguments); }
+      return originalReduce.apply(this.length >= 0 ? this : [], arguments);
     }, true);
   }
   if (!toLengthsCorrectly(Array.prototype.reduceRight, true)) {
     var originalReduceRight = Array.prototype.reduceRight;
     overrideNative(Array.prototype, 'reduceRight', function reduceRight(callbackFn) {
-      if (this.length >= 0) { return originalReduceRight.apply(this, arguments); }
+      return originalReduceRight.apply(this.length >= 0 ? this : [], arguments);
     }, true);
   }
 
