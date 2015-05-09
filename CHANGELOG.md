@@ -1,5 +1,8 @@
 # es6-shim x.x.x (not yet released)
 
+# es6-shim 0.31.2 (9 May 2015)
+* Fix ES5 `Array.prototype` method wrappers to return the correct value. (#341)
+
 # es6-shim 0.31.1 (7 May 2015)
 * `RegExp` should work properly as a wrapper (#340)
 
