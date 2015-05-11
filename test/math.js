@@ -1,11 +1,16 @@
 /*global describe, it, expect, require */
 
 var Assertion = expect().constructor;
-Assertion.prototype.almostEqual = function (obj, precision) {
-  'use strict';
 
-  var allowedDiff = precision || 1e-11;
-  return this.within(obj - allowedDiff, obj + allowedDiff);
+var EPSILON = Math.pow(2, -52);
+var MIN_VALUE = Math.pow(2, -1022);
+var MAX_VALUE = Math.pow(2, 1023) * (2 - EPSILON);
+
+var MATH_EXP_ERROR = Math.abs(1 - Math.exp(704.6589) / 1.0702171200481775e+306) / EPSILON;
+Assertion.prototype.almostEqual = function (expected) {
+  'use strict';
+  var C = (expected < 0 ? -1 : (expected > 0 ? 1 : expected)) * (MATH_EXP_ERROR + 8) * EPSILON;
+  return this.within(expected * (1 - C), expected * (1 + C));
 };
 
 describe('Math', function () {
@@ -27,7 +32,6 @@ describe('Math', function () {
   };
   var valueOfIsNaN = { valueOf: function () { return NaN; } };
   var valueOfIsInfinity = { valueOf: function () { return Infinity; } };
-  var EPSILON = Number.EPSILON || 2.2204460492503130808472633361816e-16;
 
   (typeof process !== 'undefined' && process.env.NO_ES6_SHIM ? it.skip : it)('is on the exported object', function () {
     var exported = require('../');
@@ -50,7 +54,7 @@ describe('Math', function () {
     it('should be correct', function () {
       expect(numberIsNaN(Math.acosh(NaN))).to.equal(true);
       expect(numberIsNaN(Math.acosh(0))).to.equal(true);
-      expect(numberIsNaN(Math.acosh(0.9999999))).to.equal(true);
+      expect(numberIsNaN(Math.acosh(1 - EPSILON / 2))).to.equal(true);
       expect(numberIsNaN(Math.acosh(-1e300))).to.equal(true);
       expect(Math.acosh(1e+99)).to.almostEqual(228.64907138697046);
       expect(isPositiveZero(Math.acosh(1))).to.equal(true);
@@ -58,7 +62,8 @@ describe('Math', function () {
       expect(Math.acosh(1234)).to.almostEqual(7.811163220849231);
       expect(Math.acosh(8.88)).to.almostEqual(2.8737631531629235);
       expect(Math.acosh(1e160)).to.almostEqual(369.10676205960726);
-      expect(Math.acosh(Number.MAX_VALUE)).to.almostEqual(710.4758600739439);
+      expect(Math.acosh(MAX_VALUE)).to.almostEqual(710.4758600739439);
+      expect(Math.acosh(1 + EPSILON)).to.almostEqual(2.1073424255447017e-8);
     });
   });
 
@@ -95,6 +100,10 @@ describe('Math', function () {
       expect(Math.asinh(1e150)).to.almostEqual(346.0809111296668);
       expect(Math.asinh(1e7)).to.almostEqual(16.811242831518268);
       expect(Math.asinh(-1e7)).to.almostEqual(-16.811242831518268);
+      expect(Math.asinh(MAX_VALUE)).to.almostEqual(710.4758600739439);
+      expect(Math.asinh(-MAX_VALUE)).to.almostEqual(-710.4758600739439);
+      expect(Math.asinh(MIN_VALUE * 2)).to.almostEqual(MIN_VALUE * 2);
+      expect(Math.asinh(-MIN_VALUE * 2)).to.almostEqual(-MIN_VALUE * 2);
     });
   });
 
@@ -113,14 +122,18 @@ describe('Math', function () {
 
     it('should be correct', function () {
       expect(numberIsNaN(Math.atanh(NaN))).to.equal(true);
-      expect(numberIsNaN(Math.atanh(-1.00000001))).to.equal(true);
-      expect(numberIsNaN(Math.atanh(1.00000001))).to.equal(true);
-      expect(numberIsNaN(Math.atanh(-1e300))).to.equal(true);
-      expect(numberIsNaN(Math.atanh(1e300))).to.equal(true);
+      expect(numberIsNaN(Math.atanh(-1 - EPSILON))).to.equal(true);
+      expect(numberIsNaN(Math.atanh(1 + EPSILON))).to.equal(true);
+      expect(numberIsNaN(Math.atanh(-MAX_VALUE))).to.equal(true);
+      expect(numberIsNaN(Math.atanh(MAX_VALUE))).to.equal(true);
       expect(Math.atanh(-1)).to.equal(-Infinity);
       expect(Math.atanh(1)).to.equal(Infinity);
       expect(isPositiveZero(Math.atanh(+0))).to.equal(true);
       expect(isNegativeZero(Math.atanh(-0))).to.equal(true);
+      expect(Math.atanh(-1 + EPSILON / 2)).to.almostEqual(-18.714973875118524);
+      expect(Math.atanh(1 - EPSILON / 2)).to.almostEqual(18.714973875118524);
+      expect(Math.atanh(MIN_VALUE * 2)).to.almostEqual(MIN_VALUE * 2);
+      expect(Math.atanh(-MIN_VALUE * 2)).to.almostEqual(-MIN_VALUE * 2);
       expect(Math.atanh(0.5)).to.almostEqual(0.5493061443340549);
       expect(Math.atanh(-0.5)).to.almostEqual(-0.5493061443340549);
       expect(Math.atanh(-0.5)).to.almostEqual(-0.5493061443340549);
@@ -151,10 +164,10 @@ describe('Math', function () {
       expect(Math.cbrt(8)).to.almostEqual(2);
       expect(Math.cbrt(-1000)).to.almostEqual(-10);
       expect(Math.cbrt(1000)).to.almostEqual(10);
-      expect(Math.cbrt(-1e-300)).to.almostEqual(-1e-100);
-      expect(Math.cbrt(1e-300)).to.almostEqual(1e-100);
-      expect(Math.cbrt(-1e+300)).to.almostEqual(-1e+100);
-      expect(Math.cbrt(1e+300)).to.almostEqual(1e+100);
+      expect(Math.cbrt(-MIN_VALUE)).to.almostEqual(-2.8126442852362615e-103);
+      expect(Math.cbrt(MIN_VALUE)).to.almostEqual(2.8126442852362615e-103);
+      expect(Math.cbrt(-MAX_VALUE)).to.almostEqual(-5.643803094122361e+102);
+      expect(Math.cbrt(MAX_VALUE)).to.almostEqual(5.643803094122361e+102);
     });
   });
 
@@ -260,13 +273,13 @@ describe('Math', function () {
     });
 
     it('should be correct', function () {
-      // Overridden precision values here are for Chrome, as of v25.0.1364.172
-      // Broadened slightly for Firefox 31
-      expect(Math.cosh(12)).to.almostEqual(81377.39571257407, 9e-11);
-      expect(Math.cosh(22)).to.almostEqual(1792456423.065795780980053377, 1e-5);
+      expect(Math.cosh(12)).to.almostEqual(81377.39571257407);
+      expect(Math.cosh(22)).to.almostEqual(1792456423.065795780980053377);
       expect(Math.cosh(-10)).to.almostEqual(11013.23292010332313972137);
-      expect(Math.cosh(-23)).to.almostEqual(4872401723.1244513000, 1e-5);
-      expect(Math.cosh(-2e-17)).to.equal(1);
+      expect(Math.cosh(-23)).to.almostEqual(4872401723.1244513000);
+      expect(Math.cosh(-2e-17)).to.almostEqual(1);
+      expect(Math.cosh(710)).to.almostEqual(1.1169973830808555e+308);
+      expect(Math.cosh(-710)).to.almostEqual(1.1169973830808555e+308);
     });
   });
 
@@ -551,7 +564,11 @@ describe('Math', function () {
       expect(Math.sinh(-Infinity)).to.equal(-Infinity);
       expect(Math.sinh(-5)).to.almostEqual(-74.20321057778875);
       expect(Math.sinh(2)).to.almostEqual(3.6268604078470186);
-      expect(Math.sinh(-2e-17)).to.equal(-2e-17);
+      expect(Math.sinh(-2e-17)).to.almostEqual(-2e-17);
+      expect(Math.sinh(MIN_VALUE * 2)).to.almostEqual(MIN_VALUE * 2);
+      expect(Math.sinh(-MIN_VALUE * 2)).to.almostEqual(-MIN_VALUE * 2);
+      expect(Math.sinh(710)).to.almostEqual(1.1169973830808555e+308);
+      expect(Math.sinh(-710)).to.almostEqual(-1.1169973830808555e+308);
     });
   });
 
@@ -582,7 +599,8 @@ describe('Math', function () {
       expect(Math.tanh(-Infinity)).to.equal(-1);
       expect(Math.tanh(90)).to.almostEqual(1);
       expect(Math.tanh(10)).to.almostEqual(0.9999999958776927);
-      expect(Math.tanh(-2e-17)).to.equal(-2e-17);
+      expect(Math.tanh(MIN_VALUE * 2)).to.almostEqual(MIN_VALUE * 2);
+      expect(Math.tanh(-MIN_VALUE * 2)).to.almostEqual(-MIN_VALUE * 2);
     });
   });
 
