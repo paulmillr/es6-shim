@@ -9,6 +9,7 @@ var MAX_VALUE = Math.pow(2, 1023) * (2 - EPSILON);
 var MATH_EXP_ERROR = Math.abs(1 - Math.exp(704.6589) / 1.0702171200481775e+306) / EPSILON;
 Assertion.prototype.almostEqual = function (expected) {
   'use strict';
+
   var C = (expected < 0 ? -1 : (expected > 0 ? 1 : expected)) * (MATH_EXP_ERROR + 8) * EPSILON;
   return this.within(expected * (1 - C), expected * (1 + C));
 };
