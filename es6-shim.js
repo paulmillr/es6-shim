@@ -1454,11 +1454,10 @@
     tanh: function tanh(value) {
       var x = Number(value);
       var a = Math.expm1(2 * x);
-      var b = Math.expm1(2 * x) + 2;
-      if (a === Infinity && b === Infinity) {
+      if (a + 2 === Infinity) {
         return 1;
       }
-      return a / b;
+      return a / (a + 2);
     },
 
     trunc: function trunc(value) {
