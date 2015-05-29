@@ -253,6 +253,12 @@ describe('Collections', function () {
     });
 
     describe('#keys()', function () {
+      if (!Map.prototype.hasOwnProperty('keys')) {
+        return it('exists', function () {
+          expect(Map.prototype).to.have.property('keys');
+        });
+      }
+
       ifFunctionsHaveNamesIt('has the right name', function () {
         expect(Map.prototype.keys).to.have.property('name', 'keys');
       });
@@ -267,6 +273,12 @@ describe('Collections', function () {
     });
 
     describe('#values()', function () {
+      if (!Map.prototype.hasOwnProperty('values')) {
+        return it('exists', function () {
+          expect(Map.prototype).to.have.property('values');
+        });
+      }
+
       ifFunctionsHaveNamesIt('has the right name', function () {
         expect(Map.prototype.values).to.have.property('name', 'values');
       });
@@ -281,6 +293,12 @@ describe('Collections', function () {
     });
 
     describe('#entries()', function () {
+      if (!Map.prototype.hasOwnProperty('entries')) {
+        return it('exists', function () {
+          expect(Map.prototype).to.have.property('entries');
+        });
+      }
+
       ifFunctionsHaveNamesIt('has the right name', function () {
         expect(Map.prototype.entries).to.have.property('name', 'entries');
       });
@@ -727,6 +745,12 @@ describe('Collections', function () {
     });
 
     describe('#keys()', function () {
+      if (!Set.prototype.hasOwnProperty('keys')) {
+        return it('exists', function () {
+          expect(Set.prototype).to.have.property('keys');
+        });
+      }
+
       it('is the same object as #values()', function () {
         expect(Set.prototype.keys).to.equal(Set.prototype.values);
       });
@@ -745,6 +769,12 @@ describe('Collections', function () {
     });
 
     describe('#values()', function () {
+      if (!Set.prototype.hasOwnProperty('values')) {
+        return it('exists', function () {
+          expect(Set.prototype).to.have.property('values');
+        });
+      }
+
       ifFunctionsHaveNamesIt('has the right name', function () {
         expect(Set.prototype.values).to.have.property('name', 'values');
       });
@@ -767,6 +797,12 @@ describe('Collections', function () {
     });
 
     describe('#entries()', function () {
+      if (!Set.prototype.hasOwnProperty('entries')) {
+        return it('exists', function () {
+          expect(Set.prototype).to.have.property('entries');
+        });
+      }
+
       ifFunctionsHaveNamesIt('has the right name', function () {
         expect(Set.prototype.entries).to.have.property('name', 'entries');
       });

@@ -35,6 +35,12 @@ describe('Math', function () {
   });
 
   describe('.acosh()', function () {
+    if (!Math.hasOwnProperty('acosh')) {
+      return it('exists', function () {
+        expect(Math).to.have.property('acosh');
+      });
+    }
+
     ifFunctionsHaveNamesIt('has the right name', function () {
       expect(Math.acosh).to.have.property('name', 'acosh');
     });
@@ -63,6 +69,12 @@ describe('Math', function () {
   });
 
   describe('.asinh()', function () {
+    if (!Math.hasOwnProperty('asinh')) {
+      return it('exists', function () {
+        expect(Math).to.have.property('asinh');
+      });
+    }
+
     ifFunctionsHaveNamesIt('has the right name', function () {
       expect(Math.asinh).to.have.property('name', 'asinh');
     });
@@ -99,6 +111,12 @@ describe('Math', function () {
   });
 
   describe('.atanh()', function () {
+    if (!Math.hasOwnProperty('atanh')) {
+      return it('exists', function () {
+        expect(Math).to.have.property('atanh');
+      });
+    }
+
     ifFunctionsHaveNamesIt('has the right name', function () {
       expect(Math.atanh).to.have.property('name', 'atanh');
     });
@@ -129,6 +147,12 @@ describe('Math', function () {
   });
 
   describe('.cbrt()', function () {
+    if (!Math.hasOwnProperty('cbrt')) {
+      return it('exists', function () {
+        expect(Math).to.have.property('cbrt');
+      });
+    }
+
     ifFunctionsHaveNamesIt('has the right name', function () {
       expect(Math.cbrt).to.have.property('name', 'cbrt');
     });
@@ -744,6 +768,12 @@ describe('Math', function () {
   });
 
   describe('.fround()', function () {
+    if (!Math.hasOwnProperty('fround')) {
+      return it('exists', function () {
+        expect(Math).to.have.property('fround');
+      });
+    }
+
     ifFunctionsHaveNamesIt('has the right name', function () {
       expect(Math.fround).to.have.property('name', 'fround');
     });

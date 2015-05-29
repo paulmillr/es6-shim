@@ -3,6 +3,12 @@
 /* This file is for testing implementation regressions of Promises. */
 
 describe('Promise', function () {
+    if (typeof Promise === 'undefined') {
+      return it('exists', function () {
+        expect(typeof Promise).to.be('function');
+      });
+    }
+
   (typeof process !== 'undefined' && process.env.NO_ES6_SHIM ? it.skip : it)('is on the exported object', function () {
     var exported = require('../');
     expect(exported.Promise).to.equal(Promise);
