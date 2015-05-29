@@ -817,7 +817,7 @@ describe('Collections', function () {
 
       var set;
       beforeEach(function () {
-        set = new Set([1, NaN, false]);
+        set = new Set([1, NaN, false, true, null, undefined, 'a']);
       });
 
       afterEach(function () {
@@ -825,7 +825,7 @@ describe('Collections', function () {
       });
 
       it('works with the full set', function () {
-        expect(Array.from(set)).to.eql([1, NaN, false]);
+        expect(Array.from(set)).to.eql([1, NaN, false, true, null, undefined, 'a']);
       });
 
       it('works with Set#keys()', function () {
@@ -837,7 +837,15 @@ describe('Collections', function () {
       });
 
       it('works with Set#entries()', function () {
-        expect(Array.from(set.entries())).to.eql([[1, 1], [NaN, NaN], [false, false]]);
+        expect(Array.from(set.entries())).to.eql([
+          [1, 1],
+          [NaN, NaN],
+          [false, false],
+          [true, true],
+          [null, null],
+          [undefined, undefined],
+          ['a', 'a']
+        ]);
       });
     });
 

@@ -1945,7 +1945,9 @@
         return null;
       }
       var type = typeof key;
-      if (type === 'string') {
+      if (type === 'undefined' || key === null) {
+        return '^' + String(key);
+      } else if (type === 'string') {
         return '$' + key;
       } else if (type === 'number') {
         // note that -0 will get coerced to "0" when used as a property key
@@ -1953,6 +1955,8 @@
           return 'n' + key;
         }
         return key;
+      } else if (type === 'boolean') {
+        return 'b' + key;
       }
       return null;
     };
@@ -2280,13 +2284,21 @@
           if (!set['[[SetData]]']) {
             var m = set['[[SetData]]'] = new collectionShims.Map();
             _forEach(Object.keys(set._storage), function (k) {
-              // fast check for leading '$'
-              if (k.charCodeAt(0) === 36) {
-                k = k.slice(1);
-              } else if (k.charAt(0) === 'n') {
-                k = +k.slice(1);
+              if (k === '^null') {
+                k = null;
+              } else if (k === '^undefined') {
+                k = void 0;
               } else {
-                k = +k;
+                var first = k.charAt(0);
+                if (first === '$') {
+                  k = k.slice(1);
+                } else if (first === 'n') {
+                  k = +k.slice(1);
+                } else if (first === 'b') {
+                  k = k === 'btrue';
+                } else {
+                  k = +k;
+                }
               }
               m.set(k, k);
             });
