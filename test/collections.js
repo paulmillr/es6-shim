@@ -108,7 +108,9 @@ describe('Collections', function () {
     it('should accept an iterable as argument', function () {
       testMapping(map, 'a', 'b');
       testMapping(map, 'c', 'd');
-      var map2 = new Map(map);
+      var map2;
+      expect(function () { map2 = new Map(map); }).not.to['throw'](Error);
+      expect(map2).to.be.an.instanceOf(Map);
       expect(map2.has('a')).to.equal(true);
       expect(map2.has('c')).to.equal(true);
       expect(map2).to.have.entries([['a', 'b'], ['c', 'd']]);
