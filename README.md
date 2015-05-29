@@ -33,39 +33,39 @@ In both browser and node you may also want to include `unorm`; see the [`String.
     * `raw()`
 * `String.prototype`:
     * `codePointAt()` ([a standalone shim is also available](http://mths.be/codepointat))
-    * `repeat()` ([a standalone shim is also available](http://mths.be/repeat))
-    * `startsWith()` ([a standalone shim is also available](http://mths.be/startswith))
     * `endsWith()` ([a standalone shim is also available](http://mths.be/endswith))
     * `includes()` ([a standalone shim is also available](http://mths.be/includes))
+    * `repeat()` ([a standalone shim is also available](http://mths.be/repeat))
+    * `startsWith()` ([a standalone shim is also available](http://mths.be/startswith))
 * `RegExp`:
     * `new RegExp`, when given a RegExp as the pattern, will no longer throw when given a "flags" string argument. (requires ES5)
 * `RegExp.prototype`:
     * `flags` (requires ES5) ([a standalone shim is also available](https://github.com/es-shims/RegExp.prototype.flags))
 * `Number`:
+    * `EPSILON`
     * `MAX_SAFE_INTEGER`
     * `MIN_SAFE_INTEGER`
-    * `EPSILON`
-    * `parseInt()`
-    * `parseFloat()`
     * `isNaN()`([a standalone shim is also available](https://npmjs.org/package/is-nan))
     * `isInteger()`
     * `isSafeInteger()`
     * `isFinite()`
+    * `parseInt()`
+    * `parseFloat()`
 * `Array`:
     * `from()` ([a standalone shim is also available](https://npmjs.org/package/array.from))
     * `of()` ([a standalone shim is also available](https://npmjs.org/package/array.of))
 * `Array.prototype`:
     * `copyWithin()`
+    * `entries()`
     * `fill()`
     * `find()` ([a standalone shim is also available](https://github.com/paulmillr/Array.prototype.find))
     * `findIndex()` ([a standalone shim is also available](https://github.com/paulmillr/Array.prototype.findIndex))
     * `keys()` (note: keys/values/entries return an `ArrayIterator` object)
-    * `entries()`
     * `values()`
 * `Object`:
-    * `keys()` (in ES5, but no longer throws on non-object non-null/undefined values in ES6)
-    * `is()` ([a standalone shim is also available](https://github.com/ljharb/object-is))
     * `assign()` ([a standalone shim is also available](https://github.com/ljharb/object.assign))
+    * `is()` ([a standalone shim is also available](https://github.com/ljharb/object-is))
+    * `keys()` (in ES5, but no longer throws on non-object non-null/undefined values in ES6)
     * `setPrototypeOf()` (IE >= 11)
 * `Math`:
     * `acosh()`
@@ -75,16 +75,16 @@ In both browser and node you may also want to include `unorm`; see the [`String.
     * `clz32()`
     * `cosh()`
     * `expm1()`
+    * `fround()`
     * `hypot()`
-    * `log2()`
+    * `imul()`
     * `log10()`
     * `log1p()`
+    * `log2()`
     * `sign()`
     * `sinh()`
     * `tanh()`
     * `trunc()`
-    * `imul()`
-    * `fround()`
 
 Math functions’ accuracy is 1e-11.
 
