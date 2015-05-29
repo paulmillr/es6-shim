@@ -75,18 +75,16 @@ In both browser and node you may also want to include `unorm`; see the [`String.
     * `clz32()`
     * `cosh()`
     * `expm1()`
+    * `fround()`
     * `hypot()`
-    * `log2()`
+    * `imul()`
     * `log10()`
     * `log1p()`
+    * `log2()`
     * `sign()`
     * `sinh()`
     * `tanh()`
     * `trunc()`
-    * `imul()`
-    * `fround()`
-
-Math functions’ accuracy is 1e-11.
 
 * `Reflect`
     * `apply()`
