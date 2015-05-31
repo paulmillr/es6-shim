@@ -1143,9 +1143,19 @@
   if (Object.getOwnPropertyNames) {
     var objectGOPNAcceptsPrimitives = !throwsError(function () { Object.getOwnPropertyNames('foo'); });
     if (!objectGOPNAcceptsPrimitives) {
+      var cachedWindowNames = typeof window === 'object' ? Object.getOwnPropertyNames(window) : [];
       var originalObjectGetOwnPropertyNames = Object.getOwnPropertyNames;
       overrideNative(Object, 'getOwnPropertyNames', function getOwnPropertyNames(value) {
-        return originalObjectGetOwnPropertyNames(ES.ToObject(value));
+        var val = ES.ToObject(value);
+        if (_toString(val) === '[object Window]') {
+          try {
+            return originalObjectGetOwnPropertyNames(val);
+          } catch (e) {
+            // IE bug where layout engine calls userland gOPN for cross-domain `window` objects
+            return _concat([], cachedWindowNames);
+          }
+        }
+        return originalObjectGetOwnPropertyNames(val);
       });
     }
   }

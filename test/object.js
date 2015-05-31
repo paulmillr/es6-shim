@@ -12,6 +12,7 @@ describe('Object', function () {
 
   var hasSymbols = typeof Symbol === 'function' && typeof Symbol() === 'symbol';
   var ifSymbolsIt = hasSymbols ? it : xit;
+  var ifBrowserIt = typeof window === 'object' && typeof document === 'object' ? it : xit;
 
   if (Object.getOwnPropertyNames) {
     describe('.getOwnPropertyNames()', function () {
@@ -25,6 +26,17 @@ describe('Object', function () {
         [true, false, NaN, 42, /a/g, 'foo'].forEach(function (item) {
           expect(Object.getOwnPropertyNames(item)).to.eql(Object.getOwnPropertyNames(Object(item)));
         });
+      });
+
+      ifBrowserIt('does not break when an iframe is added', function () {
+        /*global window, document */
+        var div = document.createElement('div');
+        div.innerHTML = '<iframe src="http://xkcd.com"></iframe>';
+        document.body.appendChild(div);
+        setTimeout(function () {
+          document.body.removeChild(div);
+        }, 0);
+        expect(Array.isArray(Object.getOwnPropertyNames(window))).to.eql(true);
       });
     });
   }
