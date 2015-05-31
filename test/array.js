@@ -281,6 +281,20 @@ var runArrayTests = function () {
         expect(Array.of.apply(Foo, args)).to.eql(expected);
       });
 
+      describe('without Array.from', function () {
+        var originalFrom = Array.from;
+        beforeEach(function () {
+          Array.from = 42;
+        });
+
+        afterEach(function () {
+          Array.from = originalFrom;
+        });
+
+        it('still works', function () {
+          expect(Array.of(1, 2, 3)).to.eql([1, 2, 3]);
+        });
+      });
     });
 
     describe('#copyWithin()', function () {

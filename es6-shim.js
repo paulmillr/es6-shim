@@ -62,6 +62,24 @@
   var _filter = Function.call.bind(Array.prototype.filter);
   var _every = Function.call.bind(Array.prototype.every);
 
+  var createDataProperty = function createDataProperty(object, name, value) {
+    if (supportsDescriptors) {
+      Object.defineProperty(object, name, {
+        configurable: true,
+        enumerable: true,
+        writable: true,
+        value: value
+      });
+    } else {
+      object[name] = value;
+    }
+  };
+  var createDataPropertyOrThrow = function createDataPropertyOrThrow(object, name, value) {
+    createDataProperty(object, name, value);
+    if (!ES.SameValue(object[name], value)) {
+      throw new TypeError('property is nonconfigurable');
+    }
+  };
   var defineProperty = function (object, name, value, force) {
     if (!force && name in object) { return; }
     if (supportsDescriptors) {
@@ -759,7 +777,14 @@
     },
 
     of: function of() {
-      return _call(Array.from, this, arguments);
+      var len = arguments.length;
+      var C = this;
+      var A = Array.isArray(C) || !ES.IsCallable(C) ? new Array(len) : ES.Construct(C, [len]);
+      for (var k = 0; k < len; ++k) {
+        createDataPropertyOrThrow(A, k, arguments[k]);
+      }
+      A.length = len;
+      return A;
     }
   };
   defineProperties(Array, ArrayShims);
@@ -864,7 +889,7 @@
   addIterator(ObjectIterator.prototype);
 
   // note: this is positioned here because it depends on ArrayIterator
-  var arrayOfSupportsSubclassing = (function () {
+  var arrayOfSupportsSubclassing = Array.of === ArrayShims.of || (function () {
     // Detects a bug in Webkit nightly r181886
     var Foo = function Foo(len) { this.length = len; };
     Foo.prototype = [];
