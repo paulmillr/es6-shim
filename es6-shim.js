@@ -2393,7 +2393,7 @@
             });
           }
         });
-        defineProperty(SetShim, 'keys', SetShim.values, true);
+        defineProperty(SetShim.prototype, 'keys', SetShim.prototype.values, true);
         addIterator(SetShim.prototype, function () { return this.values(); });
 
         return SetShim;
