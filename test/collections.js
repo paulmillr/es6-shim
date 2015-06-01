@@ -818,6 +818,25 @@ describe('Collections', function () {
       });
     });
 
+    describe('#has()', function () {
+      if (!Set.prototype.hasOwnProperty('has')) {
+        return it('exists', function () {
+          expect(Set.prototype).to.have.property('has');
+        });
+      }
+
+      ifFunctionsHaveNamesIt('has the right name', function () {
+        expect(Set.prototype.has).to.have.property('name', 'has');
+      });
+
+      it('is not enumerable', function () {
+        expect(Set.prototype).ownPropertyDescriptor('has').to.have.property('enumerable', false);
+      });
+
+      it('has the right arity', function () {
+        expect(Set.prototype.has).to.have.property('length', 1);
+      });
+    });
 
     it('should allow NaN values as keys', function () {
       expect(set.has(NaN)).to.equal(false);

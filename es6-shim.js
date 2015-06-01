@@ -1720,7 +1720,7 @@
       };
     };
 
-    Promise = function (resolver) {
+    Promise = function Promise(resolver) {
       var promise = this;
       promise = emulateES6construct(promise);
       if (!promise._promiseConstructor) {
@@ -2000,7 +2000,7 @@
           this.prev = null;
         }
 
-        MapEntry.prototype.isRemoved = function () {
+        MapEntry.prototype.isRemoved = function isRemoved() {
           return this.key === empty;
         };
 
@@ -2022,7 +2022,7 @@
         }
 
         MapIterator.prototype = {
-          next: function () {
+          next: function next() {
             var i = this.i, kind = this.kind, head = this.head, result;
             if (typeof this.i === 'undefined') {
               return { value: void 0, done: true };
@@ -2107,7 +2107,7 @@
         });
 
         defineProperties(Map.prototype, {
-          get: function (key) {
+          get: function get(key) {
 		    requireMapSlot(this, 'get');
             var fkey = fastkey(key);
             if (fkey !== null) {
@@ -2127,7 +2127,7 @@
             }
           },
 
-          has: function (key) {
+          has: function has(key) {
             requireMapSlot(this, 'has');
             var fkey = fastkey(key);
             if (fkey !== null) {
@@ -2143,7 +2143,7 @@
             return false;
           },
 
-          set: function (key, value) {
+          set: function set(key, value) {
 		    requireMapSlot(this, 'set');
             var head = this._head, i = head, entry;
             var fkey = fastkey(key);
@@ -2335,7 +2335,7 @@
         });
 
         defineProperties(SetShim.prototype, {
-          has: function (key) {
+          has: function has(key) {
             requireSetSlot(this, 'has');
             var fkey;
             if (this._storage && (fkey = fastkey(key)) !== null) {
@@ -2345,7 +2345,7 @@
             return this['[[SetData]]'].has(key);
           },
 
-          add: function (key) {
+          add: function add(key) {
             requireSetSlot(this, 'add');
             var fkey;
             if (this._storage && (fkey = fastkey(key)) !== null) {
