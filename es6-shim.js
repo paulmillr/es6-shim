@@ -2394,7 +2394,7 @@
           }
         });
         defineProperty(SetShim.prototype, 'keys', SetShim.prototype.values, true);
-        addIterator(SetShim.prototype, function () { return this.values(); });
+        addIterator(SetShim.prototype, SetShim.prototype.values);
 
         return SetShim;
       }())
