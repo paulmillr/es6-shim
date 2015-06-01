@@ -2242,7 +2242,7 @@
             }
           }
         });
-        addIterator(Map.prototype, function () { return this.entries(); });
+        addIterator(Map.prototype, Map.prototype.entries);
 
         return Map;
       }()),
