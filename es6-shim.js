@@ -2435,15 +2435,15 @@
         globals.Map.prototype = create(OrigMapNoArgs.prototype);
         Value.preserveToString(globals.Map, OrigMapNoArgs);
       }
-      var m = new Map();
+      var testMap = new Map();
       var mapUsesSameValueZero = (function (m) {
         m['delete'](0);
         m['delete'](-0);
         m.set(0, 3);
         m.get(-0, 4);
         return m.get(0) === 3 && m.get(-0) === 4;
-      }(m));
-      var mapSupportsChaining = m.set(1, 2) === m;
+      }(testMap));
+      var mapSupportsChaining = testMap.set(1, 2) === testMap;
       if (!mapUsesSameValueZero || !mapSupportsChaining) {
         var origMapSet = Map.prototype.set;
         overrideNative(Map.prototype, 'set', function set(k, v) {
@@ -2465,13 +2465,13 @@
         Value.preserveToString(Map.prototype.get, origMapGet);
         Value.preserveToString(Map.prototype.has, origMapHas);
       }
-      var s = new Set();
+      var testSet = new Set();
       var setUsesSameValueZero = (function (s) {
         s['delete'](0);
         s.add(-0);
         return !s.has(0);
-      }(s));
-      var setSupportsChaining = s.add(1) === s;
+      }(testSet));
+      var setSupportsChaining = testSet.add(1) === testSet;
       if (!setUsesSameValueZero || !setSupportsChaining) {
         var origSetAdd = Set.prototype.add;
         Set.prototype.add = function add(v) {
