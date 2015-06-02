@@ -88,7 +88,7 @@
   // Simple shim for Object.create on ES3 browsers
   // (unlike real shim, no attempt to support `prototype === null`)
   var create = Object.create || function (prototype, properties) {
-    function Prototype() {}
+    var Prototype = function Prototype() {};
     Prototype.prototype = prototype;
     var object = new Prototype();
     if (typeof properties !== 'undefined') {
@@ -1993,12 +1993,12 @@
 
         var empty = {};
 
-        function MapEntry(key, value) {
+        var MapEntry = function MapEntry(key, value) {
           this.key = key;
           this.value = value;
           this.next = null;
           this.prev = null;
-        }
+        };
 
         MapEntry.prototype.isRemoved = function isRemoved() {
           return this.key === empty;
@@ -2014,12 +2014,12 @@
           }
         };
 
-        function MapIterator(map, kind) {
+        var MapIterator = function MapIterator(map, kind) {
           requireMapSlot(map, '[[MapIterator]]');
           this.head = map._head;
           this.i = this.head;
           this.kind = kind;
-        }
+        };
 
         MapIterator.prototype = {
           next: function next() {
@@ -2053,7 +2053,7 @@
         };
         addIterator(MapIterator.prototype);
 
-        function Map() {
+        var MapShim = function Map() {
           var map = this;
           if (!ES.TypeIsObject(map)) {
             throw new TypeError("Constructor Map requires 'new'");
@@ -2089,9 +2089,9 @@
             }
           }
           return map;
-        }
-        var Map$prototype = Map.prototype;
-        defineProperty(Map, symbolSpecies, function (obj) {
+        };
+        var Map$prototype = MapShim.prototype;
+        defineProperty(MapShim, symbolSpecies, function (obj) {
           var constructor = this;
           var prototype = constructor.prototype || Map$prototype;
           var object = obj || create(prototype);
@@ -2099,14 +2099,14 @@
           return object;
         });
 
-        Value.getter(Map.prototype, 'size', function () {
+        Value.getter(Map$prototype, 'size', function () {
           if (typeof this._size === 'undefined') {
             throw new TypeError('size method called on incompatible Map');
           }
           return this._size;
         });
 
-        defineProperties(Map.prototype, {
+        defineProperties(Map$prototype, {
           get: function get(key) {
 		    requireMapSlot(this, 'get');
             var fkey = fastkey(key);
@@ -2242,9 +2242,9 @@
             }
           }
         });
-        addIterator(Map.prototype, Map.prototype.entries);
+        addIterator(Map$prototype, Map$prototype.entries);
 
-        return Map;
+        return MapShim;
       }()),
 
       Set: (function () {
