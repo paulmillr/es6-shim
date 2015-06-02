@@ -1,5 +1,20 @@
 # es6-shim x.x.x (not yet released)
 
+# es6-shim 0.31.3 (2 Jun 2015)
+* [Fix] Properly name more shim functions
+* [Fix] Fix an IE bug where the layout engine internally calls the userland `Object.getOwnPropertyNames`
+* [Fix] Ensure `Map.prototype[Symbol.iterator] === Map.prototype.entries`
+* [Fix] Ensure `Set.prototype[Symbol.iterator] === Set.prototype.values`
+* [Tests] `Object.assign` pending exceptions: IE 9 `preventExtensions` doesn't throw, even in strict mode
+* [Security] Cache more native methods in case they're overwritten later
+* [Tests] IE 11 has native `Map`/`Set`, but it takes an optional *function*, not an optional iterable, in the constructor
+* [Tests] Add more "exists" early bailouts, to declutter native test results
+* [Docs] Alphabetize shim lists in the README
+* [Perf] Add more `Map`/`Set` fast paths for more primitives: boolean, null, undefined
+* [Tests] Test up to `io.js` `v2.2`
+* [Deps] Update `mocha`, `es5-shim`, `uglify-js`, `jshint`
+* [Refactor] Style cleanups
+
 # es6-shim 0.31.2 (9 May 2015)
 * Fix ES5 `Array.prototype` method wrappers to return the correct value. (#341)
 
