@@ -2106,7 +2106,7 @@
 
         defineProperties(Map$prototype, {
           get: function get(key) {
-		    requireMapSlot(this, 'get');
+            requireMapSlot(this, 'get');
             var fkey = fastkey(key);
             if (fkey !== null) {
               // fast O(1) path
@@ -2142,7 +2142,7 @@
           },
 
           set: function set(key, value) {
-		    requireMapSlot(this, 'set');
+            requireMapSlot(this, 'set');
             var head = this._head, i = head, entry;
             var fkey = fastkey(key);
             if (fkey !== null) {
@@ -2175,7 +2175,7 @@
           },
 
           'delete': function (key) {
-		    requireMapSlot(this, 'delete');
+            requireMapSlot(this, 'delete');
             var head = this._head, i = head;
             var fkey = fastkey(key);
             if (fkey !== null) {
@@ -2200,7 +2200,7 @@
           },
 
           clear: function clear() {
-		    requireMapSlot(this, 'clear');
+            requireMapSlot(this, 'clear');
             this._size = 0;
             this._storage = emptyObject();
             var head = this._head, i = head, p = i.next;
@@ -2213,22 +2213,22 @@
           },
 
           keys: function keys() {
-		    requireMapSlot(this, 'keys');
+            requireMapSlot(this, 'keys');
             return new MapIterator(this, 'key');
           },
 
           values: function values() {
-		    requireMapSlot(this, 'values');
+            requireMapSlot(this, 'values');
             return new MapIterator(this, 'value');
           },
 
           entries: function entries() {
-		    requireMapSlot(this, 'entries');
+            requireMapSlot(this, 'entries');
             return new MapIterator(this, 'key+value');
           },
 
           forEach: function forEach(callback) {
-		    requireMapSlot(this, 'forEach');
+            requireMapSlot(this, 'forEach');
             var context = arguments.length > 1 ? arguments[1] : null;
             var it = this.entries();
             for (var entry = it.next(); !entry.done; entry = it.next()) {
