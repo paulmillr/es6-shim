@@ -1890,15 +1890,11 @@
         // https://bugs.ecmascript.org/show_bug.cgi?id=2513
         var C = this.constructor;
         var capability = new PromiseCapability(C);
-        if (!ES.IsCallable(onRejected)) {
-          onRejected = Thrower;
-        }
-        if (!ES.IsCallable(onFulfilled)) {
-          onFulfilled = Identity;
-        }
-        var resolutionHandler = promiseResolutionHandler(promise, onFulfilled, onRejected);
+        var rejectHandler = ES.IsCallable(onRejected) ? onRejected : Thrower;
+        var fulfillHandler = ES.IsCallable(onFulfilled) ? onFulfilled : Identity;
+        var resolutionHandler = promiseResolutionHandler(promise, fulfillHandler, rejectHandler);
         var resolveReaction = { capability: capability, handler: resolutionHandler };
-        var rejectReaction = { capability: capability, handler: onRejected };
+        var rejectReaction = { capability: capability, handler: rejectHandler };
         switch (promise._status) {
           case 'unresolved':
             _push(promise._resolveReactions, resolveReaction);
