@@ -1582,8 +1582,6 @@
   // want the best possible speed and/or long stack traces.
   var PromiseShim = (function () {
 
-    var Promise, Promise$prototype;
-
     ES.IsPromise = function (promise) {
       if (!ES.TypeIsObject(promise)) {
         return false;
@@ -1720,7 +1718,7 @@
       };
     };
 
-    Promise = function Promise(resolver) {
+    var Promise = function Promise(resolver) {
       var promise = this;
       promise = emulateES6construct(promise);
       if (!promise._promiseConstructor) {
@@ -1764,7 +1762,7 @@
       }
       return promise;
     };
-    Promise$prototype = Promise.prototype;
+    var Promise$prototype = Promise.prototype;
     var _promiseAllResolver = function (index, values, capability, remaining) {
       var done = false;
       return function (x) {
