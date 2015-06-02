@@ -1895,19 +1895,15 @@
         var resolutionHandler = promiseResolutionHandler(promise, fulfillHandler, rejectHandler);
         var resolveReaction = { capability: capability, handler: resolutionHandler };
         var rejectReaction = { capability: capability, handler: rejectHandler };
-        switch (promise._status) {
-          case 'unresolved':
-            _push(promise._resolveReactions, resolveReaction);
-            _push(promise._rejectReactions, rejectReaction);
-            break;
-          case 'has-resolution':
-            triggerPromiseReactions([resolveReaction], promise._result);
-            break;
-          case 'has-rejection':
-            triggerPromiseReactions([rejectReaction], promise._result);
-            break;
-          default:
-            throw new TypeError('unexpected');
+        if (promise._status === 'unresolved') {
+          _push(promise._resolveReactions, resolveReaction);
+          _push(promise._rejectReactions, rejectReaction);
+        } else if (promise._status === 'has-resolution') {
+          triggerPromiseReactions([resolveReaction], promise._result);
+        } else if (promise._status === 'has-rejection') {
+          triggerPromiseReactions([rejectReaction], promise._result);
+        } else {
+          throw new TypeError('unexpected status');
         }
         return capability.promise;
       }
