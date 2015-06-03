@@ -38,27 +38,6 @@ describe('Support user subclassing of Promise', function () {
     p3 = p3.then(function () { done(); }, done);
   });
 
-  it('should throw if you inherit incompletely', function () {
-    var MyPromise = function (executor) {
-      Promise.call(this, executor);
-      this.mine = 'yeah';
-    };
-    // If the constructor doesn't inherit from Promise then
-    // in an es6 engine we won't pick up the internal @@species
-    // method, even if we do everything else 'correctly'
-    MyPromise.prototype = Object.create(Promise.prototype, {
-      constructor: { value: MyPromise }
-    });
-
-    assert.throws(function () {
-      new MyPromise(function (r) { r(5); });
-    }, TypeError);
-
-    assert.throws(function () {
-      Promise.resolve.call(MyPromise, 5);
-    }, TypeError);
-  });
-
   it("should throw if you don't inherit at all", function () {
     var MyPromise = function () {};
     assert.throws(function () {
