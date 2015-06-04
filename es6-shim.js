@@ -142,6 +142,7 @@
   var _floor = Math.floor;
   var _abs = Math.abs;
   var _log = Math.log;
+  var _sqrt = Math.sqrt;
   var _hasOwnProperty = Function.call.bind(Object.prototype.hasOwnProperty);
   var ArrayIterator; // make our implementation private
   var noop = function () {};
@@ -1335,7 +1336,7 @@
       if (Number.isNaN(x) || value < 1) { return NaN; }
       if (x === 1) { return 0; }
       if (x === Infinity) { return x; }
-      return _log(x / Math.E + Math.sqrt(x + 1) * Math.sqrt(x - 1) / Math.E) + 1;
+      return _log(x / Math.E + _sqrt(x + 1) * _sqrt(x - 1) / Math.E) + 1;
     },
 
     asinh: function asinh(value) {
@@ -1343,7 +1344,7 @@
       if (x === 0 || !globalIsFinite(x)) {
         return x;
       }
-      return x < 0 ? -Math.asinh(-x) : _log(x + Math.sqrt(x * x + 1));
+      return x < 0 ? -Math.asinh(-x) : _log(x + _sqrt(x * x + 1));
     },
 
     atanh: function atanh(value) {
@@ -1440,7 +1441,7 @@
       var largest = _apply(_max, Math, numbers);
       var divided = _map(numbers, function (number) { return number / largest; });
       var sum = _reduce(_map(divided, square), add);
-      return largest * Math.sqrt(sum);
+      return largest * _sqrt(sum);
     },
 
     log2: function log2(value) {
