@@ -2090,7 +2090,19 @@
   });
   var promiseIgnoresNonFunctionThenCallbacks = !throwsError(function () { globals.Promise.reject(42).then(null, 5).then(null, noop); });
   var promiseRequiresObjectContext = throwsError(function () { globals.Promise.call(3, noop); });
-  if (!promiseSupportsSubclassing || !promiseIgnoresNonFunctionThenCallbacks || !promiseRequiresObjectContext) {
+  // Promise.resolve() was errata'ed late in the ES6 process.
+  // See: https://bugzilla.mozilla.org/show_bug.cgi?id=1170742
+  //      https://code.google.com/p/v8/issues/detail?id=4161
+  // It serves as a proxy for a number of other bugs in early Promise
+  // implementations.
+  var promiseResolveBroken = (function (Promise) {
+    var p = Promise.resolve(5);
+    p.constructor = {};
+    var p2 = Promise.resolve(p);
+    return (p === p2); // This *should* be false!
+  })(globals.Promise);
+  if (!promiseSupportsSubclassing || !promiseIgnoresNonFunctionThenCallbacks ||
+      !promiseRequiresObjectContext || promiseResolveBroken) {
     /*globals Promise: true */
     Promise = PromiseShim;
     /*globals Promise: false */
