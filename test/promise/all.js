@@ -158,9 +158,10 @@ describe('Promise.all', function () {
     var hijack = true;
     var actualArguments = [];
     var P = function (resolver) {
+      var self;
       if (hijack) {
         hijack = false;
-        Promise.call(this, function (resolve, reject) {
+        self = new Promise(function (resolve, reject) {
           return resolver(function (values) {
             // record arguments & # of times resolve function is called
             actualArguments.push(values.slice());
@@ -168,8 +169,10 @@ describe('Promise.all', function () {
           }, reject);
         });
       } else {
-        Promise.call(this, resolver);
+        self = new Promise(resolver);
       }
+      Object.setPrototypeOf(self, P.prototype);
+      return self;
     };
     if (!Object.setPrototypeOf) { return done(); } // skip test if on IE < 11
     Object.setPrototypeOf(P, Promise);

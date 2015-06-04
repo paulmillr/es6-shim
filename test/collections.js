@@ -127,6 +127,7 @@ describe('Collections', function () {
         Object.setPrototypeOf(map, MyMap.prototype);
         return map;
       };
+      Object.setPrototypeOf(MyMap, Map);
       MyMap.prototype = Object.create(Map.prototype, {
         constructor: { value: MyMap }
       });
@@ -652,6 +653,7 @@ describe('Collections', function () {
         Object.setPrototypeOf(set, MySet.prototype);
         return set;
       };
+      Object.setPrototypeOf(MySet, Set);
       MySet.prototype = Object.create(Set.prototype, {
         constructor: { value: MySet }
       });

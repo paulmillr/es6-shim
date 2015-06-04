@@ -49,4 +49,48 @@ describe('Promise', function () {
       Promise.all.call(StealingPromiseConstructor, iterable);
     });
   });
+
+  specify('resolve with a thenable calls it once', function () {
+    var resolve;
+    var p = new Promise(function (r) { resolve = r; });
+    var count = 0;
+    resolve({
+      then: function () {
+        ++count;
+        throw new RangeError('reject the promise');
+      }
+    });
+    var a = p.then(function () {})['catch'](function (err) {
+      assert.equal(count, 1);
+      assert.ok(err instanceof RangeError);
+    });
+    var b = p.then(function () {})['catch'](function (err) {
+      assert.equal(count, 1);
+      assert.ok(err instanceof RangeError);
+    });
+    return Promise.all([a, b]);
+  });
+
+  specify('resolve with a thenable that throws on .then, throws immediately', function () {
+    var resolve;
+    var p = new Promise(function (r) { resolve = r; });
+    var count = 0;
+    var thenable = Object.defineProperty({}, 'then', {
+      get: function () {
+        ++count;
+        throw new RangeError('no then for you');
+      }
+    });
+    resolve(thenable);
+    assert.equal(count, 1);
+    var a = p.then(function () {})['catch'](function (err) {
+      assert.equal(count, 1);
+      assert.ok(err instanceof RangeError);
+    });
+    var b = p.then(function () {})['catch'](function (err) {
+      assert.equal(count, 1);
+      assert.ok(err instanceof RangeError);
+    });
+    return Promise.all([a, b]);
+  });
 });

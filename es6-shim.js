@@ -104,8 +104,9 @@
         Object.setPrototypeOf(o, Subclass.prototype);
         return o;
       };
+      Object.setPrototypeOf(Sub, C);
       Sub.prototype = create(C.prototype, {
-        constructor: { value: C }
+        constructor: { value: Sub }
       });
       return f(Sub);
     });
@@ -148,6 +149,12 @@
 
   var Symbol = globals.Symbol || {};
   var symbolSpecies = Symbol.species || '@@species';
+  var defaultSpeciesGetter = function () { return this; };
+  var addDefaultSpecies = function (C) {
+    if (supportsDescriptors && !_hasOwnProperty(C, symbolSpecies)) {
+      Value.getter(C, symbolSpecies, defaultSpeciesGetter);
+    }
+  };
   var Type = {
     object: function (x) { return x !== null && typeof x === 'object'; },
     string: function (x) { return _toString(x) === '[object String]'; },
@@ -285,6 +292,11 @@
       return typeof x === 'function' && _toString(x) === '[object Function]';
     },
 
+    IsConstructor: function (x) {
+      // We can't tell callables from constructors in ES5
+      return ES.IsCallable(x);
+    },
+
     ToInt32: function (x) {
       return ES.ToNumber(x) >> 0;
     },
@@ -337,8 +349,9 @@
         // special case support for `arguments`
         return new ArrayIterator(o, 'value');
       }
-      var itFn = o[$iterator$];
+      var itFn = ES.GetMethod(o, $iterator$);
       if (!ES.IsCallable(itFn)) {
+        // Better diagnostics if itFn is null or undefined
         throw new TypeError('value is not an iterable');
       }
       var it = _call(itFn, o);
@@ -346,6 +359,43 @@
         throw new TypeError('bad iterator');
       }
       return it;
+    },
+
+    GetMethod: function (o, p) {
+      var func = ES.ToObject(o)[p];
+      if (func === void 0 || func === null) {
+        return void 0;
+      }
+      if (!ES.IsCallable(func)) {
+        throw new TypeError('Method not callable: ' + p);
+      }
+      return func;
+    },
+
+    IteratorComplete: function (iterResult) {
+      return !!(iterResult.done);
+    },
+
+    IteratorClose: function (iterator, completionIsThrow) {
+      var returnMethod = ES.GetMethod(iterator, 'return');
+      if (returnMethod === void 0) {
+        return;
+      }
+      var innerResult, innerException;
+      try {
+        innerResult = _call(returnMethod, iterator);
+      } catch (e) {
+        innerException = e;
+      }
+      if (completionIsThrow) {
+        return;
+      }
+      if (innerException) {
+        throw innerException;
+      }
+      if (!ES.TypeIsObject(innerResult)) {
+        throw new TypeError("Iterator's return method returned a non-object.");
+      }
     },
 
     IteratorNext: function (it) {
@@ -356,21 +406,51 @@
       return result;
     },
 
-    Construct: function (C, args) {
-      // CreateFromConstructor
-      var obj;
-      if (ES.IsCallable(C[symbolSpecies])) {
-        obj = C[symbolSpecies]();
-      } else {
-        // OrdinaryCreateFromConstructor
-        obj = create(C.prototype || null);
+    IteratorStep: function (it) {
+      var result = ES.IteratorNext(it);
+      var done = ES.IteratorComplete(result);
+      return done ? false : result;
+    },
+
+    Construct: function (C, args, newTarget, isES6internal) {
+      if (newTarget === void 0) {
+        newTarget = C;
       }
-      // Mark that we've used the es6 construct path
-      // (see emulateES6construct)
-      defineProperties(obj, { _es6construct: true });
+      if (!isES6internal) {
+        // Try to use Reflect.construct if available
+        return Reflect.construct(C, args, newTarget);
+      }
+      // OK, we have to fake it.  This will only work if the
+      // C.[[ConstructorKind]] == "base" -- but that's the only
+      // kind we can make in ES5 code anyway.
+
+      // OrdinaryCreateFromConstructor(newTarget, "%ObjectPrototype%")
+      var proto = newTarget.prototype;
+      if (!ES.TypeIsObject(proto)) {
+        proto = Object.prototype;
+      }
+      var obj = create(proto);
       // Call the constructor.
       var result = ES.Call(C, obj, args);
       return ES.TypeIsObject(result) ? result : obj;
+    },
+
+    SpeciesConstructor: function (O, defaultConstructor) {
+      var C = O.constructor;
+      if (C === void 0) {
+        return defaultConstructor;
+      }
+      if (!ES.TypeIsObject(C)) {
+        throw new TypeError('Bad constructor');
+      }
+      var S = C[symbolSpecies];
+      if (S === void 0 || S === null) {
+        return defaultConstructor;
+      }
+      if (!ES.IsConstructor(S)) {
+        throw new TypeError('Bad @@species');
+      }
+      return S;
     },
 
     CreateHTML: function (string, tag, attribute, value) {
@@ -387,20 +467,32 @@
     }
   };
 
-  var emulateES6construct = function (o) {
-    if (!ES.TypeIsObject(o)) { throw new TypeError('bad object'); }
-    var object = o;
-    // es5 approximation to es6 subclass semantics: in es6, 'new Foo'
-    // would invoke Foo.@@species to allocation/initialize the new object.
-    // In es5 we just get the plain object.  So if we detect an
-    // uninitialized object, invoke o.constructor.@@species
-    if (!object._es6construct) {
-      if (object.constructor && ES.IsCallable(object.constructor[symbolSpecies])) {
-        object = object.constructor[symbolSpecies](object);
-      }
-      defineProperties(object, { _es6construct: true });
+  var emulateES6construct = function (o, defaultNewTarget, defaultProto, slots) {
+    // This is an es5 approximation to es6 construct semantics.  in es6,
+    // 'new Foo' invokes Foo.[[Construct]] which (for almost all objects)
+    // just sets the internal variable NewTarget (in es6 syntax `new.target`)
+    // to Foo and then returns Foo().
+
+    // Many ES6 object then have constructors of the form:
+    // 1. If NewTarget is undefined, throw a TypeError exception
+    // 2. Let xxx by OrdinaryCreateFromConstructor(NewTarget, yyy, zzz)
+
+    // So we're going to emulate those first two steps.
+    if (!ES.TypeIsObject(o)) {
+      throw new TypeError('Constructor requires `new`: ' + defaultNewTarget.name);
     }
-    return object;
+    var proto = defaultNewTarget.prototype;
+    if (!ES.TypeIsObject(proto)) {
+      proto = defaultProto;
+    }
+    o = create(proto);
+    for (var name in slots) {
+      if (_hasOwnProperty(slots, name)) {
+        var value = slots[name];
+        defineProperty(o, name, value, true);
+      }
+    }
+    return o;
   };
 
   // Firefox 31 reports this function's length as 0
@@ -593,53 +685,58 @@
   }
 
   var ArrayShims = {
-    from: function from(iterable) {
+    from: function from(items) {
+      var C = this;
       var mapFn = arguments.length > 1 ? arguments[1] : void 0;
-
-      var list = ES.ToObject(iterable, 'bad iterable');
-      if (typeof mapFn !== 'undefined' && !ES.IsCallable(mapFn)) {
-        throw new TypeError('Array.from: when provided, the second argument must be a function');
+      var mapping, T;
+      if (mapFn === void 0) {
+        mapping = false;
+      } else {
+        if (!ES.IsCallable(mapFn)) {
+          throw new TypeError('Array.from: when provided, the second argument must be a function');
+        }
+        T = arguments.length > 2 ? arguments[2] : void 0;
+        mapping = true;
       }
 
-      var hasThisArg = arguments.length > 2;
-      var thisArg = hasThisArg ? arguments[2] : void 0;
-
-      var usingIterator = ES.IsIterable(list);
-      // does the spec really mean that Arrays should use ArrayIterator?
+      // Note that that Arrays will use ArrayIterator:
       // https://bugs.ecmascript.org/show_bug.cgi?id=2416
-      //if (Array.isArray(list)) { usingIterator=false; }
+      var usingIterator = isArguments(items) || ES.GetMethod(items, $iterator$);
 
-      var length;
-      var result, i, value;
-      if (usingIterator) {
-        i = 0;
-        result = ES.IsCallable(this) ? Object(new this()) : [];
-        var it = usingIterator ? ES.GetIterator(list) : null;
-        var iterationValue;
+      var length, result, i;
+      if (usingIterator !== void 0) {
+        result = ES.IsConstructor(C) ? Object(new C()) : [];
+        var iterator = ES.GetIterator(items);
+        var next, nextValue;
 
-        do {
-          iterationValue = ES.IteratorNext(it);
-          if (!iterationValue.done) {
-            value = iterationValue.value;
-            if (mapFn) {
-              result[i] = hasThisArg ? _call(mapFn, thisArg, value, i) : mapFn(value, i);
-            } else {
-              result[i] = value;
-            }
-            i += 1;
+        for (i = 0; ; ++i) {
+          next = ES.IteratorStep(iterator);
+          if (next === false) {
+            break;
           }
-        } while (!iterationValue.done);
+          nextValue = next.value;
+          try {
+            if (mapping) {
+              nextValue = T !== undefined ? _call(mapFn, T, nextValue, i) : mapFn(nextValue, i);
+            }
+            result[i] = nextValue;
+          } catch (e) {
+            ES.IteratorClose(iterator, true);
+            throw e;
+          }
+        }
         length = i;
       } else {
-        length = ES.ToLength(list.length);
-        result = ES.IsCallable(this) ? Object(new this(length)) : new Array(length);
+        var arrayLike = ES.ToObject(items);
+        length = ES.ToLength(arrayLike.length);
+        result = ES.IsConstructor(C) ? Object(new C(length)) : new Array(length);
+        var value;
         for (i = 0; i < length; ++i) {
-          value = list[i];
-          if (mapFn) {
-            result[i] = hasThisArg ? _call(mapFn, thisArg, value, i) : mapFn(value, i);
-          } else {
-            result[i] = value;
+          value = arrayLike[i];
+          if (mapping) {
+            value = T !== undefined ? _call(mapFn, T, value, i) : mapFn(value, i);
           }
+          result[i] = value;
         }
       }
 
@@ -652,6 +749,7 @@
     }
   };
   defineProperties(Array, ArrayShims);
+  addDefaultSpecies(Array);
 
   // Given an argument x, it will return an IteratorResult object,
   // with value set to x and done to false.
@@ -1315,6 +1413,7 @@
       }
     });
   }
+  addDefaultSpecies(RegExp);
 
   var inverseEpsilon = 1 / Number.EPSILON;
   var roundTiesToEven = function roundTiesToEven(n) {
@@ -1569,13 +1668,8 @@
       if (!ES.TypeIsObject(promise)) {
         return false;
       }
-      if (!promise._promiseConstructor) {
-        // _promiseConstructor is a bit more unique than _status, so we'll
-        // check that instead of the [[PromiseStatus]] internal field.
-        return false;
-      }
-      if (typeof promise._status === 'undefined') {
-        return false; // uninitialized
+      if (typeof promise._promise === 'undefined') {
+        return false; // uninitialized, or missing our hidden field.
       }
       return true;
     };
@@ -1583,21 +1677,20 @@
     // "PromiseCapability" in the spec is what most promise implementations
     // call a "deferred".
     var PromiseCapability = function (C) {
-      if (!ES.IsCallable(C)) {
-        throw new TypeError('bad promise constructor');
+      if (!ES.IsConstructor(C)) {
+        throw new TypeError('Bad promise constructor');
       }
       var capability = this;
       var resolver = function (resolve, reject) {
+        if (capability.resolve !== void 0 || capability.reject !== void 0) {
+          throw new TypeError('Bad Promise implementation!');
+        }
         capability.resolve = resolve;
         capability.reject = reject;
       };
-      capability.promise = ES.Construct(C, [resolver]);
-      // see https://bugs.ecmascript.org/show_bug.cgi?id=2478
-      if (!capability.promise._es6construct) {
-        throw new TypeError('bad promise constructor');
-      }
+      capability.promise = new C(resolver);
       if (!(ES.IsCallable(capability.resolve) && ES.IsCallable(capability.reject))) {
-        throw new TypeError('bad promise constructor');
+        throw new TypeError('Bad promise constructor');
       }
     };
 
@@ -1644,113 +1737,149 @@
       (ES.IsCallable(makeZeroTimeout) ? makeZeroTimeout() :
       function (task) { setTimeout(task, 0); }); // fallback
 
-    var updatePromiseFromPotentialThenable = function (x, capability) {
-      if (!ES.TypeIsObject(x)) {
-        return false;
+    // Constants for Promise implementation
+    var PROMISE_IDENTITY = 1;
+    var PROMISE_THROWER = 2;
+    var PROMISE_PENDING = 3;
+    var PROMISE_FULFILLED = 4;
+    var PROMISE_REJECTED = 5;
+
+    var promiseReactionJob = function (reaction, argument) {
+      var promiseCapability = reaction.capabilities;
+      var handler = reaction.handler;
+      var handlerResult, handlerException = false, f;
+      if (handler === PROMISE_IDENTITY) {
+        handlerResult = argument;
+      } else if (handler === PROMISE_THROWER) {
+        handlerResult = argument;
+        handlerException = true;
+      } else {
+        try {
+          handlerResult = handler(argument);
+        } catch (e) {
+          handlerResult = e;
+          handlerException = true;
+        }
       }
-      var resolve = capability.resolve;
-      var reject = capability.reject;
-      try {
-        var then = x.then; // only one invocation of accessor
-        if (!ES.IsCallable(then)) { return false; }
-        _call(then, x, resolve, reject);
-      } catch (e) {
-        reject(e);
-      }
-      return true;
+      f = handlerException ? promiseCapability.reject : promiseCapability.resolve;
+      f(handlerResult);
     };
 
-    var triggerPromiseReactions = function (reactions, x) {
+    var triggerPromiseReactions = function (reactions, argument) {
       _forEach(reactions, function (reaction) {
         enqueue(function () {
-          // PromiseReactionTask
-          var handler = reaction.handler;
-          var capability = reaction.capability;
-          var resolve = capability.resolve;
-          var reject = capability.reject;
-          try {
-            var result = handler(x);
-            if (result === capability.promise) {
-              throw new TypeError('self resolution');
-            }
-            var updateResult =
-              updatePromiseFromPotentialThenable(result, capability);
-            if (!updateResult) {
-              resolve(result);
-            }
-          } catch (e) {
-            reject(e);
-          }
+          promiseReactionJob(reaction, argument);
         });
       });
     };
 
-    var promiseResolutionHandler = function (promise, onFulfilled, onRejected) {
-      return function (x) {
-        if (x === promise) {
-          return onRejected(new TypeError('self resolution'));
+    var fulfillPromise = function (promise, value) {
+      var _promise = promise._promise;
+      var reactions = _promise.fulfillReactions;
+      _promise.result = value;
+      _promise.fulfillReactions = void 0;
+      _promise.rejectReactions = void 0;
+      _promise.state = PROMISE_FULFILLED;
+      triggerPromiseReactions(reactions, value);
+    };
+
+    var rejectPromise = function (promise, reason) {
+      var _promise = promise._promise;
+      var reactions = _promise.rejectReactions;
+      _promise.result = reason;
+      _promise.fulfillReactions = void 0;
+      _promise.rejectReactions = void 0;
+      _promise.state = PROMISE_REJECTED;
+      triggerPromiseReactions(reactions, reason);
+    };
+
+    var createResolvingFunctions = function (promise) {
+      var alreadyResolved = false;
+      var resolve = function (resolution) {
+        var then;
+        if (alreadyResolved) { return; }
+        alreadyResolved = true;
+        if (resolution === promise) {
+          return rejectPromise(promise, new TypeError('Self resolution'));
         }
-        var C = promise._promiseConstructor;
-        var capability = new PromiseCapability(C);
-        var updateResult = updatePromiseFromPotentialThenable(x, capability);
-        if (updateResult) {
-          return capability.promise.then(onFulfilled, onRejected);
-        } else {
-          return onFulfilled(x);
+        if (!ES.TypeIsObject(resolution)) {
+          return fulfillPromise(promise, resolution);
         }
+        try {
+          then = resolution.then;
+        } catch (e) {
+          return rejectPromise(promise, e);
+        }
+        if (!ES.IsCallable(then)) {
+          return fulfillPromise(promise, resolution);
+        }
+        enqueue(function () {
+          promiseResolveThenableJob(promise, resolution, then);
+        });
       };
+      var reject = function (reason) {
+        if (alreadyResolved) { return; }
+        alreadyResolved = true;
+        return rejectPromise(promise, reason);
+      };
+      return { resolve: resolve, reject: reject };
+    };
+
+    var promiseResolveThenableJob = function (promise, thenable, then) {
+      var resolvingFunctions = createResolvingFunctions(promise);
+      var resolve = resolvingFunctions.resolve;
+      var reject = resolvingFunctions.reject;
+      try {
+        _call(then, thenable, resolve, reject);
+      } catch (e) {
+        reject(e);
+      }
+    };
+
+    // This is a common step in many Promise methods
+    var getPromiseSpecies = function (C) {
+      if (!ES.TypeIsObject(C)) {
+        throw new TypeError('Promise is not object');
+      }
+      var S = C[symbolSpecies];
+      if (S !== void 0 && S !== null) {
+        return S;
+      }
+      return C;
     };
 
     var Promise = function Promise(resolver) {
-      var promise = this;
-      promise = emulateES6construct(promise);
-      if (!promise._promiseConstructor) {
-        // we use _promiseConstructor as a stand-in for the internal
-        // [[PromiseStatus]] field; it's a little more unique.
-        throw new TypeError('bad promise');
-      }
-      if (typeof promise._status !== 'undefined') {
-        throw new TypeError('promise already initialized');
+      if (this && this._promise) {
+        throw new TypeError('Bad construction');
       }
       // see https://bugs.ecmascript.org/show_bug.cgi?id=2482
       if (!ES.IsCallable(resolver)) {
         throw new TypeError('not a valid resolver');
       }
-      promise._status = 'unresolved';
-      promise._resolveReactions = [];
-      promise._rejectReactions = [];
-
-      var resolve = function (resolution) {
-        if (promise._status !== 'unresolved') { return; }
-        var reactions = promise._resolveReactions;
-        promise._result = resolution;
-        promise._resolveReactions = void 0;
-        promise._rejectReactions = void 0;
-        promise._status = 'has-resolution';
-        triggerPromiseReactions(reactions, resolution);
-      };
-      var reject = function (reason) {
-        if (promise._status !== 'unresolved') { return; }
-        var reactions = promise._rejectReactions;
-        promise._result = reason;
-        promise._resolveReactions = void 0;
-        promise._rejectReactions = void 0;
-        promise._status = 'has-rejection';
-        triggerPromiseReactions(reactions, reason);
-      };
+      var promise = emulateES6construct(this, Promise, Promise$prototype, {
+        _promise: {
+          result: void 0,
+          state: PROMISE_PENDING,
+          fulfillReactions: [],
+          rejectReactions: []
+        }
+      });
+      var resolvingFunctions = createResolvingFunctions(promise);
+      var reject = resolvingFunctions.reject;
       try {
-        resolver(resolve, reject);
+        resolver(resolvingFunctions.resolve, reject);
       } catch (e) {
         reject(e);
       }
       return promise;
     };
     var Promise$prototype = Promise.prototype;
+
     var _promiseAllResolver = function (index, values, capability, remaining) {
-      var done = false;
+      var alreadyCalled = false;
       return function (x) {
-        if (done) { return; } // protect against being called multiple times
-        done = true;
+        if (alreadyCalled) { return; }
+        alreadyCalled = true;
         values[index] = x;
         if ((--remaining.count) === 0) {
           var resolve = capability.resolve;
@@ -1759,107 +1888,126 @@
       };
     };
 
-    defineProperty(Promise, symbolSpecies, function (obj) {
-      var constructor = this;
-      // AllocatePromise
-      // The `obj` parameter is a hack we use for es5
-      // compatibility.
-      var prototype = constructor.prototype || Promise$prototype;
-      var object = obj || create(prototype);
-      defineProperties(object, {
-        _status: void 0,
-        _result: void 0,
-        _resolveReactions: void 0,
-        _rejectReactions: void 0,
-        _promiseConstructor: void 0
-      });
-      object._promiseConstructor = constructor;
-      return object;
-    });
+    var performPromiseAll = function (iteratorRecord, C, resultCapability) {
+      var it = iteratorRecord.iterator;
+      var values = [], remaining = { count: 1 }, next, nextValue;
+      for (var index = 0; ; index++) {
+        try {
+          next = ES.IteratorStep(it);
+          if (next === false) {
+            iteratorRecord.done = true;
+            break;
+          }
+          nextValue = next.value;
+        } catch (e) {
+          iteratorRecord.done = true;
+          throw e;
+        }
+        values[index] = void 0;
+        var nextPromise = C.resolve(nextValue);
+        var resolveElement = _promiseAllResolver(
+          index, values, resultCapability, remaining
+        );
+        remaining.count++;
+        nextPromise.then(resolveElement, resultCapability.reject);
+      }
+      if ((--remaining.count) === 0) {
+        var resolve = resultCapability.resolve;
+        resolve(values); // call w/ this===undefined
+      }
+      return resultCapability.promise;
+    };
+
+    var performPromiseRace = function (iteratorRecord, C, resultCapability) {
+      var it = iteratorRecord.iterator, next, nextValue, nextPromise;
+      while (true) {
+        try {
+          next = ES.IteratorStep(it);
+          if (next === false) {
+            // NOTE: If iterable has no items, resulting promise will never
+            // resolve; see:
+            // https://github.com/domenic/promises-unwrapping/issues/75
+            // https://bugs.ecmascript.org/show_bug.cgi?id=2515
+            iteratorRecord.done = true;
+            break;
+          }
+          nextValue = next.value;
+        } catch (e) {
+          iteratorRecord.done = true;
+          throw e;
+        }
+        nextPromise = C.resolve(nextValue);
+        nextPromise.then(resultCapability.resolve, resultCapability.reject);
+      }
+      return resultCapability.promise;
+    };
+
     defineProperties(Promise, {
       all: function all(iterable) {
-        var C = this;
+        var C = getPromiseSpecies(this);
         var capability = new PromiseCapability(C);
-        var resolve = capability.resolve;
-        var reject = capability.reject;
+        var iterator, iteratorRecord;
         try {
-          if (!ES.IsIterable(iterable)) {
-            throw new TypeError('bad iterable');
-          }
-          var it = ES.GetIterator(iterable);
-          var values = [], remaining = { count: 1 };
-          for (var index = 0; ; index++) {
-            var next = ES.IteratorNext(it);
-            if (next.done) {
-              break;
-            }
-            var nextPromise = C.resolve(next.value);
-            var resolveElement = _promiseAllResolver(
-              index, values, capability, remaining
-            );
-            remaining.count++;
-            nextPromise.then(resolveElement, capability.reject);
-          }
-          if ((--remaining.count) === 0) {
-            resolve(values); // call w/ this===undefined
-          }
+          iterator = ES.GetIterator(iterable);
+          iteratorRecord = { iterator: iterator, done: false };
+          return performPromiseAll(iteratorRecord, C, capability);
         } catch (e) {
+          if (iteratorRecord && !iteratorRecord.done) {
+            try {
+              ES.IteratorClose(iterator, true);
+            } catch (ee) {
+              e = ee;
+            }
+          }
+          var reject = capability.reject;
           reject(e);
+          return capability.promise;
         }
-        return capability.promise;
       },
 
       race: function race(iterable) {
-        var C = this;
+        var C = getPromiseSpecies(this);
         var capability = new PromiseCapability(C);
-        var resolve = capability.resolve;
-        var reject = capability.reject;
+        var iterator, iteratorRecord;
         try {
-          if (!ES.IsIterable(iterable)) {
-            throw new TypeError('bad iterable');
-          }
-          var it = ES.GetIterator(iterable);
-          while (true) {
-            var next = ES.IteratorNext(it);
-            if (next.done) {
-              // If iterable has no items, resulting promise will never
-              // resolve; see:
-              // https://github.com/domenic/promises-unwrapping/issues/75
-              // https://bugs.ecmascript.org/show_bug.cgi?id=2515
-              break;
-            }
-            var nextPromise = C.resolve(next.value);
-            nextPromise.then(resolve, reject);
-          }
+          iterator = ES.GetIterator(iterable);
+          iteratorRecord = { iterator: iterator, done: false };
+          return performPromiseRace(iteratorRecord, C, capability);
         } catch (e) {
+          if (iteratorRecord && !iteratorRecord.done) {
+            try {
+              ES.IteratorClose(iterator, true);
+            } catch (ee) {
+              e = ee;
+            }
+          }
+          var reject = capability.reject;
           reject(e);
+          return capability.promise;
         }
-        return capability.promise;
       },
 
       reject: function reject(reason) {
-        var C = this;
+        var C = getPromiseSpecies(this);
         var capability = new PromiseCapability(C);
-        var rejectPromise = capability.reject;
-        rejectPromise(reason); // call with this===undefined
+        var rejectFunc = capability.reject;
+        rejectFunc(reason); // call with this===undefined
         return capability.promise;
       },
 
       resolve: function resolve(v) {
+        // See https://esdiscuss.org/topic/fixing-promise-resolve for spec
         var C = this;
         if (ES.IsPromise(v)) {
-          var constructor = v._promiseConstructor;
+          var constructor = v.constructor;
           if (constructor === C) { return v; }
         }
         var capability = new PromiseCapability(C);
-        var resolvePromise = capability.resolve;
-        resolvePromise(v); // call with this===undefined
+        var resolveFunc = capability.resolve;
+        resolveFunc(v); // call with this===undefined
         return capability.promise;
       }
     });
-
-    var Identity = function (x) { return x; };
-    var Thrower = function (e) { throw e; };
 
     defineProperties(Promise$prototype, {
       'catch': function (onRejected) {
@@ -1869,26 +2017,39 @@
       then: function then(onFulfilled, onRejected) {
         var promise = this;
         if (!ES.IsPromise(promise)) { throw new TypeError('not a promise'); }
-        // this.constructor not this._promiseConstructor; see
-        // https://bugs.ecmascript.org/show_bug.cgi?id=2513
-        var C = this.constructor;
-        var capability = new PromiseCapability(C);
-        var rejectHandler = ES.IsCallable(onRejected) ? onRejected : Thrower;
-        var fulfillHandler = ES.IsCallable(onFulfilled) ? onFulfilled : Identity;
-        var resolutionHandler = promiseResolutionHandler(promise, fulfillHandler, rejectHandler);
-        var resolveReaction = { capability: capability, handler: resolutionHandler };
-        var rejectReaction = { capability: capability, handler: rejectHandler };
-        if (promise._status === 'unresolved') {
-          _push(promise._resolveReactions, resolveReaction);
-          _push(promise._rejectReactions, rejectReaction);
-        } else if (promise._status === 'has-resolution') {
-          triggerPromiseReactions([resolveReaction], promise._result);
-        } else if (promise._status === 'has-rejection') {
-          triggerPromiseReactions([rejectReaction], promise._result);
-        } else {
-          throw new TypeError('unexpected status');
+        var C = ES.SpeciesConstructor(promise, Promise);
+        var resultCapability = new PromiseCapability(C);
+        // PerformPromiseThen(promise, onFulfilled, onRejected, resultCapability)
+        if (!ES.IsCallable(onFulfilled)) {
+          onFulfilled = PROMISE_IDENTITY;
         }
-        return capability.promise;
+        if (!ES.IsCallable(onRejected)) {
+          onRejected = PROMISE_THROWER;
+        }
+        var fulfillReaction = { capabilities: resultCapability, handler: onFulfilled };
+        var rejectReaction = { capabilities: resultCapability, handler: onRejected };
+        var _promise = promise._promise, value;
+        switch (_promise.state) {
+          case PROMISE_PENDING:
+            _push(_promise.fulfillReactions, fulfillReaction);
+            _push(_promise.rejectReactions, rejectReaction);
+            break;
+          case PROMISE_FULFILLED:
+            value = _promise.result;
+            enqueue(function () {
+              promiseReactionJob(fulfillReaction, value);
+            });
+            break;
+          case PROMISE_REJECTED:
+            value = _promise.result;
+            enqueue(function () {
+              promiseReactionJob(rejectReaction, value);
+            });
+            break;
+          default:
+            throw new TypeError('unexpected');
+        }
+        return resultCapability.promise;
       }
     });
 
@@ -1908,16 +2069,29 @@
   // implementation is buggy in a number of ways.  Let's check subclassing
   // support to see if we have a buggy implementation.
   var promiseSupportsSubclassing = supportsSubclassing(globals.Promise, function (S) {
-    return S.resolve(42) instanceof S;
+    return S.resolve(42).then(function () {}) instanceof S;
   });
   var promiseIgnoresNonFunctionThenCallbacks = !throwsError(function () { globals.Promise.reject(42).then(null, 5).then(null, noop); });
   var promiseRequiresObjectContext = throwsError(function () { globals.Promise.call(3, noop); });
-  if (!promiseSupportsSubclassing || !promiseIgnoresNonFunctionThenCallbacks || !promiseRequiresObjectContext) {
+  // Promise.resolve() was errata'ed late in the ES6 process.
+  // See: https://bugzilla.mozilla.org/show_bug.cgi?id=1170742
+  //      https://code.google.com/p/v8/issues/detail?id=4161
+  // It serves as a proxy for a number of other bugs in early Promise
+  // implementations.
+  var promiseResolveBroken = (function (Promise) {
+    var p = Promise.resolve(5);
+    p.constructor = {};
+    var p2 = Promise.resolve(p);
+    return (p === p2); // This *should* be false!
+  })(globals.Promise);
+  if (!promiseSupportsSubclassing || !promiseIgnoresNonFunctionThenCallbacks ||
+      !promiseRequiresObjectContext || promiseResolveBroken) {
     /*globals Promise: true */
     Promise = PromiseShim;
     /*globals Promise: false */
     overrideNative(globals, 'Promise', PromiseShim);
   }
+  addDefaultSpecies(Promise);
 
   // Map and Set require a true ES5 environment
   // Their fast path also requires that the environment preserve
@@ -2027,50 +2201,48 @@
         addIterator(MapIterator.prototype);
 
         var MapShim = function Map() {
-          var map = this;
-          if (!ES.TypeIsObject(map)) {
-            throw new TypeError("Constructor Map requires 'new'");
+          if (this && this._es6map) {
+            throw new TypeError('Bad construction');
           }
-          map = emulateES6construct(map);
-          if (!map._es6map) {
-            throw new TypeError('bad map');
-          }
-
-          var head = new MapEntry(null, null);
-          // circular doubly-linked list.
-          head.next = head.prev = head;
-
-          defineProperties(map, {
-            _head: head,
+          var map = emulateES6construct(this, Map, Map$prototype, {
+            _es6map: true,
+            _head: null,
             _storage: emptyObject(),
             _size: 0
           });
 
+          var head = new MapEntry(null, null);
+          // circular doubly-linked list.
+          head.next = head.prev = head;
+          map._head = head;
+
           // Optionally initialize map from iterable
-          if (arguments.length > 0 && typeof arguments[0] !== 'undefined' && arguments[0] !== null) {
-            var it = ES.GetIterator(arguments[0]);
-            var adder = map.set;
+          var iterable = (arguments.length > 0) ? arguments[0] : void 0;
+          var iter, adder;
+          if (iterable !== null && iterable !== void 0) {
+            adder = map.set;
             if (!ES.IsCallable(adder)) { throw new TypeError('bad map'); }
+            iter = ES.GetIterator(iterable);
+          }
+          if (iter !== void 0) {
             while (true) {
-              var next = ES.IteratorNext(it);
-              if (next.done) { break; }
+              var next = ES.IteratorStep(iter);
+              if (next === false) { break; }
               var nextItem = next.value;
-              if (!ES.TypeIsObject(nextItem)) {
-                throw new TypeError('expected iterable of pairs');
+              try {
+                if (!ES.TypeIsObject(nextItem)) {
+                  throw new TypeError('expected iterable of pairs');
+                }
+                _call(adder, map, nextItem[0], nextItem[1]);
+              } catch (e) {
+                ES.IteratorClose(iter, true);
+                throw e;
               }
-              _call(adder, map, nextItem[0], nextItem[1]);
             }
           }
           return map;
         };
         var Map$prototype = MapShim.prototype;
-        defineProperty(MapShim, symbolSpecies, function (obj) {
-          var constructor = this;
-          var prototype = constructor.prototype || Map$prototype;
-          var object = obj || create(prototype);
-          defineProperties(object, { _es6map: true });
-          return object;
-        });
 
         Value.getter(Map$prototype, 'size', function () {
           if (typeof this._size === 'undefined') {
@@ -2236,43 +2408,42 @@
         // as backing storage and lazily create a full Map only when
         // required.
         var SetShim = function Set() {
-          var set = this;
-          if (!ES.TypeIsObject(set)) {
-            throw new TypeError("Constructor Set requires 'new'");
+          if (this && this._es6set) {
+            throw new TypeError('Bad construction');
           }
-          set = emulateES6construct(set);
+          var set = emulateES6construct(this, Set, Set$prototype, {
+            _es6set: true,
+            '[[SetData]]': null,
+            _storage: emptyObject()
+          });
           if (!set._es6set) {
             throw new TypeError('bad set');
           }
 
-          defineProperties(set, {
-            '[[SetData]]': null,
-            _storage: emptyObject()
-          });
-
           // Optionally initialize Set from iterable
-          if (arguments.length > 0 && typeof arguments[0] !== 'undefined' && arguments[0] !== null) {
-            var iterable = arguments[0];
-            var it = ES.GetIterator(iterable);
-            var adder = set.add;
+          var iterable = (arguments.length > 0) ? arguments[0] : void 0;
+          var iter, adder;
+          if (iterable !== null && iterable !== void 0) {
+            adder = set.add;
             if (!ES.IsCallable(adder)) { throw new TypeError('bad set'); }
+            iter = ES.GetIterator(iterable);
+          }
+          if (iter !== void 0) {
             while (true) {
-              var next = ES.IteratorNext(it);
-              if (next.done) { break; }
-              var nextItem = next.value;
-              _call(adder, set, nextItem);
+              var next = ES.IteratorStep(iter);
+              if (next === false) { break; }
+              var nextValue = next.value;
+              try {
+                _call(adder, set, nextValue);
+              } catch (e) {
+                ES.IteratorClose(iter, true);
+                throw e;
+              }
             }
           }
           return set;
         };
         var Set$prototype = SetShim.prototype;
-        defineProperty(SetShim, symbolSpecies, function (obj) {
-          var constructor = this;
-          var prototype = constructor.prototype || Set$prototype;
-          var object = obj || create(prototype);
-          defineProperties(object, { _es6set: true });
-          return object;
-        });
 
         // Switch from the object backing storage to a full Map.
         var ensureMap = function ensureMap(set) {
@@ -2567,6 +2738,8 @@
     addIterator(Object.getPrototypeOf((new globals.Map()).keys()));
     addIterator(Object.getPrototypeOf((new globals.Set()).keys()));
   }
+  addDefaultSpecies(Map);
+  addDefaultSpecies(Set);
 
   // Reflect
   if (!globals.Reflect) {
@@ -2592,11 +2765,14 @@
 
     // New operator in a functional form.
     construct: function construct(constructor, args) {
-      if (!ES.IsCallable(constructor)) {
-        throw new TypeError('First argument must be callable.');
+      if (!ES.IsConstructor(constructor)) {
+        throw new TypeError('First argument must be a constructor.');
       }
-
-      return ES.Construct(constructor, args);
+      var newTarget = (arguments.length < 3) ? constructor : arguments[2];
+      if (!ES.IsConstructor(newTarget)) {
+        throw new TypeError('new.target must be a constructor.');
+      }
+      return ES.Construct(constructor, args, newTarget, 'internal');
     },
 
     // When deleting a non-existent or configurable property,
