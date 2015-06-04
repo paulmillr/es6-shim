@@ -57,7 +57,6 @@
   var supportsDescriptors = !!Object.defineProperty && arePropertyDescriptorsSupported();
 
   var _forEach = Function.call.bind(Array.prototype.forEach);
-  var _map = Function.call.bind(Array.prototype.map);
   var _reduce = Function.call.bind(Array.prototype.reduce);
   var _filter = Function.call.bind(Array.prototype.filter);
   var _every = Function.call.bind(Array.prototype.every);
@@ -1317,8 +1316,6 @@
     });
   }
 
-  var square = function (n) { return n * n; };
-  var add = function (a, b) { return a + b; };
   var inverseEpsilon = 1 / Number.EPSILON;
   var roundTiesToEven = function roundTiesToEven(n) {
     // Even though this reduces down to `return n`, it takes advantage of built-in rounding.
@@ -1414,34 +1411,19 @@
     },
 
     hypot: function hypot(x, y) {
-      var anyNaN = false;
-      var allZero = true;
-      var anyInfinity = false;
-      var numbers = [];
-      _every(arguments, function (arg) {
-        var num = Number(arg);
-        if (Number.isNaN(num)) {
-          anyNaN = true;
-        } else if (num === Infinity || num === -Infinity) {
-          anyInfinity = true;
-        } else if (num !== 0) {
-          allZero = false;
+      var result = 0;
+      var largest = 0;
+      for (var i = 0; i < arguments.length; ++i) {
+        var value = _abs(Number(arguments[i]));
+        if (largest < value) {
+          result *= (largest / value) * (largest / value);
+          result += 1;
+          largest = value;
+        } else {
+          result += (value > 0 ? (value / largest) * (value / largest) : value);
         }
-        if (anyInfinity) {
-          return false;
-        } else if (!anyNaN) {
-          _push(numbers, _abs(num));
-        }
-        return true;
-      });
-      if (anyInfinity) { return Infinity; }
-      if (anyNaN) { return NaN; }
-      if (allZero) { return 0; }
-
-      var largest = _apply(_max, Math, numbers);
-      var divided = _map(numbers, function (number) { return number / largest; });
-      var sum = _reduce(_map(divided, square), add);
-      return largest * _sqrt(sum);
+      }
+      return largest === Infinity ? Infinity : largest * _sqrt(result);
     },
 
     log2: function log2(value) {
