@@ -224,11 +224,13 @@ describe('Object', function () {
 
       // Firefox 37 still has "pending exception" logic in its Object.assign implementation,
       // which is 72% slower than our shim, and Firefox 40's native implementation.
-      var thrower = Object.preventExtensions({ 1: 2, 2: 3, 3: 4 });
+      var thrower = { 1: 2, 2: 3, 3: 4 };
       Object.defineProperty(thrower, 2, {
         get: function () { return 3; },
         set: function (v) { throw new RangeError('IE 9 does not throw on preventExtensions'); }
       });
+      Object.preventExtensions(thrower);
+      expect(thrower).to.have.property(2, 3);
       var error;
       try { Object.assign(thrower, 'wxyz'); } catch (e) { error = e; }
       expect(thrower).not.to.have.property(0);
