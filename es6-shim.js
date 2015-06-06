@@ -3030,7 +3030,6 @@
     sub: function sub() { return ES.CreateHTML(this, 'sub', '', ''); },
     sup: function sub() { return ES.CreateHTML(this, 'sup', '', ''); }
   };
-  defineProperties(String.prototype, stringHTMLshims);
   _forEach(Object.keys(stringHTMLshims), function (key) {
     var method = String.prototype[key];
     var shouldOverwrite = false;
