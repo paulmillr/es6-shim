@@ -1849,6 +1849,9 @@
     };
 
     var Promise = function Promise(resolver) {
+      if (!(this instanceof Promise)) {
+        throw new TypeError('Constructor Promise requires "new"');
+      }
       if (this && this._promise) {
         throw new TypeError('Bad construction');
       }
@@ -2201,6 +2204,9 @@
         addIterator(MapIterator.prototype);
 
         var MapShim = function Map() {
+          if (!(this instanceof Map)) {
+            throw new TypeError('Constructor Map requires "new"');
+          }
           if (this && this._es6map) {
             throw new TypeError('Bad construction');
           }
@@ -2408,6 +2414,9 @@
         // as backing storage and lazily create a full Map only when
         // required.
         var SetShim = function Set() {
+          if (!(this instanceof Set)) {
+            throw new TypeError('Constructor Set requires "new"');
+          }
           if (this && this._es6set) {
             throw new TypeError('Bad construction');
           }
