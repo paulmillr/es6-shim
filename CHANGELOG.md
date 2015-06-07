@@ -1,5 +1,12 @@
 # es6-shim x.x.x (not yet released)
 
+# es6-shim 0.32.0 (7 Jun 2015)
+* [Spec compliance] Update Promises to match finalized ES6 spec (#345, #344, #239)
+* [Fix] Ensure `Map`, `Set`, and `Promise` shims all throw when used without "new".
+* [Tests] Fix the pending exceptions test for Safari 5.1
+* [Refactor] Since the String HTML shims will be iterated anyways, no need to defineProperties them twice.
+* [Deps] Update `chai`, `es5-shim`
+
 # es6-shim 0.31.3 (2 Jun 2015)
 * [Fix] Properly name more shim functions
 * [Fix] Fix an IE bug where the layout engine internally calls the userland `Object.getOwnPropertyNames`
