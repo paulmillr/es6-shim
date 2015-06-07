@@ -327,10 +327,18 @@ describe('Collections', function () {
       expect(Map.prototype).to.not.equal(Object.prototype);
     });
 
-    it('Map.prototype.size should throw TypeError', function () {
-      // see https://github.com/paulmillr/es6-shim/issues/176
-      expect(function () { return Map.prototype.size; }).to['throw'](TypeError);
-      expect(function () { return Map.prototype.size; }).to['throw'](TypeError);
+    describe('#size', function () {
+      it('throws TypeError when accessed directly', function () {
+        // see https://github.com/paulmillr/es6-shim/issues/176
+        expect(function () { return Map.prototype.size; }).to['throw'](TypeError);
+        expect(function () { return Map.prototype.size; }).to['throw'](TypeError);
+      });
+
+      it('is an accessor function on the prototype', function () {
+        expect(Map.prototype).ownPropertyDescriptor('size').to.have.property('get');
+        expect(typeof Object.getOwnPropertyDescriptor(Map.prototype, 'size').get).to.equal('function');
+        expect(new Map()).not.to.haveOwnPropertyDescriptor('size');
+      });
     });
 
     it('should return false when deleting a nonexistent key', function () {
