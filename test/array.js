@@ -849,7 +849,7 @@ var runArrayTests = function () {
       it('uses ToLength to clamp negative values to zero', function () {
         expect(function () {
           Array.prototype.forEach.call(negativeLength, throwRangeError);
-        }).not.to['throw'](RangeError);
+        }).not.to['throw']();
       });
     });
 
@@ -858,7 +858,7 @@ var runArrayTests = function () {
         var mapped;
         expect(function () {
           mapped = Array.prototype.map.call(negativeLength, throwRangeError);
-        }).not.to['throw'](RangeError);
+        }).not.to['throw']();
         expect(mapped).to.eql([]);
       });
     });
@@ -868,7 +868,7 @@ var runArrayTests = function () {
         var filtered;
         expect(function () {
           filtered = Array.prototype.filter.call(negativeLength, throwRangeError);
-        }).not.to['throw'](RangeError);
+        }).not.to['throw']();
         expect(filtered).to.eql([]);
       });
     });
@@ -878,7 +878,7 @@ var runArrayTests = function () {
         var result;
         expect(function () {
           result = Array.prototype.some.call(negativeLength, throwRangeError);
-        }).not.to['throw'](RangeError);
+        }).not.to['throw']();
         expect(result).to.equal([].some(Object));
       });
     });
@@ -888,7 +888,7 @@ var runArrayTests = function () {
         var result;
         expect(function () {
           result = Array.prototype.every.call(negativeLength, throwRangeError);
-        }).not.to['throw'](RangeError);
+        }).not.to['throw']();
         expect(result).to.equal([].every(Object));
       });
     });
@@ -899,7 +899,7 @@ var runArrayTests = function () {
         var reduced;
         expect(function () {
           reduced = Array.prototype.reduce.call(negativeLength, throwRangeError, accumulator);
-        }).not.to['throw'](RangeError);
+        }).not.to['throw']();
         expect(reduced).to.equal(accumulator);
       });
     });
@@ -913,7 +913,7 @@ var runArrayTests = function () {
         var reduced;
         expect(function () {
           reduced = Array.prototype.reduceRight.call(obj, throwRangeError, accumulator);
-        }).not.to['throw'](RangeError);
+        }).not.to['throw']();
         expect(reduced).to.equal(accumulator);
       });
     });
