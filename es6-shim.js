@@ -2138,6 +2138,41 @@
       return Object.create ? Object.create(null) : {};
     };
 
+    var addIterableToMap = function addIterableToMap(MapConstructor, map, iterable) {
+      if (Array.isArray(iterable) || Type.string(iterable)) {
+        _forEach(iterable, function (entry) {
+          map.set(entry[0], entry[1]);
+        });
+      } else if (iterable instanceof MapConstructor) {
+        _call(MapConstructor.prototype.forEach, iterable, function (value, key) {
+          map.set(key, value);
+        });
+      } else {
+        var iter, adder;
+        if (iterable !== null && typeof iterable !== 'undefined') {
+          adder = map.set;
+          if (!ES.IsCallable(adder)) { throw new TypeError('bad map'); }
+          iter = ES.GetIterator(iterable);
+        }
+        if (typeof iter !== 'undefined') {
+          while (true) {
+            var next = ES.IteratorStep(iter);
+            if (next === false) { break; }
+            var nextItem = next.value;
+            try {
+              if (!ES.TypeIsObject(nextItem)) {
+                throw new TypeError('expected iterable of pairs');
+              }
+              _call(adder, map, nextItem[0], nextItem[1]);
+            } catch (e) {
+              ES.IteratorClose(iter, true);
+              throw e;
+            }
+          }
+        }
+      }
+    };
+
     var collectionShims = {
       Map: (function () {
 
@@ -2223,31 +2258,8 @@
           map._head = head;
 
           // Optionally initialize map from iterable
-          var iterable;
           if (arguments.length > 0) {
-            iterable = arguments[0];
-          }
-          var iter, adder;
-          if (iterable !== null && typeof iterable !== 'undefined') {
-            adder = map.set;
-            if (!ES.IsCallable(adder)) { throw new TypeError('bad map'); }
-            iter = ES.GetIterator(iterable);
-          }
-          if (iter !== void 0) {
-            while (true) {
-              var next = ES.IteratorStep(iter);
-              if (next === false) { break; }
-              var nextItem = next.value;
-              try {
-                if (!ES.TypeIsObject(nextItem)) {
-                  throw new TypeError('expected iterable of pairs');
-                }
-                _call(adder, map, nextItem[0], nextItem[1]);
-              } catch (e) {
-                ES.IteratorClose(iter, true);
-                throw e;
-              }
-            }
+            addIterableToMap(Map, map, arguments[0]);
           }
           return map;
         };
@@ -2577,18 +2589,8 @@
             throw new TypeError('Constructor Map requires "new"');
           }
           var m = new OrigMapNoArgs();
-          var iterable;
           if (arguments.length > 0) {
-            iterable = arguments[0];
-          }
-          if (Array.isArray(iterable) || Type.string(iterable)) {
-            _forEach(iterable, function (entry) {
-              m.set(entry[0], entry[1]);
-            });
-          } else if (iterable instanceof Map) {
-            _call(Map.prototype.forEach, iterable, function (value, key) {
-              m.set(key, value);
-            });
+            addIterableToMap(Map, m, arguments[0]);
           }
           Object.setPrototypeOf(m, globals.Map.prototype);
           defineProperty(m, 'constructor', Map, true);
@@ -2675,7 +2677,10 @@
           if (!(this instanceof Map)) {
             throw new TypeError('Constructor Map requires "new"');
           }
-          var m = arguments.length > 0 ? new OrigMap(arguments[0]) : new OrigMap();
+          var m = new OrigMap();
+          if (arguments.length > 0) {
+            addIterableToMap(Map, m, arguments[0]);
+          }
           Object.setPrototypeOf(m, Map.prototype);
           defineProperty(m, 'constructor', Map, true);
           return m;
