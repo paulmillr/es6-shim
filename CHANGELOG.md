@@ -1,5 +1,9 @@
 # es6-shim x.x.x (not yet released)
 
+# es6-shim 0.32.1 (13 Jun 2015)
+* [Fix] Make sure that all `Map`/`Set` shim forms properly add an iterable to the collection instance.
+* [Tests] Make sure none of the `Array` ToLength tests throw *any* error (#347)
+
 # es6-shim 0.32.0 (7 Jun 2015)
 * [Spec compliance] Update Promises to match finalized ES6 spec (#345, #344, #239)
 * [Fix] Ensure `Map`, `Set`, and `Promise` shims all throw when used without "new".
