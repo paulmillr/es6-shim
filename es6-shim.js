@@ -2172,6 +2172,37 @@
         }
       }
     };
+    var addIterableToSet = function addIterableToSet(SetConstructor, set, iterable) {
+      if (Array.isArray(iterable) || Type.string(iterable)) {
+        _forEach(iterable, function (value) {
+          set.add(value);
+        });
+      } else if (iterable instanceof SetConstructor) {
+        _call(SetConstructor.prototype.forEach, iterable, function (value) {
+          set.add(value);
+        });
+      } else {
+        var iter, adder;
+        if (iterable !== null && typeof iterable !== 'undefined') {
+          adder = set.add;
+          if (!ES.IsCallable(adder)) { throw new TypeError('bad set'); }
+          iter = ES.GetIterator(iterable);
+        }
+        if (typeof iter !== 'undefined') {
+          while (true) {
+            var next = ES.IteratorStep(iter);
+            if (next === false) { break; }
+            var nextValue = next.value;
+            try {
+              _call(adder, set, nextValue);
+            } catch (e) {
+              ES.IteratorClose(iter, true);
+              throw e;
+            }
+          }
+        }
+      }
+    };
 
     var collectionShims = {
       Map: (function () {
@@ -2445,25 +2476,8 @@
           }
 
           // Optionally initialize Set from iterable
-          var iterable = (arguments.length > 0) ? arguments[0] : void 0;
-          var iter, adder;
-          if (iterable !== null && iterable !== void 0) {
-            adder = set.add;
-            if (!ES.IsCallable(adder)) { throw new TypeError('bad set'); }
-            iter = ES.GetIterator(iterable);
-          }
-          if (iter !== void 0) {
-            while (true) {
-              var next = ES.IteratorStep(iter);
-              if (next === false) { break; }
-              var nextValue = next.value;
-              try {
-                _call(adder, set, nextValue);
-              } catch (e) {
-                ES.IteratorClose(iter, true);
-                throw e;
-              }
-            }
+          if (arguments.length > 0) {
+            addIterableToSet(Set, set, arguments[0]);
           }
           return set;
         };
@@ -2707,7 +2721,10 @@
           if (!(this instanceof Set)) {
             throw new TypeError('Constructor Set requires "new"');
           }
-          var s = arguments.length > 0 ? new OrigSet(arguments[0]) : new OrigSet();
+          var s = new OrigSet();
+          if (arguments.length > 0) {
+            addIterableToSet(Set, s, arguments[0]);
+          }
           Object.setPrototypeOf(s, Set.prototype);
           defineProperty(s, 'constructor', Set, true);
           return s;
