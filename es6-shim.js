@@ -91,7 +91,9 @@
     Prototype.prototype = prototype;
     var object = new Prototype();
     if (typeof properties !== 'undefined') {
-      defineProperties(object, properties);
+      Object.keys(properties).forEach(function (key) {
+        Value.defineByDescriptor(object, key, properties[key]);
+      });
     }
     return object;
   };
@@ -206,6 +208,13 @@
         Object.defineProperty(object, property, descriptor);
       } else {
         object[property] = newValue;
+      }
+    },
+    defineByDescriptor: function (object, property, descriptor) {
+      if (supportsDescriptors) {
+        Object.defineProperty(object, property, descriptor);
+      } else if ('value' in descriptor) {
+        object[property] = descriptor.value;
       }
     },
     preserveToString: function (target, source) {
