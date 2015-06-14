@@ -2223,9 +2223,12 @@
           map._head = head;
 
           // Optionally initialize map from iterable
-          var iterable = (arguments.length > 0) ? arguments[0] : void 0;
+          var iterable;
+          if (arguments.length > 0) {
+            iterable = arguments[0];
+          }
           var iter, adder;
-          if (iterable !== null && iterable !== void 0) {
+          if (iterable !== null && typeof iterable !== 'undefined') {
             adder = map.set;
             if (!ES.IsCallable(adder)) { throw new TypeError('bad map'); }
             iter = ES.GetIterator(iterable);
