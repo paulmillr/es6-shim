@@ -23,6 +23,11 @@ describe('RegExp', function () {
     expect(regex).to.be.an.instanceOf(RegExp);
   });
 
+  it('can be called with null/undefined', function () {
+    expect(String(RegExp(null))).to.equal('/null/');
+    expect(String(RegExp(undefined))).to.equal(String(RegExp.prototype));
+  });
+
   describe('constructor', function () {
     it('allows a regex as the pattern', function () {
       var a = /a/g;
