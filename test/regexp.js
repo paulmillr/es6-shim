@@ -17,6 +17,12 @@ describe('RegExp', function () {
     expect(exported.RegExp).to.equal(RegExp);
   });
 
+  it('can be called with no arguments', function () {
+    var regex = RegExp();
+    expect(String(regex)).to.equal(String(RegExp.prototype));
+    expect(regex).to.be.an.instanceOf(RegExp);
+  });
+
   describe('constructor', function () {
     it('allows a regex as the pattern', function () {
       var a = /a/g;

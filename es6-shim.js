@@ -1380,7 +1380,9 @@
     var OrigRegExp = RegExp;
     var RegExpShim = function RegExp(pattern, flags) {
       var calledWithNew = this instanceof RegExp;
-      if (!calledWithNew && (Type.regex(pattern) || pattern.constructor === RegExp)) {
+      if (!calledWithNew && arguments.length === 0) {
+        return new RegExp();
+      } else if (!calledWithNew && (Type.regex(pattern) || pattern.constructor === RegExp)) {
         return pattern;
       }
       if (Type.regex(pattern) && Type.string(flags)) {
