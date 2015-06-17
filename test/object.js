@@ -216,19 +216,19 @@ describe('Object', function () {
 
     it('coerces lone target to an object', function () {
       var result = {
-        boolean: Object.assign(true),
+        bool: Object.assign(true),
         number: Object.assign(1),
-        string: Object.assign('1'),
+        string: Object.assign('1')
       };
 
-      expect(typeof result.boolean).to.equal('object');
-      expect(result.boolean.valueOf()).to.equal(true);
+      expect(typeof result.bool).to.equal('object');
+      expect(Boolean.prototype.valueOf.call(result.bool)).to.equal(true);
 
       expect(typeof result.number).to.equal('object');
-      expect(result.number.valueOf()).to.equal(1);
+      expect(Number.prototype.valueOf.call(result.number)).to.equal(1);
 
       expect(typeof result.string).to.equal('object');
-      expect(result.string.valueOf()).to.equal('1');
+      expect(String.prototype.valueOf.call(result.string)).to.equal('1');
     });
 
     it('coerces target to an object, assigns from sources', function () {
@@ -236,20 +236,20 @@ describe('Object', function () {
       var sourceB = { b: 1 };
 
       var result = {
-        boolean: Object.assign(true, sourceA, sourceB),
+        bool: Object.assign(true, sourceA, sourceB),
         number: Object.assign(1, sourceA, sourceB),
-        string: Object.assign('1', sourceA, sourceB),
+        string: Object.assign('1', sourceA, sourceB)
       };
 
-      expect(typeof result.boolean).to.equal('object');
-      expect(result.boolean.valueOf()).to.equal(true);
-      expect(result.boolean).to.eql({ a: 1, b: 1 });
+      expect(typeof result.bool).to.equal('object');
+      expect(Boolean.prototype.valueOf.call(result.bool)).to.equal(true);
+      expect(result.bool).to.eql({ a: 1, b: 1 });
 
       expect(typeof result.number).to.equal('object');
-      expect(result.number.valueOf()).to.equal(1);
+      expect(Number.prototype.valueOf.call(result.number)).to.equal(1);
 
       expect(typeof result.string).to.equal('object');
-      expect(result.string.valueOf()).to.equal('1');
+      expect(String.prototype.valueOf.call(result.string)).to.equal('1');
       expect(result.string).to.eql({ 0: '1', a: 1, b: 1 });
     });
 
