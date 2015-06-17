@@ -1,5 +1,13 @@
 # es6-shim x.x.x (not yet released)
 
+# es6-shim 0.32.2 (17 Jun 2015)
+* [Fix] `Object.assign` with no sources should coerce to an object (#348)
+* [Fix] `String#includes` should throw when given a `RegExp` (#349)
+* [Fix] `RegExp()` should not throw (#350)
+* [Fix] Create `Value.defineByDescriptor`, fix `create` when `Object.create` is unavailable.
+* [Compliance] Update `Promise.reject` to match official ECMA-262 spec.
+* [Dev Deps] Update `es5-shim`
+
 # es6-shim 0.32.1 (13 Jun 2015)
 * [Fix] Make sure that all `Map`/`Set` shim forms properly add an iterable to the collection instance.
 * [Tests] Make sure none of the `Array` ToLength tests throw *any* error (#347)
