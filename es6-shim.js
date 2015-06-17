@@ -2000,7 +2000,7 @@
       },
 
       reject: function reject(reason) {
-        var C = getPromiseSpecies(this);
+        var C = this;
         var capability = new PromiseCapability(C);
         var rejectFunc = capability.reject;
         rejectFunc(reason); // call with this===undefined
