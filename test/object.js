@@ -209,8 +209,48 @@ describe('Object', function () {
       expect(target).to.eql({ baz: true, a: 1 });
     });
 
-    it('throws when target is not an object', function () {
+    it('throws when target is null or undefined', function () {
       expect(function () { Object.assign(null); }).to['throw'](TypeError);
+      expect(function () { Object.assign(undefined); }).to['throw'](TypeError);
+    });
+
+    it('coerces lone target to an object', function () {
+      var result = {
+        boolean: Object.assign(true),
+        number: Object.assign(1),
+        string: Object.assign('1'),
+      };
+
+      expect(typeof result.boolean).to.equal('object');
+      expect(result.boolean.valueOf()).to.equal(true);
+
+      expect(typeof result.number).to.equal('object');
+      expect(result.number.valueOf()).to.equal(1);
+
+      expect(typeof result.string).to.equal('object');
+      expect(result.string.valueOf()).to.equal('1');
+    });
+
+    it('coerces target to an object, assigns from sources', function () {
+      var sourceA = { a: 1 };
+      var sourceB = { b: 1 };
+
+      var result = {
+        boolean: Object.assign(true, sourceA, sourceB),
+        number: Object.assign(1, sourceA, sourceB),
+        string: Object.assign('1', sourceA, sourceB),
+      };
+
+      expect(typeof result.boolean).to.equal('object');
+      expect(result.boolean.valueOf()).to.equal(true);
+      expect(result.boolean).to.eql({ a: 1, b: 1 });
+
+      expect(typeof result.number).to.equal('object');
+      expect(result.number.valueOf()).to.equal(1);
+
+      expect(typeof result.string).to.equal('object');
+      expect(result.string.valueOf()).to.equal('1');
+      expect(result.string).to.eql({ 0: '1', a: 1, b: 1 });
     });
 
     it('ignores non-object sources', function () {
