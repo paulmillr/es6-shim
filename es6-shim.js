@@ -1140,10 +1140,8 @@
   var ObjectShims = {
     // 19.1.3.1
     assign: function (target, source) {
-      if (!ES.TypeIsObject(target)) {
-        throw new TypeError('target must be an object');
-      }
-      return _reduce(_apply(sliceArgs, 0, arguments), assignReducer);
+      var to = ES.ToObject(target, 'Cannot convert undefined or null to object');
+      return _reduce(_apply(sliceArgs, 1, arguments), assignReducer, to);
     },
 
     // Added in WebKit in https://bugs.webkit.org/show_bug.cgi?id=143865
