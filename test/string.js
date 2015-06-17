@@ -315,6 +315,10 @@ var runStringTests = function () {
         testObjectCoercible('includes');
       });
 
+      it('throws a TypeError when given a regex', function () {
+        expect(function () { 'foo'.includes(/a/g); }).to['throw'](TypeError);
+      });
+
       it('should be truthy on correct results', function () {
         expect('test'.includes('es')).to.equal(true);
         expect('abc'.includes('a')).to.equal(true);

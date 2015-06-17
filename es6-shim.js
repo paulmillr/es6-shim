@@ -613,7 +613,13 @@
     },
 
     includes: function includes(searchString) {
-      var position = arguments.length > 1 ? arguments[1] : void 0;
+      if (Type.regex(searchString)) {
+        throw new TypeError('"includes" does not accept a RegExp');
+      }
+      var position;
+      if (arguments.length > 1) {
+        position = arguments[1];
+      }
       // Somehow this trick makes method 100% compat with the spec.
       return _indexOf(this, searchString, position) !== -1;
     },
