@@ -122,12 +122,13 @@ These methods are part of "Annex B", which means that although they are a defact
 
 ## Subclassing
 The `Map`, `Set`, and `Promise` implementations are subclassable.
-You should use the following pattern to create a subclass in ES5 which
-will continue to work in ES6:
+You should use the following pattern to create a subclass in ES5 which will continue to work in ES6:
 ```javascript
 function MyPromise(exec) {
-  Promise.call(this, exec);
+  var promise = new Promise(exec);
+  Object.setPrototypeOf(promise, MyPromise.prototype);
   // ...
+  return promise;
 }
 Object.setPrototypeOf(MyPromise, Promise);
 MyPromise.prototype = Object.create(Promise.prototype, {
