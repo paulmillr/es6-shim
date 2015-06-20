@@ -75,6 +75,12 @@ describe('Collections', function () {
   };
 
   describe('Map', function () {
+    if (typeof Map === 'undefined') {
+      return it('exists', function () {
+        expect(typeof Map).to.equal('function');
+      });
+    }
+
     var map;
     beforeEach(function () {
       map = new Map();
@@ -604,6 +610,12 @@ describe('Collections', function () {
   };
 
   describe('Set', function () {
+    if (typeof Set === 'undefined') {
+      return it('exists', function () {
+        expect(typeof Set).to.equal('function');
+      });
+    }
+
     var set;
     beforeEach(function () {
       set = new Set();
