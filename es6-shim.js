@@ -55,6 +55,7 @@
     return !throwsError(function () { Object.defineProperty({}, 'x', {}); });
   };
   var supportsDescriptors = !!Object.defineProperty && arePropertyDescriptorsSupported();
+  var functionsHaveNames = (function foo() {}).name === 'foo';
 
   var _forEach = Function.call.bind(Array.prototype.forEach);
   var _reduce = Function.call.bind(Array.prototype.reduce);
@@ -989,7 +990,7 @@
     }
   }
   // Chrome 40 defines Array#values with the incorrect name, although Array#{keys,entries} have the correct name
-  if (Array.prototype.values && Array.prototype.values.name !== 'values') {
+  if (functionsHaveNames && Array.prototype.values && Array.prototype.values.name !== 'values') {
     var originalArrayPrototypeValues = Array.prototype.values;
     overrideNative(Array.prototype, 'values', function values() { return _call(originalArrayPrototypeValues, this); });
     defineProperty(Array.prototype, $iterator$, Array.prototype.values, true);
@@ -2784,6 +2785,14 @@
     // Shim incomplete iterator implementations.
     addIterator(Object.getPrototypeOf((new globals.Map()).keys()));
     addIterator(Object.getPrototypeOf((new globals.Set()).keys()));
+
+    if (functionsHaveNames && globals.Set.prototype.has.name !== 'has') {
+      // Microsoft Edge v0.11.10074.0 is missing a name on Set#has
+      var anonymousSetHas = globals.Set.prototype.has;
+      overrideNative(globals.Set.prototype, 'has', function has(key) {
+        return _call(anonymousSetHas, this, key);
+      });
+    }
   }
   addDefaultSpecies(Map);
   addDefaultSpecies(Set);
