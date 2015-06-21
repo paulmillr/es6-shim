@@ -813,7 +813,8 @@ describe('Math', function () {
     });
 
     it('returns zero for really small numbers', function () {
-      expect(Number.MIN_VALUE).to.equal(Math.pow(2, -1074)); // sanity check
+      expect(Number.MIN_VALUE).to.equal(5e-324);
+
       expect(Math.fround(Number.MIN_VALUE)).to.equal(0);
       expect(Math.fround(-Number.MIN_VALUE)).to.equal(0);
     });
