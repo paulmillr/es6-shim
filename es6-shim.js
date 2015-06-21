@@ -2828,7 +2828,7 @@
   // those on the Object global, except that a TypeError is thrown if
   // target isn't an object. As well as returning a boolean indicating
   // the success of the operation.
-  defineProperties(globals.Reflect, {
+  var ReflectShims = {
     // Apply method in a functional form.
     apply: function apply() {
       return _apply(ES.Call, null, arguments);
@@ -2873,10 +2873,10 @@
       throwUnlessTargetIsObject(target);
       return key in target;
     }
-  });
+  };
 
   if (Object.getOwnPropertyNames) {
-    defineProperties(globals.Reflect, {
+    Object.assign(ReflectShims, {
       // Basically the result of calling the internal [[OwnPropertyKeys]].
       // Concatenating propertyNames and propertySymbols should do the trick.
       // This should continue to work together with a Symbol shim
@@ -2900,7 +2900,7 @@
   };
 
   if (Object.preventExtensions) {
-    defineProperties(globals.Reflect, {
+    Object.assign(ReflectShims, {
       isExtensible: function isExtensible(target) {
         throwUnlessTargetIsObject(target);
         return Object.isExtensible(target);
@@ -2990,7 +2990,7 @@
       return false;
     };
 
-    defineProperties(globals.Reflect, {
+    Object.assign(ReflectShims, {
       defineProperty: function defineProperty(target, propertyKey, attributes) {
         throwUnlessTargetIsObject(target);
         return callAndCatchException(function () {
@@ -3022,26 +3022,24 @@
 
   if (Object.getPrototypeOf) {
     var objectDotGetPrototypeOf = Object.getPrototypeOf;
-    defineProperties(globals.Reflect, {
-      getPrototypeOf: function getPrototypeOf(target) {
-        throwUnlessTargetIsObject(target);
-        return objectDotGetPrototypeOf(target);
-      }
-    });
+    ReflectShims.getPrototypeOf = function getPrototypeOf(target) {
+      throwUnlessTargetIsObject(target);
+      return objectDotGetPrototypeOf(target);
+    };
   }
 
-  if (Object.setPrototypeOf) {
+  if (Object.setPrototypeOf && ReflectShims.getPrototypeOf) {
     var willCreateCircularPrototype = function (object, proto) {
       while (proto) {
         if (object === proto) {
           return true;
         }
-        proto = Reflect.getPrototypeOf(proto);
+        proto = ReflectShims.getPrototypeOf(proto);
       }
       return false;
     };
 
-    defineProperties(globals.Reflect, {
+    Object.assign(ReflectShims, {
       // Sets the prototype of the given object.
       // Returns true on success, otherwise false.
       setPrototypeOf: function setPrototypeOf(object, proto) {
@@ -3071,6 +3069,7 @@
       }
     });
   }
+  defineProperties(globals.Reflect, ReflectShims);
 
   if (String(new Date(NaN)) !== 'Invalid Date') {
     var dateToString = Date.prototype.toString;
