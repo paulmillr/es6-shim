@@ -1,5 +1,16 @@
 # es6-shim x.x.x (not yet released)
 
+# es6-shim 0.32.3 (21 Jun 2015)
+* [Fix] Override or wrap native `Reflect` methods in Microsoft Edge v0.11 as required.
+* [Fix] Edge v0.11: `Array.from([], undefined)` should not throw
+* [Fix] Fix a bug in `Array.from handles iterables` runtime clobbering, which would always replace the native function
+* [Fix] Ensure that `Set#has` has the correct name in Edge v0.11
+* [Tests] Add `Map`/`Set` error messages for Edge v0.11
+* [Tests] Fix `Math.fround` test value for Edge v0.11
+* [Tests] Bail out of `Map`/`Set` test blocks if they don't exist
+* [Docs] Update ES5 subclassing instructions in the README.
+* [Dev Deps] Update `es5-shim`
+
 # es6-shim 0.32.2 (17 Jun 2015)
 * [Fix] `Object.assign` with no sources should coerce to an object (#348)
 * [Fix] `String#includes` should throw when given a `RegExp` (#349)
