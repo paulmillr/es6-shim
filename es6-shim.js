@@ -3069,7 +3069,46 @@
       }
     });
   }
-  defineProperties(globals.Reflect, ReflectShims);
+  var defineOrOverrideReflectProperty = function (key, shim) {
+    if (!ES.IsCallable(globals.Reflect[key])) {
+      defineProperty(globals.Reflect, key, shim);
+    } else {
+      var acceptsPrimitives = valueOrFalseIfThrows(function () {
+        globals.Reflect[key](1);
+        globals.Reflect[key](NaN);
+        globals.Reflect[key](true);
+        return true;
+      });
+      if (acceptsPrimitives) {
+        overrideNative(globals.Reflect, key, shim);
+      }
+    }
+  };
+  Object.keys(ReflectShims).forEach(function (key) {
+    defineOrOverrideReflectProperty(key, ReflectShims[key]);
+  });
+  if (functionsHaveNames && globals.Reflect.getPrototypeOf.name !== 'getPrototypeOf') {
+    var originalReflectGetProto = globals.Reflect.getPrototypeOf;
+    overrideNative(globals.Reflect, 'getPrototypeOf', function getPrototypeOf(target) {
+      return _call(originalReflectGetProto, globals.Reflect, target);
+    });
+  }
+  if (globals.Reflect.setPrototypeOf) {
+    if (valueOrFalseIfThrows(function () {
+      globals.Reflect.setPrototypeOf(1, {});
+      return true;
+    })) {
+      overrideNative(globals.Reflect, 'setPrototypeOf', ReflectShims.setPrototypeOf);
+    }
+  }
+  if (globals.Reflect.defineProperty) {
+    if (valueOrFalseIfThrows(function () {
+      globals.Reflect.defineProperty(1, 'test', { value: 1 });
+      return true;
+    })) {
+      overrideNative(globals.Reflect, 'defineProperty', ReflectShims.defineProperty);
+    }
+  }
 
   if (String(new Date(NaN)) !== 'Invalid Date') {
     var dateToString = Date.prototype.toString;
