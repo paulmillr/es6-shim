@@ -2618,7 +2618,6 @@
         return SetShim;
       }())
     };
-    defineProperties(globals, collectionShims);
 
     if (globals.Map || globals.Set) {
       // Safari 8, for example, doesn't accept an iterable.
@@ -2790,25 +2789,28 @@
           Set: collectionShims.Set
         }, true);
       }
-    }
-    if (globals.Set.prototype.keys !== globals.Set.prototype.values) {
-      // Fixed in WebKit with https://bugs.webkit.org/show_bug.cgi?id=144190
-      defineProperty(globals.Set.prototype, 'keys', globals.Set.prototype.values, true);
-    }
-    // Shim incomplete iterator implementations.
-    addIterator(Object.getPrototypeOf((new globals.Map()).keys()));
-    addIterator(Object.getPrototypeOf((new globals.Set()).keys()));
 
-    if (functionsHaveNames && globals.Set.prototype.has.name !== 'has') {
-      // Microsoft Edge v0.11.10074.0 is missing a name on Set#has
-      var anonymousSetHas = globals.Set.prototype.has;
-      overrideNative(globals.Set.prototype, 'has', function has(key) {
-        return _call(anonymousSetHas, this, key);
-      });
+      if (globals.Set.prototype.keys !== globals.Set.prototype.values) {
+        // Fixed in WebKit with https://bugs.webkit.org/show_bug.cgi?id=144190
+        defineProperty(globals.Set.prototype, 'keys', globals.Set.prototype.values, true);
+      }
+
+      // Shim incomplete iterator implementations.
+      addIterator(Object.getPrototypeOf((new globals.Map()).keys()));
+      addIterator(Object.getPrototypeOf((new globals.Set()).keys()));
+
+      if (functionsHaveNames && globals.Set.prototype.has.name !== 'has') {
+        // Microsoft Edge v0.11.10074.0 is missing a name on Set#has
+        var anonymousSetHas = globals.Set.prototype.has;
+        overrideNative(globals.Set.prototype, 'has', function has(key) {
+          return _call(anonymousSetHas, this, key);
+        });
+      }
     }
+    defineProperties(globals, collectionShims);
+    addDefaultSpecies(globals.Map);
+    addDefaultSpecies(globals.Set);
   }
-  addDefaultSpecies(Map);
-  addDefaultSpecies(Set);
 
   // Reflect
   if (!globals.Reflect) {
