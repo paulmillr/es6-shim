@@ -243,9 +243,7 @@
   }
   var addIterator = function (prototype, impl) {
     var implementation = impl || function iterator() { return this; };
-    var o = {};
-    o[$iterator$] = implementation;
-    defineProperties(prototype, o);
+    defineProperty(prototype, $iterator$, implementation);
     if (!prototype[$iterator$] && Type.symbol($iterator$)) {
       // implementations are buggy when $iterator$ is a Symbol
       prototype[$iterator$] = implementation;
