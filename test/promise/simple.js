@@ -71,7 +71,7 @@ describe('Promise', function () {
     return Promise.all([a, b]);
   });
 
-  specify('resolve with a thenable that throws on .then, throws immediately', function () {
+  specify('resolve with a thenable that throws on .then, rejects the promise synchronously', function () {
     var resolve;
     var p = new Promise(function (r) { resolve = r; });
     var count = 0;
