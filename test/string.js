@@ -587,13 +587,14 @@ var runStringTests = function () {
       });
 
       it('should trim the correct characters', function () {
-        var whitespace = '\u0009' + '\u000b' + '\u000c' + '\u0020' +
-                         '\u00a0' + '\u1680' + '\u2000' + '\u2001' +
-                         '\u2002' + '\u2003' + '\u2004' + '\u2005' +
-                         '\u2006' + '\u2007' + '\u2008' + '\u2009' +
-                         '\u200A' + '\u202f' + '\u205f' + '\u3000';
+        var whitespace = '\u0009' + '\u000B' + '\u000C' + '\u0020' +
+                         '\u00A0' + '\u1680' + '\u180E' + '\u2000' +
+                         '\u2001' + '\u2002' + '\u2003' + '\u2004' +
+                         '\u2005' + '\u2006' + '\u2007' + '\u2008' +
+                         '\u2009' + '\u200A' + '\u202F' + '\u205F' +
+                         '\u3000' + '\uFEFF';
 
-        var lineTerminators = '\u000a' + '\u000d' + '\u2028' + '\u2029';
+        var lineTerminators = '\u000A' + '\u000D' + '\u2028' + '\u2029';
 
         var trimmed = (whitespace + lineTerminators).trim();
         expect(trimmed).to.have.property('length', 0);
@@ -604,6 +605,12 @@ var runStringTests = function () {
         var trimmed = '\u0085'.trim();
         expect(trimmed).to.have.property('length', 1);
         expect(trimmed).to.equal('\u0085');
+      });
+
+      it('should not trim U+200B', function () {
+        var trimmed = '\u200B'.trim();
+        expect(trimmed).to.have.property('length', 1);
+        expect(trimmed).to.equal('\u200B');
       });
 
       it('should trim on both sides', function () {
