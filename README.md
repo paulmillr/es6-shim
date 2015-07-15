@@ -166,7 +166,7 @@ WeakMap has a very unusual use-case so you probably won't need it at all
 Object.is(NaN, NaN) // Fixes ===. 0 isnt -0, NaN is NaN
 Object.assign({a: 1}, {b: 2}) // {a: 1, b: 2}
 
-Number.isNaN('123') // false. isNaN('123') will give true.
+Number.isNaN('123') // false. Global isNaN('123') will give true.
 Number.isFinite('asd') // false. Global isFinite() will give true.
 // Tests if value is a number, finite,
 // >= -9007199254740992 && <= 9007199254740992 and floor(value) === value
