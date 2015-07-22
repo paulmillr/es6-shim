@@ -1,4 +1,4 @@
-/*global it, describe, expect, assert, Promise */
+/* global it, describe, expect, assert, Promise */
 
 var failIfThrows = function (done) {
   'use strict';
@@ -87,7 +87,6 @@ describe('Promise.all', function () {
       assert.notStrictEqual(input, value);
     }).then(done, failIfThrows(done));
   });
-
 
   it('should reject with a TypeError if given a non-iterable', function (done) {
     var notIterable = {};
@@ -197,4 +196,3 @@ describe('Promise.all', function () {
       then(done, failIfThrows(done));
   });
 });
-

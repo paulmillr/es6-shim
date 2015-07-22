@@ -1,4 +1,4 @@
-/*global describe, it, expect, require, Promise */
+/* global describe, it, expect, require, Promise */
 
 /* This file is for testing implementation regressions of Promises. */
 
@@ -26,4 +26,3 @@ describe('Promise', function () {
     expect(Promise.prototype).not.to.have.property('chain');
   });
 });
-

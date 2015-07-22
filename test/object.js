@@ -1,4 +1,4 @@
-/*global describe, it, expect, require, Symbol */
+/* global describe, it, expect, require, Symbol */
 
 describe('Object', function () {
   (typeof process !== 'undefined' && process.env.NO_ES6_SHIM ? it.skip : it)('is on the exported object', function () {

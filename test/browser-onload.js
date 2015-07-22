@@ -1,4 +1,4 @@
-/*global window, mocha */
+/* global window, mocha */
 
 if (typeof window !== 'undefined') {
   window.completedTests = 0;

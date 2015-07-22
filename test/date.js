@@ -1,4 +1,4 @@
-/*global describe, it, expect, require */
+/* global describe, it, expect, require */
 
 describe('Date', function () {
   it('when invalid, dates should toString to "Invalid Date"', function () {

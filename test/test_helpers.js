@@ -1,4 +1,4 @@
-/*global expect: true, assert: true, require, process */
+/* global expect: true, assert: true, require, process */
 
 expect = (function () {
   var chai = require('chai');

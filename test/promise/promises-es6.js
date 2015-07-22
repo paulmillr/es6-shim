@@ -1,4 +1,4 @@
-/*global describe, require */
+/* global describe, require */
 
 // tests from promises-es6-tests
 (function () {

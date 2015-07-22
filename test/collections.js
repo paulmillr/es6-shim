@@ -1,4 +1,4 @@
-/*global describe, it, expect, require, beforeEach, afterEach */
+/* global describe, it, expect, require, beforeEach, afterEach */
 
 // Big thanks to V8 folks for test ideas.
 // v8/test/mjsunit/harmony/collections.js

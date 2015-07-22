@@ -1,4 +1,4 @@
-/*global describe, require, Promise */
+/* global describe, require, Promise */
 
 // tests from promises-aplus-tests
 

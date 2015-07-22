@@ -3,7 +3,7 @@ describe('Object.setPrototypeOf(o, p)', function () {
   'use strict';
 
   it('changes prototype to regular objects', function () {
-    var obj = {a: 123};
+    var obj = { a: 123 };
     expect(obj).to.be.an.instanceOf(Object);
     // sham requires assignment to work cross browser
     obj = Object.setPrototypeOf(obj, null);

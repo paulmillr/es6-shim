@@ -1,4 +1,4 @@
-/*global describe, it, xit, expect, require, beforeEach */
+/* global describe, it, xit, expect, require, beforeEach */
 
 var runArrayTests = function () {
   'use strict';
@@ -560,10 +560,10 @@ var runArrayTests = function () {
 
       describe('#next()', function () {
         it('should work when applied to an ArrayIterator', function () {
-          expect(arrayIterator.next.apply(arrayIterator)).to.eql({value: 0, done: false});
-          expect(arrayIterator.next.apply(arrayIterator)).to.eql({value: 1, done: false});
-          expect(arrayIterator.next.apply(arrayIterator)).to.eql({value: 2, done: false});
-          expect(arrayIterator.next.apply(arrayIterator)).to.eql({value: undefined, done: true});
+          expect(arrayIterator.next.apply(arrayIterator)).to.eql({ value: 0, done: false });
+          expect(arrayIterator.next.apply(arrayIterator)).to.eql({ value: 1, done: false });
+          expect(arrayIterator.next.apply(arrayIterator)).to.eql({ value: 2, done: false });
+          expect(arrayIterator.next.apply(arrayIterator)).to.eql({ value: undefined, done: true });
         });
 
         it('throws when not applied to an ArrayIterator', function () {

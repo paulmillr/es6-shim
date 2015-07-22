@@ -1,4 +1,4 @@
-/*global describe, it, expect, require */
+/* global describe, it, expect, require */
 
 var Assertion = expect().constructor;
 Assertion.prototype.almostEqual = function (obj, precision) {

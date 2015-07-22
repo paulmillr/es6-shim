@@ -1,4 +1,4 @@
-/*global window, chai, mocha */
+/* global window, chai, mocha */
 
 if (typeof window !== 'undefined') {
   chai.config.includeStack = true;

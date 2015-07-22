@@ -1,4 +1,4 @@
-/*global describe, it, expect, require */
+/* global describe, it, expect, require */
 
 describe('Number', function () {
   var functionsHaveNames = (function foo() {}).name === 'foo';

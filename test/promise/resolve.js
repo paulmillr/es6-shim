@@ -1,4 +1,4 @@
-/*global describe, it, expect, setTimeout, Promise */
+/* global describe, it, expect, setTimeout, Promise */
 
 var failIfThrows = function (done) {
   'use strict';

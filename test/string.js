@@ -1,4 +1,4 @@
-/*global describe, it, expect, require */
+/* global describe, it, expect, require */
 
 var runStringTests = function () {
   'use strict';
@@ -544,11 +544,11 @@ var runStringTests = function () {
         var callSite = {};
 
         var str = 'The total is 10 ($11 with tax)';
-        callSite.raw = {0: 'The total is ', 1: ' ($', 2: ' with tax)', length: 3};
+        callSite.raw = { 0: 'The total is ', 1: ' ($', 2: ' with tax)', length: 3 };
         expect(String.raw(callSite, 10, 11)).to.eql(str);
 
         str = 'The total is {total} (${total * 1.01} with tax)';
-        callSite.raw = {0: 'The total is ', 1: ' ($', 2: ' with tax)', length: 3};
+        callSite.raw = { 0: 'The total is ', 1: ' ($', 2: ' with tax)', length: 3 };
         expect(String.raw(callSite, '{total}', '{total * 1.01}')).to.eql(str);
       });
 

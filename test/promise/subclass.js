@@ -1,4 +1,4 @@
-/*global it, describe, assert, Promise */
+/* global it, describe, assert, Promise */
 
 describe('Support user subclassing of Promise', function () {
   'use strict';
