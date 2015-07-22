@@ -2139,7 +2139,7 @@
     p.constructor = {};
     var p2 = Promise.resolve(p);
     return (p === p2); // This *should* be false!
-  })(globals.Promise);
+  }(globals.Promise));
   if (!promiseSupportsSubclassing || !promiseIgnoresNonFunctionThenCallbacks ||
       !promiseRequiresObjectContext || promiseResolveBroken) {
     /*globals Promise: true */
