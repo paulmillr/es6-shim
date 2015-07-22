@@ -170,32 +170,6 @@
 
   var Symbol = globals.Symbol || {};
   var symbolSpecies = Symbol.species || '@@species';
-  var defaultSpeciesGetter = function () { return this; };
-  var addDefaultSpecies = function (C) {
-    if (supportsDescriptors && !_hasOwnProperty(C, symbolSpecies)) {
-      Value.getter(C, symbolSpecies, defaultSpeciesGetter);
-    }
-  };
-  var Type = {
-    object: function (x) { return x !== null && typeof x === 'object'; },
-    string: function (x) { return _toString(x) === '[object String]'; },
-    regex: function (x) { return _toString(x) === '[object RegExp]'; },
-    symbol: function (x) {
-      return typeof globals.Symbol === 'function' && typeof x === 'symbol';
-    }
-  };
-
-  var numberIsNaN = Number.isNaN || function isNaN(value) {
-    // NaN !== NaN, but they are identical.
-    // NaNs are the only non-reflexive value, i.e., if x !== x,
-    // then x is NaN.
-    // isNaN is broken: it converts its argument to number, so
-    // isNaN('foo') => true
-    return value !== value;
-  };
-  var numberIsFinite = Number.isFinite || function isFinite(value) {
-    return typeof value === 'number' && globalIsFinite(value);
-  };
 
   var Value = {
     getter: function (object, name, getter) {
@@ -239,6 +213,33 @@
     preserveToString: function (target, source) {
       defineProperty(target, 'toString', source.toString.bind(source), true);
     }
+  };
+
+  var defaultSpeciesGetter = function () { return this; };
+  var addDefaultSpecies = function (C) {
+    if (supportsDescriptors && !_hasOwnProperty(C, symbolSpecies)) {
+      Value.getter(C, symbolSpecies, defaultSpeciesGetter);
+    }
+  };
+  var Type = {
+    object: function (x) { return x !== null && typeof x === 'object'; },
+    string: function (x) { return _toString(x) === '[object String]'; },
+    regex: function (x) { return _toString(x) === '[object RegExp]'; },
+    symbol: function (x) {
+      return typeof globals.Symbol === 'function' && typeof x === 'symbol';
+    }
+  };
+
+  var numberIsNaN = Number.isNaN || function isNaN(value) {
+    // NaN !== NaN, but they are identical.
+    // NaNs are the only non-reflexive value, i.e., if x !== x,
+    // then x is NaN.
+    // isNaN is broken: it converts its argument to number, so
+    // isNaN('foo') => true
+    return value !== value;
+  };
+  var numberIsFinite = Number.isFinite || function isFinite(value) {
+    return typeof value === 'number' && globalIsFinite(value);
   };
 
   var overrideNative = function overrideNative(object, property, replacement) {
