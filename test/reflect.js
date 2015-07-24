@@ -247,6 +247,12 @@ describe('Reflect', function () {
   });
 
   describe('.enumerate()', function () {
+    if (typeof Reflect.enumerate === 'undefined') {
+      return it('exists', function () {
+        expect(Reflect).to.have.property('enumerate');
+      });
+    }
+
     it('is a function', function () {
       expect(typeof Reflect.enumerate).to.equal('function');
     });
