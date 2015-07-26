@@ -78,6 +78,12 @@ describe('Reflect', function () {
   });
 
   describe('.apply()', function () {
+    if (typeof Reflect.apply === 'undefined') {
+      return it('exists', function () {
+        expect(Reflect).to.have.property('apply');
+      });
+    }
+
     it('is a function', function () {
       expect(typeof Reflect.apply).to.equal('function');
     });
@@ -114,6 +120,12 @@ describe('Reflect', function () {
   });
 
   describe('.construct()', function () {
+    if (typeof Reflect.construct === 'undefined') {
+      return it('exists', function () {
+        expect(Reflect).to.have.property('construct');
+      });
+    }
+
     it('is a function', function () {
       expect(typeof Reflect.construct).to.equal('function');
     });
@@ -140,6 +152,12 @@ describe('Reflect', function () {
   });
 
   describeIfES5('.defineProperty()', function () {
+    if (typeof Reflect.defineProperty === 'undefined') {
+      return it('exists', function () {
+        expect(Reflect).to.have.property('defineProperty');
+      });
+    }
+
     it('is a function', function () {
       expect(typeof Reflect.defineProperty).to.equal('function');
     });
@@ -204,6 +222,12 @@ describe('Reflect', function () {
   });
 
   describe('.deleteProperty()', function () {
+    if (typeof Reflect.deleteProperty === 'undefined') {
+      return it('exists', function () {
+        expect(Reflect).to.have.property('deleteProperty');
+      });
+    }
+
     it('is a function', function () {
       expect(typeof Reflect.deleteProperty).to.equal('function');
     });
@@ -319,6 +343,12 @@ describe('Reflect', function () {
   });
 
   describeIfES5('.get()', function () {
+    if (typeof Reflect.get === 'undefined') {
+      return it('exists', function () {
+        expect(Reflect).to.have.property('get');
+      });
+    }
+
     it('is a function', function () {
       expect(typeof Reflect.get).to.equal('function');
     });
@@ -372,6 +402,12 @@ describe('Reflect', function () {
   });
 
   describeIfES5('.set()', function () {
+    if (typeof Reflect.set === 'undefined') {
+      return it('exists', function () {
+        expect(Reflect).to.have.property('set');
+      });
+    }
+
     it('is a function', function () {
       expect(typeof Reflect.set).to.equal('function');
     });
@@ -419,6 +455,12 @@ describe('Reflect', function () {
   });
 
   describeIfES5('.getOwnPropertyDescriptor()', function () {
+    if (typeof Reflect.getOwnPropertyDescriptor === 'undefined') {
+      return it('exists', function () {
+        expect(Reflect).to.have.property('getOwnPropertyDescriptor');
+      });
+    }
+
     it('is a function', function () {
       expect(typeof Reflect.getOwnPropertyDescriptor).to.equal('function');
     });
@@ -448,6 +490,12 @@ describe('Reflect', function () {
   });
 
   describeIfGetProto('.getPrototypeOf()', function () {
+    if (typeof Reflect.getPrototypeOf === 'undefined') {
+      return it('exists', function () {
+        expect(Reflect).to.have.property('getPrototypeOf');
+      });
+    }
+
     it('is a function', function () {
       expect(typeof Reflect.getPrototypeOf).to.equal('function');
     });
@@ -470,6 +518,12 @@ describe('Reflect', function () {
   });
 
   describe('.has()', function () {
+    if (typeof Reflect.has === 'undefined') {
+      return it('exists', function () {
+        expect(Reflect).to.have.property('has');
+      });
+    }
+
     it('is a function', function () {
       expect(typeof Reflect.has).to.equal('function');
     });
@@ -524,6 +578,12 @@ describe('Reflect', function () {
   });
 
   describeIfExtensionsPreventible('.isExtensible()', function () {
+    if (typeof Reflect.isExtensible === 'undefined') {
+      return it('exists', function () {
+        expect(Reflect).to.have.property('isExtensible');
+      });
+    }
+
     it('is a function', function () {
       expect(typeof Reflect.isExtensible).to.equal('function');
     });
@@ -545,6 +605,12 @@ describe('Reflect', function () {
   });
 
   describeIfGetOwnPropertyNames('.ownKeys()', function () {
+    if (typeof Reflect.ownKeys === 'undefined') {
+      return it('exists', function () {
+        expect(Reflect).to.have.property('ownKeys');
+      });
+    }
+
     it('is a function', function () {
       expect(typeof Reflect.ownKeys).to.equal('function');
     });
@@ -588,6 +654,12 @@ describe('Reflect', function () {
   });
 
   describeIfExtensionsPreventible('.preventExtensions()', function () {
+    if (typeof Reflect.preventExtensions === 'undefined') {
+      return it('exists', function () {
+        expect(Reflect).to.have.property('preventExtensions');
+      });
+    }
+
     it('is a function', function () {
       expect(typeof Reflect.preventExtensions).to.equal('function');
     });
@@ -610,6 +682,12 @@ describe('Reflect', function () {
   });
 
   describeIfSetProto('.setPrototypeOf()', function () {
+    if (typeof Reflect.setPrototypeOf === 'undefined') {
+      return it('exists', function () {
+        expect(Reflect).to.have.property('setPrototypeOf');
+      });
+    }
+
     it('is a function', function () {
       expect(typeof Reflect.setPrototypeOf).to.equal('function');
     });
