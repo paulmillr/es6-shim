@@ -13,6 +13,7 @@ describe('Object', function () {
   var hasSymbols = typeof Symbol === 'function' && typeof Symbol() === 'symbol';
   var ifSymbolsIt = hasSymbols ? it : xit;
   var ifBrowserIt = typeof window === 'object' && typeof document === 'object' ? it : xit;
+  var ifObjectGetPrototypeOfIt = typeof Object.getPrototypeOf === 'function' ? it : xit;
 
   if (Object.getOwnPropertyNames) {
     describe('.getOwnPropertyNames()', function () {
@@ -342,6 +343,12 @@ describe('Object', function () {
         expect(fooNull).to.equal(foo);
         expect(Object.getPrototypeOf(foo)).to.equal(null);
       });
+    });
+  });
+
+  describe('.getPrototypeOf()', function () {
+    ifObjectGetPrototypeOfIt('does not throw for a primitive', function () {
+      expect(Object.getPrototypeOf(3)).to.equal(Number.prototype);
     });
   });
 });
