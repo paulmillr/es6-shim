@@ -1,5 +1,14 @@
 # es6-shim x.x.x (not yet released)
 
+# es6-shim 0.33.0 (30 Jul 2015)
+* [Breaking] Avoid CSP errors in Chrome apps by using global var detection (#301)
+* [Performance] Rearranging some of the Map/Set runtime shim clobberings to be more efficient.
+* [Refactor] Implement `Array.of` directly, rather than in terms of `Array.from`
+* [Dev Deps] Update `chai`, `es5-shim`, `promises-aplus-tests`, `uglify-js`
+* [Tests] Add test for `Object.getPrototypeOf` accepting primitives.
+* [Tests] Bail out of individual `Reflect` tests when the methods don’t exist
+* [Tests] Test on latest `io.js`
+
 # es6-shim 0.32.3 (21 Jun 2015)
 * [Fix] Override or wrap native `Reflect` methods in Microsoft Edge v0.11 as required.
 * [Fix] Edge v0.11: `Array.from([], undefined)` should not throw
