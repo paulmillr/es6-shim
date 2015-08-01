@@ -143,7 +143,6 @@
     return String.prototype.startsWith && 'abc'.startsWith('a', Infinity) === false;
   }());
 
-  /*jshint evil: true */
   var getGlobal = function () {
 	// the only reliable means to get the global object is
 	// `Function('return this')()`
@@ -153,7 +152,6 @@
     if (typeof global !== 'undefined') { return global; }
 	throw new Error('unable to locate global object');
   };
-  /*jshint evil: false */
 
   var globals = getGlobal();
   var globalIsFinite = globals.isFinite;
