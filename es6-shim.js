@@ -748,7 +748,8 @@
         var iterator = ES.GetIterator(items);
         var next, nextValue;
 
-        for (i = 0; ; ++i) {
+        i = 0;
+        while (true) {
           next = ES.IteratorStep(iterator);
           if (next === false) {
             break;
@@ -763,6 +764,7 @@
             ES.IteratorClose(iterator, true);
             throw e;
           }
+          i += 1;
         }
         length = i;
       } else {
@@ -1953,7 +1955,8 @@
     var performPromiseAll = function (iteratorRecord, C, resultCapability) {
       var it = iteratorRecord.iterator;
       var values = [], remaining = { count: 1 }, next, nextValue;
-      for (var index = 0; ; index++) {
+      var index = 0;
+      while (true) {
         try {
           next = ES.IteratorStep(it);
           if (next === false) {
@@ -1972,6 +1975,7 @@
         );
         remaining.count++;
         nextPromise.then(resolveElement, resultCapability.reject);
+        index += 1;
       }
       if ((--remaining.count) === 0) {
         var resolve = resultCapability.resolve;
@@ -2091,25 +2095,21 @@
         var fulfillReaction = { capabilities: resultCapability, handler: onFulfilled };
         var rejectReaction = { capabilities: resultCapability, handler: onRejected };
         var _promise = promise._promise, value;
-        switch (_promise.state) {
-          case PROMISE_PENDING:
-            _push(_promise.fulfillReactions, fulfillReaction);
-            _push(_promise.rejectReactions, rejectReaction);
-            break;
-          case PROMISE_FULFILLED:
-            value = _promise.result;
-            enqueue(function () {
-              promiseReactionJob(fulfillReaction, value);
-            });
-            break;
-          case PROMISE_REJECTED:
-            value = _promise.result;
-            enqueue(function () {
-              promiseReactionJob(rejectReaction, value);
-            });
-            break;
-          default:
-            throw new TypeError('unexpected');
+        if (_promise.state === PROMISE_PENDING) {
+          _push(_promise.fulfillReactions, fulfillReaction);
+          _push(_promise.rejectReactions, rejectReaction);
+        } else if (_promise.state === PROMISE_FULFILLED) {
+          value = _promise.result;
+          enqueue(function () {
+            promiseReactionJob(fulfillReaction, value);
+          });
+        } else if (_promise.state === PROMISE_REJECTED) {
+          value = _promise.result;
+          enqueue(function () {
+            promiseReactionJob(rejectReaction, value);
+          });
+        } else {
+          throw new TypeError('unexpected Promise state');
         }
         return resultCapability.promise;
       }

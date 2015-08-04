@@ -231,8 +231,10 @@ var runArrayTests = function () {
 
       it('removes holes', function () {
         /*jshint elision: true */
+        /* jscs:disable disallowSpaceBeforeComma */
         var input = [0, , 2];
         var result = Array.from([0, , 2]);
+        /* jscs:enable disallowSpaceBeforeComma */
         /*jshint elision: false */
         expect(1 in input).to.equal(false);
         expect(1 in result).to.equal(true);
@@ -423,7 +425,9 @@ var runArrayTests = function () {
 
       it('should work with a sparse array', function () {
         /*jshint elision: true */
+        /* jscs:disable disallowSpaceBeforeComma */
         var obj = [1, , undefined];
+        /* jscs:enable disallowSpaceBeforeComma */
         /*jshint elision: false */
         expect(1 in obj).to.equal(false);
         var seen = [];
@@ -516,7 +520,9 @@ var runArrayTests = function () {
 
       it('should work with a sparse array', function () {
         /*jshint elision: true */
+        /* jscs:disable disallowSpaceBeforeComma */
         var obj = [1, , undefined];
+        /* jscs:enable disallowSpaceBeforeComma */
         /*jshint elision: false */
         expect(1 in obj).to.equal(false);
         var seen = [];
