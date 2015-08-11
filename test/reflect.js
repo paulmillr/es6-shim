@@ -315,7 +315,7 @@ describe('Reflect', function () {
     });
 
     describe('keys determined at first next() call', function () {
-      it('does not yield a key added after next()', function () {
+      it('likely does not yield a key added after next()', function () {
         var obj = { a: 1, b: 2 },
         iter = Reflect.enumerate(obj);
 
@@ -326,15 +326,21 @@ describe('Reflect', function () {
         expect(iter.next()).to.deep.equal({ value: undefined, done: true });
       });
 
-      it('yields a key added after enumerate(), before next()', function () {
+      it('may not yield a key added after enumerate(), before next()', function () {
         var obj = { a: 1, b: 2 };
         var iter = Reflect.enumerate(obj);
 
         obj.c = 3;
         expect(iter.next()).to.deep.equal({ value: 'a', done: false });
         expect(iter.next()).to.deep.equal({ value: 'b', done: false });
-        expect(iter.next()).to.deep.equal({ value: 'c', done: false });
-        expect(iter.next()).to.deep.equal({ value: undefined, done: true });
+        var thirdResult = iter.next();
+        // Webkit's implementation of Reflect.enumerate locks the keys at iterator creation
+        if (thirdResult.done) {
+          expect(iter.next()).to.deep.equal({ value: undefined, done: true });
+        } else {
+          expect(iter.next()).to.deep.equal({ value: 'c', done: false });
+          expect(iter.next()).to.deep.equal({ value: undefined, done: true });
+        }
       });
 
       it('does not yield an unyielded key deleted after first next()', function () {

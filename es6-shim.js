@@ -844,8 +844,7 @@
 
   var ObjectIterator = function (object, kind) {
     this.object = object;
-    // Don't generate keys yet.
-    this.array = null;
+    this.array = getAllKeys(object);
     this.kind = kind;
   };
 
@@ -865,11 +864,6 @@
 
       if (!(this instanceof ObjectIterator)) {
         throw new TypeError('Not an ObjectIterator');
-      }
-
-      // Keys not generated
-      if (array === null) {
-        array = this.array = getAllKeys(this.object);
       }
 
       // Find next key in the object
