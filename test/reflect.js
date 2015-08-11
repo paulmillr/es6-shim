@@ -352,6 +352,27 @@ describe('Reflect', function () {
         expect(iter.next()).to.deep.equal({ value: undefined, done: true });
       });
     });
+
+    describe('enumeration order', function () {
+      it('enumerates own keys before prototype keys', function () {
+        var Foo = function Foo(arg) {
+          this.b = arg;
+          this[2] = arg;
+        };
+        Foo.prototype.a = 'bar';
+        Foo.prototype.c = 'bar';
+        Foo.prototype[1] = 'bar';
+        var foo = new Foo(42);
+
+        var iter = Reflect.enumerate(foo);
+        expect(iter.next()).to.deep.equal({ value: '2', done: false });
+        expect(iter.next()).to.deep.equal({ value: 'b', done: false });
+        expect(iter.next()).to.deep.equal({ value: '1', done: false });
+        expect(iter.next()).to.deep.equal({ value: 'a', done: false });
+        expect(iter.next()).to.deep.equal({ value: 'c', done: false });
+        expect(iter.next()).to.deep.equal({ value: undefined, done: true });
+      });
+    });
   });
 
   describeIfES5('.get()', function () {

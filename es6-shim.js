@@ -843,9 +843,11 @@
   addIterator(ArrayIterator.prototype);
 
   var ObjectIterator = function (object, kind) {
-    this.object = object;
-    this.array = getAllKeys(object);
-    this.kind = kind;
+    defineProperties(this, {
+      object: object,
+      array: getAllKeys(object),
+      kind: kind
+    });
   };
 
   var getAllKeys = function getAllKeys(object) {
