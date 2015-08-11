@@ -859,8 +859,9 @@
   };
 
   defineProperties(ObjectIterator.prototype, {
-    next: function () {
-      var key, array = this.array;
+    next: function next() {
+      var key;
+      var array = this.array;
 
       if (!(this instanceof ObjectIterator)) {
         throw new TypeError('Not an ObjectIterator');
