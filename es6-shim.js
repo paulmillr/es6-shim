@@ -868,7 +868,7 @@
       }
 
       // Find next key in the object
-      while (ES.ToLength(array.length) > 0) {
+      while (array.length > 0) {
         key = _shift(array);
 
         // The candidate key isn't defined on object.
