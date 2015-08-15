@@ -326,4 +326,33 @@ describe('Number', function () {
       expect(Number.isNaN(toPrimitiveThrows)).to.equal(false);
     });
   });
+
+  describe('strings in the constructor', function () {
+    it('works on normal literals', function () {
+      expect(Number('1')).to.equal(+'1');
+	  expect(Number('1.1')).to.equal(+'1.1');
+      expect(Number('0xA')).to.equal(0xA);
+    });
+
+    it('behaves like the builtin', function () {
+      expect((1).constructor).to.equal(Number);
+    });
+
+    it('works with boxed primitives', function () {
+      expect(1 instanceof Number).to.equal(false);
+      expect(Object(1) instanceof Number).to.equal(true);
+    });
+
+    it('works with `new`', function () {
+      /*jshint -W053 */
+      var one = new Number('1');
+      var a = new Number('0xA');
+      /*jshint +W053 */
+
+      expect(+one).to.equal(1);
+      expect(one instanceof Number).to.equal(true);
+      expect(+a).to.equal(0xA);
+      expect(a instanceof Number).to.equal(true);
+    });
+  });
 });
