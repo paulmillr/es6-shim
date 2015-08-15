@@ -221,6 +221,20 @@
     }
   };
 
+  var wrapConstructor = function wrapConstructor(original, replacement, keysToSkip) {
+    Value.preserveToString(replacement, original);
+    if (Object.setPrototypeOf) {
+      // sets up proper prototype chain where possible
+      Object.setPrototypeOf(original, replacement);
+    }
+    _forEach(Object.getOwnPropertyNames(original), function (key) {
+      if (key in noop || keysToSkip[key]) { return; }
+      Value.proxy(original, key, replacement);
+    });
+    replacement.prototype = original.prototype;
+    Value.redefine(original.prototype, 'constructor', replacement);
+  };
+
   var defaultSpeciesGetter = function () { return this; };
   var addDefaultSpecies = function (C) {
     if (supportsDescriptors && !_hasOwnProperty(C, symbolSpecies)) {
@@ -1437,18 +1451,9 @@
       }
       return new OrigRegExp(pattern, flags);
     };
-    Value.preserveToString(RegExpShim, OrigRegExp);
-    if (Object.setPrototypeOf) {
-      // sets up proper prototype chain where possible
-      Object.setPrototypeOf(OrigRegExp, RegExpShim);
-    }
-    _forEach(Object.getOwnPropertyNames(OrigRegExp), function (key) {
-      if (key === '$input') { return; } // Chrome < v39 & Opera < 26 have a nonstandard "$input" property
-      if (key in noop) { return; }
-      Value.proxy(OrigRegExp, key, RegExpShim);
+    wrapConstructor(OrigRegExp, RegExpShim, {
+      $input: true // Chrome < v39 & Opera < 26 have a nonstandard "$input" property
     });
-    RegExpShim.prototype = OrigRegExp.prototype;
-    Value.redefine(OrigRegExp.prototype, 'constructor', RegExpShim);
     /*globals RegExp: true */
     RegExp = RegExpShim;
     Value.redefine(globals, 'RegExp', RegExpShim);
