@@ -242,6 +242,7 @@
     }
   };
   var Type = {
+    primitive: function (x) { return x === null || (typeof x !== 'function' && typeof x !== 'object'); },
     object: function (x) { return x !== null && typeof x === 'object'; },
     string: function (x) { return _toString(x) === '[object String]'; },
     regex: function (x) { return _toString(x) === '[object RegExp]'; },
