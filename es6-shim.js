@@ -1132,6 +1132,49 @@
     }, true);
   }
 
+  if (Number('0o10') !== 8 || Number('0b10') !== 2) {
+    var OrigNumber = Number;
+    var isBinary = Function.bind.call(Function.call, RegExp.prototype.test, /^0b/i);
+    var isOctal = Function.bind.call(Function.call, RegExp.prototype.test, /^0o/i);
+    var toPrimitive = function (O) { // need to replace this with `es-to-primitive/es6`
+      var result;
+      if (typeof O.valueOf === 'function') {
+        result = O.valueOf();
+        if (Type.primitive(result)) {
+          return result;
+        }
+      }
+      if (typeof O.toString === 'function') {
+        result = O.toString();
+        if (Type.primitive(result)) {
+          return result;
+        }
+      }
+      throw new TypeError('No default value');
+    };
+    var NumberShim = function Number(value) {
+      var primValue = Type.primitive(value) ? value : toPrimitive(value, 'number');
+      if (typeof primValue === 'string') {
+        if (isBinary(primValue)) {
+          primValue = parseInt(_strSlice(primValue, 2), 2);
+        } else if (isOctal(primValue)) {
+          primValue = parseInt(_strSlice(primValue, 2), 8);
+        }
+      }
+      if (this instanceof Number) {
+        return new OrigNumber(primValue);
+      }
+      /* jshint newcap: false */
+      return OrigNumber(primValue);
+      /* jshint newcap: true */
+    };
+    wrapConstructor(OrigNumber, NumberShim, {});
+    /*globals Number: true */
+    Number = NumberShim;
+    Value.redefine(globals, 'Number', NumberShim);
+    /*globals Number: false */
+  }
+
   var maxSafeInteger = Math.pow(2, 53) - 1;
   defineProperties(Number, {
     MAX_SAFE_INTEGER: maxSafeInteger,

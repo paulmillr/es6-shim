@@ -354,5 +354,19 @@ describe('Number', function () {
       expect(+a).to.equal(0xA);
       expect(a instanceof Number).to.equal(true);
     });
+
+    it('works with binary literals in string form', function () {
+      expect(Number('0b1')).to.equal(1);
+      expect(Number('0b10')).to.equal(2);
+      expect(Number('0b11')).to.equal(3);
+      expect(Number({ toString: function () { return '0b100'; }, valueOf: function () { return '0b101'; } })).to.equal(5);
+    });
+
+    it('works with octal literals in string form', function () {
+      expect(Number('0o7')).to.equal(7);
+      expect(Number('0o10')).to.equal(8);
+      expect(Number('0o11')).to.equal(9);
+      expect(Number({ toString: function () { return '0o12'; }, valueOf: function () { return '0o13'; } })).to.equal(11);
+    });
   });
 });
