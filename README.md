@@ -8,6 +8,8 @@ closely as possible to ECMAScript 6 (Harmony).
 
 [![Sauce Test Status](https://saucelabs.com/browser-matrix/es6-shim.svg)](https://saucelabs.com/u/es6-shim)
 
+[HTML version of the final ECMAScript 6 spec][spec-html-url]
+
 ## Installation
 If you want to use it in browser:
 
@@ -209,11 +211,6 @@ Promise.resolve(5).then(function (value) {
 });
 ```
 
-Other stuff:
-
-* [HTML version of the latest ECMAScript 6 spec draft][spec-html-url]
-* [PDFs of ECMAScript 6 spec drafts][spec-drafts-url]
-
 ## [License][license-url]
 
 [1]: https://travis-ci.org/paulmillr/es6-shim.svg
@@ -223,6 +220,5 @@ Other stuff:
 [5]: https://david-dm.org/paulmillr/es6-shim/dev-status.svg
 [6]: https://david-dm.org/paulmillr/es6-shim#info=devDependencies
 [license-url]: https://github.com/paulmillr/es6-shim/blob/master/LICENSE
-[spec-html-url]: https://people.mozilla.org/~jorendorff/es6-draft.html
-[spec-drafts-url]: http://wiki.ecmascript.org/doku.php?id=harmony:specification_drafts
+[spec-html-url]: http://www.ecma-international.org/ecma-262/6.0/
 [es5-shim-url]: https://github.com/es-shims/es5-shim
