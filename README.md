@@ -126,6 +126,8 @@ These methods are part of "Annex B", which means that although they are a defact
 The `Map`, `Set`, and `Promise` implementations are subclassable.
 You should use the following pattern to create a subclass in ES5 which will continue to work in ES6:
 ```javascript
+require('es6-shim');
+
 function MyPromise(exec) {
   var promise = new Promise(exec);
   Object.setPrototypeOf(promise, MyPromise.prototype);
@@ -139,49 +141,45 @@ MyPromise.prototype = Object.create(Promise.prototype, {
 ```
 
 ## String.prototype.normalize
-Including a proper shim for `String.prototype.normalize` would
-increase the size of this library by a factor of more than 4.
-So instead we recommend that you install the
-[`unorm`](https://github.com/walling/unorm)
-package alongside `es6-shim` if you need `String.prototype.normalize`.
-See https://github.com/paulmillr/es6-shim/issues/134 for more
-discussion.
+Including a proper shim for `String.prototype.normalize` would increase the size of this library by a factor of more than 4.
+So instead we recommend that you install the [`unorm`](https://github.com/walling/unorm) package alongside `es6-shim` if you need `String.prototype.normalize`.
+See https://github.com/paulmillr/es6-shim/issues/134 for more discussion.
 
 
 ## WeakMap shim
 It is not possible to implement WeakMap in pure javascript.
-The [es6-collections](https://github.com/WebReflection/es6-collections)
-implementation doesn't hold values strongly, which is critical
-for the collection. es6-shim decided to not include an incorrect shim.
+The [es6-collections](https://github.com/WebReflection/es6-collections) implementation doesn't hold values strongly, which is critical for the collection. `es6-shim` decided to not include an incorrect shim.
 
-WeakMap has a very unusual use-case so you probably won't need it at all
-(use simple `Map` instead).
+`WeakMap` has very unusual use-cases, so you probably won't need it at all (use simple `Map` instead).
 
 ## Getting started
 
 ```javascript
-'abc'.startsWith('a') // true
-'abc'.endsWith('a') // false
-'john alice'.includes('john') // true
-'123'.repeat(2)     // '123123'
+var assert = require('assert');
+require('es6-shim');
 
-Object.is(NaN, NaN) // Fixes ===. 0 isnt -0, NaN is NaN
-Object.assign({a: 1}, {b: 2}) // {a: 1, b: 2}
+'abc'.startsWith('a'); // true
+'abc'.endsWith('a'); // false
+'john alice'.includes('john'); // true
+'123'.repeat(2);    // '123123'
 
-Number.isNaN('123') // false. Global isNaN('123') will give true.
-Number.isFinite('asd') // false. Global isFinite() will give true.
+Object.is(NaN, NaN); // Fixes ===. 0 isnt -0, NaN is NaN
+Object.assign({a: 1}, {b: 2}); // {a: 1, b: 2}
+
+Number.isNaN('123'); // false. Global isNaN('123') will give true.
+Number.isFinite('asd'); // false. Global isFinite() will give true.
 // Tests if value is a number, finite,
 // >= -9007199254740992 && <= 9007199254740992 and floor(value) === value
-Number.isInteger(2.4) // false.
+Number.isInteger(2.4); // false.
 
-Math.sign(400) // 1, 0 or -1 depending on sign. In this case 1.
+Math.sign(400); // 1, 0 or -1 depending on sign. In this case 1.
 
-[5, 10, 15, 10].find(function (item) {return item / 2 === 5;}) // 10
-[5, 10, 15, 10].findIndex(function (item) {return item / 2 === 5;}) // 1
+[5, 10, 15, 10].find(function (item) { return item / 2 === 5; }); // 10
+[5, 10, 15, 10].findIndex(function (item) { return item / 2 === 5; }); // 1
 
 // Replacement for `{}` key-value storage.
 // Keys can be anything.
-var map = new Map();
+var map = new Map([['Bob', 42], ['Foo', 'bar']]);
 map.set('John', 25);
 map.set('Alice', 400);
 map.set(['meh'], 555);
@@ -189,13 +187,15 @@ assert(map.get(['meh']) === undefined); // undefined because you need to use exa
 map.delete('Alice');
 map.keys();
 map.values();
-assert(map.size === 2);
+assert(map.size === 4);
 
 // Useful for storing unique items.
-var set = new Set();
-set.add(1);
+var set = new Set([0, 1]);
+set.add(2);
 set.add(5);
+assert(set.has(0) === true);
 assert(set.has(1) === true);
+assert(set.has(2) === true);
 assert(set.has(4) === false);
 set.delete(5);
 
@@ -203,7 +203,7 @@ set.delete(5);
 // http://www.slideshare.net/domenicdenicola/callbacks-promises-and-coroutines-oh-my-the-evolution-of-asynchronicity-in-javascript
 // https://github.com/petkaantonov/bluebird/#what-are-promises-and-why-should-i-use-them
 Promise.resolve(5).then(function (value) {
-  if ( ... ) throw new Error("whoops!");
+  if (value) throw new Error("whoops!");
   // do some stuff
   return anotherPromise();
 }).catch(function (e) {
