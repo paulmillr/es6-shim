@@ -266,8 +266,9 @@
   var overrideNative = function overrideNative(object, property, replacement) {
     var original = object[property];
     defineProperty(object, property, replacement, true);
-    if (typeof original !== 'undefined')
+    if (typeof original !== 'undefined'){
       Value.preserveToString(object[property], original);
+    }
   };
 
   // This is a private name in the es6 spec, equal to '[Symbol.iterator]'
