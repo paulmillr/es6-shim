@@ -156,9 +156,7 @@
   var globals = getGlobal();
   var globalIsFinite = globals.isFinite;
   var hasStrictMode = (function () { return this === null; }.call(null));
-  var startsWithExistAndIsNotCompliant = 
-    (typeof String.prototype.startsWith !== 'undefined') && 
-    (!startsWithRejectsRegex() || !startsWithHandlesInfinity());
+  var startsWithExistAndIsNotCompliant = (typeof String.prototype.startsWith === 'function') && (!startsWithRejectsRegex() || !startsWithHandlesInfinity());
   var _indexOf = Function.call.bind(String.prototype.indexOf);
   var _toString = Function.call.bind(Object.prototype.toString);
   var _concat = Function.call.bind(Array.prototype.concat);
@@ -267,8 +265,8 @@
 
   var overrideNative = function overrideNative(object, property, replacement) {
     var original = object[property];
-    if (typeof original == 'undefined'){
-      throw "Native property does not exist";
+    if (typeof original === 'undefined'){
+      throw new Error("Native property does not exist");
     }
     defineProperty(object, property, replacement, true);
     Value.preserveToString(object[property], original);
