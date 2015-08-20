@@ -1,5 +1,15 @@
 # es6-shim x.x.x (not yet released)
 
+# es6-shim 0.33.1 (20 Aug 2015)
+* [New] Add support for binary and octal literals in strings to the `Number` constructor (#358)
+* [Docs] Update spec link to final spec
+* [Fix] `Reflect.enumerate`: does not necessarily wait until the first `next()` to determine keys.
+* [Refactors] split up some tests; name some functions; remove unnecessary code
+* {Refactors] make ObjectIterator properties non-enumerable
+* [Refactors] Refactor `RegExp` wrapping code so most of it can be reused.
+* [Tests] up to `io.js` `v3.1`
+* [Dev Deps] update `grunt-contrib-connect`, `jscs`
+
 # es6-shim 0.33.0 (30 Jul 2015)
 * [Breaking] Avoid CSP errors in Chrome apps by using global var detection (#301)
 * [Performance] Rearranging some of the Map/Set runtime shim clobberings to be more efficient.
