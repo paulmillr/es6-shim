@@ -270,6 +270,7 @@
     }
     defineProperty(object, property, replacement, true);
     Value.preserveToString(object[property], original);
+    
   };
 
   // This is a private name in the es6 spec, equal to '[Symbol.iterator]'
