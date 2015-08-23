@@ -1770,6 +1770,9 @@
   // Simplest possible implementation; use a 3rd-party library if you
   // want the best possible speed and/or long stack traces.
   var PromiseShim = (function () {
+    var setTimeout = globals.setTimeout;
+    // some environments don't have setTimeout - no way to shim here.
+    if (typeof setTimeout !== 'function') { return; }
 
     ES.IsPromise = function (promise) {
       if (!ES.TypeIsObject(promise)) {
@@ -1802,7 +1805,6 @@
     };
 
     // find an appropriate setImmediate-alike
-    var setTimeout = globals.setTimeout;
     var makeZeroTimeout;
     /*global window */
     if (typeof window !== 'undefined' && ES.IsCallable(window.postMessage)) {
@@ -2171,35 +2173,37 @@
     delete globals.Promise.prototype.chain;
   }
 
-  // export the Promise constructor.
-  defineProperties(globals, { Promise: PromiseShim });
-  // In Chrome 33 (and thereabouts) Promise is defined, but the
-  // implementation is buggy in a number of ways.  Let's check subclassing
-  // support to see if we have a buggy implementation.
-  var promiseSupportsSubclassing = supportsSubclassing(globals.Promise, function (S) {
-    return S.resolve(42).then(function () {}) instanceof S;
-  });
-  var promiseIgnoresNonFunctionThenCallbacks = !throwsError(function () { globals.Promise.reject(42).then(null, 5).then(null, noop); });
-  var promiseRequiresObjectContext = throwsError(function () { globals.Promise.call(3, noop); });
-  // Promise.resolve() was errata'ed late in the ES6 process.
-  // See: https://bugzilla.mozilla.org/show_bug.cgi?id=1170742
-  //      https://code.google.com/p/v8/issues/detail?id=4161
-  // It serves as a proxy for a number of other bugs in early Promise
-  // implementations.
-  var promiseResolveBroken = (function (Promise) {
-    var p = Promise.resolve(5);
-    p.constructor = {};
-    var p2 = Promise.resolve(p);
-    return (p === p2); // This *should* be false!
-  }(globals.Promise));
-  if (!promiseSupportsSubclassing || !promiseIgnoresNonFunctionThenCallbacks ||
-      !promiseRequiresObjectContext || promiseResolveBroken) {
-    /*globals Promise: true */
-    Promise = PromiseShim;
-    /*globals Promise: false */
-    overrideNative(globals, 'Promise', PromiseShim);
+  if (typeof PromiseShim === 'function') {
+    // export the Promise constructor.
+    defineProperties(globals, { Promise: PromiseShim });
+    // In Chrome 33 (and thereabouts) Promise is defined, but the
+    // implementation is buggy in a number of ways.  Let's check subclassing
+    // support to see if we have a buggy implementation.
+    var promiseSupportsSubclassing = supportsSubclassing(globals.Promise, function (S) {
+      return S.resolve(42).then(function () {}) instanceof S;
+    });
+    var promiseIgnoresNonFunctionThenCallbacks = !throwsError(function () { globals.Promise.reject(42).then(null, 5).then(null, noop); });
+    var promiseRequiresObjectContext = throwsError(function () { globals.Promise.call(3, noop); });
+    // Promise.resolve() was errata'ed late in the ES6 process.
+    // See: https://bugzilla.mozilla.org/show_bug.cgi?id=1170742
+    //      https://code.google.com/p/v8/issues/detail?id=4161
+    // It serves as a proxy for a number of other bugs in early Promise
+    // implementations.
+    var promiseResolveBroken = (function (Promise) {
+      var p = Promise.resolve(5);
+      p.constructor = {};
+      var p2 = Promise.resolve(p);
+      return (p === p2); // This *should* be false!
+    }(globals.Promise));
+    if (!promiseSupportsSubclassing || !promiseIgnoresNonFunctionThenCallbacks ||
+        !promiseRequiresObjectContext || promiseResolveBroken) {
+      /*globals Promise: true */
+      Promise = PromiseShim;
+      /*globals Promise: false */
+      overrideNative(globals, 'Promise', PromiseShim);
+    }
+    addDefaultSpecies(Promise);
   }
-  addDefaultSpecies(Promise);
 
   // Map and Set require a true ES5 environment
   // Their fast path also requires that the environment preserve
