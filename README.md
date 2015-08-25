@@ -211,6 +211,11 @@ Promise.resolve(5).then(function (value) {
 });
 ```
 
+## Caveats
+
+- `Object.setPrototypeOf` / `Reflect.setPrototypeOf`
+   - Note that null objects (`Object.create(null)`, eg, an object with `null` as its `[[Prototype]]`) can not have their `[[Prototype]]` changed except via a native `Object.setPrototypeOf`.
+
 ## [License][license-url]
 
 [1]: https://travis-ci.org/paulmillr/es6-shim.svg
