@@ -1,5 +1,10 @@
 # es6-shim x.x.x (not yet released)
 
+# es6-shim 0.33.2 (26 Aug 2015)
+* [Fix] Make sure that minified code preserves function names.
+* [Fix] Skip the `Promise` shim when `setTimeout` is not available ([#301](https://github.com/paulmillr/es6-shim/issues/301#issuecomment-126566703))
+* [Docs] Add note about `setPrototypeOf` on null objects
+
 # es6-shim 0.33.1 (20 Aug 2015)
 * [New] Add support for binary and octal literals in strings to the `Number` constructor (#358)
 * [Docs] Update spec link to final spec
