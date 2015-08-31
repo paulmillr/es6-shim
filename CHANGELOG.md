@@ -1,5 +1,9 @@
 # es6-shim x.x.x (not yet released)
 
+# es6-shim 0.33.3 (31 Aug 2015)
+* [Fix] Handle Firefox Nightly's broken `construct` method
+* [Tests] Add `JSON.stringify` tests for handling `Symbol`s
+
 # es6-shim 0.33.2 (26 Aug 2015)
 * [Fix] Make sure that minified code preserves function names.
 * [Fix] Skip the `Promise` shim when `setTimeout` is not available ([#301](https://github.com/paulmillr/es6-shim/issues/301#issuecomment-126566703))
