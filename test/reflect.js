@@ -149,6 +149,11 @@ describe('Reflect', function () {
 
       expect(Reflect.construct(C, ['foo', 'bar', 'baz']).qux).to.equal('foo|bar|baz');
     });
+
+    it('correctly handles newTarget param', function () {
+      function F() {}
+      expect(Reflect.construct(function () {}, [], F) instanceof F).to.equal(true);
+    });
   });
 
   describeIfES5('.defineProperty()', function () {

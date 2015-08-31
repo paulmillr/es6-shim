@@ -3191,6 +3191,14 @@
       overrideNative(globals.Reflect, 'defineProperty', ReflectShims.defineProperty);
     }
   }
+  if (globals.Reflect.construct) {
+    if (!valueOrFalseIfThrows(function () {
+      var F = function F() {};
+      return globals.Reflect.construct(function () {}, [], F) instanceof F;
+    })) {
+      overrideNative(globals.Reflect, 'construct', ReflectShims.construct);
+    }
+  }
 
   if (String(new Date(NaN)) !== 'Invalid Date') {
     var dateToString = Date.prototype.toString;
