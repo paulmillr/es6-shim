@@ -10,11 +10,12 @@ describe('JSON', function () {
       expect(JSON.stringify([Symbol('foo')])).to.eql('[null]');
     });
 
-    ifSymbolsIt('skips symbol properties in an object', function () {
+    ifSymbolsIt('skips symbol properties and values in an object', function () {
       var obj = {};
       var enumSym = Symbol('enumerable');
       var nonenum = Symbol('non-enumerable');
       obj[enumSym] = true;
+      obj.sym = enumSym;
       Object.defineProperty(obj, nonenum, { enumerable: false, value: true });
       expect(Object.getOwnPropertySymbols(obj)).to.eql([enumSym, nonenum]);
       expect(JSON.stringify(obj)).to.eql('{}');
