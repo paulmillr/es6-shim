@@ -3242,7 +3242,7 @@
       shouldOverwrite = true;
     }
     if (shouldOverwrite) {
-      defineProperty(String.prototype, key, stringHTMLshims[key], true);
+      overrideNative(String.prototype, key, stringHTMLshims[key]);
     }
   });
 
