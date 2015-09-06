@@ -3184,9 +3184,11 @@
     }
   }
   if (globals.Reflect.defineProperty) {
-    if (valueOrFalseIfThrows(function () {
-      globals.Reflect.defineProperty(1, 'test', { value: 1 });
-      return true;
+    if (!valueOrFalseIfThrows(function () {
+      var basic = !globals.Reflect.defineProperty(1, 'test', { value: 1 });
+      // "extensible" fails on Edge 0.12
+      var extensible = typeof Object.preventExtensions !== 'function' || !globals.Reflect.defineProperty(Object.preventExtensions({}), 'test', {});
+      return basic && extensible;
     })) {
       overrideNative(globals.Reflect, 'defineProperty', ReflectShims.defineProperty);
     }
