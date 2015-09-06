@@ -292,19 +292,18 @@
 
   // taken directly from https://github.com/ljharb/is-arguments/blob/master/index.js
   // can be replaced with require('is-arguments') if we ever use a build process instead
-  var isArguments = function isArguments(value) {
-    var str = _toString(value);
-    var result = str === '[object Arguments]';
-    if (!result) {
-      result = str !== '[object Array]' &&
-        value !== null &&
-        typeof value === 'object' &&
-        typeof value.length === 'number' &&
-        value.length >= 0 &&
-        _toString(value.callee) === '[object Function]';
-    }
-    return result;
+  var isStandardArguments = function isArguments(value) {
+    return _toString(value) === '[object Arguments]';
   };
+  var isLegacyArguments = function isArguments(value) {
+    return value !== null &&
+      typeof value === 'object' &&
+      typeof value.length === 'number' &&
+      value.length >= 0 &&
+      _toString(value) !== '[object Array]' &&
+      _toString(value.callee) === '[object Function]';
+  };
+  var isArguments = isStandardArguments(arguments) ? isStandardArguments : isLegacyArguments;
 
   var ES = {
     // https://people.mozilla.org/~jorendorff/es6-draft.html#sec-call-f-v-args
