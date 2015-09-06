@@ -29,6 +29,7 @@
 
   var _apply = Function.call.bind(Function.apply);
   var _call = Function.call.bind(Function.call);
+  var isArray = Array.isArray;
 
   var not = function notThunker(func) {
     return function notThunk() { return !_apply(func, this, arguments); };
@@ -802,7 +803,7 @@
     of: function of() {
       var len = arguments.length;
       var C = this;
-      var A = Array.isArray(C) || !ES.IsCallable(C) ? new Array(len) : ES.Construct(C, [len]);
+      var A = isArray(C) || !ES.IsCallable(C) ? new Array(len) : ES.Construct(C, [len]);
       for (var k = 0; k < len; ++k) {
         createDataPropertyOrThrow(A, k, arguments[k]);
       }
@@ -1056,7 +1057,7 @@
   var arrayFromHandlesIterables = (function () {
     // Detects a bug in Webkit nightly r181886
     var arr = Array.from([0].entries());
-    return arr.length === 1 && Array.isArray(arr[0]) && arr[0][0] === 0 && arr[0][1] === 0;
+    return arr.length === 1 && isArray(arr[0]) && arr[0][0] === 0 && arr[0][1] === 0;
   }());
   if (!arrayFromSwallowsNegativeLengths || !arrayFromHandlesIterables) {
     overrideNative(Array, 'from', ArrayShims.from);
@@ -2247,7 +2248,7 @@
     };
 
     var addIterableToMap = function addIterableToMap(MapConstructor, map, iterable) {
-      if (Array.isArray(iterable) || Type.string(iterable)) {
+      if (isArray(iterable) || Type.string(iterable)) {
         _forEach(iterable, function (entry) {
           map.set(entry[0], entry[1]);
         });
@@ -2281,7 +2282,7 @@
       }
     };
     var addIterableToSet = function addIterableToSet(SetConstructor, set, iterable) {
-      if (Array.isArray(iterable) || Type.string(iterable)) {
+      if (isArray(iterable) || Type.string(iterable)) {
         _forEach(iterable, function (value) {
           set.add(value);
         });
