@@ -3246,5 +3246,46 @@
     }
   });
 
+  var JSONstringifiesSymbols = (function () {
+    if (!Type.symbol(Symbol.iterator)) { return false; } // Symbols are not supported
+    var stringify = typeof JSON === 'object' && typeof JSON.stringify === 'function' ? JSON.stringify : null;
+    if (!stringify) { return false; } // JSON.stringify is not supported
+    if (typeof stringify(Symbol()) !== 'undefined') { return true; } // Symbols should become `undefined`
+    if (stringify([Symbol()]) !== '[null]') { return true; } // Symbols in arrays should become `null`
+    var obj = { a: Symbol() };
+    obj[Symbol()] = true;
+    if (stringify(obj) !== '{}') { return true; } // Symbol-valued keys *and* Symbol-valued properties should be omitted
+    return false;
+  }());
+  if (JSONstringifiesSymbols) {
+    // Microsoft Edge v0.12 stringifies Symbols incorrectly
+    var origStringify = JSON.stringify;
+    overrideNative(JSON, 'stringify', function stringify(value) {
+      if (Type.symbol(value)) { return; }
+      var replacer;
+      if (arguments.length > 1) {
+        replacer = arguments[1];
+      }
+      var args = [value];
+      if (!isArray(replacer)) {
+        var replaceFn = ES.IsCallable(replacer) ? replacer : null;
+        var wrappedReplacer = function (key, val) {
+          var parsedValue = replacer ? _call(replacer, this, key, val) : val;
+          if (!Type.symbol(parsedValue)) {
+            return parsedValue;
+          }
+        };
+        args.push(wrappedReplacer);
+      } else {
+        // create wrapped replacer that handles an array replacer?
+        args.push(replacer);
+      }
+      if (arguments.length > 2) {
+        args.push(arguments[2]);
+      }
+      return origStringify.apply(this, args);
+    });
+  }
+
   return globals;
 }));
