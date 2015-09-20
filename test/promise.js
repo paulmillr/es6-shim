@@ -25,4 +25,11 @@ describe('Promise', function () {
     expect(Promise).not.to.have.property('defer');
     expect(Promise.prototype).not.to.have.property('chain');
   });
+
+  it('requires an object context', function () {
+    // this fails in Safari 7.1 - 9
+    expect(function promiseDotCallThree() {
+      Promise.call(3, function () {});
+    }).to['throw']();
+  });
 });
