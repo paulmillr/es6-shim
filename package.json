@@ -23,7 +23,7 @@
   },
   "main": "es6-shim",
   "scripts": {
-    "test": "npm run lint && npm run test-shim && npm run test-sham",
+    "test": "npm run lint && evalmd *.md && npm run test-shim && npm run test-sham",
     "test-shim": "mocha test/*.js test/*/*.js",
     "test-sham": "mocha test-sham/*.js",
     "test-native": "npm run jshint-shim && NO_ES6_SHIM=1 mocha test/*.js test/*/*.js",
@@ -74,6 +74,7 @@
     "mocha": "^2.3.3",
     "promises-aplus-tests": "^2.1.1",
     "promises-es6-tests": "^0.5.0",
-    "uglify-js": "^2.4.24"
+    "uglify-js": "^2.4.24",
+    "evalmd": "^0.0.16"
   }
 }
