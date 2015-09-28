@@ -1,5 +1,18 @@
 # es6-shim x.x.x (not yet released)
 
+# es6-shim 0.33.4 (27 Sep 2015)
+* [Fix] Add test, and fix, for `JSON.stringify(Object(Symbol()))` throwing on Chrome 45
+* [Fix] Wrap `JSON.stringify` when `Symbol` exists and it fails to serialize them correctly
+* [Fix] fix `Reflect.defineProperty` on edge v0.12
+* [Robustness] Cache `Array.isArray` internally
+* [Refactor] Use internal `overrideNative` helper for String.prototype HTML methods
+* [Refactor] Update `is-arguments` implementation; don't call down legacy code path in modern engines
+* [Tests] Add `evalmd` to verify that example code blocks are valid
+* [Tests] Adding a test for Safari 7.1 and later (runtime check added in 8a8ddd36186cdc1fcb3fcc259ec9ecef1e141901)
+* [Tests] Add additional `JSON.stringify` test for `Symbol` and object `Symbol` values
+* [Tests] up to `io.js` `v3.3`, `node` `v4.1`
+* [Dev Deps] update `es5-shim`, `mocha`, `chai`
+
 # es6-shim 0.33.3 (31 Aug 2015)
 * [Fix] Handle Firefox Nightly's broken `construct` method
 * [Tests] Add `JSON.stringify` tests for handling `Symbol`s

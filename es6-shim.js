@@ -2,7 +2,7 @@
   * https://github.com/paulmillr/es6-shim
   * @license es6-shim Copyright 2013-2015 by Paul Miller (http://paulmillr.com)
   *   and contributors,  MIT License
-  * es6-shim: v0.33.3
+  * es6-shim: v0.33.4
   * see https://github.com/paulmillr/es6-shim/blob/0.33.3/LICENSE
   * Details and documentation:
   * https://github.com/paulmillr/es6-shim/
