@@ -1,5 +1,10 @@
 # es6-shim x.x.x (not yet released)
 
+# es6-shim 0.33.5 (28 Sep 2015)
+* [Fix] IE 6-8 have wacky scoping issues with named function expressions.
+* [Fix] Apparently in IE 8, RegExp#test is an own property of regexes, not a prototype method
+* [Fix] Make sure to treat `es5-sham`'s `Object.defineProperty` as unsupported, in IE 8
+
 # es6-shim 0.33.4 (27 Sep 2015)
 * [Fix] Add test, and fix, for `JSON.stringify(Object(Symbol()))` throwing on Chrome 45
 * [Fix] Wrap `JSON.stringify` when `Symbol` exists and it fails to serialize them correctly
