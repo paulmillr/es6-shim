@@ -53,7 +53,7 @@
   var isCallableWithoutNew = not(throwsError);
   var arePropertyDescriptorsSupported = function () {
     // if Object.defineProperty exists but throws, it's IE 8
-    return !throwsError(function () { Object.defineProperty({}, 'x', {}); });
+    return !throwsError(function () { Object.defineProperty({}, 'x', { get: function () {} }); });
   };
   var supportsDescriptors = !!Object.defineProperty && arePropertyDescriptorsSupported();
   var functionsHaveNames = (function foo() {}).name === 'foo';
