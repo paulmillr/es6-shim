@@ -1155,22 +1155,25 @@
       }
       throw new TypeError('No default value');
     };
-    var NumberShim = function Number(value) {
-      var primValue = Type.primitive(value) ? value : toPrimitive(value, 'number');
-      if (typeof primValue === 'string') {
-        if (isBinary(primValue)) {
-          primValue = parseInt(_strSlice(primValue, 2), 2);
-        } else if (isOctal(primValue)) {
-          primValue = parseInt(_strSlice(primValue, 2), 8);
+    var NumberShim = (function () {
+      // this is wrapped in an IIFE because of IE 6-8's wacky scoping issues with named function expressions.
+      return function Number(value) {
+        var primValue = Type.primitive(value) ? value : toPrimitive(value, 'number');
+        if (typeof primValue === 'string') {
+          if (isBinary(primValue)) {
+            primValue = parseInt(_strSlice(primValue, 2), 2);
+          } else if (isOctal(primValue)) {
+            primValue = parseInt(_strSlice(primValue, 2), 8);
+          }
         }
-      }
-      if (this instanceof Number) {
-        return new OrigNumber(primValue);
-      }
-      /* jshint newcap: false */
-      return OrigNumber(primValue);
-      /* jshint newcap: true */
-    };
+        if (this instanceof Number) {
+          return new OrigNumber(primValue);
+        }
+        /* jshint newcap: false */
+        return OrigNumber(primValue);
+        /* jshint newcap: true */
+      };
+    }());
     wrapConstructor(OrigNumber, NumberShim, {});
     /*globals Number: true */
     Number = NumberShim;
