@@ -11,8 +11,18 @@ describe('JSON', function () {
       expect(JSON.stringify(Symbol())).to.eql(undefined);
     });
 
+    ifSymbolsIt('serializes a Symbol object to {}', function () {
+      expect(function stringifyObjectSymbol() { JSON.stringify(Object(Symbol())); }).not.to['throw']();
+      expect(JSON.stringify(Object(Symbol()))).to.eql('{}');
+    });
+
     ifSymbolsIt('serializes Symbols in an Array to null', function () {
       expect(JSON.stringify([Symbol('foo')])).to.eql('[null]');
+    });
+
+    ifSymbolsIt('serializes Symbol objects in an Array to {}', function () {
+      expect(function stringifyObjectSymbolInArray() { JSON.stringify([Object(Symbol('foo'))]); }).not.to['throw']();
+      expect(JSON.stringify([Object(Symbol('foo'))])).to.eql('[{}]');
     });
 
     ifSymbolsDescribe('skips symbol properties and values in an object', function () {

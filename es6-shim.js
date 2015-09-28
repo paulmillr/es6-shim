@@ -3247,6 +3247,7 @@
   });
 
   var JSONstringifiesSymbols = (function () {
+    // Microsoft Edge v0.12 stringifies Symbols incorrectly
     if (!Type.symbol(Symbol.iterator)) { return false; } // Symbols are not supported
     var stringify = typeof JSON === 'object' && typeof JSON.stringify === 'function' ? JSON.stringify : null;
     if (!stringify) { return false; } // JSON.stringify is not supported
@@ -3257,11 +3258,15 @@
     if (stringify(obj) !== '{}') { return true; } // Symbol-valued keys *and* Symbol-valued properties should be omitted
     return false;
   }());
-  if (JSONstringifiesSymbols) {
-    // Microsoft Edge v0.12 stringifies Symbols incorrectly
+  var JSONstringifyAcceptsObjectSymbol = valueOrFalseIfThrows(function () {
+    // Chrome 45 throws on stringifying object symbols
+    if (!Type.symbol(Symbol.iterator)) { return true; } // Symbols are not supported
+    return JSON.stringify(Object(Symbol())) === '{}' && JSON.stringify([Object(Symbol())]) === '[{}]';
+  });
+  if (JSONstringifiesSymbols || !JSONstringifyAcceptsObjectSymbol) {
     var origStringify = JSON.stringify;
     overrideNative(JSON, 'stringify', function stringify(value) {
-      if (Type.symbol(value)) { return; }
+      if (typeof value === 'symbol') { return; }
       var replacer;
       if (arguments.length > 1) {
         replacer = arguments[1];
@@ -3271,8 +3276,12 @@
         var replaceFn = ES.IsCallable(replacer) ? replacer : null;
         var wrappedReplacer = function (key, val) {
           var parsedValue = replacer ? _call(replacer, this, key, val) : val;
-          if (!Type.symbol(parsedValue)) {
-            return parsedValue;
+          if (typeof parsedValue !== 'symbol') {
+            if (Type.symbol(parsedValue)) {
+              return assignTo({})(parsedValue);
+            } else {
+              return parsedValue;
+            }
           }
         };
         args.push(wrappedReplacer);
