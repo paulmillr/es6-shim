@@ -1,5 +1,9 @@
 # es6-shim x.x.x (not yet released)
 
+# es6-shim 0.33.6 (29 Sep 2015)
+* [Fix] In IE 6-8, of course, `typeof setTimeout` is "object"
+* [Tests] Upgrade jQuery on the test HTML pages
+
 # es6-shim 0.33.5 (28 Sep 2015)
 * [Fix] IE 6-8 have wacky scoping issues with named function expressions.
 * [Fix] Apparently in IE 8, RegExp#test is an own property of regexes, not a prototype method
