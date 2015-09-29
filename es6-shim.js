@@ -1778,7 +1778,7 @@
   var PromiseShim = (function () {
     var setTimeout = globals.setTimeout;
     // some environments don't have setTimeout - no way to shim here.
-    if (typeof setTimeout !== 'function') { return; }
+    if (typeof setTimeout !== 'function' && typeof setTimeout !== 'object') { return; }
 
     ES.IsPromise = function (promise) {
       if (!ES.TypeIsObject(promise)) {
