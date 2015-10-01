@@ -106,11 +106,14 @@
           // Safari, old Firefox, many others
           setPrototypeOf = function (origin, proto) {
             // if proto is not null
-            return getPrototypeOf(origin) ?
+            if (getPrototypeOf(origin)) {
               // use __proto__ to promote
-              ((origin.__proto__ = proto), origin) :
+              origin.__proto__ = proto;
+              return origin;
+            } else {
               // otherwise unable to promote: fallback
-              createAndCopy(origin, proto);
+              return createAndCopy(origin, proto);
+            }
           };
         }
       }
