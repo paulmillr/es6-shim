@@ -28,7 +28,7 @@ node_js:
   - "0.6"
   - "0.4"
 before_install:
-  - '[ "${TRAVIS_NODE_VERSION}" = "0.6" ] || npm install -g npm@1.4.28 && npm install -g npm'
+  - '[ "${TRAVIS_NODE_VERSION}" = "0.6" ] || npm install -g npm@1.4.28 && npm install -g npm@3.3.4'
   - '[ "${TRAVIS_RUN_SAUCE}" != "true" ] || npm install -g grunt-cli'
 script:
   - 'if [ "${TRAVIS_RUN_SAUCE}" == "true" ]; then npm run sauce ; elif [ "${TRAVIS_NODE_VERSION}" != "0.11" ] && [ "${TRAVIS_RUN_LINT_ONLY}" != "true" ]; then npm run test-shim && npm run test-sham ; else npm test ; fi'
