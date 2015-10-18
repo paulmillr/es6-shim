@@ -135,14 +135,14 @@
   };
 
   var startsWithRejectsRegex = function () {
-    return String.prototype.startsWith && throwsError(function () {
+    return throwsError(function () {
       /* throws if spec-compliant */
       '/a/'.startsWith(/a/);
     });
   };
-  var startsWithHandlesInfinity = (function () {
-    return String.prototype.startsWith && 'abc'.startsWith('a', Infinity) === false;
-  }());
+  var startsWithHandlesInfinity = function () {
+    return 'abc'.startsWith('a', Infinity) === false;
+  };
 
   var getGlobal = function () {
 	// the only reliable means to get the global object is
@@ -157,7 +157,7 @@
   var globals = getGlobal();
   var globalIsFinite = globals.isFinite;
   var hasStrictMode = (function () { return this === null; }.call(null));
-  var startsWithIsCompliant = startsWithRejectsRegex() && startsWithHandlesInfinity;
+  var startsWithExistAndIsNotCompliant = (typeof String.prototype.startsWith === 'function') && (!startsWithRejectsRegex() || !startsWithHandlesInfinity());
   var _indexOf = Function.call.bind(String.prototype.indexOf);
   var _toString = Function.call.bind(Object.prototype.toString);
   var _concat = Function.call.bind(Array.prototype.concat);
@@ -266,8 +266,12 @@
 
   var overrideNative = function overrideNative(object, property, replacement) {
     var original = object[property];
+    if (typeof original === 'undefined'){
+      throw new Error("Native property does not exist");
+    }
     defineProperty(object, property, replacement, true);
     Value.preserveToString(object[property], original);
+    
   };
 
   // This is a private name in the es6 spec, equal to '[Symbol.iterator]'
@@ -732,7 +736,7 @@
     return new StringIterator(this);
   });
 
-  if (!startsWithIsCompliant) {
+  if (startsWithExistAndIsNotCompliant) {
     // Firefox (< 37?) and IE 11 TP have a noncompliant startsWith implementation
     overrideNative(String.prototype, 'startsWith', StringPrototypeShims.startsWith);
     overrideNative(String.prototype, 'endsWith', StringPrototypeShims.endsWith);
