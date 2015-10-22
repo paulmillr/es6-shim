@@ -1132,7 +1132,7 @@
     }, true);
   }
 
-  if (Number('0o10') !== 8 || Number('0b10') !== 2) {
+  if (supportsDescriptors && (Number('0o10') !== 8 || Number('0b10') !== 2)) {
     var OrigNumber = Number;
     var binaryRegex = /^0b/i;
     var octalRegex = /^0o/i;
