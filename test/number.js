@@ -1,4 +1,4 @@
-/* global describe, it, expect, require */
+/* global describe, it, xit, expect, require */
 
 describe('Number', function () {
   var functionsHaveNames = (function foo() {}).name === 'foo';
@@ -336,6 +336,13 @@ describe('Number', function () {
 
     it('behaves like the builtin', function () {
       expect((1).constructor).to.equal(Number);
+    });
+
+    xit('returns a primitive when called with a receiver', function () {
+      expect((1).constructor(2)).to.equal(2);
+      expect(Object(1).constructor(3)).to.equal(3);
+      expect(Object(1).constructor.apply(null, 4)).to.equal(4);
+      expect(Object(1).constructor.apply(Object(1).constructor, 5)).to.equal(5);
     });
 
     it('works with boxed primitives', function () {

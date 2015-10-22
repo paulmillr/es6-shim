@@ -214,8 +214,14 @@ Promise.resolve(5).then(function (value) {
 
 ## Caveats
 
-- `Object.setPrototypeOf` / `Reflect.setPrototypeOf`
+ - `Object.setPrototypeOf` / `Reflect.setPrototypeOf`
    - Note that null objects (`Object.create(null)`, eg, an object with `null` as its `[[Prototype]]`) can not have their `[[Prototype]]` changed except via a native `Object.setPrototypeOf`.
+ - `Number`:
+   - In order to support binary literals (`Number('0b1')`) and octal literals (`Number('0o7')`), the global `Number` constructor is wrapped in a shim. However, this can cause issues in the exceedingly unlikely event that you ever call `Number` as a function with a receiver (a “this” value) that is itself a number. Some problematic examples:
+```js
+  assert(typeof Number.call(2, 3) === 'number'); // will fail when `Number` is wrapped, is "object"
+  assert(typeof (1).constructor(2) === 'number'); // will fail when `Number` is wrapped, is "object"
+```
 
 ## [License][license-url]
 
