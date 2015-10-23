@@ -228,10 +228,17 @@
       // sets up proper prototype chain where possible
       Object.setPrototypeOf(original, replacement);
     }
-    _forEach(Object.getOwnPropertyNames(original), function (key) {
-      if (key in noop || keysToSkip[key]) { return; }
-      Value.proxy(original, key, replacement);
-    });
+    if (supportsDescriptors) {
+      _forEach(Object.getOwnPropertyNames(original), function (key) {
+        if (key in noop || keysToSkip[key]) { return; }
+        Value.proxy(original, key, replacement);
+      });
+    } else {
+      _forEach(Object.keys(original), function (key) {
+        if (key in noop || keysToSkip[key]) { return; }
+        replacement[key] = original[key];
+      });
+    }
     replacement.prototype = original.prototype;
     Value.redefine(original.prototype, 'constructor', replacement);
   };
@@ -1132,7 +1139,7 @@
     }, true);
   }
 
-  if (supportsDescriptors && (Number('0o10') !== 8 || Number('0b10') !== 2)) {
+  if (Number('0o10') !== 8 || Number('0b10') !== 2) {
     var OrigNumber = Number;
     var binaryRegex = /^0b/i;
     var octalRegex = /^0o/i;
