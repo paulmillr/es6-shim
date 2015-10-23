@@ -134,16 +134,6 @@
     });
   };
 
-  var startsWithRejectsRegex = function () {
-    return String.prototype.startsWith && throwsError(function () {
-      /* throws if spec-compliant */
-      '/a/'.startsWith(/a/);
-    });
-  };
-  var startsWithHandlesInfinity = (function () {
-    return String.prototype.startsWith && 'abc'.startsWith('a', Infinity) === false;
-  }());
-
   var getGlobal = function () {
     // the only reliable means to get the global object is
     // `Function('return this')()`
@@ -157,7 +147,6 @@
   var globals = getGlobal();
   var globalIsFinite = globals.isFinite;
   var hasStrictMode = (function () { return this === null; }.call(null));
-  var startsWithIsCompliant = startsWithRejectsRegex() && startsWithHandlesInfinity;
   var _indexOf = Function.call.bind(String.prototype.indexOf);
   var _toString = Function.call.bind(Object.prototype.toString);
   var _concat = Function.call.bind(Array.prototype.concat);
@@ -688,6 +677,20 @@
   if (String.prototype.includes && 'a'.includes('a', Infinity) !== false) {
     overrideNative(String.prototype, 'includes', StringPrototypeShims.includes);
   }
+
+  if (String.prototype.startsWith && String.prototype.endsWith) {
+    var startsWithRejectsRegex = throwsError(function () {
+      /* throws if spec-compliant */
+      '/a/'.startsWith(/a/);
+    });
+    var startsWithHandlesInfinity = 'abc'.startsWith('a', Infinity) === false;
+    if (!startsWithRejectsRegex || !startsWithHandlesInfinity) {
+      // Firefox (< 37?) and IE 11 TP have a noncompliant startsWith implementation
+      overrideNative(String.prototype, 'startsWith', StringPrototypeShims.startsWith);
+      overrideNative(String.prototype, 'endsWith', StringPrototypeShims.endsWith);
+    }
+  }
+
   defineProperties(String.prototype, StringPrototypeShims);
 
   var hasStringTrimBug = '\u0085'.trim().length !== 1;
@@ -737,12 +740,6 @@
   addIterator(String.prototype, function () {
     return new StringIterator(this);
   });
-
-  if (!startsWithIsCompliant) {
-    // Firefox (< 37?) and IE 11 TP have a noncompliant startsWith implementation
-    overrideNative(String.prototype, 'startsWith', StringPrototypeShims.startsWith);
-    overrideNative(String.prototype, 'endsWith', StringPrototypeShims.endsWith);
-  }
 
   var ArrayShims = {
     from: function from(items) {
