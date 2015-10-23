@@ -1,5 +1,14 @@
 # es6-shim x.x.x (not yet released)
 
+# es6-shim 0.33.7 (23 Oct 2015)
+* [Fix] Ensure `preserveToString` does not throw when the original does not exist (#359)
+* [Fix] `Promise`: properly handle named function expressions in IE 8.
+* [Fix] `Number`: `wrapConstructor` now works in ES3 (#365)
+* [Docs] Document `Number` supporting string binary and octal literals.
+* [Tests] add commented-out test for `typeof Number.call(Object(3), 3) === 'number'`, which fails atm.
+* [Tests] Fix browser tests sans-`npm install`
+* [Dev Deps] update `es5-shim`, `jscs`, `uglify-js`, `chai`
+
 # es6-shim 0.33.6 (29 Sep 2015)
 * [Fix] In IE 6-8, of course, `typeof setTimeout` is "object"
 * [Tests] Upgrade jQuery on the test HTML pages
