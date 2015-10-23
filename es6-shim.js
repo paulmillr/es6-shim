@@ -605,11 +605,11 @@
       return stringElements.join('');
     }
   };
-  defineProperties(String, StringShims);
-  if (String.raw({ raw: { 0: 'x', 1: 'y', length: 2 } }) !== 'xy') {
+  if (String.raw && String.raw({ raw: { 0: 'x', 1: 'y', length: 2 } }) !== 'xy') {
     // IE 11 TP has a broken String.raw implementation
     overrideNative(String, 'raw', StringShims.raw);
   }
+  defineProperties(String, StringShims);
 
   // Fast repeat, uses the `Exponentiation by squaring` algorithm.
   // Perf: http://jsperf.com/string-repeat2/2
@@ -685,11 +685,10 @@
       }
     }
   };
-  defineProperties(String.prototype, StringPrototypeShims);
-
-  if ('a'.includes('a', Infinity) !== false) {
+  if (String.prototype.includes && 'a'.includes('a', Infinity) !== false) {
     overrideNative(String.prototype, 'includes', StringPrototypeShims.includes);
   }
+  defineProperties(String.prototype, StringPrototypeShims);
 
   var hasStringTrimBug = '\u0085'.trim().length !== 1;
   if (hasStringTrimBug) {
