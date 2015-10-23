@@ -352,7 +352,7 @@ describe('Number', function () {
         expect(Object(1).constructor.call(Object(1), 7)).to.equal(7);
       });
 
-      xit('returns a primitive when called with the same number as an object receiver', function () {
+      it('returns a primitive when called with the same number as an object receiver', function () {
         expect(Object(1).constructor.call(Object(8), 8)).to.equal(8);
       });
     });

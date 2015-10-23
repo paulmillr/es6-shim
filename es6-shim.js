@@ -1174,15 +1174,16 @@
           }
         }
         var receiver = this;
-        /* jshint newcap: false */
-        var prim = OrigNumber(primValue);
-        /* jshint newcap: true */
-        if (receiver instanceof Number && !valueOrFalseIfThrows(function () {
-          return Number.prototype.valueOf.call(receiver) !== prim;
-        })) {
+        var valueOfSucceeds = valueOrFalseIfThrows(function () {
+          Number.prototype.valueOf.call(receiver);
+          return true;
+        });
+        if (receiver instanceof Number && !valueOfSucceeds) {
           return new OrigNumber(primValue);
         }
-        return prim;
+        /* jshint newcap: false */
+        return OrigNumber(primValue);
+        /* jshint newcap: true */
       };
     }());
     wrapConstructor(OrigNumber, NumberShim, {});
