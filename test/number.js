@@ -333,16 +333,28 @@ describe('Number', function () {
 	  expect(Number('1.1')).to.equal(+'1.1');
       expect(Number('0xA')).to.equal(0xA);
     });
+  });
 
+  describe('constructor', function () {
     it('behaves like the builtin', function () {
       expect((1).constructor).to.equal(Number);
     });
 
-    xit('returns a primitive when called with a receiver', function () {
-      expect((1).constructor(2)).to.equal(2);
-      expect(Object(1).constructor(3)).to.equal(3);
-      expect(Object(1).constructor.apply(null, 4)).to.equal(4);
-      expect(Object(1).constructor.apply(Object(1).constructor, 5)).to.equal(5);
+    describe('when called with a receiver', function () {
+      it('returns a primitive when called with a primitive receiver', function () {
+        expect((1).constructor(2)).to.equal(2);
+        expect((1).constructor.call(null, 3)).to.equal(3);
+        expect(Object(1).constructor.call(null, 5)).to.equal(5);
+      });
+
+      it('returns a primitive when called with a different number as an object receiver', function () {
+        expect(Object(1).constructor(6)).to.equal(6);
+        expect(Object(1).constructor.call(Object(1), 7)).to.equal(7);
+      });
+
+      xit('returns a primitive when called with the same number as an object receiver', function () {
+        expect(Object(1).constructor.call(Object(8), 8)).to.equal(8);
+      });
     });
 
     it('works with boxed primitives', function () {

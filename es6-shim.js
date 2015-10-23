@@ -1166,12 +1166,16 @@
             primValue = parseInt(_strSlice(primValue, 2), 8);
           }
         }
-        if (this instanceof Number) {
+        var receiver = this;
+        /* jshint newcap: false */
+        var prim = OrigNumber(primValue);
+        /* jshint newcap: true */
+        if (receiver instanceof Number && !valueOrFalseIfThrows(function () {
+          return Number.prototype.valueOf.call(receiver) !== prim;
+        })) {
           return new OrigNumber(primValue);
         }
-        /* jshint newcap: false */
-        return OrigNumber(primValue);
-        /* jshint newcap: true */
+        return prim;
       };
     }());
     wrapConstructor(OrigNumber, NumberShim, {});
