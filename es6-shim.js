@@ -1976,34 +1976,36 @@
       return C;
     };
 
-    var Promise = function Promise(resolver) {
-      if (!(this instanceof Promise)) {
-        throw new TypeError('Constructor Promise requires "new"');
-      }
-      if (this && this._promise) {
-        throw new TypeError('Bad construction');
-      }
-      // see https://bugs.ecmascript.org/show_bug.cgi?id=2482
-      if (!ES.IsCallable(resolver)) {
-        throw new TypeError('not a valid resolver');
-      }
-      var promise = emulateES6construct(this, Promise, Promise$prototype, {
-        _promise: {
-          result: void 0,
-          state: PROMISE_PENDING,
-          fulfillReactions: [],
-          rejectReactions: []
+    var Promise = (function () {
+      return function Promise(resolver) {
+        if (!(this instanceof Promise)) {
+          throw new TypeError('Constructor Promise requires "new"');
         }
-      });
-      var resolvingFunctions = createResolvingFunctions(promise);
-      var reject = resolvingFunctions.reject;
-      try {
-        resolver(resolvingFunctions.resolve, reject);
-      } catch (e) {
-        reject(e);
-      }
-      return promise;
-    };
+        if (this && this._promise) {
+          throw new TypeError('Bad construction');
+        }
+        // see https://bugs.ecmascript.org/show_bug.cgi?id=2482
+        if (!ES.IsCallable(resolver)) {
+          throw new TypeError('not a valid resolver');
+        }
+        var promise = emulateES6construct(this, Promise, Promise$prototype, {
+          _promise: {
+            result: void 0,
+            state: PROMISE_PENDING,
+            fulfillReactions: [],
+            rejectReactions: []
+          }
+        });
+        var resolvingFunctions = createResolvingFunctions(promise);
+        var reject = resolvingFunctions.reject;
+        try {
+          resolver(resolvingFunctions.resolve, reject);
+        } catch (e) {
+          reject(e);
+        }
+        return promise;
+      };
+    }());
     var Promise$prototype = Promise.prototype;
 
     var _promiseAllResolver = function (index, values, capability, remaining) {
