@@ -35,23 +35,25 @@ describe('Reflect', function () {
     _value: 0
   };
 
-  Object.defineProperties(object, {
-    value: {
-      get: function () {
-        return this._value;
-      }
-    },
+  if (supportsDescriptors) {
+    Object.defineProperties(object, {
+      value: {
+        get: function () {
+          return this._value;
+        }
+      },
 
-    setter: {
-      set: function (val) {
-        this._value = val;
-      }
-    },
+      setter: {
+        set: function (val) {
+          this._value = val;
+        }
+      },
 
-    bool: {
-      value: true
-    }
-  });
+      bool: {
+        value: true
+      }
+    });
+  }
 
   var testXThrow = function (values, func) {
     function checker(item) {
