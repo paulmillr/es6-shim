@@ -207,7 +207,9 @@
       }
     },
     preserveToString: function (target, source) {
-      defineProperty(target, 'toString', source.toString.bind(source), true);
+      if (source && ES.IsCallable(source.toString)) {
+        defineProperty(target, 'toString', source.toString.bind(source), true);
+      }
     }
   };
 
