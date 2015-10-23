@@ -1976,8 +1976,8 @@
     };
 
     var Promise = (function () {
-      return function Promise(resolver) {
-        if (!(this instanceof Promise)) {
+      var PromiseShim = function Promise(resolver) {
+        if (!(this instanceof PromiseShim)) {
           throw new TypeError('Constructor Promise requires "new"');
         }
         if (this && this._promise) {
@@ -1987,7 +1987,7 @@
         if (!ES.IsCallable(resolver)) {
           throw new TypeError('not a valid resolver');
         }
-        var promise = emulateES6construct(this, Promise, Promise$prototype, {
+        var promise = emulateES6construct(this, PromiseShim, Promise$prototype, {
           _promise: {
             result: void 0,
             state: PROMISE_PENDING,
@@ -2004,6 +2004,7 @@
         }
         return promise;
       };
+      return PromiseShim;
     }());
     var Promise$prototype = Promise.prototype;
 
