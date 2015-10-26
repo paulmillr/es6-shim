@@ -1162,7 +1162,7 @@
     };
     var NumberShim = (function () {
       // this is wrapped in an IIFE because of IE 6-8's wacky scoping issues with named function expressions.
-      return function Number(value) {
+      var NumberShim = function Number(value) {
         var primValue = Type.primitive(value) ? value : toPrimitive(value, 'number');
         if (typeof primValue === 'string') {
           if (isBinary(primValue)) {
@@ -1173,16 +1173,17 @@
         }
         var receiver = this;
         var valueOfSucceeds = valueOrFalseIfThrows(function () {
-          Number.prototype.valueOf.call(receiver);
+          OrigNumber.prototype.valueOf.call(receiver);
           return true;
         });
-        if (receiver instanceof Number && !valueOfSucceeds) {
+        if (receiver instanceof NumberShim && !valueOfSucceeds) {
           return new OrigNumber(primValue);
         }
         /* jshint newcap: false */
         return OrigNumber(primValue);
         /* jshint newcap: true */
       };
+      return NumberShim;
     }());
     wrapConstructor(OrigNumber, NumberShim, {});
     /*globals Number: true */
