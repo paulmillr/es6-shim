@@ -1,5 +1,8 @@
 # es6-shim x.x.x (not yet released)
 
+# es6-shim 0.33.9 (29 Oct 2015)
+* [Fix] IE 8: `Number(new Number(1))` was throwing. More NFE madness. (#365)
+
 # es6-shim 0.33.8 (23 Oct 2015)
 * [Fix] IE 8: `Promise.resolve(2)` was throwing. More named function expression madness.
 * [Tests] Reflect: Don't attempt to define properties on this test object unless we're in true ES5.
