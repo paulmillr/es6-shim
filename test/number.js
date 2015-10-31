@@ -330,7 +330,7 @@ describe('Number', function () {
   describe('strings in the constructor', function () {
     it('works on normal literals', function () {
       expect(Number('1')).to.equal(+'1');
-	  expect(Number('1.1')).to.equal(+'1.1');
+      expect(Number('1.1')).to.equal(+'1.1');
       expect(Number('0xA')).to.equal(0xA);
     });
   });
@@ -386,6 +386,32 @@ describe('Number', function () {
       expect(Number('0o10')).to.equal(8);
       expect(Number('0o11')).to.equal(9);
       expect(Number({ toString: function () { return '0o12'; }, valueOf: function () { return '0o13'; } })).to.equal(11);
+    });
+
+    it('should produce NaN', function () {
+      expect(String(Number('0b12'))).to.equal('NaN');
+      expect(String(Number('0o18'))).to.equal('NaN');
+      expect(String(Number('0x1g'))).to.equal('NaN');
+      expect(String(Number('+0b1'))).to.equal('NaN');
+      expect(String(Number('+0o1'))).to.equal('NaN');
+      expect(String(Number('+0x1'))).to.equal('NaN');
+      expect(String(Number('-0b1'))).to.equal('NaN');
+      expect(String(Number('-0o1'))).to.equal('NaN');
+      expect(String(Number('-0x1'))).to.equal('NaN');
+    });
+
+    it('should work with well formed and poorly formed objects', function () {
+      expect(String(Number({}))).to.equal('NaN');
+      expect(String(Number({ valueOf: '1.1' }))).to.equal('NaN');
+      expect(Number({ valueOf: '1.1', toString: function () { return '2.2'; } })).to.equal(2.2);
+      expect(Number({ valueOf: function () { return '1.1'; }, toString: '2.2' })).to.equal(1.1);
+      expect(Number({ valueOf: function () { return '1.1'; }, toString: function () { return '2.2'; } })).to.equal(1.1);
+      expect(String(Number({ valueOf: function () { return '-0x1a2b3c'; } }))).to.equal('NaN');
+      expect(String(Number({ toString: function () { return '-0x1a2b3c'; } }))).to.equal('NaN');
+      expect(Number({ valueOf: function () { return '0o12345'; } })).to.equal(5349);
+      expect(Number({ toString: function () { return '0o12345'; } })).to.equal(5349);
+      expect(Number({ valueOf: function () { return '0b101010'; } })).to.equal(42);
+      expect(Number({ toString: function () { return '0b101010'; } })).to.equal(42);
     });
   });
 });
