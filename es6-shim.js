@@ -1139,8 +1139,8 @@
 
   if (Number('0o10') !== 8 || Number('0b10') !== 2) {
     var OrigNumber = Number;
-    var binaryRegex = /^0b/i;
-    var octalRegex = /^0o/i;
+    var binaryRegex = /^0b[01]+$/i;
+    var octalRegex = /^0o[0-7]+$/i;
     // Note that in IE 8, RegExp.prototype.test doesn't seem to exist: ie, "test" is an own property of regexes. wtf.
     var isBinary = binaryRegex.test.bind(binaryRegex);
     var isOctal = octalRegex.test.bind(octalRegex);
