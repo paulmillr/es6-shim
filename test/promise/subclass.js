@@ -40,7 +40,7 @@ describe('Support user subclassing of Promise', function () {
 
   it("should throw if you don't inherit at all", function () {
     var MyPromise = function () {};
-    assert.throws(function () {
+    assert['throws'](function () {
       Promise.all.call(MyPromise, []);
     }, TypeError);
   });

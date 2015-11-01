@@ -28,7 +28,9 @@
   'use strict';
 
   /*jshint evil: true */
+  /* eslint-disable no-new-func */
   var getGlobal = new Function('return this;');
+  /* eslint-enable no-new-func */
   /*jshint evil: false */
 
   var globals = getGlobal();
@@ -85,20 +87,24 @@
       };
     } catch (e) {
       // do one or more feature detections
-      set = {__proto__: null};
+      set = { __proto__: null };
       // if proto does not work, needs to fallback
       // some Opera, Rhino, ducktape
       if (set instanceof Object) {
         setPrototypeOf = createAndCopy;
       } else {
         // verify if null objects are buggy
+        /* eslint-disable no-proto */
         set.__proto__ = objProto;
+        /* eslint-enable no-proto */
         // if null objects are buggy
         // nodejs 0.8 to 0.10
         if (set instanceof Object) {
           setPrototypeOf = function (origin, proto) {
             // use such bug to promote
+            /* eslint-disable no-proto */
             origin.__proto__ = proto;
+            /* eslint-enable no-proto */
             return origin;
           };
         } else {
@@ -108,7 +114,9 @@
             // if proto is not null
             if (getPrototypeOf(origin)) {
               // use __proto__ to promote
+              /* eslint-disable no-proto */
               origin.__proto__ = proto;
+              /* eslint-enable no-proto */
               return origin;
             } else {
               // otherwise unable to promote: fallback

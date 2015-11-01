@@ -1,4 +1,4 @@
-/* global describe, it, expect, require, beforeEach, afterEach */
+/* global describe, it, xit, expect, require, beforeEach, afterEach */
 
 // Big thanks to V8 folks for test ideas.
 // v8/test/mjsunit/harmony/collections.js
@@ -60,7 +60,7 @@ describe('Collections', function () {
     }
   };
 
-  var Sym = typeof Symbol !== 'undefined' ? Symbol : {};
+  var Sym = typeof Symbol === 'undefined' ? {} : Symbol;
   var isSymbol = function (sym) {
     return typeof Sym === 'function' && typeof sym === 'symbol';
   };
@@ -129,9 +129,9 @@ describe('Collections', function () {
     it('should be subclassable', function () {
       if (!Object.setPrototypeOf) { return; } // skip test if on IE < 11
       var MyMap = function MyMap() {
-        var map = new Map([['a', 'b']]);
-        Object.setPrototypeOf(map, MyMap.prototype);
-        return map;
+        var testMap = new Map([['a', 'b']]);
+        Object.setPrototypeOf(testMap, MyMap.prototype);
+        return testMap;
       };
       Object.setPrototypeOf(MyMap, Map);
       MyMap.prototype = Object.create(Map.prototype, {
@@ -381,17 +381,17 @@ describe('Collections', function () {
     });
 
     describe('#forEach', function () {
-      var map;
+      var mapToIterate;
 
       beforeEach(function () {
-        map = new Map();
-        expect(map.set('a', 1)).to.equal(map);
-        expect(map.set('b', 2)).to.equal(map);
-        expect(map.set('c', 3)).to.equal(map);
+        mapToIterate = new Map();
+        expect(mapToIterate.set('a', 1)).to.equal(mapToIterate);
+        expect(mapToIterate.set('b', 2)).to.equal(mapToIterate);
+        expect(mapToIterate.set('c', 3)).to.equal(mapToIterate);
       });
 
       afterEach(function () {
-        map = null;
+        mapToIterate = null;
       });
 
       ifFunctionsHaveNamesIt('has the right name', function () {
@@ -413,21 +413,21 @@ describe('Collections', function () {
           c: 3
         };
         var foundMap = {};
-        map.forEach(function (value, key, entireMap) {
-          expect(entireMap).to.equal(map);
+        mapToIterate.forEach(function (value, key, entireMap) {
+          expect(entireMap).to.equal(mapToIterate);
           foundMap[key] = value;
         });
         expect(foundMap).to.eql(expectedMap);
       });
 
       it('should iterate over empty keys', function () {
-        var map = new Map();
+        var mapWithEmptyKeys = new Map();
         var expectedKeys = [{}, null, undefined, '', NaN, 0];
         expectedKeys.forEach(function (key) {
-          expect(map.set(key, true)).to.equal(map);
+          expect(mapWithEmptyKeys.set(key, true)).to.equal(mapWithEmptyKeys);
         });
         var foundKeys = [];
-        map.forEach(function (value, key, entireMap) {
+        mapWithEmptyKeys.forEach(function (value, key, entireMap) {
           expect(entireMap.get(key)).to.equal(value);
           foundKeys.push(key);
         });
@@ -436,7 +436,7 @@ describe('Collections', function () {
 
       it('should support the thisArg', function () {
         var context = function () {};
-        map.forEach(function () {
+        mapToIterate.forEach(function () {
           expect(this).to.equal(context);
         }, context);
       });
@@ -447,9 +447,9 @@ describe('Collections', function () {
 
       it('should not revisit modified keys', function () {
         var hasModifiedA = false;
-        map.forEach(function (value, key) {
+        mapToIterate.forEach(function (value, key) {
           if (!hasModifiedA && key === 'a') {
-            expect(map.set('a', 4)).to.equal(map);
+            expect(mapToIterate.set('a', 4)).to.equal(mapToIterate);
             hasModifiedA = true;
           } else {
             expect(key).not.to.equal('a');
@@ -458,19 +458,19 @@ describe('Collections', function () {
       });
 
       it('returns the map from #set() for chaining', function () {
-        expect(map.set({}, {})).to.equal(map);
-        expect(map.set(42, {})).to.equal(map);
-        expect(map.set(0, {})).to.equal(map);
-        expect(map.set(NaN, {})).to.equal(map);
-        expect(map.set(-0, {})).to.equal(map);
+        expect(mapToIterate.set({}, {})).to.equal(mapToIterate);
+        expect(mapToIterate.set(42, {})).to.equal(mapToIterate);
+        expect(mapToIterate.set(0, {})).to.equal(mapToIterate);
+        expect(mapToIterate.set(NaN, {})).to.equal(mapToIterate);
+        expect(mapToIterate.set(-0, {})).to.equal(mapToIterate);
       });
 
       it('visits keys added in the iterator', function () {
         var hasAdded = false;
         var hasFoundD = false;
-        map.forEach(function (value, key) {
+        mapToIterate.forEach(function (value, key) {
           if (!hasAdded) {
-            map.set('d', 5);
+            mapToIterate.set('d', 5);
             hasAdded = true;
           } else if (key === 'd') {
             hasFoundD = true;
@@ -481,12 +481,12 @@ describe('Collections', function () {
 
       it('visits keys added in the iterator when there is a deletion', function () {
         var hasSeenFour = false;
-        var map = new Map();
-        map.set('0', 42);
-        map.forEach(function (value, key) {
+        var mapToMutate = new Map();
+        mapToMutate.set('0', 42);
+        mapToMutate.forEach(function (value, key) {
           if (key === '0') {
-            expect(map['delete']('0')).to.equal(true);
-            map.set('4', 'a value');
+            expect(mapToMutate['delete']('0')).to.equal(true);
+            mapToMutate.set('4', 'a value');
           } else if (key === '4') {
             hasSeenFour = true;
           }
@@ -497,12 +497,12 @@ describe('Collections', function () {
       it('does not visit keys deleted before a visit', function () {
         var hasVisitedC = false;
         var hasDeletedC = false;
-        map.forEach(function (value, key) {
+        mapToIterate.forEach(function (value, key) {
           if (key === 'c') {
             hasVisitedC = true;
           }
           if (!hasVisitedC && !hasDeletedC) {
-            hasDeletedC = map['delete']('c');
+            hasDeletedC = mapToIterate['delete']('c');
             expect(hasDeletedC).to.equal(true);
           }
         });
@@ -516,22 +516,23 @@ describe('Collections', function () {
           c: 3
         };
         var foundMap = {};
-        map.forEach(function (value, key) {
+        mapToIterate.forEach(function (value, key) {
           foundMap[key] = value;
-          expect(map['delete'](key)).to.equal(true);
+          expect(mapToIterate['delete'](key)).to.equal(true);
         });
         expect(foundMap).to.eql(expectedMap);
       });
 
       it('should convert key -0 to +0', function () {
-        var map = new Map(), result = [];
-        map.set(-0, 'a');
-        map.forEach(function (value, key) {
+        var zeroMap = new Map();
+        var result = [];
+        zeroMap.set(-0, 'a');
+        zeroMap.forEach(function (value, key) {
           result.push(String(1 / key) + ' ' + value);
         });
-        map.set(1, 'b');
-        map.set(0, 'c'); // shouldn't cause reordering
-        map.forEach(function (value, key) {
+        zeroMap.set(1, 'b');
+        zeroMap.set(0, 'c'); // shouldn't cause reordering
+        zeroMap.forEach(function (value, key) {
           result.push(String(1 / key) + ' ' + value);
         });
         expect(result.join(', ')).to.equal(
@@ -658,8 +659,8 @@ describe('Collections', function () {
 
     it('accepts an array as an argument', function () {
       var arr = ['a', 'b', 'c'];
-      var set = new Set(arr);
-      expect(set).to.have.entries([['a', 'a'], ['b', 'b'], ['c', 'c']]);
+      var setFromArray = new Set(arr);
+      expect(setFromArray).to.have.entries([['a', 'a'], ['b', 'b'], ['c', 'c']]);
     });
 
     it('should not be callable without "new"', function () {
@@ -669,19 +670,19 @@ describe('Collections', function () {
     it('should be subclassable', function () {
       if (!Object.setPrototypeOf) { return; } // skip test if on IE < 11
       var MySet = function MySet() {
-        var set = new Set(['a', 'b']);
-        Object.setPrototypeOf(set, MySet.prototype);
-        return set;
+        var actualSet = new Set(['a', 'b']);
+        Object.setPrototypeOf(actualSet, MySet.prototype);
+        return actualSet;
       };
       Object.setPrototypeOf(MySet, Set);
       MySet.prototype = Object.create(Set.prototype, {
         constructor: { value: MySet }
       });
 
-      set = new MySet();
-      testSet(set, 'c');
-      testSet(set, 'd');
-      expect(set).to.have.entries([['a', 'a'], ['b', 'b'], ['c', 'c'], ['d', 'd']]);
+      var mySet = new MySet();
+      testSet(mySet, 'c');
+      testSet(mySet, 'd');
+      expect(mySet).to.have.entries([['a', 'a'], ['b', 'b'], ['c', 'c'], ['d', 'd']]);
     });
 
     it('should has valid getter and setter calls', function () {
@@ -894,29 +895,29 @@ describe('Collections', function () {
         });
       }
 
-      var set;
+      var setToIterate;
       beforeEach(function () {
-        set = new Set([1, NaN, false, true, null, undefined, 'a']);
+        setToIterate = new Set([1, NaN, false, true, null, undefined, 'a']);
       });
 
       afterEach(function () {
-        set = null;
+        setToIterate = null;
       });
 
       it('works with the full set', function () {
-        expect(Array.from(set)).to.eql([1, NaN, false, true, null, undefined, 'a']);
+        expect(Array.from(setToIterate)).to.eql([1, NaN, false, true, null, undefined, 'a']);
       });
 
       it('works with Set#keys()', function () {
-        expect(Array.from(set.keys())).to.eql(Array.from(set));
+        expect(Array.from(setToIterate.keys())).to.eql(Array.from(setToIterate));
       });
 
       it('works with Set#values()', function () {
-        expect(Array.from(set.values())).to.eql(Array.from(set));
+        expect(Array.from(setToIterate.values())).to.eql(Array.from(setToIterate));
       });
 
       it('works with Set#entries()', function () {
-        expect(Array.from(set.entries())).to.eql([
+        expect(Array.from(setToIterate.entries())).to.eql([
           [1, 1],
           [NaN, NaN],
           [false, false],
@@ -946,16 +947,16 @@ describe('Collections', function () {
     });
 
     describe('#forEach', function () {
-      var set;
+      var setToIterate;
       beforeEach(function () {
-        set = new Set();
-        expect(set.add('a')).to.equal(set);
-        expect(set.add('b')).to.equal(set);
-        expect(set.add('c')).to.equal(set);
+        setToIterate = new Set();
+        expect(setToIterate.add('a')).to.equal(setToIterate);
+        expect(setToIterate.add('b')).to.equal(setToIterate);
+        expect(setToIterate.add('c')).to.equal(setToIterate);
       });
 
       afterEach(function () {
-        set = null;
+        setToIterate = null;
       });
 
       ifFunctionsHaveNamesIt('has the right name', function () {
@@ -973,8 +974,8 @@ describe('Collections', function () {
       it('should be iterable via forEach', function () {
         var expectedSet = ['a', 'b', 'c'];
         var foundSet = [];
-        set.forEach(function (value, alsoValue, entireSet) {
-          expect(entireSet).to.equal(set);
+        setToIterate.forEach(function (value, alsoValue, entireSet) {
+          expect(entireSet).to.equal(setToIterate);
           expect(value).to.equal(alsoValue);
           foundSet.push(value);
         });
@@ -982,13 +983,13 @@ describe('Collections', function () {
       });
 
       it('should iterate over empty keys', function () {
-        var set = new Set();
+        var setWithEmptyKeys = new Set();
         var expectedKeys = [{}, null, undefined, '', NaN, 0];
         expectedKeys.forEach(function (key) {
-          expect(set.add(key)).to.equal(set);
+          expect(setWithEmptyKeys.add(key)).to.equal(setWithEmptyKeys);
         });
         var foundKeys = [];
-        set.forEach(function (value, key, entireSet) {
+        setWithEmptyKeys.forEach(function (value, key, entireSet) {
           expect([key]).to.be.theSameSet([value]); // handles NaN correctly
           expect(entireSet.has(key)).to.equal(true);
           foundKeys.push(key);
@@ -998,7 +999,7 @@ describe('Collections', function () {
 
       it('should support the thisArg', function () {
         var context = function () {};
-        set.forEach(function () {
+        setToIterate.forEach(function () {
           expect(this).to.equal(context);
         }, context);
       });
@@ -1009,9 +1010,9 @@ describe('Collections', function () {
 
       it('should not revisit modified keys', function () {
         var hasModifiedA = false;
-        set.forEach(function (value, key) {
+        setToIterate.forEach(function (value, key) {
           if (!hasModifiedA && key === 'a') {
-            expect(set.add('a')).to.equal(set);
+            expect(setToIterate.add('a')).to.equal(setToIterate);
             hasModifiedA = true;
           } else {
             expect(key).not.to.equal('a');
@@ -1022,9 +1023,9 @@ describe('Collections', function () {
       it('visits keys added in the iterator', function () {
         var hasAdded = false;
         var hasFoundD = false;
-        set.forEach(function (value, key) {
+        setToIterate.forEach(function (value, key) {
           if (!hasAdded) {
-            expect(set.add('d')).to.equal(set);
+            expect(setToIterate.add('d')).to.equal(setToIterate);
             hasAdded = true;
           } else if (key === 'd') {
             hasFoundD = true;
@@ -1035,13 +1036,13 @@ describe('Collections', function () {
 
       it('visits keys added in the iterator when there is a deletion (slow path)', function () {
         var hasSeenFour = false;
-        var set = new Set();
-        expect(set.add({})).to.equal(set); // force use of the slow O(N) implementation
-        expect(set.add('0')).to.equal(set);
-        set.forEach(function (value, key) {
+        var setToMutate = new Set();
+        expect(setToMutate.add({})).to.equal(setToMutate); // force use of the slow O(N) implementation
+        expect(setToMutate.add('0')).to.equal(setToMutate);
+        setToMutate.forEach(function (value, key) {
           if (key === '0') {
-            expect(set['delete']('0')).to.equal(true);
-            expect(set.add('4')).to.equal(set);
+            expect(setToMutate['delete']('0')).to.equal(true);
+            expect(setToMutate.add('4')).to.equal(setToMutate);
           } else if (key === '4') {
             hasSeenFour = true;
           }
@@ -1051,12 +1052,12 @@ describe('Collections', function () {
 
       it('visits keys added in the iterator when there is a deletion (fast path)', function () {
         var hasSeenFour = false;
-        var set = new Set();
-        expect(set.add('0')).to.equal(set);
-        set.forEach(function (value, key) {
+        var setToMutate = new Set();
+        expect(setToMutate.add('0')).to.equal(setToMutate);
+        setToMutate.forEach(function (value, key) {
           if (key === '0') {
-            expect(set['delete']('0')).to.equal(true);
-            expect(set.add('4')).to.equal(set);
+            expect(setToMutate['delete']('0')).to.equal(true);
+            expect(setToMutate.add('4')).to.equal(setToMutate);
           } else if (key === '4') {
             hasSeenFour = true;
           }
@@ -1067,12 +1068,12 @@ describe('Collections', function () {
       it('does not visit keys deleted before a visit', function () {
         var hasVisitedC = false;
         var hasDeletedC = false;
-        set.forEach(function (value, key) {
+        setToIterate.forEach(function (value, key) {
           if (key === 'c') {
             hasVisitedC = true;
           }
           if (!hasVisitedC && !hasDeletedC) {
-            hasDeletedC = set['delete']('c');
+            hasDeletedC = setToIterate['delete']('c');
             expect(hasDeletedC).to.equal(true);
           }
         });
@@ -1086,23 +1087,23 @@ describe('Collections', function () {
           c: 'c'
         };
         var foundSet = {};
-        set.forEach(function (value, key) {
+        setToIterate.forEach(function (value, key) {
           foundSet[key] = value;
-          expect(set['delete'](key)).to.equal(true);
+          expect(setToIterate['delete'](key)).to.equal(true);
         });
         expect(foundSet).to.eql(expectedSet);
       });
 
       it('should convert key -0 to +0', function () {
-        var set = new Set();
+        var zeroSet = new Set();
         var result = [];
-        expect(set.add(-0)).to.equal(set);
-        set.forEach(function (key) {
+        expect(zeroSet.add(-0)).to.equal(zeroSet);
+        zeroSet.forEach(function (key) {
           result.push(String(1 / key));
         });
-        expect(set.add(1)).to.equal(set);
-        expect(set.add(0)).to.equal(set); // shouldn't cause reordering
-        set.forEach(function (key) {
+        expect(zeroSet.add(1)).to.equal(zeroSet);
+        expect(zeroSet.add(0)).to.equal(zeroSet); // shouldn't cause reordering
+        zeroSet.forEach(function (key) {
           result.push(String(1 / key));
         });
         expect(result.join(', ')).to.equal(

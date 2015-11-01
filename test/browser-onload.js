@@ -11,13 +11,13 @@ if (typeof window !== 'undefined') {
         window.testsPassed = (runner.stats.failures === 0);
       }
       runner.on('pass', function () {
-        window.completedTests++;
+        window.completedTests += 1;
       });
       runner.on('fail', function (test, err) {
         window.sawFail = true;
-        var flattenTitles = function (test) {
+        var flattenTitles = function (testToFlatten) {
           var titles = [];
-          var currentTest = test;
+          var currentTest = testToFlatten;
           while (currentTest.parent.title) {
             titles.push(currentTest.parent.title);
             currentTest = currentTest.parent;

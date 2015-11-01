@@ -33,16 +33,16 @@ describe('Promise', function () {
 
   specify('Stealing a resolver and using it to trigger possible reentrancy bug (#83)', function () {
     var stolenResolver;
-    function StealingPromiseConstructor(resolver) {
+    var StealingPromiseConstructor = function StealingPromiseConstructor(resolver) {
       stolenResolver = resolver;
       resolver(function () { }, function () { });
-    }
+    };
 
     var iterable = {};
     var atAtIterator = '@@iterator'; // on firefox, at least.
     iterable[atAtIterator] = function () {
       stolenResolver(null, null);
-      throw 0;
+      throw new Error(0);
     };
 
     assert.doesNotThrow(function () {
@@ -56,7 +56,7 @@ describe('Promise', function () {
     var count = 0;
     resolve({
       then: function () {
-        ++count;
+        count += 1;
         throw new RangeError('reject the promise');
       }
     });
@@ -77,7 +77,7 @@ describe('Promise', function () {
     var count = 0;
     var thenable = Object.defineProperty({}, 'then', {
       get: function () {
-        ++count;
+        count += 1;
         throw new RangeError('no then for you');
       }
     });

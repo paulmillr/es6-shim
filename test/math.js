@@ -1,4 +1,4 @@
-/* global describe, it, expect, require */
+/* global describe, it, xit, expect, require */
 
 var Assertion = expect().constructor;
 Assertion.prototype.almostEqual = function (obj, precision) {
@@ -712,7 +712,7 @@ describe('Math', function () {
     it('should be correct for objects with valueOf', function () {
      var x = {
        x: 0,
-       valueOf: function () { return ++this.x; }
+       valueOf: function () { this.x += 1; return this.x; }
      };
      expect(Math.imul(x, 1)).to.equal(1);
      expect(Math.imul(1, x)).to.equal(2);

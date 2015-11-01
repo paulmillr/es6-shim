@@ -70,11 +70,13 @@ describe('Promise.all', function () {
   });
 
   it('fulfills when passed an sparse array, giving `undefined` for the omitted values', function (done) {
-    /*jshint elision: true */
+    /* jshint elision: true */
     /* jscs:disable disallowSpaceBeforeComma */
+    /* eslint-disable no-sparse-arrays */
     var iterable = [Promise.resolve(0), , , Promise.resolve(1)];
+    /* eslint-enable no-sparse-arrays */
     /* jscs:enable disallowSpaceBeforeComma */
-    /*jshint elision: false */
+    /* jshint elision: false */
 
     Promise.all(iterable).then(function (value) {
       assert.deepEqual(value, [0, undefined, undefined, 1]);
@@ -121,6 +123,9 @@ describe('Promise.all', function () {
   });
 
   it('should be robust against tampering (2)', function (done) {
+    // Promise from Promise.all resolved before arguments
+    var fulfillCalled = false;
+
     var g = [
       Promise.resolve(0),
       tamper(Promise.resolve(1)),
@@ -130,8 +135,6 @@ describe('Promise.all', function () {
         assert(!fulfillCalled, 'should be resolved before all()');
       })['catch'](failIfThrows(done))
     ];
-    // Promise from Promise.all resolved before arguments
-    var fulfillCalled = false;
     Promise.all(g).
       then(function () {
         assert(!fulfillCalled, 'should be resolved last');
@@ -148,7 +151,7 @@ describe('Promise.all', function () {
     ];
     // Promise from Promise.all resolved despite rejected promise in arguments
     Promise.all(g).
-      then(function (v) {
+      then(function () {
         throw new Error('should not reach here!');
       }, function (e) {
         assert.strictEqual(e, 2);

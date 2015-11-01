@@ -116,6 +116,7 @@
   };
 
   var getGlobal = function () {
+    /* global self, window, global */
     // the only reliable means to get the global object is
     // `Function('return this')()`
     // However, this causes CSP violations in Chrome apps.
@@ -597,7 +598,7 @@
         next = nextIndex + 1 < arguments.length ? arguments[nextIndex + 1] : '';
         nextSub = String(next);
         _push(stringElements, nextSub);
-        nextIndex++;
+        nextIndex += 1;
       }
       return stringElements.join('');
     }
@@ -766,10 +767,10 @@
 
       // Note that that Arrays will use ArrayIterator:
       // https://bugs.ecmascript.org/show_bug.cgi?id=2416
-      var usingIterator = isArguments(items) || ES.GetMethod(items, $iterator$);
+      var usingIterator = typeof (isArguments(items) || ES.GetMethod(items, $iterator$)) !== 'undefined';
 
       var length, result, i;
-      if (usingIterator !== void 0) {
+      if (usingIterator) {
         result = ES.IsConstructor(C) ? Object(new C()) : [];
         var iterator = ES.GetIterator(items);
         var next, nextValue;
@@ -783,7 +784,7 @@
           nextValue = next.value;
           try {
             if (mapping) {
-              nextValue = T !== undefined ? _call(mapFn, T, nextValue, i) : mapFn(nextValue, i);
+              nextValue = T === undefined ? mapFn(nextValue, i) : _call(mapFn, T, nextValue, i);
             }
             result[i] = nextValue;
           } catch (e) {
@@ -1193,8 +1194,10 @@
     }());
     wrapConstructor(OrigNumber, NumberShim, {});
     /*globals Number: true */
+    /* eslint-disable no-undef */
     Number = NumberShim;
     Value.redefine(globals, 'Number', NumberShim);
+    /* eslint-enable no-undef */
     /*globals Number: false */
   }
 
@@ -1227,12 +1230,14 @@
   // implementations of find/findIndex indirectly use shimmed
   // methods of Number, so this test has to happen down here.)
   /*jshint elision: true */
+  /* eslint-disable no-sparse-arrays */
   if (![, 1].find(function (item, idx) { return idx === 0; })) {
     overrideNative(Array.prototype, 'find', ArrayPrototypeShims.find);
   }
   if ([, 1].findIndex(function (item, idx) { return idx === 0; }) !== 0) {
     overrideNative(Array.prototype, 'findIndex', ArrayPrototypeShims.findIndex);
   }
+  /* eslint-enable no-sparse-arrays */
   /*jshint elision: false */
 
   var isEnumerableOn = Function.bind.call(Function.bind, Object.prototype.propertyIsEnumerable);
@@ -1522,8 +1527,10 @@
       $input: true // Chrome < v39 & Opera < 26 have a nonstandard "$input" property
     });
     /*globals RegExp: true */
+    /* eslint-disable no-undef */
     RegExp = RegExpShim;
     Value.redefine(globals, 'RegExp', RegExpShim);
+    /* eslint-enable no-undef */
     /*globals RegExp: false */
   }
 
@@ -1982,6 +1989,7 @@
       return C;
     };
 
+    var Promise$prototype;
     var Promise = (function () {
       var PromiseShim = function Promise(resolver) {
         if (!(this instanceof PromiseShim)) {
@@ -2013,7 +2021,7 @@
       };
       return PromiseShim;
     }());
-    var Promise$prototype = Promise.prototype;
+    Promise$prototype = Promise.prototype;
 
     var _promiseAllResolver = function (index, values, capability, remaining) {
       var alreadyCalled = false;
@@ -2049,7 +2057,7 @@
         var resolveElement = _promiseAllResolver(
           index, values, resultCapability, remaining
         );
-        remaining.count++;
+        remaining.count += 1;
         nextPromise.then(resolveElement, resultCapability.reject);
         index += 1;
       }
@@ -2229,7 +2237,9 @@
     if (!promiseSupportsSubclassing || !promiseIgnoresNonFunctionThenCallbacks ||
         !promiseRequiresObjectContext || promiseResolveBroken) {
       /*globals Promise: true */
+      /* eslint-disable no-undef */
       Promise = PromiseShim;
+      /* eslint-enable no-undef */
       /*globals Promise: false */
       overrideNative(globals, 'Promise', PromiseShim);
     }
@@ -2409,6 +2419,7 @@
         };
         addIterator(MapIterator.prototype);
 
+        var Map$prototype;
         var MapShim = function Map() {
           if (!(this instanceof Map)) {
             throw new TypeError('Constructor Map requires "new"');
@@ -2434,7 +2445,7 @@
           }
           return map;
         };
-        var Map$prototype = MapShim.prototype;
+        Map$prototype = MapShim.prototype;
 
         Value.getter(Map$prototype, 'size', function () {
           if (typeof this._size === 'undefined') {
@@ -2599,6 +2610,7 @@
         // Sets containing only string or numeric keys, we use an object
         // as backing storage and lazily create a full Map only when
         // required.
+        var Set$prototype;
         var SetShim = function Set() {
           if (!(this instanceof Set)) {
             throw new TypeError('Constructor Set requires "new"');
@@ -2621,7 +2633,7 @@
           }
           return set;
         };
-        var Set$prototype = SetShim.prototype;
+        Set$prototype = SetShim.prototype;
 
         // Switch from the object backing storage to a full Map.
         var ensureMap = function ensureMap(set) {
@@ -2947,7 +2959,7 @@
       if (!ES.IsConstructor(constructor)) {
         throw new TypeError('First argument must be a constructor.');
       }
-      var newTarget = (arguments.length < 3) ? constructor : arguments[2];
+      var newTarget = arguments.length < 3 ? constructor : arguments[2];
       if (!ES.IsConstructor(newTarget)) {
         throw new TypeError('new.target must be a constructor.');
       }

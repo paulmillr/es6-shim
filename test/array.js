@@ -1,9 +1,9 @@
-/* global describe, it, xit, expect, require, beforeEach */
+/* global describe, it, xit, expect, require, beforeEach, afterEach */
 
 var runArrayTests = function () {
   'use strict';
 
-  var Sym = typeof Symbol !== 'undefined' ? Symbol : {};
+  var Sym = typeof Symbol === 'undefined' ? {} : Symbol;
   var isSymbol = function (sym) {
     return typeof Sym === 'function' && typeof sym === 'symbol';
   };
@@ -232,8 +232,10 @@ var runArrayTests = function () {
       it('removes holes', function () {
         /*jshint elision: true */
         /* jscs:disable disallowSpaceBeforeComma */
+        /* eslint-disable no-sparse-arrays */
         var input = [0, , 2];
         var result = Array.from([0, , 2]);
+        /* eslint-enable no-sparse-arrays */
         /* jscs:enable disallowSpaceBeforeComma */
         /*jshint elision: false */
         expect(1 in input).to.equal(false);
@@ -426,7 +428,9 @@ var runArrayTests = function () {
       it('should work with a sparse array', function () {
         /*jshint elision: true */
         /* jscs:disable disallowSpaceBeforeComma */
+        /* eslint-disable no-sparse-arrays */
         var obj = [1, , undefined];
+        /* eslint-enable no-sparse-arrays */
         /* jscs:enable disallowSpaceBeforeComma */
         /*jshint elision: false */
         expect(1 in obj).to.equal(false);
@@ -521,7 +525,9 @@ var runArrayTests = function () {
       it('should work with a sparse array', function () {
         /*jshint elision: true */
         /* jscs:disable disallowSpaceBeforeComma */
+        /* eslint-disable no-sparse-arrays */
         var obj = [1, , undefined];
+        /* eslint-enable no-sparse-arrays */
         /* jscs:enable disallowSpaceBeforeComma */
         /*jshint elision: false */
         expect(1 in obj).to.equal(false);
@@ -945,7 +951,9 @@ describe('clean Object.prototype', runArrayTests);
 describe('polluted Object.prototype', function () {
   'use strict';
 
+  /* eslint-disable no-extend-native */
   Object.prototype[1] = 42;
+  /* eslint-enable no-extend-native */
   runArrayTests();
   delete Object.prototype[1];
 });

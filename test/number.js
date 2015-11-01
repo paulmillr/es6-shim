@@ -363,10 +363,12 @@ describe('Number', function () {
     });
 
     it('works with `new`', function () {
-      /*jshint -W053 */
+      /* jshint -W053 */
+      /* eslint-disable no-new-wrappers */
       var one = new Number('1');
       var a = new Number('0xA');
-      /*jshint +W053 */
+      /* eslint-enable no-new-wrappers */
+      /* jshint +W053 */
 
       expect(+one).to.equal(1);
       expect(one instanceof Number).to.equal(true);

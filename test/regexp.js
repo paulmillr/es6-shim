@@ -2,10 +2,12 @@
 
 var getRegexLiteral = function (stringRegex) {
   try {
-    /*jshint evil: true */
+    /* jshint evil: true */
+    /* eslint-disable no-new-func */
     return Function('return ' + stringRegex + ';')();
-    /*jshint evil: false */
-  } catch (e) {}
+    /* eslint-enable no-new-func */
+    /* jshint evil: false */
+  } catch (e) {/**/}
 };
 var describeIfSupportsDescriptors = Object.getOwnPropertyDescriptor ? describe : xdescribe;
 var callAllowsPrimitives = (function () { return this === 3; }.call(3));

@@ -1,4 +1,5 @@
 {
 	"es3": true,
-	"esnext": true
+	"esnext": true,
+	"sub": true
 }

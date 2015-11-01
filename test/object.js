@@ -1,4 +1,4 @@
-/* global describe, it, expect, require, Symbol */
+/* global describe, it, xit, expect, require, Symbol */
 
 describe('Object', function () {
   (typeof process !== 'undefined' && process.env.NO_ES6_SHIM ? it.skip : it)('is on the exported object', function () {
@@ -152,7 +152,7 @@ describe('Object', function () {
     });
 
     it('should compare regular objects correctly', function () {
-      [null, undefined, [0], 5, 'str', {a: null}].map(function (item) {
+      [null, undefined, [0], 5, 'str', { a: null }].map(function (item) {
         return Object.is(item, item);
       }).forEach(function (result) {
         expect(result).to.equal(true);
@@ -268,7 +268,7 @@ describe('Object', function () {
       var thrower = { 1: 2, 2: 3, 3: 4 };
       Object.defineProperty(thrower, 2, {
         get: function () { return 3; },
-        set: function (v) { throw new RangeError('IE 9 does not throw on preventExtensions'); }
+        set: function (v) { throw new RangeError('IE 9 does not throw on preventExtensions: ' + v); }
       });
       Object.preventExtensions(thrower);
       expect(thrower).to.have.property(2, 3);

@@ -36,6 +36,7 @@ describe('Reflect', function () {
   };
 
   if (supportsDescriptors) {
+    /* eslint-disable accessor-pairs */
     Object.defineProperties(object, {
       value: {
         get: function () {
@@ -53,17 +54,18 @@ describe('Reflect', function () {
         value: true
       }
     });
+    /* eslint-enable accessor-pairs */
   }
 
   var testXThrow = function (values, func) {
-    function checker(item) {
+    var checker = function checker(item) {
       try {
         func(item);
         return false;
       } catch (e) {
         return e instanceof TypeError;
       }
-    }
+    };
 
     values.forEach(function (item) {
       expect(item).to.satisfy(checker);
@@ -103,17 +105,17 @@ describe('Reflect', function () {
     it('works also with redefined apply', function () {
       expect(Reflect.apply(Array.prototype.push, [1, 2], [3, 4, 5])).to.equal(5);
 
-      function F(a, b, c) {
+      var F = function F(a, b, c) {
         return a + b + c;
-      }
+      };
 
       F.apply = false;
 
       expect(Reflect.apply(F, null, [1, 2, 3])).to.equal(6);
 
-      function G(last) {
+      var G = function G(last) {
         return this.x + 'lo' + last;
-      }
+      };
 
       G.apply = function nop() {};
 
@@ -143,9 +145,9 @@ describe('Reflect', function () {
     });
 
     it('works also with redefined apply', function () {
-      function C(a, b, c) {
+      var C = function C(a, b, c) {
         this.qux = [a, b, c].join('|');
-      }
+      };
 
       C.apply = undefined;
 
@@ -153,7 +155,7 @@ describe('Reflect', function () {
     });
 
     it('correctly handles newTarget param', function () {
-      function F() {}
+      var F = function F() {};
       expect(Reflect.construct(function () {}, [], F) instanceof F).to.equal(true);
     });
   });
@@ -483,11 +485,13 @@ describe('Reflect', function () {
       expect(Reflect.getOwnPropertyDescriptor(receiver, 'bar').enumerable).to.equal(false);
 
       var out;
+      /* eslint-disable accessor-pairs */
       target = Object.create({}, {
         o: {
           set: function () { out = this; }
         }
       });
+      /* eslint-enable accessor-pairs */
 
       expect(Reflect.set(target, 'o', 17, receiver)).to.equal(true);
       expect(out).to.equal(receiver);
@@ -594,9 +598,11 @@ describe('Reflect', function () {
 
     ifES5It('will detect an own accessor property', function () {
       var target = Object.create(null);
+      /* eslint-disable accessor-pairs */
       Object.defineProperty(target, 'accessor', {
         set: function () {}
       });
+      /* eslint-enable accessor-pairs */
 
       expect(Reflect.has(target, 'accessor')).to.equal(true);
     });

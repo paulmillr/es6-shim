@@ -1,4 +1,4 @@
-/* global describe, it, expect, require */
+/* global describe, it, xit, expect, require */
 
 var runStringTests = function () {
   'use strict';
@@ -587,13 +587,35 @@ var runStringTests = function () {
       });
 
       it('should trim the correct characters', function () {
-        var whitespace = '\u0009' + '\u000b' + '\u000c' + '\u0020' +
-                         '\u00a0' + '\u1680' + '\u2000' + '\u2001' +
-                         '\u2002' + '\u2003' + '\u2004' + '\u2005' +
-                         '\u2006' + '\u2007' + '\u2008' + '\u2009' +
-                         '\u200A' + '\u202f' + '\u205f' + '\u3000';
+        var whitespace = [
+          '\u0009',
+          '\u000b',
+          '\u000c',
+          '\u0020',
+          '\u00a0',
+          '\u1680',
+          '\u2000',
+          '\u2001',
+          '\u2002',
+          '\u2003',
+          '\u2004',
+          '\u2005',
+          '\u2006',
+          '\u2007',
+          '\u2008',
+          '\u2009',
+          '\u200A',
+          '\u202f',
+          '\u205f',
+          '\u3000'
+        ].join('');
 
-        var lineTerminators = '\u000a' + '\u000d' + '\u2028' + '\u2029';
+        var lineTerminators = [
+          '\u000a',
+          '\u000d',
+          '\u2028',
+          '\u2029'
+        ].join('');
 
         var trimmed = (whitespace + lineTerminators).trim();
         expect(trimmed).to.have.property('length', 0);
@@ -660,7 +682,9 @@ var runStringTests = function () {
 describe('clean Object.prototype', runStringTests);
 
 describe('polluted Object.prototype', function () {
+  /* eslint-disable no-extend-native */
   Object.prototype[1] = 42;
   runStringTests();
   delete Object.prototype[1];
+  /* eslint-enable no-extend-native */
 });
