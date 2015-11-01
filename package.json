@@ -23,7 +23,8 @@
   },
   "main": "es6-shim",
   "scripts": {
-    "test": "npm run lint && evalmd *.md && npm run test-shim && npm run test-sham",
+    "test": "npm run lint && evalmd *.md && npm run tests-only",
+	"tests-only": "npm run test-shim && npm run test-sham",
     "test-shim": "mocha test/*.js test/*/*.js",
     "test-sham": "mocha test-sham/*.js",
     "test-native": "npm run jshint-shim && NO_ES6_SHIM=1 mocha test/*.js test/*/*.js",
