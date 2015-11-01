@@ -61,7 +61,6 @@
   var _forEach = Function.call.bind(Array.prototype.forEach);
   var _reduce = Function.call.bind(Array.prototype.reduce);
   var _filter = Function.call.bind(Array.prototype.filter);
-  var _every = Function.call.bind(Array.prototype.every);
 
   var defineProperty = function (object, name, value, force) {
     if (!force && name in object) { return; }
@@ -128,7 +127,6 @@
 
   var globals = getGlobal();
   var globalIsFinite = globals.isFinite;
-  var hasStrictMode = (function () { return this === null; }.call(null));
   var _indexOf = Function.call.bind(String.prototype.indexOf);
   var _toString = Function.call.bind(Object.prototype.toString);
   var _concat = Function.call.bind(Array.prototype.concat);
