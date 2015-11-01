@@ -360,19 +360,18 @@
     },
 
     Construct: function (C, args, newTarget, isES6internal) {
-      if (newTarget === void 0) {
-        newTarget = C;
-      }
+      var target = typeof newTarget === 'undefined' ? C : newTarget;
+
       if (!isES6internal) {
         // Try to use Reflect.construct if available
-        return Reflect.construct(C, args, newTarget);
+        return Reflect.construct(C, args, target);
       }
       // OK, we have to fake it.  This will only work if the
       // C.[[ConstructorKind]] == "base" -- but that's the only
       // kind we can make in ES5 code anyway.
 
-      // OrdinaryCreateFromConstructor(newTarget, "%ObjectPrototype%")
-      var proto = newTarget.prototype;
+      // OrdinaryCreateFromConstructor(target, "%ObjectPrototype%")
+      var proto = target.prototype;
       if (!ES.TypeIsObject(proto)) {
         proto = Object.prototype;
       }
@@ -540,14 +539,14 @@
     if (!ES.TypeIsObject(proto)) {
       proto = defaultProto;
     }
-    o = create(proto);
+    var obj = create(proto);
     for (var name in slots) {
       if (_hasOwnProperty(slots, name)) {
         var value = slots[name];
-        defineProperty(o, name, value, true);
+        defineProperty(obj, name, value, true);
       }
     }
-    return o;
+    return obj;
   };
 
   // Firefox 31 reports this function's length as 0
@@ -2097,15 +2096,16 @@
           iteratorRecord = { iterator: iterator, done: false };
           return performPromiseAll(iteratorRecord, C, capability);
         } catch (e) {
+          var exception = e;
           if (iteratorRecord && !iteratorRecord.done) {
             try {
               ES.IteratorClose(iterator, true);
             } catch (ee) {
-              e = ee;
+              exception = ee;
             }
           }
           var reject = capability.reject;
-          reject(e);
+          reject(exception);
           return capability.promise;
         }
       },
@@ -2119,15 +2119,16 @@
           iteratorRecord = { iterator: iterator, done: false };
           return performPromiseRace(iteratorRecord, C, capability);
         } catch (e) {
+          var exception = e;
           if (iteratorRecord && !iteratorRecord.done) {
             try {
               ES.IteratorClose(iterator, true);
             } catch (ee) {
-              e = ee;
+              exception = ee;
             }
           }
           var reject = capability.reject;
-          reject(e);
+          reject(exception);
           return capability.promise;
         }
       },
@@ -2165,15 +2166,16 @@
         var C = ES.SpeciesConstructor(promise, Promise);
         var resultCapability = new PromiseCapability(C);
         // PerformPromiseThen(promise, onFulfilled, onRejected, resultCapability)
-        if (!ES.IsCallable(onFulfilled)) {
-          onFulfilled = PROMISE_IDENTITY;
-        }
-        if (!ES.IsCallable(onRejected)) {
-          onRejected = PROMISE_THROWER;
-        }
-        var fulfillReaction = { capabilities: resultCapability, handler: onFulfilled };
-        var rejectReaction = { capabilities: resultCapability, handler: onRejected };
-        var _promise = promise._promise, value;
+        var fulfillReaction = {
+          capabilities: resultCapability,
+          handler: ES.IsCallable(onFulfilled) ? onFulfilled : PROMISE_IDENTITY
+        };
+        var rejectReaction = {
+          capabilities: resultCapability,
+          handler: ES.IsCallable(onRejected) ? onRejected : PROMISE_THROWER
+        };
+        var _promise = promise._promise;
+        var value;
         if (_promise.state === PROMISE_PENDING) {
           _push(_promise.fulfillReactions, fulfillReaction);
           _push(_promise.rejectReactions, rejectReaction);
@@ -2627,7 +2629,8 @@
         var ensureMap = function ensureMap(set) {
           if (!set['[[SetData]]']) {
             var m = set['[[SetData]]'] = new collectionShims.Map();
-            _forEach(Object.keys(set._storage), function (k) {
+            _forEach(Object.keys(set._storage), function (key) {
+              var k = key;
               if (k === '^null') {
                 k = null;
               } else if (k === '^undefined') {
@@ -3136,7 +3139,8 @@
   }
 
   if (Object.setPrototypeOf && ReflectShims.getPrototypeOf) {
-    var willCreateCircularPrototype = function (object, proto) {
+    var willCreateCircularPrototype = function (object, lastProto) {
+      var proto = lastProto;
       while (proto) {
         if (object === proto) {
           return true;

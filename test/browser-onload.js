@@ -17,9 +17,10 @@ if (typeof window !== 'undefined') {
         window.sawFail = true;
         var flattenTitles = function (test) {
           var titles = [];
-          while (test.parent.title) {
-            titles.push(test.parent.title);
-            test = test.parent;
+          var currentTest = test;
+          while (currentTest.parent.title) {
+            titles.push(currentTest.parent.title);
+            currentTest = currentTest.parent;
           }
           return titles.reverse();
         };
