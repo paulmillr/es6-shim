@@ -24,8 +24,11 @@ if (typeof window !== 'undefined') {
           return titles.reverse();
         };
         failedTests.push({
-          name: test.title, result: false, message: err.message,
-          stack: err.stack, titles: flattenTitles(test)
+          name: test.title,
+          result: false,
+          message: err.message,
+          stack: err.stack,
+          titles: flattenTitles(test)
         });
       });
       runner.on('end', function () {
