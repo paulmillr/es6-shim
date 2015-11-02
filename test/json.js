@@ -7,22 +7,26 @@ describe('JSON', function () {
   var ifSymbolsDescribe = hasSymbols ? describe : xit;
 
   describe('.stringify()', function () {
+    ifFunctionsHaveNamesIt('has the right name', function () {
+      expect(JSON.stringify.name).to.equal('stringify');
+    });
+
     ifSymbolsIt('serializes a Symbol to undefined', function () {
-      expect(JSON.stringify(Symbol())).to.eql(undefined);
+      expect(JSON.stringify(Symbol())).to.equal(undefined);
     });
 
     ifSymbolsIt('serializes a Symbol object to {}', function () {
       expect(function stringifyObjectSymbol() { JSON.stringify(Object(Symbol())); }).not.to['throw']();
-      expect(JSON.stringify(Object(Symbol()))).to.eql('{}');
+      expect(JSON.stringify(Object(Symbol()))).to.equal('{}');
     });
 
     ifSymbolsIt('serializes Symbols in an Array to null', function () {
-      expect(JSON.stringify([Symbol('foo')])).to.eql('[null]');
+      expect(JSON.stringify([Symbol('foo')])).to.equal('[null]');
     });
 
     ifSymbolsIt('serializes Symbol objects in an Array to {}', function () {
       expect(function stringifyObjectSymbolInArray() { JSON.stringify([Object(Symbol('foo'))]); }).not.to['throw']();
-      expect(JSON.stringify([Object(Symbol('foo'))])).to.eql('[{}]');
+      expect(JSON.stringify([Object(Symbol('foo'))])).to.equal('[{}]');
     });
 
     ifSymbolsDescribe('skips symbol properties and values in an object', function () {
