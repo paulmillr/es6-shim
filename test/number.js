@@ -415,5 +415,17 @@ describe('Number', function () {
       expect(Number({ valueOf: function () { return '0b101010'; } })).to.equal(42);
       expect(Number({ toString: function () { return '0b101010'; } })).to.equal(42);
     });
+
+    it('should work with correct whitespaces', function () {
+        var whitespace = ' \t\x0b\f\xa0\ufeff\n\r\u2028\u2029\u1680\u180e\u2000\u2001\u2002\u2003\u2004\u2005\u2006\u2007\u2008\u2009\u200a\u202f\u205f\u3000';
+
+        // Zero-width space (zws), next line character (nel), and non-character (bom) are not whitespace.
+        var nonWhitespaces = ['\u0085', '\u200b', '\ufffe'];
+
+        expect(String(Number(nonWhitespaces[0] + '0' + nonWhitespaces[0]))).to.equal('NaN');
+        expect(String(Number(nonWhitespaces[1] + '1' + nonWhitespaces[1]))).to.equal('NaN');
+        expect(String(Number(nonWhitespaces[2] + '2' + nonWhitespaces[2]))).to.equal('NaN');
+        expect(String(Number(whitespace + '3' + whitespace))).to.equal('3');
+    });
   });
 });
