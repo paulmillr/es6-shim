@@ -61,6 +61,7 @@
   var _forEach = Function.call.bind(Array.prototype.forEach);
   var _reduce = Function.call.bind(Array.prototype.reduce);
   var _filter = Function.call.bind(Array.prototype.filter);
+  var _some = Function.call.bind(Array.prototype.some);
 
   var defineProperty = function (object, name, value, force) {
     if (!force && name in object) { return; }
@@ -717,6 +718,7 @@
     return String(this).replace(trimRegexp, '');
   };
   var nonWS = ['\u0085', '\u200b', '\ufffe'].join('');
+  var nonWSregex = new RegExp('[' + nonWS + ']', 'g');
   var hasStringTrimBug = nonWS.trim().length !== nonWS.length;
   defineProperty(String.prototype, 'trim', trimShim, hasStringTrimBug);
 
@@ -1141,7 +1143,12 @@
     }, true);
   }
 
-  if (Number('0o10') !== 8 || Number('0b10') !== 2) {
+  var lacksOctalSupport = Number('0o10') !== 8;
+  var lacksBinarySupport = Number('0b10') !== 2;
+  var trimsNonWhitespace = _some(nonWS, function (c) {
+    return Number(c + 0 + c) === 0;
+  });
+  if (lacksOctalSupport || lacksBinarySupport || trimsNonWhitespace) {
     var OrigNumber = Number;
     var binaryRegex = /^0b[01]+$/i;
     var octalRegex = /^0o[0-7]+$/i;
@@ -1164,6 +1171,7 @@
       }
       throw new TypeError('No default value');
     };
+    var hasNonWS = nonWSregex.test.bind(nonWSregex);
     var NumberShim = (function () {
       // this is wrapped in an IIFE because of IE 6-8's wacky scoping issues with named function expressions.
       var NumberShim = function Number(value) {
@@ -1173,6 +1181,10 @@
             primValue = parseInt(_strSlice(primValue, 2), 2);
           } else if (isOctal(primValue)) {
             primValue = parseInt(_strSlice(primValue, 2), 8);
+          } else if (hasNonWS(primValue)) {
+            primValue = NaN;
+          } else {
+            primValue = _call(trimShim, primValue);
           }
         }
         var receiver = this;
