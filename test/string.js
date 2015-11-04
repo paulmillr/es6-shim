@@ -1,6 +1,6 @@
 /* global describe, it, xit, expect, require */
 
-var runStringTests = function () {
+var runStringTests = function (it) {
   'use strict';
 
   var functionsHaveNames = (function foo() {}).name === 'foo';
@@ -679,12 +679,16 @@ var runStringTests = function () {
   });
 };
 
-describe('clean Object.prototype', runStringTests);
+describe('clean Object.prototype', function () {
+  return runStringTests.call(this, it);
+});
 
 describe('polluted Object.prototype', function () {
-  /* eslint-disable no-extend-native */
-  Object.prototype[1] = 42;
-  runStringTests();
-  delete Object.prototype[1];
-  /* eslint-enable no-extend-native */
+  return runStringTests.call(this, function () {
+    /* eslint-disable no-extend-native */
+    Object.prototype[1] = 42;
+    /* eslint-enable no-extend-native */
+    it.apply(this, arguments);
+    delete Object.prototype[1];
+  });
 });

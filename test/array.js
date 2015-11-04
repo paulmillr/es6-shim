@@ -1,6 +1,6 @@
 /* global describe, it, xit, expect, require, beforeEach, afterEach */
 
-var runArrayTests = function () {
+var runArrayTests = function (it) {
   'use strict';
 
   var Sym = typeof Symbol === 'undefined' ? {} : Symbol;
@@ -946,14 +946,20 @@ var runArrayTests = function () {
   });
 };
 
-describe('clean Object.prototype', runArrayTests);
+describe('clean Object.prototype', function () {
+  'use strict';
+
+  runArrayTests.call(this, it);
+});
 
 describe('polluted Object.prototype', function () {
   'use strict';
 
-  /* eslint-disable no-extend-native */
-  Object.prototype[1] = 42;
-  /* eslint-enable no-extend-native */
-  runArrayTests();
-  delete Object.prototype[1];
+  return runArrayTests.call(this, function () {
+    /* eslint-disable no-extend-native */
+    Object.prototype[1] = 42;
+    /* eslint-enable no-extend-native */
+    it.apply(this, arguments);
+    delete Object.prototype[1];
+  });
 });
