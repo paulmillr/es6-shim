@@ -719,6 +719,7 @@
   };
   var nonWS = ['\u0085', '\u200b', '\ufffe'].join('');
   var nonWSregex = new RegExp('[' + nonWS + ']', 'g');
+  var isBadHexRegex = /^[\-+]0x[0-9a-f]+$/i;
   var hasStringTrimBug = nonWS.trim().length !== nonWS.length;
   defineProperty(String.prototype, 'trim', trimShim, hasStringTrimBug);
 
@@ -1172,6 +1173,7 @@
       throw new TypeError('No default value');
     };
     var hasNonWS = nonWSregex.test.bind(nonWSregex);
+    var isBadHex = isBadHexRegex.test.bind(isBadHexRegex);
     var NumberShim = (function () {
       // this is wrapped in an IIFE because of IE 6-8's wacky scoping issues with named function expressions.
       var NumberShim = function Number(value) {
@@ -1181,7 +1183,7 @@
             primValue = parseInt(_strSlice(primValue, 2), 2);
           } else if (isOctal(primValue)) {
             primValue = parseInt(_strSlice(primValue, 2), 8);
-          } else if (hasNonWS(primValue)) {
+          } else if (hasNonWS(primValue) || isBadHex(primValue)) {
             primValue = NaN;
           } else {
             primValue = _call(trimShim, primValue);
