@@ -1491,7 +1491,7 @@
     }
   }
 
-  if (!RegExp.prototype.flags && supportsDescriptors) {
+  if (typeof Object.getOwnPropertyDescriptor(RegExp.prototype, 'flags').get !== 'function' && supportsDescriptors) {
     var regExpFlagsGetter = function flags() {
       if (!ES.TypeIsObject(this)) {
         throw new TypeError('Method called on incompatible type: must be an object.');
