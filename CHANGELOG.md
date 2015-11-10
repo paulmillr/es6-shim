@@ -1,5 +1,11 @@
 # es6-shim x.x.x (not yet released)
 
+# es6-shim 0.33.11 (9 Nov 2015)
+* [Fix] handle future change of RegExp.prototype not being a regex (#370, #371)
+* [Fix] disallow invalid hex strings in `Number` (#369)
+* [Tests] Tweak "polluted prototype" approach
+* [Dev Deps] update `chai`, `es5-shim`, `eslint`, `@ljharb/eslint-config`, `jscs`
+
 # es6-shim 0.33.10 (2 Nov 2015)
 * [Fix] the `Number` constructor properly trims (or not) whitespace characters (#368)
 * [Fix] `Number('0b12')` and `Number('0o18')` should both be `NaN` (#366)
