@@ -12,6 +12,13 @@ var getRegexLiteral = function (stringRegex) {
 var describeIfSupportsDescriptors = Object.getOwnPropertyDescriptor ? describe : xdescribe;
 var callAllowsPrimitives = (function () { return this === 3; }.call(3));
 var ifCallAllowsPrimitivesIt = callAllowsPrimitives ? it : xit;
+var defaultRegex = (function () {
+  try {
+    return String(RegExp.prototype);
+  } catch (e) {
+    return '/(?:)/';
+  }
+}());
 
 describe('RegExp', function () {
   (typeof process !== 'undefined' && process.env.NO_ES6_SHIM ? it.skip : it)('is on the exported object', function () {
@@ -21,13 +28,13 @@ describe('RegExp', function () {
 
   it('can be called with no arguments', function () {
     var regex = RegExp();
-    expect(String(regex)).to.equal(String(RegExp.prototype));
+    expect(String(regex)).to.equal(defaultRegex);
     expect(regex).to.be.an.instanceOf(RegExp);
   });
 
   it('can be called with null/undefined', function () {
     expect(String(RegExp(null))).to.equal('/null/');
-    expect(String(RegExp(undefined))).to.equal(String(RegExp.prototype));
+    expect(String(RegExp(undefined))).to.equal(defaultRegex);
   });
 
   describe('constructor', function () {

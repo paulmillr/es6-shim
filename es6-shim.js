@@ -1491,7 +1491,11 @@
     }
   }
 
-  if (!RegExp.prototype.flags && supportsDescriptors) {
+  var hasFlags = supportsDescriptors && (function () {
+    var desc = Object.getOwnPropertyDescriptor(RegExp.prototype, 'flags');
+    return desc && ES.IsCallable(desc.get);
+  }());
+  if (!hasFlags) {
     var regExpFlagsGetter = function flags() {
       if (!ES.TypeIsObject(this)) {
         throw new TypeError('Method called on incompatible type: must be an object.');
