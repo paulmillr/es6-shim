@@ -73,7 +73,9 @@ describe('Number', function () {
     }
 
     it('should work', function () {
+      /* eslint-disable radix */
       expect(Number.parseInt('601')).to.equal(601);
+      /* eslint-enable radix */
     });
 
     ifFunctionsHaveNamesIt('has the right name', function () {
