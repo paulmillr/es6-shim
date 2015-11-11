@@ -1495,7 +1495,7 @@
     var desc = Object.getOwnPropertyDescriptor(RegExp.prototype, 'flags');
     return desc && ES.IsCallable(desc.get);
   }());
-  if (!hasFlags) {
+  if (supportsDescriptors && !hasFlags) {
     var regExpFlagsGetter = function flags() {
       if (!ES.TypeIsObject(this)) {
         throw new TypeError('Method called on incompatible type: must be an object.');
@@ -1528,16 +1528,18 @@
 
   if (!regExpSupportsFlagsWithRegex && supportsDescriptors) {
     var OrigRegExp = RegExp;
-    var RegExpShim = function RegExp(pattern, flags) {
-      var calledWithNew = this instanceof RegExp;
-      if (!calledWithNew && (Type.regex(pattern) || (pattern && pattern.constructor === RegExp))) {
-        return pattern;
-      }
-      if (Type.regex(pattern) && Type.string(flags)) {
-        return new RegExp(pattern.source, flags);
-      }
-      return new OrigRegExp(pattern, flags);
-    };
+    var RegExpShim = (function () {
+      return function RegExp(pattern, flags) {
+        var calledWithNew = this instanceof RegExp;
+        if (!calledWithNew && (Type.regex(pattern) || (pattern && pattern.constructor === RegExp))) {
+          return pattern;
+        }
+        if (Type.regex(pattern) && Type.string(flags)) {
+          return new RegExp(pattern.source, flags);
+        }
+        return new OrigRegExp(pattern, flags);
+      };
+    }());
     wrapConstructor(OrigRegExp, RegExpShim, {
       $input: true // Chrome < v39 & Opera < 26 have a nonstandard "$input" property
     });
