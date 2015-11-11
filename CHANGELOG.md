@@ -1,5 +1,12 @@
 # es6-shim x.x.x (not yet released)
 
+# es6-shim 0.33.12 (11 Nov 2015)
+* [Fix] IE 8: more NFE madness.
+* [Dev Deps] update `es5-shim`
+* [Docs] removing now-fixed `Number` caveat
+* [Docs] use assertions so `evalmd` will test the readme better.
+* [Docs] fix incorrect isFinite note (#373)
+
 # es6-shim 0.33.11 (9 Nov 2015)
 * [Fix] handle future change of RegExp.prototype not being a regex (#370, #371)
 * [Fix] disallow invalid hex strings in `Number` (#369)
