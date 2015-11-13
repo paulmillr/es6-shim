@@ -1177,7 +1177,12 @@
     var NumberShim = (function () {
       // this is wrapped in an IIFE because of IE 6-8's wacky scoping issues with named function expressions.
       var NumberShim = function Number(value) {
-        var primValue = Type.primitive(value) ? value : toPrimitive(value, 'number');
+        var primValue;
+        if (arguments.length > 0) {
+          primValue = Type.primitive(value) ? value : toPrimitive(value, 'number');
+        } else {
+          primValue = 0;
+        }
         if (typeof primValue === 'string') {
           primValue = _call(trimShim, primValue);
           if (isBinary(primValue)) {

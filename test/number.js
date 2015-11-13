@@ -332,6 +332,7 @@ describe('Number', function () {
   describe('constructor', function () {
     it('behaves like the builtin', function () {
       expect((1).constructor).to.equal(Number);
+      expect(Number()).to.equal(0);
     });
 
     describe('strings in the constructor', function () {
