@@ -1,5 +1,11 @@
 # es6-shim x.x.x (not yet released)
 
+# es6-shim 0.33.13 (12 Nov 2015
+* [Fix] `Number`: when no arguments are passed, return `+0`.
+* [Fix] `Number`: Make sure string values are trimmed before attempting to parse.
+* [Tests] cleaning up `Number` tests)
+* [Dev Deps] update `uglify-js`
+
 # es6-shim 0.33.12 (11 Nov 2015)
 * [Fix] IE 8: more NFE madness.
 * [Dev Deps] update `es5-shim`
