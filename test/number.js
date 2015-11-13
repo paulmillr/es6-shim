@@ -329,17 +329,17 @@ describe('Number', function () {
     });
   });
 
-  describe('strings in the constructor', function () {
-    it('works on normal literals', function () {
-      expect(Number('1')).to.equal(+'1');
-      expect(Number('1.1')).to.equal(+'1.1');
-      expect(Number('0xA')).to.equal(0xA);
-    });
-  });
-
   describe('constructor', function () {
     it('behaves like the builtin', function () {
       expect((1).constructor).to.equal(Number);
+    });
+
+    describe('strings in the constructor', function () {
+      it('works on normal literals', function () {
+        expect(Number('1')).to.equal(+'1');
+        expect(Number('1.1')).to.equal(+'1.1');
+        expect(Number('0xA')).to.equal(0xA);
+      });
     });
 
     describe('when called with a receiver', function () {
