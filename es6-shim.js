@@ -1179,14 +1179,13 @@
       var NumberShim = function Number(value) {
         var primValue = Type.primitive(value) ? value : toPrimitive(value, 'number');
         if (typeof primValue === 'string') {
+          primValue = _call(trimShim, primValue);
           if (isBinary(primValue)) {
             primValue = parseInt(_strSlice(primValue, 2), 2);
           } else if (isOctal(primValue)) {
             primValue = parseInt(_strSlice(primValue, 2), 8);
           } else if (hasNonWS(primValue) || isBadHex(primValue)) {
             primValue = NaN;
-          } else {
-            primValue = _call(trimShim, primValue);
           }
         }
         var receiver = this;

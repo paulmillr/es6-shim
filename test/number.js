@@ -380,8 +380,17 @@ describe('Number', function () {
 
     it('works with binary literals in string form', function () {
       expect(Number('0b1')).to.equal(1);
+      expect(Number(' 0b1')).to.equal(1);
+      expect(Number('0b1 ')).to.equal(1);
+
       expect(Number('0b10')).to.equal(2);
+      expect(Number(' 0b10')).to.equal(2);
+      expect(Number('0b10 ')).to.equal(2);
+
       expect(Number('0b11')).to.equal(3);
+      expect(Number(' 0b11')).to.equal(3);
+      expect(Number('0b11 ')).to.equal(3);
+
       expect(Number({ toString: function () { return '0b100'; }, valueOf: function () { return '0b101'; } })).to.equal(5);
     });
 
