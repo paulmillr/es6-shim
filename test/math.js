@@ -11,6 +11,7 @@ Assertion.prototype.almostEqual = function (obj, precision) {
 describe('Math', function () {
   var functionsHaveNames = (function foo() {}).name === 'foo';
   var ifFunctionsHaveNamesIt = functionsHaveNames ? it : xit;
+  var ifShimIt = (typeof process !== 'undefined' && process.env.NO_ES6_SHIM) ? it.skip : it;
 
   var isPositiveZero = function (zero) {
     'use strict';
@@ -29,7 +30,7 @@ describe('Math', function () {
   var valueOfIsInfinity = { valueOf: function () { return Infinity; } };
   var EPSILON = Number.EPSILON || 2.2204460492503130808472633361816e-16;
 
-  (typeof process !== 'undefined' && process.env.NO_ES6_SHIM ? it.skip : it)('is on the exported object', function () {
+  ifShimIt('is on the exported object', function () {
     var exported = require('../');
     expect(exported.Math).to.equal(Math);
   });

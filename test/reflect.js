@@ -22,6 +22,7 @@ var ifExtensionsPreventibleIt = Object.preventExtensions ? it : xit;
 var ifES5It = supportsDescriptors ? it : xit;
 var ifFreezeIt = typeof Object.freeze === 'function' ? it : xit;
 var ifFunctionsHaveNamesIt = functionsHaveNames ? it : xit;
+var ifShimIt = (typeof process !== 'undefined' && process.env.NO_ES6_SHIM) ? it.skip : it;
 
 describe('Reflect', function () {
   if (typeof Reflect === 'undefined') {
@@ -76,7 +77,7 @@ describe('Reflect', function () {
 
   var testPrimitiveThrow = testXThrow.bind(null, [null, undefined, 1, 'string', true]);
 
-  (typeof process !== 'undefined' && process.env.NO_ES6_SHIM ? it.skip : it)('is on the exported object', function () {
+  ifShimIt('is on the exported object', function () {
     var exported = require('../');
     expect(exported.Reflect).to.equal(Reflect);
   });

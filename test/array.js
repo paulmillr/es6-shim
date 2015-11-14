@@ -12,11 +12,12 @@ var runArrayTests = function (it) {
   var ifSymbolIteratorIt = isSymbol(Sym.iterator) ? it : xit;
   var ifSymbolIteratorAndArrayValuesIt = isSymbol(Sym.iterator) && Array.prototype.values ? it : xit;
   var ifSymbolUnscopablesIt = isSymbol(Sym.unscopables) ? it : xit;
+  var ifShimIt = (typeof process !== 'undefined' && process.env.NO_ES6_SHIM) ? it.skip : it;
 
   describe('Array', function () {
     var list = [5, 10, 15, 20];
 
-    (typeof process !== 'undefined' && process.env.NO_ES6_SHIM ? it.skip : it)('is on the exported object', function () {
+    ifShimIt('is on the exported object', function () {
       var exported = require('../');
       expect(exported.Array).to.equal(Array);
     });
@@ -955,11 +956,13 @@ describe('clean Object.prototype', function () {
 describe('polluted Object.prototype', function () {
   'use strict';
 
-  return runArrayTests.call(this, function () {
+  var shimmedIt = function () {
     /* eslint-disable no-extend-native */
     Object.prototype[1] = 42;
     /* eslint-enable no-extend-native */
     it.apply(this, arguments);
     delete Object.prototype[1];
-  });
+  };
+  shimmedIt.skip = it.skip;
+  return runArrayTests.call(this, shimmedIt);
 });

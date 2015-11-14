@@ -3,6 +3,7 @@
 describe('Number', function () {
   var functionsHaveNames = (function foo() {}).name === 'foo';
   var ifFunctionsHaveNamesIt = functionsHaveNames ? it : xit;
+  var ifShimIt = (typeof process !== 'undefined' && process.env.NO_ES6_SHIM) ? it.skip : it;
 
   var integers = [5295, -5295, -9007199254740991, 9007199254740991, 0, -0];
   var nonIntegers = [-9007199254741992, 9007199254741992, 5.9];
@@ -40,7 +41,7 @@ describe('Number', function () {
     expect(item).to.equal(false);
   };
 
-  (typeof process !== 'undefined' && process.env.NO_ES6_SHIM ? it.skip : it)('is on the exported object', function () {
+  ifShimIt('is on the exported object', function () {
     var exported = require('../');
     expect(exported.Number).to.equal(Number);
   });

@@ -1,7 +1,9 @@
 /* global describe, it, xit, expect, require, Symbol */
 
 describe('Object', function () {
-  (typeof process !== 'undefined' && process.env.NO_ES6_SHIM ? it.skip : it)('is on the exported object', function () {
+  var ifShimIt = (typeof process !== 'undefined' && process.env.NO_ES6_SHIM) ? it.skip : it;
+
+  ifShimIt('is on the exported object', function () {
     var exported = require('../');
     expect(exported.Object).to.equal(Object);
   });

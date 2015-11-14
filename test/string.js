@@ -5,6 +5,7 @@ var runStringTests = function (it) {
 
   var functionsHaveNames = (function foo() {}).name === 'foo';
   var ifFunctionsHaveNamesIt = functionsHaveNames ? it : xit;
+  var ifShimIt = (typeof process !== 'undefined' && process.env.NO_ES6_SHIM) ? it.skip : it;
 
   describe('String', function () {
     var hasStrictMode = (function () { return this === null; }.call(null));
@@ -17,7 +18,7 @@ var runStringTests = function (it) {
       expect(function () { return fn.apply(null); }).to['throw'](TypeError);
     };
 
-    (typeof process !== 'undefined' && process.env.NO_ES6_SHIM ? it.skip : it)('is on the exported object', function () {
+    ifShimIt('is on the exported object', function () {
       var exported = require('../');
       expect(exported.String).to.equal(String);
     });
@@ -684,11 +685,13 @@ describe('clean Object.prototype', function () {
 });
 
 describe('polluted Object.prototype', function () {
-  return runStringTests.call(this, function () {
+  var shimmedIt = function () {
     /* eslint-disable no-extend-native */
     Object.prototype[1] = 42;
     /* eslint-enable no-extend-native */
     it.apply(this, arguments);
     delete Object.prototype[1];
-  });
+  };
+  shimmedIt.skip = it.skip;
+  return runStringTests.call(this, shimmedIt);
 });

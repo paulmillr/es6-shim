@@ -27,7 +27,7 @@
     "tests-only": "npm run test:shim && npm run test:sham",
     "test:shim": "mocha test/*.js test/*/*.js",
     "test:sham": "mocha test-sham/*.js",
-    "test:native": "npm run jshint:shim && NO_ES6_SHIM=1 mocha test/*.js test/*/*.js",
+    "test:native": "NO_ES6_SHIM=1 npm run tests-only",
     "lint": "npm run lint:shim && npm run lint:sham",
     "lint:shim": "npm run jshint:shim && npm run jscs:shim && npm run eslint:shim",
     "lint:sham": "npm run jshint:sham && npm run jscs:sham && npm run eslint:sham",
