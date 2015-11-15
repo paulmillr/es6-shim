@@ -706,6 +706,49 @@ var runStringTests = function (it) {
         });
       });
     });
+
+    describe('#split()', function () {
+      it('works', function () {
+        expect('abcabc'.split('b')).to.eql(['a', 'ca', 'c']);
+        expect('abcabc'.split('b', 2)).to.eql(['a', 'ca']);
+        expect('abcabc'.split(/b.?/)).to.eql(['a', 'a', '']);
+        expect('abcabc'.split(/b.?/, 2)).to.eql(['a', 'a']);
+        expect('abcabc'.split(/b/)).to.eql(['a', 'ca', 'c']);
+        expect('abcabc'.split(/b/, 2)).to.eql(['a', 'ca']);
+        expect('abcabc'.split(/b/g)).to.eql(['a', 'ca', 'c']);
+        expect('abcabc'.split(/b/g, 2)).to.eql(['a', 'ca']);
+        expect('abcabc'.split(/B/i)).to.eql(['a', 'ca', 'c']);
+        expect('abcabc'.split(/B/i, 2)).to.eql(['a', 'ca']);
+        expect('abcabc'.split(/B/gi)).to.eql(['a', 'ca', 'c']);
+        expect('abcabc'.split(/B/gi, 2)).to.eql(['a', 'ca']);
+      });
+
+      ifSymbolsDescribe('Symbol.split', function () {
+        it('is a symbol', function () {
+          expect(typeof Symbol.split).to.equal('symbol');
+        });
+
+        it('is nonconfigurable', function () {
+          expect(Symbol).ownPropertyDescriptor('split').to.have.property('configurable', false);
+        });
+
+        it('is nonenumerable', function () {
+          expect(Symbol).ownPropertyDescriptor('split').to.have.property('enumerable', false);
+        });
+
+        it('is nonwritable', function () {
+          expect(Symbol).ownPropertyDescriptor('split').to.have.property('writable', false);
+        });
+
+        it('respects Symbol.split', function () {
+          var str = Object('a');
+          var limitVal = Object(42);
+          var obj = {};
+          obj[Symbol.split] = function (string, limit) { return string === str && limit === limitVal && this === obj; };
+          expect(str.split(obj, limitVal)).to.equal(true);
+        });
+      });
+    });
   });
 
   describe('Annex B', function () {

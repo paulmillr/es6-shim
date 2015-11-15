@@ -511,6 +511,21 @@
       };
       overrideNative(String.prototype, 'replace', replaceShim);
     }
+    if (!Type.symbol(Symbol.split)) {
+      var symbolSplit = defineWellKnownSymbol('split');
+      var originalSplit = String.prototype.split;
+      var splitShim = function split(separator, limit) {
+        var O = ES.RequireObjectCoercible(this);
+        if (separator !== null && typeof separator !== 'undefined') {
+          var splitter = ES.GetMethod(separator, symbolSplit);
+          if (typeof splitter !== 'undefined') {
+            return ES.Call(splitter, separator, [O, limit]);
+          }
+        }
+        return ES.Call(originalSplit, O, arguments);
+      };
+      overrideNative(String.prototype, 'split', splitShim);
+    }
   }
 
   var wrapConstructor = function wrapConstructor(original, replacement, keysToSkip) {

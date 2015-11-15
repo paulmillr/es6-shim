@@ -110,6 +110,7 @@ Math functions’ accuracy is 1e-11.
 * `Symbol` (only if it already exists)
     * `replace` (and corresponding `String#replace` support)
     * `search` (and corresponding `String#search` support)
+    * `split` (and corresponding `String#split` support)
 
 Well-known symbols will only be provided if the engine already has `Symbol` support.
 
