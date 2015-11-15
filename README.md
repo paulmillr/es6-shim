@@ -108,6 +108,7 @@ Math functions’ accuracy is 1e-11.
     * `setPrototypeOf()`
 
 * `Symbol` (only if it already exists)
+    * `match` (and corresponding `String#match`, `String#startsWith`, `String#endsWith`, `String#includes` support)
     * `replace` (and corresponding `String#replace` support)
     * `search` (and corresponding `String#search` support)
     * `split` (and corresponding `String#split` support)

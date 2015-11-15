@@ -182,6 +182,15 @@ var runStringTests = function (it) {
         expect(function () { return 'abcd'.startsWith(/abc/); }).to['throw'](TypeError);
         expect(function () { return 'abcd'.startsWith(new RegExp('abc')); }).to['throw'](TypeError);
       });
+
+      ifSymbolsDescribe('Symbol.match', function () {
+        it('allows a regex with Symbol.match set to a falsy value', function () {
+          var re = /a/g;
+          re[Symbol.match] = false;
+          expect(function () { return 'abcd'.startsWith(re); }).not.to['throw']();
+          expect('abcd'.startsWith(re)).to.equal('abcd'.startsWith(String(re)));
+        });
+      });
     });
 
     describe('#endsWith()', function () {
@@ -292,6 +301,15 @@ var runStringTests = function (it) {
         expect('abc'.endsWith('bc', Infinity)).to.equal(true);
         expect('abc'.endsWith('a', Infinity)).to.equal(false);
       });
+
+      ifSymbolsDescribe('Symbol.match', function () {
+        it('allows a regex with Symbol.match set to a falsy value', function () {
+          var re = /a/g;
+          re[Symbol.match] = false;
+          expect(function () { return 'abcd'.startsWith(re); }).not.to['throw']();
+          expect('abcd'.endsWith(re)).to.equal('abcd'.endsWith(String(re)));
+        });
+      });
     });
 
     describe('#includes()', function () {
@@ -390,6 +408,15 @@ var runStringTests = function (it) {
 
       it('should be falsy on incorrect results', function () {
         expect('test'.includes('1290')).to.equal(false);
+      });
+
+      ifSymbolsDescribe('Symbol.match', function () {
+        it('allows a regex with Symbol.match set to a falsy value', function () {
+          var re = /a/g;
+          re[Symbol.match] = false;
+          expect(function () { return 'abcd'.includes(re); }).not.to['throw']();
+          expect('abcd'.includes(re)).to.equal('abcd'.includes(String(re)));
+        });
       });
     });
 
@@ -746,6 +773,41 @@ var runStringTests = function (it) {
           var obj = {};
           obj[Symbol.split] = function (string, limit) { return string === str && limit === limitVal && this === obj; };
           expect(str.split(obj, limitVal)).to.equal(true);
+        });
+      });
+    });
+
+    describe('#match()', function () {
+      it('works', function () {
+        var str = 'abca';
+        var match = str.match(/a/);
+        expect(match.index).to.equal(0);
+        expect(match.input).to.equal(str);
+        expect(Array.prototype.slice.call(match)).to.eql(['a']);
+      });
+
+      ifSymbolsDescribe('Symbol.match', function () {
+        it('is a symbol', function () {
+          expect(typeof Symbol.match).to.equal('symbol');
+        });
+
+        it('is nonconfigurable', function () {
+          expect(Symbol).ownPropertyDescriptor('match').to.have.property('configurable', false);
+        });
+
+        it('is nonenumerable', function () {
+          expect(Symbol).ownPropertyDescriptor('match').to.have.property('enumerable', false);
+        });
+
+        it('is nonwritable', function () {
+          expect(Symbol).ownPropertyDescriptor('match').to.have.property('writable', false);
+        });
+
+        it('respects Symbol.match', function () {
+          var str = Object('a');
+          var obj = {};
+          obj[Symbol.match] = function (string) { return string === str && this === obj; };
+          expect(str.match(obj)).to.equal(true);
         });
       });
     });

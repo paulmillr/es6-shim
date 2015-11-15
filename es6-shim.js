@@ -466,12 +466,26 @@
       var p2 = p1 + '>';
       var p3 = p2 + S;
       return p3 + '</' + tag + '>';
+    },
+
+    IsRegExp: function IsRegExp(argument) {
+      if (!ES.TypeIsObject(argument)) {
+        return false;
+      }
+      var isRegExp = argument[Symbol.match];
+      if (typeof isRegExp !== 'undefined') {
+        return !!isRegExp;
+      }
+      return Type.regex(argument);
     }
   };
 
   // Well-known Symbol shims
   if (supportsDescriptors && hasSymbols) {
     var defineWellKnownSymbol = function defineWellKnownSymbol(name) {
+      if (Type.symbol(Symbol[name])) {
+        return Symbol[name];
+      }
       var sym = Symbol['for']('Symbol.' + name);
       Object.defineProperty(Symbol, name, {
         configurable: false,
@@ -525,6 +539,29 @@
         return ES.Call(originalSplit, O, arguments);
       };
       overrideNative(String.prototype, 'split', splitShim);
+    }
+    var symbolMatchExists = Type.symbol(Symbol.match);
+    var stringMatchIgnoresSymbolMatch = symbolMatchExists && (function () {
+      // Firefox 41, through Nightly 45 has Symbol.match, but String#match ignores it.
+      // Firefox 40 and below have Symbol.match but String#match works fine.
+      var o = {};
+      o[Symbol.match] = function () { return 42; };
+      return 'a'.match(o) !== 42;
+    }());
+    if (!symbolMatchExists || stringMatchIgnoresSymbolMatch) {
+      var symbolMatch = defineWellKnownSymbol('match');
+      var originalMatch = String.prototype.match;
+      var matchShim = function match(regexp) {
+        var O = ES.RequireObjectCoercible(this);
+        if (regexp !== null && typeof regexp !== 'undefined') {
+          var matcher = ES.GetMethod(regexp, symbolMatch);
+          if (typeof matcher !== 'undefined') {
+            return ES.Call(matcher, regexp, [O]);
+          }
+        }
+        return ES.Call(originalMatch, O, arguments);
+      };
+      overrideNative(String.prototype, 'match', matchShim);
     }
   }
 
@@ -695,7 +732,7 @@
 
     startsWith: function startsWith(searchString) {
       var thisStr = String(ES.RequireObjectCoercible(this));
-      if (Type.regex(searchString)) {
+      if (ES.IsRegExp(searchString)) {
         throw new TypeError('Cannot call method "startsWith" with a regex');
       }
       var searchStr = String(searchString);
@@ -706,7 +743,7 @@
 
     endsWith: function endsWith(searchString) {
       var thisStr = String(ES.RequireObjectCoercible(this));
-      if (Type.regex(searchString)) {
+      if (ES.IsRegExp(searchString)) {
         throw new TypeError('Cannot call method "endsWith" with a regex');
       }
       var searchStr = String(searchString);
@@ -718,15 +755,16 @@
     },
 
     includes: function includes(searchString) {
-      if (Type.regex(searchString)) {
+      if (ES.IsRegExp(searchString)) {
         throw new TypeError('"includes" does not accept a RegExp');
       }
+      var searchStr = String(searchString);
       var position;
       if (arguments.length > 1) {
         position = arguments[1];
       }
       // Somehow this trick makes method 100% compat with the spec.
-      return _indexOf(this, searchString, position) !== -1;
+      return _indexOf(this, searchStr, position) !== -1;
     },
 
     codePointAt: function codePointAt(pos) {
@@ -757,6 +795,32 @@
       // Firefox (< 37?) and IE 11 TP have a noncompliant startsWith implementation
       overrideNative(String.prototype, 'startsWith', StringPrototypeShims.startsWith);
       overrideNative(String.prototype, 'endsWith', StringPrototypeShims.endsWith);
+    }
+  }
+  if (hasSymbols) {
+    var startsWithSupportsSymbolMatch = valueOrFalseIfThrows(function () {
+      var re = /a/;
+      re[Symbol.match] = false;
+      return '/a/'.startsWith(re);
+    });
+    if (!startsWithSupportsSymbolMatch) {
+      overrideNative(String.prototype, 'startsWith', StringPrototypeShims.startsWith);
+    }
+    var endsWithSupportsSymbolMatch = valueOrFalseIfThrows(function () {
+      var re = /a/;
+      re[Symbol.match] = false;
+      return '/a/'.endsWith(re);
+    });
+    if (!endsWithSupportsSymbolMatch) {
+      overrideNative(String.prototype, 'endsWith', StringPrototypeShims.endsWith);
+    }
+    var includesSupportsSymbolMatch = valueOrFalseIfThrows(function () {
+      var re = /a/;
+      re[Symbol.match] = false;
+      return '/a/'.includes(re);
+    });
+    if (!includesSupportsSymbolMatch) {
+      overrideNative(String.prototype, 'includes', StringPrototypeShims.includes);
     }
   }
 
