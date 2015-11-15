@@ -243,6 +243,8 @@
     Value.preserveToString(object[property], original);
   };
 
+  var hasSymbols = typeof Symbol === 'function' && typeof Symbol['for'] === 'function' && Type.symbol(Symbol());
+
   // This is a private name in the es6 spec, equal to '[Symbol.iterator]'
   // we're going to use an arbitrary _-prefixed name to make our shims
   // work properly with each other, even though we don't have full Iterator
@@ -466,6 +468,31 @@
       return p3 + '</' + tag + '>';
     }
   };
+
+  // Well-known Symbol shims
+  if (supportsDescriptors && hasSymbols) {
+    if (!Type.symbol(Symbol.search)) {
+      var symbolSearch = Symbol['for']('Symbol.search');
+      Object.defineProperty(Symbol, 'search', {
+        configurable: false,
+        enumerable: false,
+        writable: false,
+        value: symbolSearch
+      });
+      var originalSearch = String.prototype.search;
+      var searchShim = function search(regexp) {
+        var O = ES.RequireObjectCoercible(this);
+        if (regexp !== null && typeof regexp !== 'undefined') {
+          var searcher = ES.GetMethod(regexp, symbolSearch);
+          if (typeof searcher !== 'undefined') {
+            return ES.Call(searcher, regexp, [O]);
+          }
+        }
+        return _call(originalSearch, O, regexp);
+      };
+      overrideNative(String.prototype, 'search', searchShim);
+    }
+  }
 
   var wrapConstructor = function wrapConstructor(original, replacement, keysToSkip) {
     Value.preserveToString(replacement, original);

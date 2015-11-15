@@ -4,8 +4,10 @@ var runStringTests = function (it) {
   'use strict';
 
   var functionsHaveNames = (function foo() {}).name === 'foo';
-  var ifFunctionsHaveNamesIt = functionsHaveNames ? it : xit;
+  var ifFunctionsHaveNamesIt = functionsHaveNames ? it : it.skip;
   var ifShimIt = (typeof process !== 'undefined' && process.env.NO_ES6_SHIM) ? it.skip : it;
+  var hasSymbols = typeof Symbol === 'function' && typeof Symbol['for'] === 'function' && typeof Symbol.iterator === 'symbol';
+  var ifSymbolsDescribe = hasSymbols ? describe : describe.skip;
 
   describe('String', function () {
     var hasStrictMode = (function () { return this === null; }.call(null));
@@ -633,6 +635,40 @@ var runStringTests = function (it) {
         var trimmed = ' a '.trim();
         expect(trimmed).to.have.property('length', 1);
         expect(trimmed).to.equal('a');
+      });
+    });
+
+    describe('#search()', function () {
+      it('works', function () {
+        expect('abc'.search('a')).to.equal(0);
+        expect('abc'.search('b')).to.equal(1);
+        expect('abc'.search('c')).to.equal(2);
+        expect('abc'.search('d')).to.equal(-1);
+      });
+
+      ifSymbolsDescribe('Symbol.search', function () {
+        it('is a symbol', function () {
+          expect(typeof Symbol.search).to.equal('symbol');
+        });
+
+        it('is nonconfigurable', function () {
+          expect(Symbol).ownPropertyDescriptor('search').to.have.property('configurable', false);
+        });
+
+        it('is nonenumerable', function () {
+          expect(Symbol).ownPropertyDescriptor('search').to.have.property('enumerable', false);
+        });
+
+        it('is nonwritable', function () {
+          expect(Symbol).ownPropertyDescriptor('search').to.have.property('writable', false);
+        });
+
+        it('respects Symbol.search', function () {
+          var str = Object('a');
+          var obj = {};
+          obj[Symbol.search] = function (string) { return string === str && this === obj; };
+          expect(str.search(obj)).to.equal(true);
+        });
       });
     });
   });

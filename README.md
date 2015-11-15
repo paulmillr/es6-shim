@@ -107,8 +107,12 @@ Math functions’ accuracy is 1e-11.
     * `set()`
     * `setPrototypeOf()`
 
+* `Symbol` (only if it already exists)
+    * `search` (and corresponding `String#search` support)
+
+Well-known symbols will only be provided if the engine already has `Symbol` support.
+
 * `String.prototype` Annex B HTML methods
-These methods are part of "Annex B", which means that although they are a defacto standard, you shouldn't use them. None the less, the `es6-shim` provides them:
     * `anchor()`
     * `big()`
     * `blink()`
@@ -122,6 +126,8 @@ These methods are part of "Annex B", which means that although they are a defact
     * `strike()`
     * `sub()`
     * `sup()`
+
+These methods are part of "Annex B", which means that although they are a defacto standard, you shouldn't use them. None the less, the `es6-shim` provides them and normalizes their behavior across browsers.
 
 ## Subclassing
 The `Map`, `Set`, and `Promise` implementations are subclassable.
@@ -237,6 +243,8 @@ Promise.resolve(5).then(function (value) {
 
  - `Object.setPrototypeOf` / `Reflect.setPrototypeOf`
    - Note that null objects (`Object.create(null)`, eg, an object with `null` as its `[[Prototype]]`) can not have their `[[Prototype]]` changed except via a native `Object.setPrototypeOf`.
+ - Well-known `Symbol`s
+   - In order to make them work cross-realm, these are created with the global `Symbol` registry via `Symbol.for`. This does not violate the spec, but it does mean that `Symbol.for('Symbol.search') === Symbol.search` will be `true`, which it would not by default in a fresh compliant realm.
 
 ## [License][license-url]
 
