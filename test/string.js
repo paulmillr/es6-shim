@@ -1,4 +1,4 @@
-/* global describe, it, xit, expect, require */
+/* global describe, it, expect, require */
 
 var runStringTests = function (it) {
   'use strict';

@@ -1,4 +1,4 @@
-/* global beforeEach, describe, xdescribe, it, xit, expect, require */
+/* global beforeEach, describe, it, expect, require */
 
 var getRegexLiteral = function (stringRegex) {
   try {
@@ -9,10 +9,12 @@ var getRegexLiteral = function (stringRegex) {
     /* jshint evil: false */
   } catch (e) {/**/}
 };
-var describeIfSupportsDescriptors = Object.getOwnPropertyDescriptor ? describe : xdescribe;
+var describeIfSupportsDescriptors = Object.getOwnPropertyDescriptor ? describe : describe.skip;
 var callAllowsPrimitives = (function () { return this === 3; }.call(3));
-var ifCallAllowsPrimitivesIt = callAllowsPrimitives ? it : xit;
+var ifCallAllowsPrimitivesIt = callAllowsPrimitives ? it : it.skip;
 var ifShimIt = (typeof process !== 'undefined' && process.env.NO_ES6_SHIM) ? it.skip : it;
+var hasSymbols = typeof Symbol === 'function' && typeof Symbol['for'] === 'function' && typeof Symbol() === 'symbol';
+var ifSymbolsDescribe = hasSymbols ? describe : describe.skip;
 var defaultRegex = (function () {
   try {
     return String(RegExp.prototype);
@@ -83,6 +85,34 @@ describe('RegExp', function () {
     it('functions as a boxed primitive wrapper', function () {
       var regex = /a/g;
       expect(RegExp(regex)).to.equal(regex);
+    });
+
+    ifSymbolsDescribe('Symbol.match', function () {
+      var regexFalsyMatch;
+      var nonregexTruthyMatch;
+
+      beforeEach(function () {
+        regexFalsyMatch = /./;
+        regexFalsyMatch[Symbol.match] = false;
+        nonregexTruthyMatch = { constructor: RegExp };
+        nonregexTruthyMatch[Symbol.match] = true;
+      });
+
+      it('function does not passthrough regexes with a falsy Symbol.match', function () {
+        expect(RegExp(regexFalsyMatch)).not.to.equal(regexFalsyMatch);
+      });
+
+      it('constructor does not passthrough regexes with a falsy Symbol.match', function () {
+        expect(new RegExp(regexFalsyMatch)).not.to.equal(regexFalsyMatch);
+      });
+
+      it('function passes through non-regexes with a truthy Symbol.match', function () {
+        expect(RegExp(nonregexTruthyMatch)).to.equal(nonregexTruthyMatch);
+      });
+
+      it('constructor does not pass through non-regexes with a truthy Symbol.match', function () {
+        expect(new RegExp(nonregexTruthyMatch)).not.to.equal(nonregexTruthyMatch);
+      });
     });
   });
 
@@ -191,7 +221,7 @@ describe('RegExp', function () {
       expect(RegExp).to.have.ownProperty("$'");
     });
 
-    xit('has "multiline" property', function () {
+    it.skip('has "multiline" property', function () {
       // fails in IE 9, 10, 11
       expect(RegExp).to.have.ownProperty('multiline');
       expect(RegExp).to.have.ownProperty('$*');
@@ -241,7 +271,7 @@ describe('RegExp', function () {
       });
 
       // in all but IE, this works. IE lastParen breaks after 11 tokens.
-      xit('has "lastParen"', function () {
+      it.skip('has "lastParen"', function () {
         expect(RegExp.lastParen).to.equal('p');
         expect(RegExp['$+']).to.equal('p');
       });

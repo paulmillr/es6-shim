@@ -1646,20 +1646,40 @@
     Value.getter(RegExp.prototype, 'flags', regExpFlagsGetter);
   }
 
-  var regExpSupportsFlagsWithRegex = valueOrFalseIfThrows(function () {
+  var regExpSupportsFlagsWithRegex = supportsDescriptors && valueOrFalseIfThrows(function () {
     return String(new RegExp(/a/g, 'i')) === '/a/i';
   });
+  var regExpNeedsToSupportSymbolMatch = hasSymbols && supportsDescriptors && (function () {
+    // Edge 0.12 supports flags fully, but does not support Symbol.match
+    var regex = /./;
+    regex[Symbol.match] = false;
+    return RegExp(regex) === regex;
+  }());
 
-  if (!regExpSupportsFlagsWithRegex && supportsDescriptors) {
+  if (supportsDescriptors && (!regExpSupportsFlagsWithRegex || regExpNeedsToSupportSymbolMatch)) {
+    var flagsGetter = Object.getOwnPropertyDescriptor(RegExp.prototype, 'flags').get;
+    var sourceDesc = Object.getOwnPropertyDescriptor(RegExp.prototype, 'source') || {};
+    var legacySourceGetter = function () { return this.source; }; // prior to it being a getter, it's own + nonconfigurable
+    var sourceGetter = ES.IsCallable(sourceDesc.get) ? sourceDesc.get : legacySourceGetter;
+
     var OrigRegExp = RegExp;
     var RegExpShim = (function () {
       return function RegExp(pattern, flags) {
+        var patternIsRegExp = ES.IsRegExp(pattern);
         var calledWithNew = this instanceof RegExp;
-        if (!calledWithNew && (Type.regex(pattern) || (pattern && pattern.constructor === RegExp))) {
+        if (!calledWithNew && patternIsRegExp && typeof flags === 'undefined' && pattern.constructor === RegExp) {
           return pattern;
         }
-        if (Type.regex(pattern) && Type.string(flags)) {
-          return new RegExp(pattern.source, flags);
+
+        var P = pattern;
+        var F = flags;
+        if (Type.regex(pattern)) {
+          P = ES.Call(sourceGetter, pattern);
+          F = typeof flags === 'undefined' ? ES.Call(flagsGetter, pattern) : flags;
+          return new RegExp(P, F);
+        } else if (patternIsRegExp) {
+          P = pattern.source;
+          F = typeof flags === 'undefined' ? pattern.flags : flags;
         }
         return new OrigRegExp(pattern, flags);
       };
