@@ -3339,7 +3339,7 @@
 
   var JSONstringifiesSymbols = (function () {
     // Microsoft Edge v0.12 stringifies Symbols incorrectly
-    if (!Type.symbol(Symbol.iterator)) { return false; } // Symbols are not supported
+    if (!hasSymbols) { return false; } // Symbols are not supported
     var stringify = typeof JSON === 'object' && typeof JSON.stringify === 'function' ? JSON.stringify : null;
     if (!stringify) { return false; } // JSON.stringify is not supported
     if (typeof stringify(Symbol()) !== 'undefined') { return true; } // Symbols should become `undefined`
@@ -3351,7 +3351,7 @@
   }());
   var JSONstringifyAcceptsObjectSymbol = valueOrFalseIfThrows(function () {
     // Chrome 45 throws on stringifying object symbols
-    if (!Type.symbol(Symbol.iterator)) { return true; } // Symbols are not supported
+    if (!hasSymbols) { return true; } // Symbols are not supported
     return JSON.stringify(Object(Symbol())) === '{}' && JSON.stringify([Object(Symbol())]) === '[{}]';
   });
   if (JSONstringifiesSymbols || !JSONstringifyAcceptsObjectSymbol) {
