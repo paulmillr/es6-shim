@@ -220,6 +220,7 @@
       if (x == null) {
         throw new TypeError(optMessage || 'Cannot call method on ' + x);
       }
+      return x;
     },
 
     TypeIsObject: function (x) {
@@ -230,8 +231,7 @@
     },
 
     ToObject: function (o, optMessage) {
-      ES.RequireObjectCoercible(o, optMessage);
-      return Object(o);
+      return Object(ES.RequireObjectCoercible(o, optMessage));
     },
 
     IsCallable: function (x) {
@@ -622,8 +622,7 @@
 
   var StringPrototypeShims = {
     repeat: function repeat(times) {
-      ES.RequireObjectCoercible(this);
-      var thisStr = String(this);
+      var thisStr = String(ES.RequireObjectCoercible(this));
       var numTimes = ES.ToInteger(times);
       if (numTimes < 0 || numTimes >= stringMaxLength) {
         throw new RangeError('repeat count must be less than infinity and not overflow maximum string size');
@@ -632,8 +631,7 @@
     },
 
     startsWith: function startsWith(searchString) {
-      ES.RequireObjectCoercible(this);
-      var thisStr = String(this);
+      var thisStr = String(ES.RequireObjectCoercible(this));
       if (Type.regex(searchString)) {
         throw new TypeError('Cannot call method "startsWith" with a regex');
       }
@@ -644,8 +642,7 @@
     },
 
     endsWith: function endsWith(searchString) {
-      ES.RequireObjectCoercible(this);
-      var thisStr = String(this);
+      var thisStr = String(ES.RequireObjectCoercible(this));
       if (Type.regex(searchString)) {
         throw new TypeError('Cannot call method "endsWith" with a regex');
       }
@@ -670,8 +667,7 @@
     },
 
     codePointAt: function codePointAt(pos) {
-      ES.RequireObjectCoercible(this);
-      var thisStr = String(this);
+      var thisStr = String(ES.RequireObjectCoercible(this));
       var position = ES.ToInteger(pos);
       var length = thisStr.length;
       if (position >= 0 && position < length) {
@@ -712,10 +708,7 @@
   ].join('');
   var trimRegexp = new RegExp('(^[' + ws + ']+)|([' + ws + ']+$)', 'g');
   var trimShim = function trim() {
-    if (typeof this === 'undefined' || this === null) {
-      throw new TypeError("can't convert " + this + ' to object');
-    }
-    return String(this).replace(trimRegexp, '');
+    return String(ES.RequireObjectCoercible(this)).replace(trimRegexp, '');
   };
   var nonWS = ['\u0085', '\u200b', '\ufffe'].join('');
   var nonWSregex = new RegExp('[' + nonWS + ']', 'g');
