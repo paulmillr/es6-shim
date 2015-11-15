@@ -108,6 +108,7 @@ Math functions’ accuracy is 1e-11.
     * `setPrototypeOf()`
 
 * `Symbol` (only if it already exists)
+    * `replace` (and corresponding `String#replace` support)
     * `search` (and corresponding `String#search` support)
 
 Well-known symbols will only be provided if the engine already has `Symbol` support.

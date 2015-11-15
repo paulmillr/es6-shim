@@ -496,6 +496,21 @@
       };
       overrideNative(String.prototype, 'search', searchShim);
     }
+    if (!Type.symbol(Symbol.replace)) {
+      var symbolReplace = defineWellKnownSymbol('replace');
+      var originalReplace = String.prototype.replace;
+      var replaceShim = function replace(searchValue, replaceValue) {
+        var O = ES.RequireObjectCoercible(this);
+        if (searchValue !== null && typeof searchValue !== 'undefined') {
+          var replacer = ES.GetMethod(searchValue, symbolReplace);
+          if (typeof replacer !== 'undefined') {
+            return ES.Call(replacer, searchValue, [O, replaceValue]);
+          }
+        }
+        return ES.Call(originalReplace, O, arguments);
+      };
+      overrideNative(String.prototype, 'replace', replaceShim);
+    }
   }
 
   var wrapConstructor = function wrapConstructor(original, replacement, keysToSkip) {

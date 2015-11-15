@@ -671,6 +671,41 @@ var runStringTests = function (it) {
         });
       });
     });
+
+    describe('#replace()', function () {
+      it('works', function () {
+        expect('abcabc'.replace('c', 'd')).to.equal('abdabc');
+        expect('abcabc'.replace(/c/, 'd')).to.equal('abdabc');
+        expect('abcabc'.replace(/c/g, 'd')).to.equal('abdabd');
+        expect('abcabc'.replace(/C/ig, 'd')).to.equal('abdabd');
+      });
+
+      ifSymbolsDescribe('Symbol.replace', function () {
+        it('is a symbol', function () {
+          expect(typeof Symbol.replace).to.equal('symbol');
+        });
+
+        it('is nonconfigurable', function () {
+          expect(Symbol).ownPropertyDescriptor('replace').to.have.property('configurable', false);
+        });
+
+        it('is nonenumerable', function () {
+          expect(Symbol).ownPropertyDescriptor('replace').to.have.property('enumerable', false);
+        });
+
+        it('is nonwritable', function () {
+          expect(Symbol).ownPropertyDescriptor('replace').to.have.property('writable', false);
+        });
+
+        it('respects Symbol.replace', function () {
+          var str = Object('a');
+          var replaceVal = Object('replaceValue');
+          var obj = {};
+          obj[Symbol.replace] = function (string, replaceValue) { return string === str && replaceValue === replaceVal && this === obj; };
+          expect(str.replace(obj, replaceVal)).to.equal(true);
+        });
+      });
+    });
   });
 
   describe('Annex B', function () {
