@@ -86,6 +86,12 @@
     });
   };
 
+  var _toString = Function.call.bind(Object.prototype.toString);
+  var isCallable = function isCallable(x) {
+    // some old browsers (IE, FF) say that typeof /abc/ === 'function'
+    return typeof x === 'function' && _toString(x) === '[object Function]';
+  };
+
   var Value = {
     getter: function (object, name, getter) {
       if (!supportsDescriptors) {
@@ -126,7 +132,7 @@
       }
     },
     preserveToString: function (target, source) {
-      if (source && ES.IsCallable(source.toString)) {
+      if (source && isCallable(source.toString)) {
         defineProperty(target, 'toString', source.toString.bind(source), true);
       }
     }
@@ -176,7 +182,6 @@
   var globals = getGlobal();
   var globalIsFinite = globals.isFinite;
   var _indexOf = Function.call.bind(String.prototype.indexOf);
-  var _toString = Function.call.bind(Object.prototype.toString);
   var _concat = Function.call.bind(Array.prototype.concat);
   var _strSlice = Function.call.bind(String.prototype.slice);
   var _push = Function.call.bind(Array.prototype.push);
@@ -286,10 +291,7 @@
       return Object(ES.RequireObjectCoercible(o, optMessage));
     },
 
-    IsCallable: function (x) {
-      // some versions of IE say that typeof /abc/ === 'function'
-      return typeof x === 'function' && _toString(x) === '[object Function]';
-    },
+    IsCallable: isCallable,
 
     IsConstructor: function (x) {
       // We can't tell callables from constructors in ES5
