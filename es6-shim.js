@@ -86,6 +86,52 @@
     });
   };
 
+  var Value = {
+    getter: function (object, name, getter) {
+      if (!supportsDescriptors) {
+        throw new TypeError('getters require true ES5 support');
+      }
+      Object.defineProperty(object, name, {
+        configurable: true,
+        enumerable: false,
+        get: getter
+      });
+    },
+    proxy: function (originalObject, key, targetObject) {
+      if (!supportsDescriptors) {
+        throw new TypeError('getters require true ES5 support');
+      }
+      var originalDescriptor = Object.getOwnPropertyDescriptor(originalObject, key);
+      Object.defineProperty(targetObject, key, {
+        configurable: originalDescriptor.configurable,
+        enumerable: originalDescriptor.enumerable,
+        get: function getKey() { return originalObject[key]; },
+        set: function setKey(value) { originalObject[key] = value; }
+      });
+    },
+    redefine: function (object, property, newValue) {
+      if (supportsDescriptors) {
+        var descriptor = Object.getOwnPropertyDescriptor(object, property);
+        descriptor.value = newValue;
+        Object.defineProperty(object, property, descriptor);
+      } else {
+        object[property] = newValue;
+      }
+    },
+    defineByDescriptor: function (object, property, descriptor) {
+      if (supportsDescriptors) {
+        Object.defineProperty(object, property, descriptor);
+      } else if ('value' in descriptor) {
+        object[property] = descriptor.value;
+      }
+    },
+    preserveToString: function (target, source) {
+      if (source && ES.IsCallable(source.toString)) {
+        defineProperty(target, 'toString', source.toString.bind(source), true);
+      }
+    }
+  };
+
   // Simple shim for Object.create on ES3 browsers
   // (unlike real shim, no attempt to support `prototype === null`)
   var create = Object.create || function (prototype, properties) {
@@ -184,6 +230,12 @@
     symbol: function (x) {
       return typeof globals.Symbol === 'function' && typeof x === 'symbol';
     }
+  };
+
+  var overrideNative = function overrideNative(object, property, replacement) {
+    var original = object[property];
+    defineProperty(object, property, replacement, true);
+    Value.preserveToString(object[property], original);
   };
 
   // This is a private name in the es6 spec, equal to '[Symbol.iterator]'
@@ -413,52 +465,6 @@
     }
   };
 
-  var Value = {
-    getter: function (object, name, getter) {
-      if (!supportsDescriptors) {
-        throw new TypeError('getters require true ES5 support');
-      }
-      Object.defineProperty(object, name, {
-        configurable: true,
-        enumerable: false,
-        get: getter
-      });
-    },
-    proxy: function (originalObject, key, targetObject) {
-      if (!supportsDescriptors) {
-        throw new TypeError('getters require true ES5 support');
-      }
-      var originalDescriptor = Object.getOwnPropertyDescriptor(originalObject, key);
-      Object.defineProperty(targetObject, key, {
-        configurable: originalDescriptor.configurable,
-        enumerable: originalDescriptor.enumerable,
-        get: function getKey() { return originalObject[key]; },
-        set: function setKey(value) { originalObject[key] = value; }
-      });
-    },
-    redefine: function (object, property, newValue) {
-      if (supportsDescriptors) {
-        var descriptor = Object.getOwnPropertyDescriptor(object, property);
-        descriptor.value = newValue;
-        Object.defineProperty(object, property, descriptor);
-      } else {
-        object[property] = newValue;
-      }
-    },
-    defineByDescriptor: function (object, property, descriptor) {
-      if (supportsDescriptors) {
-        Object.defineProperty(object, property, descriptor);
-      } else if ('value' in descriptor) {
-        object[property] = descriptor.value;
-      }
-    },
-    preserveToString: function (target, source) {
-      if (source && ES.IsCallable(source.toString)) {
-        defineProperty(target, 'toString', source.toString.bind(source), true);
-      }
-    }
-  };
-
   var wrapConstructor = function wrapConstructor(original, replacement, keysToSkip) {
     Value.preserveToString(replacement, original);
     if (Object.setPrototypeOf) {
@@ -485,12 +491,6 @@
     if (supportsDescriptors && !_hasOwnProperty(C, symbolSpecies)) {
       Value.getter(C, symbolSpecies, defaultSpeciesGetter);
     }
-  };
-
-  var overrideNative = function overrideNative(object, property, replacement) {
-    var original = object[property];
-    defineProperty(object, property, replacement, true);
-    Value.preserveToString(object[property], original);
   };
 
   var addIterator = function (prototype, impl) {
