@@ -471,14 +471,18 @@
 
   // Well-known Symbol shims
   if (supportsDescriptors && hasSymbols) {
-    if (!Type.symbol(Symbol.search)) {
-      var symbolSearch = Symbol['for']('Symbol.search');
-      Object.defineProperty(Symbol, 'search', {
+    var defineWellKnownSymbol = function defineWellKnownSymbol(name) {
+      var sym = Symbol['for']('Symbol.' + name);
+      Object.defineProperty(Symbol, name, {
         configurable: false,
         enumerable: false,
         writable: false,
-        value: symbolSearch
+        value: sym
       });
+      return sym;
+    };
+    if (!Type.symbol(Symbol.search)) {
+      var symbolSearch = defineWellKnownSymbol('search');
       var originalSearch = String.prototype.search;
       var searchShim = function search(regexp) {
         var O = ES.RequireObjectCoercible(this);
