@@ -2255,8 +2255,17 @@
       var p2 = Promise.resolve(p);
       return (p === p2); // This *should* be false!
     }(globals.Promise));
+
+    // Chrome 46 (probably older too) does not retrieve a thenable's .then synchronously
+    var getsThenSynchronously = (function () {
+      var count = 0;
+      var thenable = Object.defineProperty({}, 'then', { get: function () { count += 1; } });
+      Promise.resolve(thenable);
+      return count === 1;
+    }());
+
     if (!promiseSupportsSubclassing || !promiseIgnoresNonFunctionThenCallbacks ||
-        !promiseRequiresObjectContext || promiseResolveBroken) {
+        !promiseRequiresObjectContext || promiseResolveBroken || !getsThenSynchronously) {
       /*globals Promise: true */
       /* eslint-disable no-undef */
       Promise = PromiseShim;
