@@ -357,7 +357,7 @@
         // Better diagnostics if itFn is null or undefined
         throw new TypeError('value is not an iterable');
       }
-      var it = _call(itFn, o);
+      var it = ES.Call(itFn, o);
       if (!ES.TypeIsObject(it)) {
         throw new TypeError('bad iterator');
       }
@@ -386,7 +386,7 @@
       }
       var innerResult, innerException;
       try {
-        innerResult = _call(returnMethod, iterator);
+        innerResult = ES.Call(returnMethod, iterator);
       } catch (e) {
         innerException = e;
       }
@@ -492,7 +492,7 @@
             return ES.Call(searcher, regexp, [O]);
           }
         }
-        return _call(originalSearch, O, regexp);
+        return ES.Call(originalSearch, O, arguments);
       };
       overrideNative(String.prototype, 'search', searchShim);
     }
@@ -586,7 +586,7 @@
   // https://bugzilla.mozilla.org/show_bug.cgi?id=1062484
   if (String.fromCodePoint && String.fromCodePoint.length !== 1) {
     var originalFromCodePoint = String.fromCodePoint;
-    overrideNative(String, 'fromCodePoint', function fromCodePoint(codePoints) { return _apply(originalFromCodePoint, this, arguments); });
+    overrideNative(String, 'fromCodePoint', function fromCodePoint(codePoints) { return ES.Call(originalFromCodePoint, this, arguments); });
   }
 
   var StringShims = {
@@ -1074,7 +1074,7 @@
   // Chrome 40 defines Array#values with the incorrect name, although Array#{keys,entries} have the correct name
   if (functionsHaveNames && Array.prototype.values && Array.prototype.values.name !== 'values') {
     var originalArrayPrototypeValues = Array.prototype.values;
-    overrideNative(Array.prototype, 'values', function values() { return _call(originalArrayPrototypeValues, this); });
+    overrideNative(Array.prototype, 'values', function values() { return ES.Call(originalArrayPrototypeValues, this, arguments); });
     defineProperty(Array.prototype, $iterator$, Array.prototype.values, true);
   }
   defineProperties(Array.prototype, ArrayPrototypeShims);
@@ -1109,7 +1109,7 @@
     var origArrayFrom = Array.from;
     overrideNative(Array, 'from', function from(items) {
       if (arguments.length > 0 && typeof arguments[1] !== 'undefined') {
-        return _apply(origArrayFrom, this, arguments);
+        return ES.Call(origArrayFrom, this, arguments);
       } else {
         return _call(origArrayFrom, this, items);
       }
@@ -1130,43 +1130,43 @@
   if (!toLengthsCorrectly(Array.prototype.forEach)) {
     var originalForEach = Array.prototype.forEach;
     overrideNative(Array.prototype, 'forEach', function forEach(callbackFn) {
-      return _apply(originalForEach, this.length >= 0 ? this : [], arguments);
+      return ES.Call(originalForEach, this.length >= 0 ? this : [], arguments);
     }, true);
   }
   if (!toLengthsCorrectly(Array.prototype.map)) {
     var originalMap = Array.prototype.map;
     overrideNative(Array.prototype, 'map', function map(callbackFn) {
-      return _apply(originalMap, this.length >= 0 ? this : [], arguments);
+      return ES.Call(originalMap, this.length >= 0 ? this : [], arguments);
     }, true);
   }
   if (!toLengthsCorrectly(Array.prototype.filter)) {
     var originalFilter = Array.prototype.filter;
     overrideNative(Array.prototype, 'filter', function filter(callbackFn) {
-      return _apply(originalFilter, this.length >= 0 ? this : [], arguments);
+      return ES.Call(originalFilter, this.length >= 0 ? this : [], arguments);
     }, true);
   }
   if (!toLengthsCorrectly(Array.prototype.some)) {
     var originalSome = Array.prototype.some;
     overrideNative(Array.prototype, 'some', function some(callbackFn) {
-      return _apply(originalSome, this.length >= 0 ? this : [], arguments);
+      return ES.Call(originalSome, this.length >= 0 ? this : [], arguments);
     }, true);
   }
   if (!toLengthsCorrectly(Array.prototype.every)) {
     var originalEvery = Array.prototype.every;
     overrideNative(Array.prototype, 'every', function every(callbackFn) {
-      return _apply(originalEvery, this.length >= 0 ? this : [], arguments);
+      return ES.Call(originalEvery, this.length >= 0 ? this : [], arguments);
     }, true);
   }
   if (!toLengthsCorrectly(Array.prototype.reduce)) {
     var originalReduce = Array.prototype.reduce;
     overrideNative(Array.prototype, 'reduce', function reduce(callbackFn) {
-      return _apply(originalReduce, this.length >= 0 ? this : [], arguments);
+      return ES.Call(originalReduce, this.length >= 0 ? this : [], arguments);
     }, true);
   }
   if (!toLengthsCorrectly(Array.prototype.reduceRight, true)) {
     var originalReduceRight = Array.prototype.reduceRight;
     overrideNative(Array.prototype, 'reduceRight', function reduceRight(callbackFn) {
-      return _apply(originalReduceRight, this.length >= 0 ? this : [], arguments);
+      return ES.Call(originalReduceRight, this.length >= 0 ? this : [], arguments);
     }, true);
   }
 
@@ -1210,7 +1210,7 @@
           primValue = 0;
         }
         if (typeof primValue === 'string') {
-          primValue = _call(trimShim, primValue);
+          primValue = ES.Call(trimShim, primValue);
           if (isBinary(primValue)) {
             primValue = parseInt(_strSlice(primValue, 2), 2);
           } else if (isOctal(primValue)) {
@@ -1313,7 +1313,7 @@
     // 19.1.3.1
     assign: function (target, source) {
       var to = ES.ToObject(target, 'Cannot convert undefined or null to object');
-      return _reduce(_apply(sliceArgs, 1, arguments), assignReducer, to);
+      return _reduce(ES.Call(sliceArgs, 1, arguments), assignReducer, to);
     },
 
     // Added in WebKit in https://bugs.webkit.org/show_bug.cgi?id=143865
@@ -1660,7 +1660,7 @@
       if (number === 0) {
         return 32;
       }
-      return numberCLZ ? _call(numberCLZ, number) : 31 - _floor(_log(number + 0.5) * Math.LOG2E);
+      return numberCLZ ? ES.Call(numberCLZ, number) : 31 - _floor(_log(number + 0.5) * Math.LOG2E);
     },
 
     cosh: function cosh(value) {
@@ -1839,7 +1839,7 @@
     // Safari 8.0.4 has a length of 1
     // fixed in https://bugs.webkit.org/show_bug.cgi?id=143658
     overrideNative(Math, 'imul', function imul(x, y) {
-      return _apply(origImul, Math, arguments);
+      return ES.Call(origImul, Math, arguments);
     });
   }
 
@@ -3007,7 +3007,7 @@
   var ReflectShims = {
     // Apply method in a functional form.
     apply: function apply() {
-      return _apply(ES.Call, null, arguments);
+      return ES.Call(ES.Call, null, arguments);
     },
 
     // New operator in a functional form.
@@ -3109,7 +3109,7 @@
       }
 
       if (desc.get) {
-        return _call(desc.get, receiver);
+        return ES.Call(desc.get, receiver);
       }
 
       return undefined;
@@ -3304,7 +3304,7 @@
       if (valueOf !== valueOf) {
         return 'Invalid Date';
       }
-      return _call(dateToString, this);
+      return ES.Call(dateToString, this);
     };
     overrideNative(Date.prototype, 'toString', shimmedDateToString);
   }
