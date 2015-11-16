@@ -113,6 +113,20 @@ describe('RegExp', function () {
       it('constructor does not pass through non-regexes with a truthy Symbol.match', function () {
         expect(new RegExp(nonregexTruthyMatch)).not.to.equal(nonregexTruthyMatch);
       });
+
+      it('is a function', function () {
+        expect(RegExp.prototype).to.have.property(Symbol.match);
+        expect(typeof RegExp.prototype[Symbol.match]).to.equal('function');
+      });
+
+      it('is the same as String#match', function () {
+        var regex = /a/g;
+        var str = 'abc';
+        var symbolMatch = regex[Symbol.match](str);
+        var stringMatch = str.match(regex);
+        expect(Object.keys(symbolMatch)).to.eql(Object.keys(stringMatch));
+        expect(symbolMatch).to.eql(stringMatch);
+      });
     });
   });
 

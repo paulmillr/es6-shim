@@ -550,7 +550,12 @@
     }());
     if (!symbolMatchExists || stringMatchIgnoresSymbolMatch) {
       var symbolMatch = defineWellKnownSymbol('match');
+
       var originalMatch = String.prototype.match;
+      defineProperty(RegExp.prototype, symbolMatch, function match(string) {
+        return ES.Call(originalMatch, string, [this]);
+      });
+
       var matchShim = function match(regexp) {
         var O = ES.RequireObjectCoercible(this);
         if (regexp !== null && typeof regexp !== 'undefined') {
@@ -559,7 +564,7 @@
             return ES.Call(matcher, regexp, [O]);
           }
         }
-        return ES.Call(originalMatch, O, arguments);
+        return ES.Call(originalMatch, O, [String(regexp)]);
       };
       overrideNative(String.prototype, 'match', matchShim);
     }

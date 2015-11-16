@@ -778,7 +778,15 @@ var runStringTests = function (it) {
     });
 
     describe('#match()', function () {
-      it('works', function () {
+      it('works with a string', function () {
+        var str = 'abca';
+        var match = str.match('a');
+        expect(match.index).to.equal(0);
+        expect(match.input).to.equal(str);
+        expect(Array.prototype.slice.call(match)).to.eql(['a']);
+      });
+
+      it('works with a regex', function () {
         var str = 'abca';
         var match = str.match(/a/);
         expect(match.index).to.equal(0);

@@ -43,6 +43,7 @@ In both browser and node you may also want to include `unorm`; see the [`String.
     * `new RegExp`, when given a RegExp as the pattern, will no longer throw when given a "flags" string argument. (requires ES5)
 * `RegExp.prototype`:
     * `flags` (requires ES5) ([a standalone shim is also available](https://github.com/es-shims/RegExp.prototype.flags))
+    * `[Symbol.match]` (requires native `Symbol`s)
 * `Number`:
     * binary and octal literals: `Number('0b1')` and `Number('0o7')`
     * `EPSILON`
