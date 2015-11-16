@@ -516,6 +516,9 @@
     if (!Type.symbol(Symbol.replace)) {
       var symbolReplace = defineWellKnownSymbol('replace');
       var originalReplace = String.prototype.replace;
+      defineProperty(RegExp.prototype, symbolReplace, function replace(string, replaceValue) {
+        return ES.Call(originalReplace, string, [this, replaceValue]);
+      });
       var replaceShim = function replace(searchValue, replaceValue) {
         var O = ES.RequireObjectCoercible(this);
         if (searchValue !== null && typeof searchValue !== 'undefined') {
@@ -524,7 +527,7 @@
             return ES.Call(replacer, searchValue, [O, replaceValue]);
           }
         }
-        return ES.Call(originalReplace, O, arguments);
+        return ES.Call(originalReplace, O, [String(searchValue), replaceValue]);
       };
       overrideNative(String.prototype, 'replace', replaceShim);
     }
