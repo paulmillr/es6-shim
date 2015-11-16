@@ -531,6 +531,9 @@
     if (!Type.symbol(Symbol.split)) {
       var symbolSplit = defineWellKnownSymbol('split');
       var originalSplit = String.prototype.split;
+      defineProperty(RegExp.prototype, symbolSplit, function split(string, limit) {
+        return ES.Call(originalSplit, string, [this, limit]);
+      });
       var splitShim = function split(separator, limit) {
         var O = ES.RequireObjectCoercible(this);
         if (separator !== null && typeof separator !== 'undefined') {
@@ -539,7 +542,7 @@
             return ES.Call(splitter, separator, [O, limit]);
           }
         }
-        return ES.Call(originalSplit, O, arguments);
+        return ES.Call(originalSplit, O, [String(separator), limit]);
       };
       overrideNative(String.prototype, 'split', splitShim);
     }

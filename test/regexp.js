@@ -103,6 +103,22 @@ describe('RegExp', function () {
       });
     });
 
+    ifSymbolsDescribe('Symbol.split', function () {
+      it('is a function', function () {
+        expect(RegExp.prototype).to.have.property(Symbol.split);
+        expect(typeof RegExp.prototype[Symbol.split]).to.equal('function');
+      });
+
+      it('is the same as String#split', function () {
+        var regex = /a/g;
+        var str = 'abcabc';
+        var symbolSplit = regex[Symbol.split](str, 1);
+        var stringSplit = str.split(regex, 1);
+        expect(Object.keys(symbolSplit)).to.eql(Object.keys(stringSplit));
+        expect(symbolSplit).to.eql(stringSplit);
+      });
+    });
+
     ifSymbolsDescribe('Symbol.match', function () {
       var regexFalsyMatch;
       var nonregexTruthyMatch;
