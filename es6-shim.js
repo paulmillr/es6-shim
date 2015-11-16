@@ -2252,7 +2252,7 @@
     }(globals.Promise));
 
     // Chrome 46 (probably older too) does not retrieve a thenable's .then synchronously
-    var getsThenSynchronously = (function () {
+    var getsThenSynchronously = supportsDescriptors && (function () {
       var count = 0;
       var thenable = Object.defineProperty({}, 'then', { get: function () { count += 1; } });
       Promise.resolve(thenable);
