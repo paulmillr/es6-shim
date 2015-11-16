@@ -44,6 +44,7 @@ In both browser and node you may also want to include `unorm`; see the [`String.
 * `RegExp.prototype`:
     * `flags` (requires ES5) ([a standalone shim is also available](https://github.com/es-shims/RegExp.prototype.flags))
     * `[Symbol.match]` (requires native `Symbol`s)
+    * `[Symbol.search]` (requires native `Symbol`s)
 * `Number`:
     * binary and octal literals: `Number('0b1')` and `Number('0o7')`
     * `EPSILON`

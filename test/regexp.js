@@ -87,6 +87,22 @@ describe('RegExp', function () {
       expect(RegExp(regex)).to.equal(regex);
     });
 
+    ifSymbolsDescribe('Symbol.search', function () {
+      it('is a function', function () {
+        expect(RegExp.prototype).to.have.property(Symbol.search);
+        expect(typeof RegExp.prototype[Symbol.search]).to.equal('function');
+      });
+
+      it('is the same as String#search', function () {
+        var regex = /a/g;
+        var str = 'abc';
+        var symbolSearch = regex[Symbol.search](str);
+        var stringSearch = str.search(regex);
+        expect(Object.keys(symbolSearch)).to.eql(Object.keys(stringSearch));
+        expect(symbolSearch).to.eql(stringSearch);
+      });
+    });
+
     ifSymbolsDescribe('Symbol.match', function () {
       var regexFalsyMatch;
       var nonregexTruthyMatch;

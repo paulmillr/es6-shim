@@ -498,6 +498,9 @@
     if (!Type.symbol(Symbol.search)) {
       var symbolSearch = defineWellKnownSymbol('search');
       var originalSearch = String.prototype.search;
+      defineProperty(RegExp.prototype, symbolSearch, function search(string) {
+        return ES.Call(originalSearch, string, [String(this)]);
+      });
       var searchShim = function search(regexp) {
         var O = ES.RequireObjectCoercible(this);
         if (regexp !== null && typeof regexp !== 'undefined') {
@@ -506,7 +509,7 @@
             return ES.Call(searcher, regexp, [O]);
           }
         }
-        return ES.Call(originalSearch, O, arguments);
+        return ES.Call(originalSearch, O, [String(regexp)]);
       };
       overrideNative(String.prototype, 'search', searchShim);
     }
