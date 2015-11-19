@@ -21,7 +21,7 @@ For `node.js`, `io.js`, or any `npm`-managed workflow (this is the recommended m
     npm install es6-shim
 
 Alternative methods:
-* `component install paulmillr/es6-shim` if you’re using [component(1)](https://github.com/component/component).
+* `component install paulmillr/es6-shim` if you’re using [component(1)](https://github.com/componentjs/component).
 * `bower install es6-shim` if you’re using [Bower](http://bower.io/).
 
 In both browser and node you may also want to include `unorm`; see the [`String.prototype.normalize`](#stringprototypenormalize) section for details.
@@ -52,15 +52,15 @@ In both browser and node you may also want to include `unorm`; see the [`String.
     * `EPSILON`
     * `MAX_SAFE_INTEGER`
     * `MIN_SAFE_INTEGER`
-    * `isNaN()`([a standalone shim is also available](https://npmjs.org/package/is-nan))
+    * `isNaN()`([a standalone shim is also available](https://www.npmjs.com/package/is-nan))
     * `isInteger()`
     * `isSafeInteger()`
     * `isFinite()`
     * `parseInt()`
     * `parseFloat()`
 * `Array`:
-    * `from()` ([a standalone shim is also available](https://npmjs.org/package/array.from))
-    * `of()` ([a standalone shim is also available](https://npmjs.org/package/array.of))
+    * `from()` ([a standalone shim is also available](https://www.npmjs.com/package/array.from))
+    * `of()` ([a standalone shim is also available](https://www.npmjs.com/package/array.of))
 * `Array.prototype`:
     * `copyWithin()`
     * `entries()`
