@@ -7,7 +7,7 @@ var getRegexLiteral = function (stringRegex) {
     return Function('return ' + stringRegex + ';')();
     /* eslint-enable no-new-func */
     /* jshint evil: false */
-  } catch (e) {/**/}
+  } catch (e) { /**/ }
 };
 var describeIfSupportsDescriptors = Object.getOwnPropertyDescriptor ? describe : describe.skip;
 var callAllowsPrimitives = (function () { return this === 3; }.call(3));
