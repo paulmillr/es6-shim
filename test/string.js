@@ -184,6 +184,12 @@ var runStringTests = function (it) {
       });
 
       ifSymbolsDescribe('Symbol.match', function () {
+        if (!hasSymbols || !Symbol.match) {
+            return it('exists', function () {
+                expect(Symbol).to.have.property('match');
+            });
+        }
+
         it('allows a regex with Symbol.match set to a falsy value', function () {
           var re = /a/g;
           re[Symbol.match] = false;
@@ -303,6 +309,12 @@ var runStringTests = function (it) {
       });
 
       ifSymbolsDescribe('Symbol.match', function () {
+        if (!hasSymbols || !Symbol.match) {
+            return it('exists', function () {
+                expect(Symbol).to.have.property('match');
+            });
+        }
+
         it('allows a regex with Symbol.match set to a falsy value', function () {
           var re = /a/g;
           re[Symbol.match] = false;
@@ -411,6 +423,12 @@ var runStringTests = function (it) {
       });
 
       ifSymbolsDescribe('Symbol.match', function () {
+        if (!hasSymbols || !Symbol.match) {
+            return it('exists', function () {
+                expect(Symbol).to.have.property('match');
+            });
+        }
+
         it('allows a regex with Symbol.match set to a falsy value', function () {
           var re = /a/g;
           re[Symbol.match] = false;
@@ -678,6 +696,10 @@ var runStringTests = function (it) {
           expect(typeof Symbol.search).to.equal('symbol');
         });
 
+        if (!hasSymbols || typeof Symbol.search !== 'symbol') {
+          return;
+        }
+
         it('is nonconfigurable', function () {
           expect(Symbol).ownPropertyDescriptor('search').to.have.property('configurable', false);
         });
@@ -690,7 +712,7 @@ var runStringTests = function (it) {
           expect(Symbol).ownPropertyDescriptor('search').to.have.property('writable', false);
         });
 
-        it('respects Symbol.search', function () {
+        it('is respected', function () {
           var str = Object('a');
           var obj = {};
           obj[Symbol.search] = function (string) { return string === str && this === obj; };
@@ -711,6 +733,10 @@ var runStringTests = function (it) {
         it('is a symbol', function () {
           expect(typeof Symbol.replace).to.equal('symbol');
         });
+
+        if (!hasSymbols || typeof Symbol.replace !== 'symbol') {
+          return;
+        }
 
         it('is nonconfigurable', function () {
           expect(Symbol).ownPropertyDescriptor('replace').to.have.property('configurable', false);
@@ -755,6 +781,10 @@ var runStringTests = function (it) {
           expect(typeof Symbol.split).to.equal('symbol');
         });
 
+        if (!hasSymbols || typeof Symbol.split !== 'symbol') {
+          return;
+        }
+
         it('is nonconfigurable', function () {
           expect(Symbol).ownPropertyDescriptor('split').to.have.property('configurable', false);
         });
@@ -798,6 +828,10 @@ var runStringTests = function (it) {
         it('is a symbol', function () {
           expect(typeof Symbol.match).to.equal('symbol');
         });
+
+        if (!hasSymbols || typeof Symbol.match !== 'symbol') {
+          return;
+        }
 
         it('is nonconfigurable', function () {
           expect(Symbol).ownPropertyDescriptor('match').to.have.property('configurable', false);

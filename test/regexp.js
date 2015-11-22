@@ -88,6 +88,10 @@ describe('RegExp', function () {
     });
 
     ifSymbolsDescribe('Symbol.replace', function () {
+      if (!hasSymbols || typeof Symbol.replace === 'undefined') {
+        return;
+      }
+
       it('is a function', function () {
         expect(RegExp.prototype).to.have.property(Symbol.replace);
         expect(typeof RegExp.prototype[Symbol.replace]).to.equal('function');
@@ -104,6 +108,10 @@ describe('RegExp', function () {
     });
 
     ifSymbolsDescribe('Symbol.search', function () {
+      if (!hasSymbols || typeof Symbol.search === 'undefined') {
+        return;
+      }
+
       it('is a function', function () {
         expect(RegExp.prototype).to.have.property(Symbol.search);
         expect(typeof RegExp.prototype[Symbol.search]).to.equal('function');
@@ -120,6 +128,10 @@ describe('RegExp', function () {
     });
 
     ifSymbolsDescribe('Symbol.split', function () {
+      if (!hasSymbols || typeof Symbol.split === 'undefined') {
+        return;
+      }
+
       it('is a function', function () {
         expect(RegExp.prototype).to.have.property(Symbol.split);
         expect(typeof RegExp.prototype[Symbol.split]).to.equal('function');
@@ -136,6 +148,10 @@ describe('RegExp', function () {
     });
 
     ifSymbolsDescribe('Symbol.match', function () {
+      if (!hasSymbols || typeof Symbol.match === 'undefined') {
+        return;
+      }
+
       var regexFalsyMatch;
       var nonregexTruthyMatch;
 
@@ -144,6 +160,20 @@ describe('RegExp', function () {
         regexFalsyMatch[Symbol.match] = false;
         nonregexTruthyMatch = { constructor: RegExp };
         nonregexTruthyMatch[Symbol.match] = true;
+      });
+
+      it('is a function', function () {
+        expect(RegExp.prototype).to.have.property(Symbol.match);
+        expect(typeof RegExp.prototype[Symbol.match]).to.equal('function');
+      });
+
+      it('is the same as String#match', function () {
+        var regex = /a/g;
+        var str = 'abc';
+        var symbolMatch = regex[Symbol.match](str);
+        var stringMatch = str.match(regex);
+        expect(Object.keys(symbolMatch)).to.eql(Object.keys(stringMatch));
+        expect(symbolMatch).to.eql(stringMatch);
       });
 
       it('function does not passthrough regexes with a falsy Symbol.match', function () {
@@ -160,20 +190,6 @@ describe('RegExp', function () {
 
       it('constructor does not pass through non-regexes with a truthy Symbol.match', function () {
         expect(new RegExp(nonregexTruthyMatch)).not.to.equal(nonregexTruthyMatch);
-      });
-
-      it('is a function', function () {
-        expect(RegExp.prototype).to.have.property(Symbol.match);
-        expect(typeof RegExp.prototype[Symbol.match]).to.equal('function');
-      });
-
-      it('is the same as String#match', function () {
-        var regex = /a/g;
-        var str = 'abc';
-        var symbolMatch = regex[Symbol.match](str);
-        var stringMatch = str.match(regex);
-        expect(Object.keys(symbolMatch)).to.eql(Object.keys(stringMatch));
-        expect(symbolMatch).to.eql(stringMatch);
       });
     });
   });
