@@ -2418,8 +2418,22 @@
       return count === 1;
     }());
 
+    var BadResolverPromise = function BadResolverPromise(executor) {
+      var p = new Promise(executor);
+      executor(3, function () {});
+      this.then = p.then;
+      this.constructor = BadResolverPromise;
+    };
+    BadResolverPromise.prototype = Promise.prototype;
+    BadResolverPromise.all = Promise.all;
+    // Chrome Canary 49 (probably older too) has some implementation bugs
+    var hasBadResolverPromise = valueOrFalseIfThrows(function () {
+      return !!BadResolverPromise.all([1, 2]);
+    });
+
     if (!promiseSupportsSubclassing || !promiseIgnoresNonFunctionThenCallbacks ||
-        !promiseRequiresObjectContext || promiseResolveBroken || !getsThenSynchronously) {
+        !promiseRequiresObjectContext || promiseResolveBroken ||
+        !getsThenSynchronously || hasBadResolverPromise) {
       /*globals Promise: true */
       /* eslint-disable no-undef */
       Promise = PromiseShim;
