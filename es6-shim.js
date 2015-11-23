@@ -264,6 +264,8 @@
   }
   var Reflect = globals.Reflect;
 
+  var $String = String;
+
   var ES = {
     // https://people.mozilla.org/~jorendorff/es6-draft.html#sec-call-f-v-args
     Call: function Call(F, V) {
@@ -456,10 +458,10 @@
     },
 
     CreateHTML: function (string, tag, attribute, value) {
-      var S = String(string);
+      var S = ES.ToString(string);
       var p1 = '<' + tag;
       if (attribute !== '') {
-        var V = String(value);
+        var V = ES.ToString(value);
         var escapedV = V.replace(/"/g, '&quot;');
         p1 += ' ' + attribute + '="' + escapedV + '"';
       }
@@ -477,6 +479,10 @@
         return !!isRegExp;
       }
       return Type.regex(argument);
+    },
+
+    ToString: function ToString(string) {
+      return $String(string);
     }
   };
 
@@ -499,7 +505,7 @@
       var symbolSearch = defineWellKnownSymbol('search');
       var originalSearch = String.prototype.search;
       defineProperty(RegExp.prototype, symbolSearch, function search(string) {
-        return ES.Call(originalSearch, string, [String(this)]);
+        return ES.Call(originalSearch, string, [ES.ToString(this)]);
       });
       var searchShim = function search(regexp) {
         var O = ES.RequireObjectCoercible(this);
@@ -509,7 +515,7 @@
             return ES.Call(searcher, regexp, [O]);
           }
         }
-        return ES.Call(originalSearch, O, [String(regexp)]);
+        return ES.Call(originalSearch, O, [ES.ToString(regexp)]);
       };
       overrideNative(String.prototype, 'search', searchShim);
     }
@@ -527,7 +533,7 @@
             return ES.Call(replacer, searchValue, [O, replaceValue]);
           }
         }
-        return ES.Call(originalReplace, O, [String(searchValue), replaceValue]);
+        return ES.Call(originalReplace, O, [ES.ToString(searchValue), replaceValue]);
       };
       overrideNative(String.prototype, 'replace', replaceShim);
     }
@@ -545,7 +551,7 @@
             return ES.Call(splitter, separator, [O, limit]);
           }
         }
-        return ES.Call(originalSplit, O, [String(separator), limit]);
+        return ES.Call(originalSplit, O, [ES.ToString(separator), limit]);
       };
       overrideNative(String.prototype, 'split', splitShim);
     }
@@ -573,7 +579,7 @@
             return ES.Call(matcher, regexp, [O]);
           }
         }
-        return ES.Call(originalMatch, O, [String(regexp)]);
+        return ES.Call(originalMatch, O, [ES.ToString(regexp)]);
       };
       overrideNative(String.prototype, 'match', matchShim);
     }
@@ -704,14 +710,14 @@
       var nextIndex = 0;
       var nextKey, next, nextSeg, nextSub;
       while (nextIndex < literalsegments) {
-        nextKey = String(nextIndex);
-        nextSeg = String(rawString[nextKey]);
+        nextKey = ES.ToString(nextIndex);
+        nextSeg = ES.ToString(rawString[nextKey]);
         _push(stringElements, nextSeg);
         if (nextIndex + 1 >= literalsegments) {
           break;
         }
         next = nextIndex + 1 < arguments.length ? arguments[nextIndex + 1] : '';
-        nextSub = String(next);
+        nextSub = ES.ToString(next);
         _push(stringElements, nextSub);
         nextIndex += 1;
       }
@@ -736,7 +742,7 @@
 
   var StringPrototypeShims = {
     repeat: function repeat(times) {
-      var thisStr = String(ES.RequireObjectCoercible(this));
+      var thisStr = ES.ToString(ES.RequireObjectCoercible(this));
       var numTimes = ES.ToInteger(times);
       if (numTimes < 0 || numTimes >= stringMaxLength) {
         throw new RangeError('repeat count must be less than infinity and not overflow maximum string size');
@@ -745,22 +751,22 @@
     },
 
     startsWith: function startsWith(searchString) {
-      var thisStr = String(ES.RequireObjectCoercible(this));
+      var thisStr = ES.ToString(ES.RequireObjectCoercible(this));
       if (ES.IsRegExp(searchString)) {
         throw new TypeError('Cannot call method "startsWith" with a regex');
       }
-      var searchStr = String(searchString);
+      var searchStr = ES.ToString(searchString);
       var startArg = arguments.length > 1 ? arguments[1] : void 0;
       var start = _max(ES.ToInteger(startArg), 0);
       return _strSlice(thisStr, start, start + searchStr.length) === searchStr;
     },
 
     endsWith: function endsWith(searchString) {
-      var thisStr = String(ES.RequireObjectCoercible(this));
+      var thisStr = ES.ToString(ES.RequireObjectCoercible(this));
       if (ES.IsRegExp(searchString)) {
         throw new TypeError('Cannot call method "endsWith" with a regex');
       }
-      var searchStr = String(searchString);
+      var searchStr = ES.ToString(searchString);
       var thisLen = thisStr.length;
       var posArg = arguments.length > 1 ? arguments[1] : void 0;
       var pos = typeof posArg === 'undefined' ? thisLen : ES.ToInteger(posArg);
@@ -772,7 +778,7 @@
       if (ES.IsRegExp(searchString)) {
         throw new TypeError('"includes" does not accept a RegExp');
       }
-      var searchStr = String(searchString);
+      var searchStr = ES.ToString(searchString);
       var position;
       if (arguments.length > 1) {
         position = arguments[1];
@@ -782,7 +788,7 @@
     },
 
     codePointAt: function codePointAt(pos) {
-      var thisStr = String(ES.RequireObjectCoercible(this));
+      var thisStr = ES.ToString(ES.RequireObjectCoercible(this));
       var position = ES.ToInteger(pos);
       var length = thisStr.length;
       if (position >= 0 && position < length) {
@@ -849,7 +855,7 @@
   ].join('');
   var trimRegexp = new RegExp('(^[' + ws + ']+)|([' + ws + ']+$)', 'g');
   var trimShim = function trim() {
-    return String(ES.RequireObjectCoercible(this)).replace(trimRegexp, '');
+    return ES.ToString(ES.RequireObjectCoercible(this)).replace(trimRegexp, '');
   };
   var nonWS = ['\u0085', '\u200b', '\ufffe'].join('');
   var nonWSregex = new RegExp('[' + nonWS + ']', 'g');
@@ -860,7 +866,7 @@
   // see https://people.mozilla.org/~jorendorff/es6-draft.html#sec-string.prototype-@@iterator
   var StringIterator = function (s) {
     ES.RequireObjectCoercible(s);
-    this._s = String(s);
+    this._s = ES.ToString(s);
     this._i = 0;
   };
   StringIterator.prototype.next = function () {
@@ -2466,7 +2472,7 @@
       }
       var type = typeof key;
       if (type === 'undefined' || key === null) {
-        return '^' + String(key);
+        return '^' + ES.ToString(key);
       } else if (type === 'string') {
         return '$' + key;
       } else if (type === 'number') {
@@ -2574,7 +2580,7 @@
 
         var requireMapSlot = function requireMapSlot(map, method) {
           if (!ES.TypeIsObject(map) || !isMap(map)) {
-            throw new TypeError('Method Map.prototype.' + method + ' called on incompatible receiver ' + String(map));
+            throw new TypeError('Method Map.prototype.' + method + ' called on incompatible receiver ' + ES.ToString(map));
           }
         };
 
@@ -2800,7 +2806,7 @@
         var requireSetSlot = function requireSetSlot(set, method) {
           if (!ES.TypeIsObject(set) || !isSet(set)) {
             // https://github.com/paulmillr/es6-shim/issues/176
-            throw new TypeError('Set.prototype.' + method + ' called on incompatible receiver ' + String(set));
+            throw new TypeError('Set.prototype.' + method + ' called on incompatible receiver ' + ES.ToString(set));
           }
         };
 

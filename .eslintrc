@@ -20,7 +20,7 @@
 		"max-params": [2, 4],
 		"max-nested-callbacks": [2, 5],
 		"max-statements": [1, 25],
-		"new-cap": [2, { "capIsNewExceptions": ["Call", "Construct", "CreateHTML", "GetIterator", "GetMethod", "IsCallable", "IsConstructor", "IsPromise", "IsRegExp", "IteratorClose", "IteratorComplete", "IteratorNext", "IteratorStep", "Map", "OrigNumber", "RequireObjectCoercible", "SameValue", "SameValueZero", "Set", "SpeciesConstructor", "ToInteger", "ToLength", "ToNumber", "ToObject", "ToUint32", "TypeIsObject"] }],
+		"new-cap": [2, { "capIsNewExceptions": ["Call", "Construct", "CreateHTML", "GetIterator", "GetMethod", "IsCallable", "IsConstructor", "IsPromise", "IsRegExp", "IteratorClose", "IteratorComplete", "IteratorNext", "IteratorStep", "Map", "OrigNumber", "RequireObjectCoercible", "SameValue", "SameValueZero", "Set", "SpeciesConstructor", "ToInteger", "ToLength", "ToNumber", "ToObject", "ToString", "ToUint32", "TypeIsObject"] }],
 		"no-constant-condition": [1],
 		"no-continue": [1],
 		"no-extend-native": [2, { "exceptions": ["Set"] }],
