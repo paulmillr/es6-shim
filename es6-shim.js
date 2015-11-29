@@ -2158,18 +2158,6 @@
       }
     };
 
-    // This is a common step in many Promise methods
-    var getPromiseSpecies = function (C) {
-      if (!ES.TypeIsObject(C)) {
-        throw new TypeError('Promise is not object');
-      }
-      var S = C[symbolSpecies];
-      if (S !== void 0 && S !== null) {
-        return S;
-      }
-      return C;
-    };
-
     var Promise$prototype;
     var Promise = (function () {
       var PromiseShim = function Promise(resolver) {
@@ -2275,7 +2263,10 @@
 
     defineProperties(Promise, {
       all: function all(iterable) {
-        var C = getPromiseSpecies(this);
+        var C = this;
+        if (!ES.TypeIsObject(C)) {
+          throw new TypeError('Promise is not object');
+        }
         var capability = new PromiseCapability(C);
         var iterator, iteratorRecord;
         try {
@@ -2298,7 +2289,10 @@
       },
 
       race: function race(iterable) {
-        var C = getPromiseSpecies(this);
+        var C = this;
+        if (!ES.TypeIsObject(C)) {
+          throw new TypeError('Promise is not object');
+        }
         var capability = new PromiseCapability(C);
         var iterator, iteratorRecord;
         try {
