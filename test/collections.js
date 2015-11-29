@@ -29,7 +29,7 @@ Assertion.addMethod('entries', function (expected) {
   var collection = this._obj;
 
   expect(Array.isArray(expected)).to.equal(true);
-  var expectedEntries = expected.slice(0);
+  var expectedEntries = expected.slice();
 
   var iterator = collection.entries();
   var result;
@@ -149,6 +149,20 @@ describe('Collections', function () {
       var myMap = new MyMap();
       testMapping(myMap, 'c', 'd');
       expect(myMap).to.have.entries([['a', 'b'], ['c', 'd']]);
+    });
+
+    it('uses SameValueZero even on a Map of size > 4', function () {
+      // Chrome 38-42, node 0.11/0.12, iojs 1/2 have a bug when the Map has a size > 4
+      var firstFour = [[1, 0], [2, 0], [3, 0], [4, 0]];
+      var fourMap = new Map(firstFour);
+      expect(fourMap.size).to.equal(4);
+      expect(fourMap.has(-0)).to.equal(false);
+      expect(fourMap.has(0)).to.equal(false);
+
+      fourMap.set(-0, fourMap);
+
+      expect(fourMap.has(0)).to.equal(true);
+      expect(fourMap.has(-0)).to.equal(true);
     });
 
     it('treats positive and negative zero the same', function () {
@@ -699,6 +713,20 @@ describe('Collections', function () {
           set[method]({});
         }).to.not['throw']();
       });
+    });
+
+    it('uses SameValueZero even on a Set of size > 4', function () {
+      var firstFour = [1, 2, 3, 4];
+      var fourSet = new Set(firstFour);
+      expect(fourSet.size).to.equal(4);
+      expect(fourSet.has(-0)).to.equal(false);
+      expect(fourSet.has(0)).to.equal(false);
+
+      fourSet.add(-0);
+
+      expect(fourSet.size).to.equal(5);
+      expect(fourSet.has(0)).to.equal(true);
+      expect(fourSet.has(-0)).to.equal(true);
     });
 
     it('should work as expected', function () {
