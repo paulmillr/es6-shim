@@ -160,6 +160,23 @@ describe('Collections', function () {
       expect(map.set(-0, value2)).to.equal(map);
       expect(map.get(-0)).to.equal(value2);
       expect(map.get(+0)).to.equal(value2);
+
+      // Extended testing
+      var o = new Map();
+      var generic = {};
+      var callback = function () {};
+      expect(!o.has(-0)).to.equal(true);
+      expect(!o.has(0)).to.equal(true);
+      o.set(-0, callback);
+      expect(o.has(-0)).to.equal(true);
+      expect(o.has(0)).to.equal(true);
+      expect(o.get(-0)).to.equal(callback);
+      expect(o.get(0)).to.equal(callback);
+      o.set(0, generic);
+      expect(o.has(-0)).to.equal(true);
+      expect(o.has(0)).to.equal(true);
+      expect(o.get(-0)).to.equal(generic);
+      expect(o.get(0)).to.equal(generic);
     });
 
     it('should map values correctly', function () {
