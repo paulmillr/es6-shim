@@ -174,6 +174,37 @@ describe('Collections', function () {
       expect(map.set(-0, value2)).to.equal(map);
       expect(map.get(-0)).to.equal(value2);
       expect(map.get(+0)).to.equal(value2);
+
+      // Extended testing
+      var o = new Map();
+      var generic = {};
+      var callback = function () {};
+      o.set(callback, generic);
+      expect(o.get(callback)).to.equal(generic);
+      o.set(callback, callback);
+      expect(o.get(callback)).to.equal(callback);
+      o.set(callback, o);
+      expect(o.get(callback)).to.equal(o);
+      o.set(o, callback);
+      expect(o.get(o)).to.equal(callback);
+      o.set(NaN, generic);
+      expect(o.has(NaN)).to.equal(true);
+      expect(o.get(NaN)).to.equal(generic);
+      o.set('key', undefined);
+      expect(o.has('key')).to.equal(true);
+      expect(o.get('key')).to.equal(undefined);
+      expect(!o.has(-0)).to.equal(true);
+      expect(!o.has(0)).to.equal(true);
+      o.set(-0, callback);
+      expect(o.has(-0)).to.equal(true);
+      expect(o.has(0)).to.equal(true);
+      expect(o.get(-0)).to.equal(callback);
+      expect(o.get(0)).to.equal(callback);
+      o.set(0, generic);
+      expect(o.has(-0)).to.equal(true);
+      expect(o.has(0)).to.equal(true);
+      expect(o.get(-0)).to.equal(generic);
+      expect(o.get(0)).to.equal(generic);
     });
 
     it('should map values correctly', function () {
