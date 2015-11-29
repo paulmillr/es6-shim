@@ -79,10 +79,10 @@
 
   // Define configurable, writable and non-enumerable props
   // if they don’t exist.
-  var defineProperties = function (object, map) {
+  var defineProperties = function (object, map, forceOverride) {
     _forEach(Object.keys(map), function (name) {
       var method = map[name];
-      defineProperty(object, name, method, false);
+      defineProperty(object, name, method, !!forceOverride);
     });
   };
 
@@ -2973,13 +2973,12 @@
         Value.preserveToString(globals.Map, OrigMapNoArgs);
       }
       var testMap = new Map();
-      var mapUsesSameValueZero = (function (m) {
-        m['delete'](0);
-        m['delete'](-0);
-        m.set(0, 3);
-        m.get(-0, 4);
-        return m.get(0) === 3 && m.get(-0) === 4;
-      }(testMap));
+      var mapUsesSameValueZero = (function () {
+        // Chrome 38-42, node 0.11/0.12, iojs 1/2 also have a bug when the Map has a size > 4
+        var m = new Map([[1, 0], [2, 0], [3, 0], [4, 0]]);
+        m.set(-0, m);
+        return m.get(0) === m && m.get(-0) === m && m.has(0) && m.has(-0);
+      }());
       var mapSupportsChaining = testMap.set(1, 2) === testMap;
       if (!mapUsesSameValueZero || !mapSupportsChaining) {
         var origMapSet = Map.prototype.set;
@@ -3115,8 +3114,6 @@
         mapIterationThrowsStopIterator || // Firefox 25
         !mapSupportsSubclassing
       ) {
-        delete globals.Map; // necessary to overwrite in Safari 8
-        delete globals.Set; // necessary to overwrite in Safari 8
         defineProperties(globals, {
           Map: collectionShims.Map,
           Set: collectionShims.Set
