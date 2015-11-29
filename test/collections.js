@@ -123,6 +123,13 @@ describe('Collections', function () {
       expect(map2).to.have.entries([['a', 'b'], ['c', 'd']]);
     });
 
+    it('should throw with iterables that return primitives', function () {
+      expect(function () { return new Map('123'); }).to['throw'](TypeError);
+      expect(function () { return new Map([1, 2, 3]); }).to['throw'](TypeError);
+      expect(function () { return new Map(['1', '2', '3']); }).to['throw'](TypeError);
+      expect(function () { return new Map([true]); }).to['throw'](TypeError);
+    });
+
     it('should not be callable without "new"', function () {
       expect(Map).to['throw'](TypeError);
     });

@@ -2495,6 +2495,9 @@
     var addIterableToMap = function addIterableToMap(MapConstructor, map, iterable) {
       if (isArray(iterable) || Type.string(iterable)) {
         _forEach(iterable, function (entry) {
+          if (!ES.TypeIsObject(entry)) {
+            throw new TypeError('Iterator value ' + entry + ' is not an entry object');
+          }
           map.set(entry[0], entry[1]);
         });
       } else if (iterable instanceof MapConstructor) {
@@ -2515,7 +2518,7 @@
             var nextItem = next.value;
             try {
               if (!ES.TypeIsObject(nextItem)) {
-                throw new TypeError('expected iterable of pairs');
+                throw new TypeError('Iterator value ' + nextItem + ' is not an entry object');
               }
               _call(adder, map, nextItem[0], nextItem[1]);
             } catch (e) {
