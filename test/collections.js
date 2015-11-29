@@ -123,6 +123,11 @@ describe('Collections', function () {
       expect(map2).to.have.entries([['a', 'b'], ['c', 'd']]);
     });
 
+    it('non-entry objects should throw', function () {
+      expect(new Map([1, 2, 3])).to['throw'](TypeError);
+      expect(new Map('123')).to['throw'](TypeError);
+    });
+
     it('should not be callable without "new"', function () {
       expect(Map).to['throw'](TypeError);
     });
@@ -153,6 +158,21 @@ describe('Collections', function () {
       expect(map.set(-0, value2)).to.equal(map);
       expect(map.get(-0)).to.equal(value2);
       expect(map.get(+0)).to.equal(value2);
+
+      // Extended testing
+      var o = new Map();
+      var generic = {};
+      var callback = function () {};
+      o.set(-0, callback);
+      expect(o.has(-0)).to.equal(true);
+      expect(o.has(0)).to.equal(true);
+      expect(o.get(-0)).to.equal(callback);
+      expect(o.get(0)).to.equal(callback);
+      o.set(0, generic);
+      expect(o.has(-0)).to.equal(true);
+      expect(o.has(0)).to.equal(true);
+      expect(o.get(-0)).to.equal(generic);
+      expect(o.get(0)).to.equal(generic);
     });
 
     it('should map values correctly', function () {
