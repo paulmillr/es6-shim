@@ -17,7 +17,7 @@
     define(factory);
   } else if (typeof exports === 'object') {
     // Node. Does not work with strict CommonJS, but
-    // only CommonJS-like enviroments that support module.exports,
+    // only CommonJS-like environments that support module.exports,
     // like Node.
     module.exports = factory();
   } else {
@@ -37,7 +37,7 @@
   var Object = globals.Object;
 
   // NOTE:  This versions needs object ownership
-  //        beacuse every promoted object needs to be reassigned
+  //        because every promoted object needs to be reassigned
   //        otherwise uncompatible browsers cannot work as expected
   //
   // NOTE:  This might need es5-shim or polyfills upfront
