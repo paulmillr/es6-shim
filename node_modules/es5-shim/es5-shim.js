@@ -10,7 +10,7 @@
 ;
 
 // UMD (Universal Module Definition)
-// see https://github.com/umdjs/umd/blob/master/returnExports.js
+// see https://github.com/umdjs/umd/blob/master/templates/returnExports.js
 (function (root, factory) {
     'use strict';
 
@@ -56,6 +56,7 @@ var array_push = ArrayPrototype.push;
 var array_unshift = ArrayPrototype.unshift;
 var array_concat = ArrayPrototype.concat;
 var call = FunctionPrototype.call;
+var apply = FunctionPrototype.apply;
 var max = Math.max;
 var min = Math.min;
 
@@ -68,19 +69,18 @@ var isRegex; /* inlined from https://npmjs.com/is-regex */ var regexExec = RegEx
 var isString; /* inlined from https://npmjs.com/is-string */ var strValue = String.prototype.valueOf, tryStringObject = function tryStringObject(value) { try { strValue.call(value); return true; } catch (e) { return false; } }, stringClass = '[object String]'; isString = function isString(value) { if (typeof value === 'string') { return true; } if (typeof value !== 'object') { return false; } return hasToStringTag ? tryStringObject(value) : to_string.call(value) === stringClass; };
 
 /* inlined from http://npmjs.com/define-properties */
+var supportsDescriptors = $Object.defineProperty && (function () {
+    try {
+        var obj = {};
+        $Object.defineProperty(obj, 'x', { enumerable: false, value: obj });
+        for (var _ in obj) { return false; }
+        return obj.x === obj;
+    } catch (e) { /* this is ES3 */
+        return false;
+    }
+}());
 var defineProperties = (function (has) {
-  var supportsDescriptors = $Object.defineProperty && (function () {
-      try {
-          var obj = {};
-          $Object.defineProperty(obj, 'x', { enumerable: false, value: obj });
-          for (var _ in obj) { return false; }
-          return obj.x === obj;
-      } catch (e) { /* this is ES3 */
-          return false;
-      }
-  }());
-
-  // Define configurable, writable and non-enumerable props
+  // Define configurable, writable, and non-enumerable props
   // if they don't exist.
   var defineProperty;
   if (supportsDescriptors) {
@@ -163,7 +163,6 @@ var ES = {
     // http://es5.github.com/#x9.9
     /* replaceable with https://npmjs.com/package/es-abstract ES5.ToObject */
     ToObject: function (o) {
-        /* jshint eqnull: true */
         if (o == null) { // this matches both null and undefined
             throw new TypeError("can't convert " + o + ' to object');
         }
@@ -321,13 +320,17 @@ defineProperties(FunctionPrototype, {
 });
 
 // _Please note: Shortcuts are defined after `Function.prototype.bind` as we
-// us it in defining shortcuts.
+// use it in defining shortcuts.
 var owns = call.bind(ObjectPrototype.hasOwnProperty);
 var toStr = call.bind(ObjectPrototype.toString);
+var arraySlice = call.bind(array_slice);
+var arraySliceApply = apply.bind(array_slice);
 var strSlice = call.bind(StringPrototype.slice);
 var strSplit = call.bind(StringPrototype.split);
 var strIndexOf = call.bind(StringPrototype.indexOf);
 var push = call.bind(array_push);
+var isEnum = call.bind(ObjectPrototype.propertyIsEnumerable);
+var arraySort = call.bind(ArrayPrototype.sort);
 
 //
 // Array
@@ -734,7 +737,7 @@ defineProperties(ArrayPrototype, {
         var args = arguments;
         this.length = max(ES.ToInteger(this.length), 0);
         if (arguments.length > 0 && typeof deleteCount !== 'number') {
-            args = array_slice.call(arguments);
+            args = arraySlice(arguments);
             if (args.length < 2) {
                 push(args, this.length - start);
             } else {
@@ -783,7 +786,7 @@ defineProperties(ArrayPrototype, {
             k += 1;
         }
 
-        var items = array_slice.call(arguments, 2);
+        var items = arraySlice(arguments, 2);
         var itemCount = items.length;
         var to;
         if (itemCount < actualDeleteCount) {
@@ -827,13 +830,26 @@ defineProperties(ArrayPrototype, {
     }
 }, !spliceWorksWithLargeSparseArrays || !spliceWorksWithSmallSparseArrays);
 
-var hasJoinUndefinedBug = [1, 2].join(undefined) !== '1,2';
 var originalJoin = ArrayPrototype.join;
-defineProperties(ArrayPrototype, {
-    join: function join(separator) {
-        return originalJoin.call(this, typeof separator === 'undefined' ? ',' : separator);
-    }
-}, hasJoinUndefinedBug);
+var hasStringJoinBug = Array.prototype.join.call('123', ',') !== '1,2,3';
+if (hasStringJoinBug) {
+    defineProperties(ArrayPrototype, {
+        join: function join(separator) {
+            var sep = typeof separator === 'undefined' ? ',' : separator;
+            return originalJoin.call(isString(this) ? strSplit(this, '') : this, sep);
+        }
+    }, hasStringJoinBug);
+}
+
+var hasJoinUndefinedBug = [1, 2].join(undefined) !== '1,2';
+if (hasJoinUndefinedBug) {
+    defineProperties(ArrayPrototype, {
+        join: function join(separator) {
+            var sep = typeof separator === 'undefined' ? ',' : separator;
+            return originalJoin.call(this, sep);
+        }
+    }, hasJoinUndefinedBug);
+}
 
 var pushShim = function push(item) {
     var O = ES.ToObject(this);
@@ -869,6 +885,52 @@ var pushUndefinedIsWeird = (function () {
 }());
 defineProperties(ArrayPrototype, { push: pushShim }, pushUndefinedIsWeird);
 
+// ES5 15.2.3.14
+// http://es5.github.io/#x15.4.4.10
+// Fix boxed string bug
+defineProperties(ArrayPrototype, {
+    slice: function (start, end) {
+        var arr = isString(this) ? strSplit(this, '') : this;
+        return arraySliceApply(arr, arguments);
+    }
+}, splitString);
+
+var sortIgnoresNonFunctions = (function () {
+    try {
+        [1, 2].sort(null);
+        [1, 2].sort({});
+        return true;
+    } catch (e) { /**/ }
+    return false;
+}());
+var sortThrowsOnRegex = (function () {
+    // this is a problem in Firefox 4, in which `typeof /a/ === 'function'`
+    try {
+        [1, 2].sort(/a/);
+        return false;
+    } catch (e) { /**/ }
+    return true;
+}());
+var sortIgnoresUndefined = (function () {
+    // applies in IE 8, for one.
+    try {
+        [1, 2].sort(undefined);
+        return true;
+    } catch (e) { /**/ }
+    return false;
+}());
+defineProperties(ArrayPrototype, {
+    sort: function sort(compareFn) {
+        if (typeof compareFn === 'undefined') {
+            return arraySort(this);
+        }
+        if (!isCallable(compareFn)) {
+            throw new TypeError('Array.prototype.sort callback must be a function');
+        }
+        return arraySort(this, compareFn);
+    }
+}, sortIgnoresNonFunctions || !sortIgnoresUndefined || !sortThrowsOnRegex);
+
 //
 // Object
 // ======
@@ -894,7 +956,8 @@ var blacklistedKeys = {
     $frames: true,
     $frameElement: true,
     $webkitIndexedDB: true,
-    $webkitStorageInfo: true
+    $webkitStorageInfo: true,
+    $external: true
 };
 var hasAutomationEqualityBug = (function () {
     /* globals window */
@@ -996,7 +1059,7 @@ var originalKeys = $Object.keys;
 defineProperties($Object, {
     keys: function keys(object) {
         if (isArguments(object)) {
-            return originalKeys(array_slice.call(object));
+            return originalKeys(arraySlice(object));
         } else {
             return originalKeys(object);
         }
@@ -1052,8 +1115,8 @@ defineProperties(Date.prototype, {
         }
         // pad milliseconds to have three digits.
         return (
-            year + '-' + array_slice.call(result, 0, 2).join('-') +
-            'T' + array_slice.call(result, 2).join(':') + '.' +
+            year + '-' + arraySlice(result, 0, 2).join('-') +
+            'T' + arraySlice(result, 2).join(':') + '.' +
             strSlice('000' + this.getUTCMilliseconds(), -3) + 'Z'
         );
     }
@@ -1124,7 +1187,6 @@ if (doesNotParseY2KNewYear || acceptsInvalidDates || !supportsExtendedYears) {
     /* global Date: true */
     /* eslint-disable no-undef */
     var maxSafeUnsigned32Bit = Math.pow(2, 31) - 1;
-    var secondsWithinMaxSafeUnsigned32Bit = Math.floor(maxSafeUnsigned32Bit / 1e3);
     var hasSafariSignedIntBug = isActualNaN(new Date(1970, 0, 1, 0, 0, 0, maxSafeUnsigned32Bit + 1).getTime());
     Date = (function (NativeDate) {
     /* eslint-enable no-undef */
@@ -1497,7 +1559,7 @@ if (
         var maxSafe32BitInt = Math.pow(2, 32) - 1;
 
         StringPrototype.split = function (separator, limit) {
-            var string = this;
+            var string = String(this);
             if (typeof separator === 'undefined' && limit === 0) {
                 return [];
             }
@@ -1516,7 +1578,6 @@ if (
                 // Make `global` and avoid `lastIndex` issues by working with a copy
                 separator2, match, lastIndex, lastLength;
             var separatorCopy = new RegExp(separator.source, flags + 'g');
-            string += ''; // Type-convert
             if (!compliantExecNpcg) {
                 // Doesn't need flags gy, but they don't hurt
                 separator2 = new RegExp('^' + separatorCopy.source + '$(?!\\s)', flags);
@@ -1549,7 +1610,7 @@ if (
                         /* eslint-enable no-loop-func */
                     }
                     if (match.length > 1 && match.index < string.length) {
-                        array_push.apply(output, array_slice.call(match, 1));
+                        array_push.apply(output, arraySlice(match, 1));
                     }
                     lastLength = match[0].length;
                     lastLastIndex = lastIndex;
@@ -1701,7 +1762,6 @@ if (parseInt(ws + '08') !== 8 || parseInt(ws + '0x16') !== 22) {
 }
 
 if (String(new RangeError('test')) !== 'RangeError: test') {
-    var originalErrorToString = Error.prototype.toString;
     var errorToStringShim = function toString() {
         if (typeof this === 'undefined' || this === null) {
             throw new TypeError("can't convert " + this + ' to object');
@@ -1728,6 +1788,39 @@ if (String(new RangeError('test')) !== 'RangeError: test') {
     };
     // can't use defineProperties here because of toString enumeration issue in IE <= 8
     Error.prototype.toString = errorToStringShim;
+}
+
+if (supportsDescriptors) {
+    var ensureNonEnumerable = function (obj, prop) {
+        if (isEnum(obj, prop)) {
+            var desc = Object.getOwnPropertyDescriptor(obj, prop);
+            desc.enumerable = false;
+            Object.defineProperty(obj, prop, desc);
+        }
+    };
+    ensureNonEnumerable(Error.prototype, 'message');
+    if (Error.prototype.message !== '') {
+      Error.prototype.message = '';
+    }
+    ensureNonEnumerable(Error.prototype, 'name');
+}
+
+if (String(/a/mig) !== '/a/gim') {
+    var regexToString = function toString() {
+        var str = '/' + this.source + '/';
+        if (this.global) {
+            str += 'g';
+        }
+        if (this.ignoreCase) {
+            str += 'i';
+        }
+        if (this.multiline) {
+            str += 'm';
+        }
+        return str;
+    };
+    // can't use defineProperties here because of toString enumeration issue in IE <= 8
+    RegExp.prototype.toString = regexToString;
 }
 
 }));
