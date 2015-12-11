@@ -20,4 +20,13 @@ describe('Promise.resolve', function () {
       done();
     }, failIfThrows(done));
   });
+
+  it('throws when receiver is a primitive', function () {
+    expect(function () { Promise.resolve.call(); }).to['throw']();
+    expect(function () { Promise.resolve.call(null); }).to['throw']();
+    expect(function () { Promise.resolve.call(''); }).to['throw']();
+    expect(function () { Promise.resolve.call(42); }).to['throw']();
+    expect(function () { Promise.resolve.call(false); }).to['throw']();
+    expect(function () { Promise.resolve.call(true); }).to['throw']();
+  });
 });
