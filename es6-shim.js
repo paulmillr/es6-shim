@@ -2069,8 +2069,9 @@
       // global Promise below (in order to workaround bugs)
       // https://github.com/Raynos/observ-hash/issues/2#issuecomment-35857671
       var P = globals.Promise;
-      return P && P.resolve && function (task) {
-        return P.resolve().then(task);
+      var pr = P && P.resolve && P.resolve();
+      return pr && function (task) {
+        return pr.then(task);
       };
     };
     /*global process */
