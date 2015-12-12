@@ -2032,6 +2032,9 @@
         capability.resolve = resolve;
         capability.reject = reject;
       };
+      // Initialize fields to inform optimizers about the object shape.
+      capability.resolve = void 0;
+      capability.reject = void 0;
       capability.promise = new C(resolver);
       if (!(ES.IsCallable(capability.resolve) && ES.IsCallable(capability.reject))) {
         throw new TypeError('Bad promise constructor');
