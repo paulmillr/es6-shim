@@ -2096,6 +2096,8 @@
     var PROMISE_FULFILL_OFFSET = 0;
     var PROMISE_REJECT_OFFSET = 1;
     var PROMISE_CAPABILITY_OFFSET = 2;
+    // This is used in an optimization for chaining promises via then.
+    var PROMISE_FAKE_CAPABILITY = {};
 
     var enqueuePromiseReactionJob = function (handler, capability, argument) {
       enqueue(function () {
@@ -2105,6 +2107,11 @@
 
     var promiseReactionJob = function (handler, promiseCapability, argument) {
       var handlerResult, f;
+      if (promiseCapability === PROMISE_FAKE_CAPABILITY) {
+        // Fast case, when we don't actually need to chain through to a
+        // (real) promiseCapability.
+        return handler(argument);
+      }
       try {
         handlerResult = handler(argument);
         f = promiseCapability.resolve;
@@ -2207,18 +2214,29 @@
       return { resolve: resolve, reject: reject };
     };
 
+    var optimizedThen = function (then, thenable, resolve, reject) {
+      // Optimization: since we discard the result, we can pass our
+      // own then implementation a special hint to let it know it
+      // doesn't have to create it.  (The PROMISE_FAKE_CAPABILITY
+      // object is local to this implementation and unforgeable outside.)
+      if (then === Promise$prototype$then) {
+        _call(then, thenable, resolve, reject, PROMISE_FAKE_CAPABILITY);
+      } else {
+        _call(then, thenable, resolve, reject);
+      }
+    };
     var promiseResolveThenableJob = function (promise, thenable, then) {
       var resolvingFunctions = createResolvingFunctions(promise);
       var resolve = resolvingFunctions.resolve;
       var reject = resolvingFunctions.reject;
       try {
-        _call(then, thenable, resolve, reject);
+        optimizedThen(then, thenable, resolve, reject);
       } catch (e) {
         reject(e);
       }
     };
 
-    var Promise$prototype;
+    var Promise$prototype, Promise$prototype$then;
     var Promise = (function () {
       var PromiseShim = function Promise(resolver) {
         if (!(this instanceof PromiseShim)) {
@@ -2294,7 +2312,7 @@
           index, values, resultCapability, remaining
         );
         remaining.count += 1;
-        nextPromise.then(resolveElement, resultCapability.reject);
+        optimizedThen(nextPromise.then, nextPromise, resolveElement, resultCapability.reject);
         index += 1;
       }
       if ((--remaining.count) === 0) {
@@ -2323,7 +2341,7 @@
           throw e;
         }
         nextPromise = C.resolve(nextValue);
-        nextPromise.then(resultCapability.resolve, resultCapability.reject);
+        optimizedThen(nextPromise.then, nextPromise, resultCapability.resolve, resultCapability.reject);
       }
       return resultCapability.promise;
     };
@@ -2418,7 +2436,13 @@
         var promise = this;
         if (!ES.IsPromise(promise)) { throw new TypeError('not a promise'); }
         var C = ES.SpeciesConstructor(promise, Promise);
-        var resultCapability = new PromiseCapability(C);
+        var resultCapability;
+        var returnValueIsIgnored = (arguments[2] === PROMISE_FAKE_CAPABILITY);
+        if (returnValueIsIgnored && C === Promise) {
+          resultCapability = PROMISE_FAKE_CAPABILITY;
+        } else {
+          resultCapability = new PromiseCapability(C);
+        }
         // PerformPromiseThen(promise, onFulfilled, onRejected, resultCapability)
         // Note that we've split the 'reaction' object into its two
         // components, "capabilities" and "handler"
@@ -2457,6 +2481,10 @@
         return resultCapability.promise;
       }
     });
+    // This helps the optimizer by ensuring that methods which take
+    // capabilities aren't polymorphic.
+    PROMISE_FAKE_CAPABILITY = new PromiseCapability(Promise);
+    Promise$prototype$then = Promise$prototype.then;
 
     return Promise;
   }());
