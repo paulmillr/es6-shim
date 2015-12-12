@@ -22,11 +22,12 @@ describe('Promise.resolve', function () {
   });
 
   it('throws when receiver is a primitive', function () {
-    expect(function () { Promise.resolve.call(); }).to['throw']();
-    expect(function () { Promise.resolve.call(null); }).to['throw']();
-    expect(function () { Promise.resolve.call(''); }).to['throw']();
-    expect(function () { Promise.resolve.call(42); }).to['throw']();
-    expect(function () { Promise.resolve.call(false); }).to['throw']();
-    expect(function () { Promise.resolve.call(true); }).to['throw']();
+    var promise = Promise.resolve();
+    expect(function () { Promise.resolve.call(undefined, promise); }).to['throw']();
+    expect(function () { Promise.resolve.call(null, promise); }).to['throw']();
+    expect(function () { Promise.resolve.call('', promise); }).to['throw']();
+    expect(function () { Promise.resolve.call(42, promise); }).to['throw']();
+    expect(function () { Promise.resolve.call(false, promise); }).to['throw']();
+    expect(function () { Promise.resolve.call(true, promise); }).to['throw']();
   });
 });

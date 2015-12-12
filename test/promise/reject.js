@@ -22,11 +22,12 @@ describe('Promise.reject', function () {
   });
 
   it('throws when receiver is a primitive', function () {
-    expect(function () { Promise.reject.call(); }).to['throw']();
-    expect(function () { Promise.reject.call(null); }).to['throw']();
-    expect(function () { Promise.reject.call(''); }).to['throw']();
-    expect(function () { Promise.reject.call(42); }).to['throw']();
-    expect(function () { Promise.reject.call(false); }).to['throw']();
-    expect(function () { Promise.reject.call(true); }).to['throw']();
+    var promise = Promise.reject();
+    expect(function () { Promise.reject.call(undefined, promise); }).to['throw']();
+    expect(function () { Promise.reject.call(null, promise); }).to['throw']();
+    expect(function () { Promise.reject.call('', promise); }).to['throw']();
+    expect(function () { Promise.reject.call(42, promise); }).to['throw']();
+    expect(function () { Promise.reject.call(false, promise); }).to['throw']();
+    expect(function () { Promise.reject.call(true, promise); }).to['throw']();
   });
 });
