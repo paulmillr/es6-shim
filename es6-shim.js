@@ -87,10 +87,10 @@
   };
 
   var _toString = Function.call.bind(Object.prototype.toString);
-  var isCallable = function isCallable(x) {
-    // some old browsers (IE, FF) say that typeof /abc/ === 'function'
+  var isCallable = typeof /abc/ === 'function' ? function IsCallableSlow(x) {
+    // Some old browsers (IE, FF) say that typeof /abc/ === 'function'
     return typeof x === 'function' && _toString(x) === '[object Function]';
-  };
+  } : function IsCallableFast(x) { return typeof x === 'function'; };
 
   var Value = {
     getter: function (object, name, getter) {
