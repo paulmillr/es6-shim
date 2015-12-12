@@ -80,6 +80,8 @@
     "mocha": "^2.3.4",
     "promises-aplus-tests": "^2.1.1",
     "promises-es6-tests": "^0.5.0",
+    "test262": "git://github.com/cscott/test262.git#master",
+    "test262-parser": "git://github.com/cscott/test262-parser.git#gh-11",
     "uglify-js": "^2.6.1",
     "evalmd": "^0.0.16"
   }
