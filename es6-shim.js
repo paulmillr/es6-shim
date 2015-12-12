@@ -286,10 +286,9 @@
     },
 
     TypeIsObject: function (x) {
-      /* jshint eqnull:true */
-      // this is expensive when it returns false; use this function
-      // when you expect it to return true in the common case.
-      return x != null && Object(x) === x;
+      return x !== void 0 && x !== null && x !== true && x !== false &&
+        typeof x !== 'string' && typeof x !== 'number' &&
+        typeof x !== 'symbol';
     },
 
     ToObject: function (o, optMessage) {
