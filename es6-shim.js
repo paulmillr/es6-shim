@@ -1239,6 +1239,7 @@
         // -1 >>> 0 times, which is 4294967295, so the throw matters.
         throw new RangeError('should not reach here');
       }, []);
+      return true;
     });
   };
   if (!toLengthsCorrectly(Array.prototype.forEach)) {
