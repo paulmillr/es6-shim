@@ -420,7 +420,7 @@
     Construct: function (C, args, newTarget, isES6internal) {
       var target = typeof newTarget === 'undefined' ? C : newTarget;
 
-      if (!isES6internal) {
+      if (!isES6internal && Reflect.construct) {
         // Try to use Reflect.construct if available
         return Reflect.construct(C, args, target);
       }
