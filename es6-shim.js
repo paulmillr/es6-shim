@@ -2316,6 +2316,9 @@
 
       reject: function reject(reason) {
         var C = this;
+        if (!ES.TypeIsObject(C)) {
+          throw new TypeError('Bad promise constructor');
+        }
         var capability = new PromiseCapability(C);
         var rejectFunc = capability.reject;
         rejectFunc(reason); // call with this===undefined
@@ -2325,6 +2328,9 @@
       resolve: function resolve(v) {
         // See https://esdiscuss.org/topic/fixing-promise-resolve for spec
         var C = this;
+        if (!ES.TypeIsObject(C)) {
+          throw new TypeError('Bad promise constructor');
+        }
         if (ES.IsPromise(v)) {
           var constructor = v.constructor;
           if (constructor === C) { return v; }
