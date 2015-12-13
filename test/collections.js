@@ -251,12 +251,22 @@ describe('Collections', function () {
       expectNotEnumerable(new Map());
     });
 
+    it('should not have an own constructor', function () {
+      var m = new Map();
+      expect(m).not.to.haveOwnPropertyDescriptor('constructor');
+      expect(m.constructor).to.equal(Map);
+    });
+
     it('should allow common ecmascript idioms', function () {
       expect(map).to.be.an.instanceOf(Map);
       expect(typeof Map.prototype.get).to.equal('function');
       expect(typeof Map.prototype.set).to.equal('function');
       expect(typeof Map.prototype.has).to.equal('function');
       expect(typeof Map.prototype['delete']).to.equal('function');
+    });
+
+    it('should have a unique constructor', function () {
+      expect(Map.prototype).to.not.equal(Object.prototype);
     });
 
     describe('#clear()', function () {
@@ -349,10 +359,6 @@ describe('Collections', function () {
           expect(function () { return Map.prototype.entries.call(nonMap); }).to['throw'](TypeError, expectedMessage);
         });
       });
-    });
-
-    it('should has unique constructor', function () {
-      expect(Map.prototype).to.not.equal(Object.prototype);
     });
 
     describe('#size', function () {
@@ -913,6 +919,12 @@ describe('Collections', function () {
       expectNotEnumerable(new Set());
     });
 
+    it('should not have an own constructor', function () {
+      var s = new Set();
+      expect(s).not.to.haveOwnPropertyDescriptor('constructor');
+      expect(s.constructor).to.equal(Set);
+    });
+
     it('should allow common ecmascript idioms', function () {
       expect(set instanceof Set).to.equal(true);
       expect(typeof Set.prototype.add).to.equal('function');
@@ -920,7 +932,7 @@ describe('Collections', function () {
       expect(typeof Set.prototype['delete']).to.equal('function');
     });
 
-    it('should has unique constructor', function () {
+    it('should have a unique constructor', function () {
       expect(Set.prototype).to.not.equal(Object.prototype);
     });
 

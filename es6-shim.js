@@ -2965,11 +2965,12 @@
           if (arguments.length > 0) {
             addIterableToMap(Map, m, arguments[0]);
           }
+          delete m.constructor;
           Object.setPrototypeOf(m, globals.Map.prototype);
-          defineProperty(m, 'constructor', Map, true);
           return m;
         };
         globals.Map.prototype = create(OrigMapNoArgs.prototype);
+        defineProperty(globals.Map.prototype, 'constructor', globals.Map, true);
         Value.preserveToString(globals.Map, OrigMapNoArgs);
       }
       var testMap = new Map();
@@ -3053,11 +3054,12 @@
           if (arguments.length > 0) {
             addIterableToMap(Map, m, arguments[0]);
           }
+          delete m.constructor;
           Object.setPrototypeOf(m, Map.prototype);
-          defineProperty(m, 'constructor', Map, true);
           return m;
         };
         globals.Map.prototype = OrigMap.prototype;
+        defineProperty(globals.Map.prototype, 'constructor', globals.Map, true);
         Value.preserveToString(globals.Map, OrigMap);
       }
       var setSupportsSubclassing = supportsSubclassing(globals.Set, function (S) {
@@ -3083,11 +3085,12 @@
           if (arguments.length > 0) {
             addIterableToSet(Set, s, arguments[0]);
           }
+          delete s.constructor;
           Object.setPrototypeOf(s, Set.prototype);
-          defineProperty(s, 'constructor', Set, true);
           return s;
         };
         globals.Set.prototype = OrigSet.prototype;
+        defineProperty(globals.Set.prototype, 'constructor', globals.Set, true);
         Value.preserveToString(globals.Set, OrigSet);
       }
       var mapIterationThrowsStopIterator = !valueOrFalseIfThrows(function () {
