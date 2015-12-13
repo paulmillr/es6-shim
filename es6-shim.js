@@ -183,6 +183,7 @@
   var globalIsFinite = globals.isFinite;
   var _indexOf = Function.call.bind(String.prototype.indexOf);
   var _concat = Function.call.bind(Array.prototype.concat);
+  var _sort = Function.call.bind(Array.prototype.sort);
   var _strSlice = Function.call.bind(String.prototype.slice);
   var _push = Function.call.bind(Array.prototype.push);
   var _pushApply = Function.apply.bind(Array.prototype.push);
@@ -1009,14 +1010,30 @@
   });
   addIterator(ArrayIterator.prototype);
 
+  var orderKeys = function orderKeys(a, b) {
+    var aNumeric = String(ES.ToInteger(a)) === a;
+    var bNumeric = String(ES.ToInteger(b)) === b;
+    if (aNumeric && bNumeric) {
+      return b - a;
+    } else if (aNumeric && !bNumeric) {
+      return -1;
+    } else if (!aNumeric && bNumeric) {
+      return 1;
+    } else {
+      return a.localeCompare(b);
+    }
+  };
   var getAllKeys = function getAllKeys(object) {
+    var ownKeys = [];
     var keys = [];
 
     for (var key in object) {
-      _push(keys, key);
+      _push(_hasOwnProperty(object, key) ? ownKeys : keys, key);
     }
+    _sort(ownKeys, orderKeys);
+    _sort(keys, orderKeys);
 
-    return keys;
+    return _concat(ownKeys, keys);
   };
 
   var ObjectIterator = function (object, kind) {
