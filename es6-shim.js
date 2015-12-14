@@ -1247,9 +1247,10 @@
     });
   }
 
+  var int32sAsOne = -(Math.pow(2, 32) - 1);
   var toLengthsCorrectly = function (method, reversed) {
-    var obj = { length: -1 };
-    obj[reversed ? ((-1 >>> 0) - 1) : 0] = true;
+    var obj = { length: int32sAsOne };
+    obj[reversed ? ((obj.length >>> 0) - 1) : 0] = true;
     return valueOrFalseIfThrows(function () {
       _call(method, obj, function () {
         // note: in nonconforming browsers, this will be called

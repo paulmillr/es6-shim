@@ -865,11 +865,18 @@ var runArrayTests = function (it) {
       });
     });
 
-    var negativeLength = { 0: 1, length: -1 };
-    var throwRangeError = function () {
+    // this length converts to "1", preventing a crazy crash in older FF
+    var negativeLength = { 0: 1, length: -Math.pow(2, 32) + 1 };
+    var throwRangeError = function (v, i) {
+      if (i === negativeLength.length >>> 0) {
+        return v;
+      }
       // note: in nonconforming browsers, this will be called
       // -1 >>> 0 times, which is 4294967295, so the throw matters.
       throw new RangeError('should not reach here: length of -1 should clamp to length of 0');
+    };
+    var throwRangeErrorReduce = function throwRangeErrorReduce(acc, v, i) {
+      return throwRangeErrorReduce(v, i);
     };
 
     describe('#forEach()', function () {
@@ -925,7 +932,7 @@ var runArrayTests = function (it) {
         var accumulator = {};
         var reduced;
         expect(function () {
-          reduced = Array.prototype.reduce.call(negativeLength, throwRangeError, accumulator);
+          reduced = Array.prototype.reduce.call(negativeLength, throwRangeErrorReduce, accumulator);
         }).not.to['throw']();
         expect(reduced).to.equal(accumulator);
       });
@@ -939,7 +946,7 @@ var runArrayTests = function (it) {
         var accumulator = {};
         var reduced;
         expect(function () {
-          reduced = Array.prototype.reduceRight.call(obj, throwRangeError, accumulator);
+          reduced = Array.prototype.reduceRight.call(obj, throwRangeErrorReduce, accumulator);
         }).not.to['throw']();
         expect(reduced).to.equal(accumulator);
       });
