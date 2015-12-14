@@ -1415,6 +1415,11 @@
   /*jshint elision: false */
 
   var isEnumerableOn = Function.bind.call(Function.bind, Object.prototype.propertyIsEnumerable);
+  var ensureEnumerable = function ensureEnumerable(obj, prop) {
+    if (supportsDescriptors && isEnumerableOn(obj, prop)) {
+      Object.defineProperty(obj, prop, { enumerable: false });
+    }
+  };
   var sliceArgs = function sliceArgs() {
     // per https://github.com/petkaantonov/bluebird/wiki/Optimization-killers#32-leaking-arguments
     // and https://gist.github.com/WebReflection/4327762cb87a8c634a29
@@ -2466,6 +2471,10 @@
       /*globals Promise: false */
       overrideNative(globals, 'Promise', PromiseShim);
     }
+    ensureEnumerable(Promise, 'all');
+    ensureEnumerable(Promise, 'race');
+    ensureEnumerable(Promise, 'resolve');
+    ensureEnumerable(Promise, 'reject');
     addDefaultSpecies(Promise);
   }
 
