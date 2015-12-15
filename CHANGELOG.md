@@ -1,6 +1,35 @@
 # es6-shim x.x.x (not yet released)
 
-# es6-shim 0.33.13 (12 Nov 2015
+# es6-shim 0.34.0 (14 Dec 2015)
+* [Breaking] Remove `Symbol.species` from `Promise.all` and `Promise.race` (#34)
+* [Fix] Firefox has enumerable Promise static methods
+* [Fix] prevent crashes in older Firefox when checking if Array methods ToLength correctly
+* [Fix] `Reflect.enumerate`: ensure correct property ordering in Firefox 19 (and likely others)
+* [Fix] Ensure that `toLengthsCorrectly` returns `true` when it passes, instead of `undefined`
+* [Fix] Don't call `Reflect.construct` unless it's actually present
+* [Fix] Ensure `Map` and `Set` do not have an own `constructor` property (#368)
+* [Fix] Add missing checks to Promise.resolve and Promise.reject (#379)
+* [Fix] `Map`: older v8s have a SameValueZero bug when a Map has a size > 4 (#378)
+* [Fix] `Map`: when provided with an iterable that yields non-Object values, should throw
+* [Fix] `Promise`: Make sure to shim broken implementations in Chrome 49 Canary
+* [Fix] `Promise`: Chrome does not retrieve a thenable's .then synchronously (#372)
+* [New] Add `RegExp.prototype[Symbol.{match,search,split,replace}]`
+* [New] support `Symbol.match` in `RegExp` constructor
+* [New] add `Symbol.match` and ensure `String#{match, startsWith, endsWith, includes}` support it
+* [New] add `Symbol.split` and ensure `String#split` supports it
+* [New] add `Symbol.replace` and ensure `String#replace` supports it
+* [New] add `Symbol.search` and ensure `String#search` supports it
+* [Robustness] Add and use `ES.ToString` so as not to rely on the global `String`
+* [Dev Deps] update `eslint`, `jscs`, `mocha`, `uglify-js`, `es5-shim`, `grunt-saucelabs`
+* [Tests] bailing out of some tests when the feature isn't present, to clean up native test failure output
+* [Tests] up to `node` `v5.2`
+* [Tests] fix `npm run test:native`
+* [Tests] Ensure `Promise.{reject,resolve}` throws when the receiver is a primitive (#379)
+* [Tests] Further ensure that Promise.resolve/reject work with a non-promise receiver (#379)
+* [Docs] update README URLs (#375)
+* [Docs] fix some typos (#380)
+
+# es6-shim 0.33.13 (12 Nov 2015)
 * [Fix] `Number`: when no arguments are passed, return `+0`.
 * [Fix] `Number`: Make sure string values are trimmed before attempting to parse.
 * [Tests] cleaning up `Number` tests)
