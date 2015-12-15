@@ -286,10 +286,9 @@
     },
 
     TypeIsObject: function (x) {
-      /* jshint eqnull:true */
-      // this is expensive when it returns false; use this function
-      // when you expect it to return true in the common case.
-      return x != null && Object(x) === x;
+      return x !== void 0 && x !== null && x !== true && x !== false &&
+        typeof x !== 'string' && typeof x !== 'number' &&
+        typeof x !== 'symbol';
     },
 
     ToObject: function (o, optMessage) {
@@ -2033,6 +2032,9 @@
         capability.resolve = resolve;
         capability.reject = reject;
       };
+      // Initialize fields to inform optimizers about the object shape.
+      capability.resolve = void 0;
+      capability.reject = void 0;
       capability.promise = new C(resolver);
       if (!(ES.IsCallable(capability.resolve) && ES.IsCallable(capability.reject))) {
         throw new TypeError('Bad promise constructor');
@@ -2069,8 +2071,9 @@
       // global Promise below (in order to workaround bugs)
       // https://github.com/Raynos/observ-hash/issues/2#issuecomment-35857671
       var P = globals.Promise;
-      return P && P.resolve && function (task) {
-        return P.resolve().then(task);
+      var pr = P && P.resolve && P.resolve();
+      return pr && function (task) {
+        return pr.then(task);
       };
     };
     /*global process */
@@ -2084,59 +2087,99 @@
     /* jscs:enable disallowMultiLineTernary */
 
     // Constants for Promise implementation
-    var PROMISE_IDENTITY = 1;
-    var PROMISE_THROWER = 2;
-    var PROMISE_PENDING = 3;
-    var PROMISE_FULFILLED = 4;
-    var PROMISE_REJECTED = 5;
+    var PROMISE_IDENTITY = function (x) { return x; };
+    var PROMISE_THROWER = function (e) { throw e; };
+    var PROMISE_PENDING = 0;
+    var PROMISE_FULFILLED = 1;
+    var PROMISE_REJECTED = 2;
+    // We store fulfill/reject handlers and capabilities in a single array.
+    var PROMISE_FULFILL_OFFSET = 0;
+    var PROMISE_REJECT_OFFSET = 1;
+    var PROMISE_CAPABILITY_OFFSET = 2;
+    // This is used in an optimization for chaining promises via then.
+    var PROMISE_FAKE_CAPABILITY = {};
 
-    var promiseReactionJob = function (reaction, argument) {
-      var promiseCapability = reaction.capabilities;
-      var handler = reaction.handler;
-      var handlerResult, handlerException = false, f;
-      if (handler === PROMISE_IDENTITY) {
-        handlerResult = argument;
-      } else if (handler === PROMISE_THROWER) {
-        handlerResult = argument;
-        handlerException = true;
-      } else {
-        try {
-          handlerResult = handler(argument);
-        } catch (e) {
-          handlerResult = e;
-          handlerException = true;
-        }
-      }
-      f = handlerException ? promiseCapability.reject : promiseCapability.resolve;
-      f(handlerResult);
+    var enqueuePromiseReactionJob = function (handler, capability, argument) {
+      enqueue(function () {
+        promiseReactionJob(handler, capability, argument);
+      });
     };
 
-    var triggerPromiseReactions = function (reactions, argument) {
-      _forEach(reactions, function (reaction) {
-        enqueue(function () {
-          promiseReactionJob(reaction, argument);
-        });
-      });
+    var promiseReactionJob = function (handler, promiseCapability, argument) {
+      var handlerResult, f;
+      if (promiseCapability === PROMISE_FAKE_CAPABILITY) {
+        // Fast case, when we don't actually need to chain through to a
+        // (real) promiseCapability.
+        return handler(argument);
+      }
+      try {
+        handlerResult = handler(argument);
+        f = promiseCapability.resolve;
+      } catch (e) {
+        handlerResult = e;
+        f = promiseCapability.reject;
+      }
+      f(handlerResult);
     };
 
     var fulfillPromise = function (promise, value) {
       var _promise = promise._promise;
-      var reactions = _promise.fulfillReactions;
+      var length = _promise.reactionLength;
+      if (length > 0) {
+        enqueuePromiseReactionJob(
+          _promise.fulfillReactionHandler0,
+          _promise.reactionCapability0,
+          value
+        );
+        _promise.fulfillReactionHandler0 = void 0;
+        _promise.rejectReactions0 = void 0;
+        _promise.reactionCapability0 = void 0;
+        if (length > 1) {
+          for (var i = 1, idx = 0; i < length; i++, idx += 3) {
+            enqueuePromiseReactionJob(
+              _promise[idx + PROMISE_FULFILL_OFFSET],
+              _promise[idx + PROMISE_CAPABILITY_OFFSET],
+              value
+            );
+            promise[idx + PROMISE_FULFILL_OFFSET] = void 0;
+            promise[idx + PROMISE_REJECT_OFFSET] = void 0;
+            promise[idx + PROMISE_CAPABILITY_OFFSET] = void 0;
+          }
+        }
+      }
       _promise.result = value;
-      _promise.fulfillReactions = void 0;
-      _promise.rejectReactions = void 0;
       _promise.state = PROMISE_FULFILLED;
-      triggerPromiseReactions(reactions, value);
+      _promise.reactionLength = 0;
     };
 
     var rejectPromise = function (promise, reason) {
       var _promise = promise._promise;
-      var reactions = _promise.rejectReactions;
+      var length = _promise.reactionLength;
+      if (length > 0) {
+        enqueuePromiseReactionJob(
+          _promise.rejectReactionHandler0,
+          _promise.reactionCapability0,
+          reason
+        );
+        _promise.fulfillReactionHandler0 = void 0;
+        _promise.rejectReactions0 = void 0;
+        _promise.reactionCapability0 = void 0;
+        if (length > 1) {
+          for (var i = 1, idx = 0; i < length; i++, idx += 3) {
+            enqueuePromiseReactionJob(
+              _promise[idx + PROMISE_REJECT_OFFSET],
+              _promise[idx + PROMISE_CAPABILITY_OFFSET],
+              reason
+            );
+            promise[idx + PROMISE_FULFILL_OFFSET] = void 0;
+            promise[idx + PROMISE_REJECT_OFFSET] = void 0;
+            promise[idx + PROMISE_CAPABILITY_OFFSET] = void 0;
+          }
+        }
+      }
       _promise.result = reason;
-      _promise.fulfillReactions = void 0;
-      _promise.rejectReactions = void 0;
       _promise.state = PROMISE_REJECTED;
-      triggerPromiseReactions(reactions, reason);
+      _promise.reactionLength = 0;
     };
 
     var createResolvingFunctions = function (promise) {
@@ -2171,18 +2214,29 @@
       return { resolve: resolve, reject: reject };
     };
 
+    var optimizedThen = function (then, thenable, resolve, reject) {
+      // Optimization: since we discard the result, we can pass our
+      // own then implementation a special hint to let it know it
+      // doesn't have to create it.  (The PROMISE_FAKE_CAPABILITY
+      // object is local to this implementation and unforgeable outside.)
+      if (then === Promise$prototype$then) {
+        _call(then, thenable, resolve, reject, PROMISE_FAKE_CAPABILITY);
+      } else {
+        _call(then, thenable, resolve, reject);
+      }
+    };
     var promiseResolveThenableJob = function (promise, thenable, then) {
       var resolvingFunctions = createResolvingFunctions(promise);
       var resolve = resolvingFunctions.resolve;
       var reject = resolvingFunctions.reject;
       try {
-        _call(then, thenable, resolve, reject);
+        optimizedThen(then, thenable, resolve, reject);
       } catch (e) {
         reject(e);
       }
     };
 
-    var Promise$prototype;
+    var Promise$prototype, Promise$prototype$then;
     var Promise = (function () {
       var PromiseShim = function Promise(resolver) {
         if (!(this instanceof PromiseShim)) {
@@ -2199,8 +2253,15 @@
           _promise: {
             result: void 0,
             state: PROMISE_PENDING,
-            fulfillReactions: [],
-            rejectReactions: []
+            // The first member of the "reactions" array is inlined here,
+            // since most promises only have one reaction.
+            // We've also exploded the 'reaction' object to inline the
+            // "handler" and "capability" fields, since both fulfill and
+            // reject reactions share the same capability.
+            reactionLength: 0,
+            fulfillReactionHandler0: void 0,
+            rejectReactionHandler0: void 0,
+            reactionCapability0: void 0
           }
         });
         var resolvingFunctions = createResolvingFunctions(promise);
@@ -2251,7 +2312,7 @@
           index, values, resultCapability, remaining
         );
         remaining.count += 1;
-        nextPromise.then(resolveElement, resultCapability.reject);
+        optimizedThen(nextPromise.then, nextPromise, resolveElement, resultCapability.reject);
         index += 1;
       }
       if ((--remaining.count) === 0) {
@@ -2280,7 +2341,7 @@
           throw e;
         }
         nextPromise = C.resolve(nextValue);
-        nextPromise.then(resultCapability.resolve, resultCapability.reject);
+        optimizedThen(nextPromise.then, nextPromise, resultCapability.resolve, resultCapability.reject);
       }
       return resultCapability.promise;
     };
@@ -2375,37 +2436,55 @@
         var promise = this;
         if (!ES.IsPromise(promise)) { throw new TypeError('not a promise'); }
         var C = ES.SpeciesConstructor(promise, Promise);
-        var resultCapability = new PromiseCapability(C);
+        var resultCapability;
+        var returnValueIsIgnored = (arguments[2] === PROMISE_FAKE_CAPABILITY);
+        if (returnValueIsIgnored && C === Promise) {
+          resultCapability = PROMISE_FAKE_CAPABILITY;
+        } else {
+          resultCapability = new PromiseCapability(C);
+        }
         // PerformPromiseThen(promise, onFulfilled, onRejected, resultCapability)
-        var fulfillReaction = {
-          capabilities: resultCapability,
-          handler: ES.IsCallable(onFulfilled) ? onFulfilled : PROMISE_IDENTITY
-        };
-        var rejectReaction = {
-          capabilities: resultCapability,
-          handler: ES.IsCallable(onRejected) ? onRejected : PROMISE_THROWER
-        };
+        // Note that we've split the 'reaction' object into its two
+        // components, "capabilities" and "handler"
+        // "capabilities" is always equal to `resultCapability`
+        var fulfillReactionHandler =
+            ES.IsCallable(onFulfilled) ? onFulfilled : PROMISE_IDENTITY;
+        var rejectReactionHandler =
+            ES.IsCallable(onRejected) ? onRejected : PROMISE_THROWER;
         var _promise = promise._promise;
         var value;
         if (_promise.state === PROMISE_PENDING) {
-          _push(_promise.fulfillReactions, fulfillReaction);
-          _push(_promise.rejectReactions, rejectReaction);
+          if (_promise.reactionLength === 0) {
+            _promise.fulfillReactionHandler0 = fulfillReactionHandler;
+            _promise.rejectReactionHandler0 = rejectReactionHandler;
+            _promise.reactionCapability0 = resultCapability;
+          } else {
+            var idx = 3 * (_promise.reactionLength - 1);
+            _promise[idx + PROMISE_FULFILL_OFFSET] = fulfillReactionHandler;
+            _promise[idx + PROMISE_REJECT_OFFSET] = rejectReactionHandler;
+            _promise[idx + PROMISE_CAPABILITY_OFFSET] = resultCapability;
+          }
+          _promise.reactionLength += 1;
         } else if (_promise.state === PROMISE_FULFILLED) {
           value = _promise.result;
-          enqueue(function () {
-            promiseReactionJob(fulfillReaction, value);
-          });
+          enqueuePromiseReactionJob(
+            fulfillReactionHandler, resultCapability, value
+          );
         } else if (_promise.state === PROMISE_REJECTED) {
           value = _promise.result;
-          enqueue(function () {
-            promiseReactionJob(rejectReaction, value);
-          });
+          enqueuePromiseReactionJob(
+            rejectReactionHandler, resultCapability, value
+          );
         } else {
           throw new TypeError('unexpected Promise state');
         }
         return resultCapability.promise;
       }
     });
+    // This helps the optimizer by ensuring that methods which take
+    // capabilities aren't polymorphic.
+    PROMISE_FAKE_CAPABILITY = new PromiseCapability(Promise);
+    Promise$prototype$then = Promise$prototype.then;
 
     return Promise;
   }());
