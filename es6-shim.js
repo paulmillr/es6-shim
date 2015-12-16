@@ -286,9 +286,14 @@
     },
 
     TypeIsObject: function (x) {
-      return x !== void 0 && x !== null && x !== true && x !== false &&
-        typeof x !== 'string' && typeof x !== 'number' &&
-        typeof x !== 'symbol';
+      if (x === void 0 || x === null || x === true || x === false) {
+        return false;
+      }
+      var type = typeof x;
+      if (type === 'string' || type === 'number' || type === 'symbol') {
+        return false;
+      }
+      return type === 'function' || type === 'object';
     },
 
     ToObject: function (o, optMessage) {
