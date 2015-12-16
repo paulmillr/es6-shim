@@ -267,7 +267,9 @@
 
   var $String = String;
 
-  var ES = {
+  // Assign these functions to a prototype to give v8 a hint that it
+  // should optimize them as constant functions (and inline them).
+  var ES = (function () {}).prototype = {
     // https://people.mozilla.org/~jorendorff/es6-draft.html#sec-call-f-v-args
     Call: function Call(F, V) {
       var args = arguments.length > 2 ? arguments[2] : [];
@@ -2015,7 +2017,7 @@
     // some environments don't have setTimeout - no way to shim here.
     if (typeof setTimeout !== 'function' && typeof setTimeout !== 'object') { return; }
 
-    ES.IsPromise = function (promise) {
+    var IsPromise = function (promise) {
       if (!ES.TypeIsObject(promise)) {
         return false;
       }
@@ -2423,7 +2425,7 @@
         if (!ES.TypeIsObject(C)) {
           throw new TypeError('Bad promise constructor');
         }
-        if (ES.IsPromise(v)) {
+        if (IsPromise(v)) {
           var constructor = v.constructor;
           if (constructor === C) { return v; }
         }
@@ -2441,7 +2443,7 @@
 
       then: function then(onFulfilled, onRejected) {
         var promise = this;
-        if (!ES.IsPromise(promise)) { throw new TypeError('not a promise'); }
+        if (!IsPromise(promise)) { throw new TypeError('not a promise'); }
         var C = ES.SpeciesConstructor(promise, Promise);
         var resultCapability;
         var returnValueIsIgnored = (arguments.length > 2 && arguments[2] === PROMISE_FAKE_CAPABILITY);
