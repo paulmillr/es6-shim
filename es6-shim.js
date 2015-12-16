@@ -2550,6 +2550,30 @@
       /*globals Promise: false */
       overrideNative(globals, 'Promise', PromiseShim);
     }
+    if (Promise.all.length !== 1) {
+      var origAll = Promise.all;
+      overrideNative(Promise, 'all', function all(iterable) {
+        return ES.Call(origAll, this, arguments);
+      });
+    }
+    if (Promise.race.length !== 1) {
+      var origRace = Promise.race;
+      overrideNative(Promise, 'race', function race(iterable) {
+        return ES.Call(origRace, this, arguments);
+      });
+    }
+    if (Promise.resolve.length !== 1) {
+      var origResolve = Promise.resolve;
+      overrideNative(Promise, 'resolve', function resolve(x) {
+        return ES.Call(origResolve, this, arguments);
+      });
+    }
+    if (Promise.reject.length !== 1) {
+      var origReject = Promise.reject;
+      overrideNative(Promise, 'reject', function reject(r) {
+        return ES.Call(origReject, this, arguments);
+      });
+    }
     ensureEnumerable(Promise, 'all');
     ensureEnumerable(Promise, 'race');
     ensureEnumerable(Promise, 'resolve');
