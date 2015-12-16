@@ -285,15 +285,20 @@
       return x;
     },
 
+    // This might miss the "(non-standard exotic and does not implement
+    // [[Call]])" case from
+    // http://www.ecma-international.org/ecma-262/6.0/#sec-typeof-operator-runtime-semantics-evaluation
+    // but we can't find any evidence these objects exist in practice.
+    // If we find some in the future, you could test `Object(x) === x`,
+    // which is reliable according to
+    // http://www.ecma-international.org/ecma-262/6.0/#sec-toobject
+    // but is not well optimized by runtimes and creates an object
+    // whenever it returns false, and thus is very slow.
     TypeIsObject: function (x) {
       if (x === void 0 || x === null || x === true || x === false) {
         return false;
       }
-      var type = typeof x;
-      if (type === 'string' || type === 'number' || type === 'symbol') {
-        return false;
-      }
-      return type === 'function' || type === 'object';
+      return typeof x === 'function' || typeof x === 'object';
     },
 
     ToObject: function (o, optMessage) {
