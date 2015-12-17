@@ -267,7 +267,9 @@
 
   var $String = String;
 
-  var ES = {
+  // Assign these functions to a prototype to give v8 a hint that it
+  // should optimize them as constant functions (and inline them).
+  var ES = (function () {}).prototype = {
     // https://people.mozilla.org/~jorendorff/es6-draft.html#sec-call-f-v-args
     Call: function Call(F, V) {
       var args = arguments.length > 2 ? arguments[2] : [];
@@ -1101,7 +1103,9 @@
 
   var ArrayPrototypeShims = {
     copyWithin: function copyWithin(target, start) {
-      var end = arguments[2]; // copyWithin.length must be 2
+      // copyWithin.length must be 2, so we can't add `end` to the arguments
+      // directly.
+      var end = arguments.length > 2 ? arguments[2] : void 0;
       var o = ES.ToObject(this);
       var len = ES.ToLength(o.length);
       var relativeTarget = ES.ToInteger(target);
@@ -1248,7 +1252,7 @@
   if (!arrayFromHandlesUndefinedMapFunction) {
     var origArrayFrom = Array.from;
     overrideNative(Array, 'from', function from(items) {
-      if (arguments.length > 0 && typeof arguments[1] !== 'undefined') {
+      if (arguments.length > 1 && typeof arguments[1] !== 'undefined') {
         return ES.Call(origArrayFrom, this, arguments);
       } else {
         return _call(origArrayFrom, this, items);
@@ -2018,7 +2022,7 @@
     // some environments don't have setTimeout - no way to shim here.
     if (typeof setTimeout !== 'function' && typeof setTimeout !== 'object') { return; }
 
-    ES.IsPromise = function (promise) {
+    var IsPromise = function (promise) {
       if (!ES.TypeIsObject(promise)) {
         return false;
       }
@@ -2426,7 +2430,7 @@
         if (!ES.TypeIsObject(C)) {
           throw new TypeError('Bad promise constructor');
         }
-        if (ES.IsPromise(v)) {
+        if (IsPromise(v)) {
           var constructor = v.constructor;
           if (constructor === C) { return v; }
         }
@@ -2444,10 +2448,10 @@
 
       then: function then(onFulfilled, onRejected) {
         var promise = this;
-        if (!ES.IsPromise(promise)) { throw new TypeError('not a promise'); }
+        if (!IsPromise(promise)) { throw new TypeError('not a promise'); }
         var C = ES.SpeciesConstructor(promise, Promise);
         var resultCapability;
-        var returnValueIsIgnored = (arguments[2] === PROMISE_FAKE_CAPABILITY);
+        var returnValueIsIgnored = (arguments.length > 2 && arguments[2] === PROMISE_FAKE_CAPABILITY);
         if (returnValueIsIgnored && C === Promise) {
           resultCapability = PROMISE_FAKE_CAPABILITY;
         } else {
@@ -3307,7 +3311,7 @@
       if (!ES.IsConstructor(constructor)) {
         throw new TypeError('First argument must be a constructor.');
       }
-      var newTarget = arguments.length < 3 ? constructor : arguments[2];
+      var newTarget = arguments.length > 2 ? arguments[2] : constructor;
       if (!ES.IsConstructor(newTarget)) {
         throw new TypeError('new.target must be a constructor.');
       }
