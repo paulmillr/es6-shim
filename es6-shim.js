@@ -761,27 +761,33 @@
     },
 
     startsWith: function startsWith(searchString) {
-      var thisStr = ES.ToString(ES.RequireObjectCoercible(this));
+      var S = ES.ToString(ES.RequireObjectCoercible(this));
       if (ES.IsRegExp(searchString)) {
         throw new TypeError('Cannot call method "startsWith" with a regex');
       }
       var searchStr = ES.ToString(searchString);
-      var startArg = arguments.length > 1 ? arguments[1] : void 0;
-      var start = _max(ES.ToInteger(startArg), 0);
-      return _strSlice(thisStr, start, start + searchStr.length) === searchStr;
+      var position;
+      if (arguments.length > 1) {
+        position = arguments[1];
+      }
+      var start = _max(ES.ToInteger(position), 0);
+      return _strSlice(S, start, start + searchStr.length) === searchStr;
     },
 
     endsWith: function endsWith(searchString) {
-      var thisStr = ES.ToString(ES.RequireObjectCoercible(this));
+      var S = ES.ToString(ES.RequireObjectCoercible(this));
       if (ES.IsRegExp(searchString)) {
         throw new TypeError('Cannot call method "endsWith" with a regex');
       }
       var searchStr = ES.ToString(searchString);
-      var thisLen = thisStr.length;
-      var posArg = arguments.length > 1 ? arguments[1] : void 0;
-      var pos = typeof posArg === 'undefined' ? thisLen : ES.ToInteger(posArg);
-      var end = _min(_max(pos, 0), thisLen);
-      return _strSlice(thisStr, end - searchStr.length, end) === searchStr;
+      var len = S.length;
+      var endPosition;
+      if (arguments.length > 1) {
+        endPosition = arguments[1];
+      }
+      var pos = typeof endPosition === 'undefined' ? len : ES.ToInteger(endPosition);
+      var end = _min(_max(pos, 0), len);
+      return _strSlice(S, end - searchStr.length, end) === searchStr;
     },
 
     includes: function includes(searchString) {
@@ -903,15 +909,20 @@
   var ArrayShims = {
     from: function from(items) {
       var C = this;
-      var mapFn = arguments.length > 1 ? arguments[1] : void 0;
+      var mapFn;
+      if (arguments.length > 1) {
+        mapFn = arguments[1];
+      }
       var mapping, T;
-      if (mapFn === void 0) {
+      if (typeof mapFn === 'undefined') {
         mapping = false;
       } else {
         if (!ES.IsCallable(mapFn)) {
           throw new TypeError('Array.from: when provided, the second argument must be a function');
         }
-        T = arguments.length > 2 ? arguments[2] : void 0;
+        if (arguments.length > 2) {
+          T = arguments[2];
+        }
         mapping = true;
       }
 
@@ -934,7 +945,7 @@
           nextValue = next.value;
           try {
             if (mapping) {
-              nextValue = T === undefined ? mapFn(nextValue, i) : _call(mapFn, T, nextValue, i);
+              nextValue = typeof T === 'undefined' ? mapFn(nextValue, i) : _call(mapFn, T, nextValue, i);
             }
             result[i] = nextValue;
           } catch (e) {
@@ -952,7 +963,7 @@
         for (i = 0; i < length; ++i) {
           value = arrayLike[i];
           if (mapping) {
-            value = T !== undefined ? _call(mapFn, T, value, i) : mapFn(value, i);
+            value = typeof T === 'undefined' ? mapFn(value, i) : _call(mapFn, T, value, i);
           }
           result[i] = value;
         }
@@ -1101,18 +1112,19 @@
 
   var ArrayPrototypeShims = {
     copyWithin: function copyWithin(target, start) {
-      // copyWithin.length must be 2, so we can't add `end` to the arguments
-      // directly.
-      var end = arguments.length > 2 ? arguments[2] : void 0;
       var o = ES.ToObject(this);
       var len = ES.ToLength(o.length);
       var relativeTarget = ES.ToInteger(target);
       var relativeStart = ES.ToInteger(start);
       var to = relativeTarget < 0 ? _max(len + relativeTarget, 0) : _min(relativeTarget, len);
       var from = relativeStart < 0 ? _max(len + relativeStart, 0) : _min(relativeStart, len);
-      end = typeof end === 'undefined' ? len : ES.ToInteger(end);
-      var fin = end < 0 ? _max(len + end, 0) : _min(end, len);
-      var count = _min(fin - from, len - to);
+      var end;
+      if (arguments.length > 2) {
+        end = arguments[2];
+      }
+      var relativeEnd = typeof end === 'undefined' ? len : ES.ToInteger(end);
+      var finalItem = relativeEnd < 0 ? _max(len + relativeEnd, 0) : _min(relativeEnd, len);
+      var count = _min(finalItem - from, len - to);
       var direction = 1;
       if (from < to && to < (from + count)) {
         direction = -1;
@@ -1133,8 +1145,14 @@
     },
 
     fill: function fill(value) {
-      var start = arguments.length > 1 ? arguments[1] : void 0;
-      var end = arguments.length > 2 ? arguments[2] : void 0;
+      var start;
+      if (arguments.length > 1) {
+        start = arguments[1];
+      }
+      var end;
+      if (arguments.length > 2) {
+        end = arguments[2];
+      }
       var O = ES.ToObject(this);
       var len = ES.ToLength(O.length);
       start = ES.ToInteger(typeof start === 'undefined' ? 0 : start);
@@ -1245,7 +1263,7 @@
   var arrayFromHandlesUndefinedMapFunction = (function () {
     // Microsoft Edge v0.11 throws if the mapFn argument is *provided* but undefined,
     // but the spec doesn't care if it's provided or not - undefined doesn't throw.
-    return valueOrFalseIfThrows(function () { return Array.from([0], undefined); });
+    return valueOrFalseIfThrows(function () { return Array.from([0], void 0); });
   }());
   if (!arrayFromHandlesUndefinedMapFunction) {
     var origArrayFrom = Array.from;
@@ -2441,7 +2459,7 @@
 
     defineProperties(Promise$prototype, {
       'catch': function (onRejected) {
-        return this.then(void 0, onRejected);
+        return this.then(null, onRejected);
       },
 
       then: function then(onFulfilled, onRejected) {
@@ -2449,7 +2467,7 @@
         if (!ES.IsPromise(promise)) { throw new TypeError('not a promise'); }
         var C = ES.SpeciesConstructor(promise, Promise);
         var resultCapability;
-        var returnValueIsIgnored = (arguments.length > 2 && arguments[2] === PROMISE_FAKE_CAPABILITY);
+        var returnValueIsIgnored = arguments.length > 2 && arguments[2] === PROMISE_FAKE_CAPABILITY;
         if (returnValueIsIgnored && C === Promise) {
           resultCapability = PROMISE_FAKE_CAPABILITY;
         } else {
@@ -2459,10 +2477,8 @@
         // Note that we've split the 'reaction' object into its two
         // components, "capabilities" and "handler"
         // "capabilities" is always equal to `resultCapability`
-        var fulfillReactionHandler =
-            ES.IsCallable(onFulfilled) ? onFulfilled : PROMISE_IDENTITY;
-        var rejectReactionHandler =
-            ES.IsCallable(onRejected) ? onRejected : PROMISE_THROWER;
+        var fulfillReactionHandler = ES.IsCallable(onFulfilled) ? onFulfilled : PROMISE_IDENTITY;
+        var rejectReactionHandler = ES.IsCallable(onRejected) ? onRejected : PROMISE_THROWER;
         var _promise = promise._promise;
         var value;
         if (_promise.state === PROMISE_PENDING) {
@@ -3392,7 +3408,7 @@
         var parent = Object.getPrototypeOf(target);
 
         if (parent === null) {
-          return undefined;
+          return void 0;
         }
 
         return internalGet(parent, key, receiver);
@@ -3406,7 +3422,7 @@
         return ES.Call(desc.get, receiver);
       }
 
-      return undefined;
+      return void 0;
     };
 
     var internalSet = function set(target, key, value, receiver) {
