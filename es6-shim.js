@@ -30,6 +30,7 @@
   var _apply = Function.call.bind(Function.apply);
   var _call = Function.call.bind(Function.call);
   var isArray = Array.isArray;
+  var keys = Object.keys;
 
   var not = function notThunker(func) {
     return function notThunk() { return !_apply(func, this, arguments); };
@@ -80,7 +81,7 @@
   // Define configurable, writable and non-enumerable props
   // if they don’t exist.
   var defineProperties = function (object, map, forceOverride) {
-    _forEach(Object.keys(map), function (name) {
+    _forEach(keys(map), function (name) {
       var method = map[name];
       defineProperty(object, name, method, !!forceOverride);
     });
@@ -145,7 +146,7 @@
     Prototype.prototype = prototype;
     var object = new Prototype();
     if (typeof properties !== 'undefined') {
-      Object.keys(properties).forEach(function (key) {
+      keys(properties).forEach(function (key) {
         Value.defineByDescriptor(object, key, properties[key]);
       });
     }
@@ -1468,12 +1469,12 @@
     };
   };
   var assignReducer = function (target, source) {
-    var keys = Object.keys(Object(source));
+    var sourceKeys = keys(Object(source));
     var symbols;
     if (ES.IsCallable(Object.getOwnPropertySymbols)) {
       symbols = _filter(Object.getOwnPropertySymbols(Object(source)), isEnumerableOn(source));
     }
-    return _reduce(_concat(keys, symbols || []), assignTo(source), target);
+    return _reduce(_concat(sourceKeys, symbols || []), assignTo(source), target);
   };
 
   var ObjectShims = {
@@ -1588,6 +1589,7 @@
     overrideNative(Object, 'keys', function keys(value) {
       return originalObjectKeys(ES.ToObject(value));
     });
+    keys = Object.keys;
   }
 
   if (Object.getOwnPropertyNames) {
@@ -1776,7 +1778,7 @@
       leftContext: '$`',
       rightContext: '$\''
     };
-    _forEach(Object.keys(regexGlobals), function (prop) {
+    _forEach(keys(regexGlobals), function (prop) {
       if (prop in RegExp && !(regexGlobals[prop] in RegExp)) {
         Value.getter(RegExp, regexGlobals[prop], function get() {
           return RegExp[prop];
@@ -2613,7 +2615,7 @@
   // Their fast path also requires that the environment preserve
   // property insertion order, which is not guaranteed by the spec.
   var testOrder = function (a) {
-    var b = Object.keys(_reduce(a, function (o, k) {
+    var b = keys(_reduce(a, function (o, k) {
       o[k] = true;
       return o;
     }, {}));
@@ -3005,7 +3007,7 @@
         var ensureMap = function ensureMap(set) {
           if (!set['[[SetData]]']) {
             var m = set['[[SetData]]'] = new collectionShims.Map();
-            _forEach(Object.keys(set._storage), function (key) {
+            _forEach(keys(set._storage), function (key) {
               var k = key;
               if (k === '^null') {
                 k = null;
