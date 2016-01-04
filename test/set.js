@@ -25,17 +25,21 @@ Assertion.addMethod('theSameSet', function (otherArray) {
   );
 });
 
-Assertion.addMethod('entries', function (expected) {
-  var collection = this._obj;
+var $iterator$ = typeof Symbol === 'function' ? Symbol.iterator : void 0;
+if (!$iterator$ && typeof Set === 'function') {
+  $iterator$ = typeof Set['@@iterator'] === 'function' ? '@@iterator' : '_es6-shim iterator_';
+}
+
+Assertion.addMethod('iterations', function (expected) {
+  var iterator = this._obj[$iterator$]();
 
   expect(Array.isArray(expected)).to.equal(true);
-  var expectedEntries = expected.slice();
+  var expectedValues = expected.slice();
 
-  var iterator = collection.entries();
   var result;
   do {
     result = iterator.next();
-    expect(result.value).to.be.eql(expectedEntries.shift());
+    expect(result.value).to.eql(expectedValues.shift());
   } while (!result.done);
 });
 
@@ -142,13 +146,13 @@ describe('Set', function () {
     var set2 = new Set(set);
     expect(set2.has('a')).to.equal(true);
     expect(set2.has('b')).to.equal(true);
-    expect(set2).to.have.entries([['a', 'a'], ['b', 'b']]);
+    expect(set2).to.have.iterations(['a', 'b']);
   });
 
   it('accepts an array as an argument', function () {
     var arr = ['a', 'b', 'c'];
     var setFromArray = new Set(arr);
-    expect(setFromArray).to.have.entries([['a', 'a'], ['b', 'b'], ['c', 'c']]);
+    expect(setFromArray).to.have.iterations(['a', 'b', 'c']);
   });
 
   it('should not be callable without "new"', function () {
@@ -170,7 +174,7 @@ describe('Set', function () {
     var mySet = new MySet();
     testSet(mySet, 'c');
     testSet(mySet, 'd');
-    expect(mySet).to.have.entries([['a', 'a'], ['b', 'b'], ['c', 'c'], ['d', 'd']]);
+    expect(mySet).to.have.iterations(['a', 'b', 'c', 'd']);
   });
 
   it('should has valid getter and setter calls', function () {
@@ -416,29 +420,22 @@ describe('Set', function () {
       });
     }
 
-    var setToIterate;
-    beforeEach(function () {
-      setToIterate = new Set([1, NaN, false, true, null, undefined, 'a']);
-    });
-
-    afterEach(function () {
-      setToIterate = null;
-    });
+    var values = [1, NaN, false, true, null, undefined, 'a'];
 
     it('works with the full set', function () {
-      expect(Array.from(setToIterate)).to.eql([1, NaN, false, true, null, undefined, 'a']);
+      expect(new Set(values)).to.have.iterations(values);
     });
 
     it('works with Set#keys()', function () {
-      expect(Array.from(setToIterate.keys())).to.eql(Array.from(setToIterate));
+      expect(new Set(values).keys()).to.have.iterations(values);
     });
 
     it('works with Set#values()', function () {
-      expect(Array.from(setToIterate.values())).to.eql(Array.from(setToIterate));
+      expect(new Set(values).values()).to.have.iterations(values);
     });
 
     it('works with Set#entries()', function () {
-      expect(Array.from(setToIterate.entries())).to.eql([
+      expect(new Set(values).entries()).to.have.iterations([
         [1, 1],
         [NaN, NaN],
         [false, false],
@@ -460,10 +457,8 @@ describe('Set', function () {
     var arr2 = [3, 2, 'z', 'a', 1];
     var arr3 = [3, 2, 'z', {}, 'a', 1];
 
-    var makeEntries = function (n) { return [n, n]; };
     [arr1, arr2, arr3].forEach(function (array) {
-      var entries = array.map(makeEntries);
-      expect(new Set(array)).to.have.entries(entries);
+      expect(new Set(array)).to.have.iterations(array);
     });
   });
 
