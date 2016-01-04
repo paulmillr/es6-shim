@@ -260,14 +260,27 @@ describe('Set', function () {
       expect(Set.prototype.clear).to.have.property('length', 0);
     });
 
-    it('should have #clear method', function () {
+    it('clears a Set with only primitives', function () {
       expect(set.add(1)).to.equal(set);
+      expect(set.size).to.equal(1);
       expect(set.add(5)).to.equal(set);
       expect(set.size).to.equal(2);
       expect(set.has(5)).to.equal(true);
       set.clear();
       expect(set.size).to.equal(0);
       expect(set.has(5)).to.equal(false);
+    });
+
+    it('clears a Set with primitives and objects', function () {
+      expect(set.add(1)).to.equal(set);
+      expect(set.size).to.equal(1);
+      var obj = {};
+      expect(set.add(obj)).to.equal(set);
+      expect(set.size).to.equal(2);
+      expect(set.has(obj)).to.equal(true);
+      set.clear();
+      expect(set.size).to.equal(0);
+      expect(set.has(obj)).to.equal(false);
     });
   });
 

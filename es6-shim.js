@@ -3025,12 +3025,16 @@
               }
               m.set(k, k);
             });
-            set._storage = null; // free old backing storage
+            set['[[SetData]]'] = m;
           }
+          set._storage = null; // free old backing storage
         };
 
         Value.getter(SetShim.prototype, 'size', function () {
           requireSetSlot(this, 'size');
+          if (this._storage) {
+            return keys(this._storage).length;
+          }
           ensureMap(this);
           return this['[[SetData]]'].size;
         });
@@ -3073,7 +3077,8 @@
             requireSetSlot(this, 'clear');
             if (this._storage) {
               this._storage = emptyObject();
-            } else {
+            }
+            if (this['[[SetData]]']) {
               this['[[SetData]]'].clear();
             }
           },
