@@ -3003,28 +3003,30 @@
         };
         Set$prototype = SetShim.prototype;
 
+        var decodeKey = function (key) {
+          var k = key;
+          if (k === '^null') {
+            return null;
+          } else if (k === '^undefined') {
+            return void 0;
+          } else {
+            var first = k.charAt(0);
+            if (first === '$') {
+              return _strSlice(k, 1);
+            } else if (first === 'n') {
+              return +_strSlice(k, 1);
+            } else if (first === 'b') {
+              return k === 'btrue';
+            }
+          }
+          return +k;
+        };
         // Switch from the object backing storage to a full Map.
         var ensureMap = function ensureMap(set) {
           if (!set['[[SetData]]']) {
             var m = set['[[SetData]]'] = new collectionShims.Map();
             _forEach(keys(set._storage), function (key) {
-              var k = key;
-              if (k === '^null') {
-                k = null;
-              } else if (k === '^undefined') {
-                k = void 0;
-              } else {
-                var first = k.charAt(0);
-                if (first === '$') {
-                  k = _strSlice(k, 1);
-                } else if (first === 'n') {
-                  k = +_strSlice(k, 1);
-                } else if (first === 'b') {
-                  k = k === 'btrue';
-                } else {
-                  k = +k;
-                }
-              }
+              var k = decodeKey(key);
               m.set(k, k);
             });
             set['[[SetData]]'] = m;
