@@ -516,7 +516,7 @@
       var symbolSearch = defineWellKnownSymbol('search');
       var originalSearch = String.prototype.search;
       defineProperty(RegExp.prototype, symbolSearch, function search(string) {
-        return ES.Call(originalSearch, string, [ES.ToString(this)]);
+        return ES.Call(originalSearch, string, [this]);
       });
       var searchShim = function search(regexp) {
         var O = ES.RequireObjectCoercible(this);

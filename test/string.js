@@ -684,11 +684,18 @@ var runStringTests = function (it) {
     });
 
     describe('#search()', function () {
-      it('works', function () {
+      it('works with strings', function () {
         expect('abc'.search('a')).to.equal(0);
         expect('abc'.search('b')).to.equal(1);
         expect('abc'.search('c')).to.equal(2);
         expect('abc'.search('d')).to.equal(-1);
+      });
+
+      it('works with regexes', function () {
+        expect('abc'.search(/a/)).to.equal(0);
+        expect('abc'.search(/b/)).to.equal(1);
+        expect('abc'.search(/c/)).to.equal(2);
+        expect('abc'.search(/d/)).to.equal(-1);
       });
 
       ifSymbolsDescribe('Symbol.search', function () {
