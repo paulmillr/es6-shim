@@ -1,5 +1,22 @@
 # es6-shim x.x.x (not yet released)
 
+# es6-shim 0.34.1 (5 Jan 2016)
+* [Fix] `RegExp#[Symbol.search]` was broken with a regex argument (#394)
+* [Fix] ensure that Set#clear works with both primitive and object values
+* [Fix] static Promise methods have the wrong length in Firefox
+* [Robustness] Cache `Object.keys`
+* [Performance] Avoid accessing arguments array without length check
+* [Performance] Optimize ES.TypeIsObject (#388)
+* [Performance] Promises: lots of improvements (#383)
+* [Performance] Only use slow implementation of IsCallable where necessary (old browsers)
+* [Performance] Promises: remove unnecessary `.bind` on `setImmediate`
+* [Refactor] extract “decode fast Map key” logic
+* [Dev Deps] update `s5-shim`, `@ljharb/eslint-config`
+* Don’t npmignore tests
+* [Tests] Fix a bug with “deep equal” wrt NaN
+* [Tests] split up Map and Set test files
+* [Tests] up to `node` `v5.3`
+
 # es6-shim 0.34.0 (14 Dec 2015)
 * [Breaking] Remove `Symbol.species` from `Promise.all` and `Promise.race` (#34)
 * [Fix] Firefox has enumerable Promise static methods
