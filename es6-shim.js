@@ -2631,18 +2631,17 @@
       if (!preservesInsertionOrder) {
         return null;
       }
-      var type = typeof key;
-      if (type === 'undefined' || key === null) {
+      if (typeof key === 'undefined' || key === null) {
         return '^' + ES.ToString(key);
-      } else if (type === 'string') {
+      } else if (typeof key === 'string') {
         return '$' + key;
-      } else if (type === 'number') {
+      } else if (typeof key === 'number') {
         // note that -0 will get coerced to "0" when used as a property key
         if (!preservesNumericInsertionOrder) {
           return 'n' + key;
         }
         return key;
-      } else if (type === 'boolean') {
+      } else if (typeof key === 'boolean') {
         return 'b' + key;
       }
       return null;
