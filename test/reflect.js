@@ -346,9 +346,9 @@ describe('Reflect', function () {
         var thirdResult = iter.next();
         // Webkit's implementation of Reflect.enumerate locks the keys at iterator creation
         if (thirdResult.done) {
-          expect(iter.next()).to.deep.equal({ value: undefined, done: true });
+          expect(thirdResult).to.deep.equal({ value: undefined, done: true });
         } else {
-          expect(iter.next()).to.deep.equal({ value: 'c', done: false });
+          expect(thirdResult).to.deep.equal({ value: 'c', done: false });
           expect(iter.next()).to.deep.equal({ value: undefined, done: true });
         }
       });
