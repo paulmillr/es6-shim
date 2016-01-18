@@ -1136,7 +1136,7 @@
         if (_hasOwnProperty(o, from)) {
           o[to] = o[from];
         } else {
-          delete o[from];
+          delete o[to];
         }
         from += direction;
         to += direction;

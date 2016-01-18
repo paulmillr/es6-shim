@@ -363,6 +363,16 @@ var runArrayTests = function (it) {
         expect(!!unscopables).to.equal(true);
         expect(unscopables.copyWithin).to.equal(true);
       });
+
+      it('should delete the target key if the source key is not present', function () {
+        /* jshint elision: true */
+        /* jscs:disable disallowSpaceBeforeComma */
+        /* eslint-disable no-sparse-arrays */
+        expect([, 1, 2].copyWithin(1, 0)).to.eql([, , 1]);
+        /* jshint elision: false */
+        /* jscs:enable disallowSpaceBeforeComma */
+        /* eslint-enable no-sparse-arrays */
+      });
     });
 
     describe('#find()', function () {
