@@ -1397,12 +1397,14 @@
       return NumberShim;
     }());
     wrapConstructor(OrigNumber, NumberShim, {});
-    /*globals Number: true */
+    /* globals Number: true */
     /* eslint-disable no-undef */
+    /* jshint -W020 */
     Number = NumberShim;
     Value.redefine(globals, 'Number', NumberShim);
+    /* jshint +W020 */
     /* eslint-enable no-undef */
-    /*globals Number: false */
+    /* globals Number: false */
   }
 
   var maxSafeInteger = Math.pow(2, 53) - 1;
@@ -1762,12 +1764,14 @@
     wrapConstructor(OrigRegExp, RegExpShim, {
       $input: true // Chrome < v39 & Opera < 26 have a nonstandard "$input" property
     });
-    /*globals RegExp: true */
+    /* globals RegExp: true */
     /* eslint-disable no-undef */
+    /* jshint -W020 */
     RegExp = RegExpShim;
     Value.redefine(globals, 'RegExp', RegExpShim);
+    /* jshint +W020 */
     /* eslint-enable no-undef */
-    /*globals RegExp: false */
+    /* globals RegExp: false */
   }
 
   if (supportsDescriptors) {
@@ -2573,11 +2577,13 @@
     if (!promiseSupportsSubclassing || !promiseIgnoresNonFunctionThenCallbacks ||
         !promiseRequiresObjectContext || promiseResolveBroken ||
         !getsThenSynchronously || hasBadResolverPromise) {
-      /*globals Promise: true */
+      /* globals Promise: true */
       /* eslint-disable no-undef */
+      /* jshint -W020 */
       Promise = PromiseShim;
+      /* jshint +W020 */
       /* eslint-enable no-undef */
-      /*globals Promise: false */
+      /* globals Promise: false */
       overrideNative(globals, 'Promise', PromiseShim);
     }
     if (Promise.all.length !== 1) {
