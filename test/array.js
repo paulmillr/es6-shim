@@ -373,6 +373,20 @@ var runArrayTests = function (it) {
         /* jscs:enable disallowSpaceBeforeComma */
         /* eslint-enable no-sparse-arrays */
       });
+
+      it('should check inherited properties as well', function () {
+        var Parent = function Parent() {};
+        Parent.prototype[0] = 'foo';
+        var sparse = new Parent();
+        sparse[1] = 1;
+        sparse[2] = 2;
+        sparse.length = 3;
+        var result = Array.prototype.copyWithin.call(sparse, 1, 0);
+        expect(result).to.have.property('0');
+        expect(result).not.to.have.ownProperty('0');
+        expect(result).to.have.ownProperty('1');
+        expect(result).to.eql({ 0: 'foo', 1: 'foo', 2: 1, length: 3 });
+      });
     });
 
     describe('#find()', function () {

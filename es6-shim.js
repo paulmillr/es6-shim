@@ -1133,7 +1133,7 @@
         to += count - 1;
       }
       while (count > 0) {
-        if (_hasOwnProperty(o, from)) {
+        if (from in o) {
           o[to] = o[from];
         } else {
           delete o[to];
