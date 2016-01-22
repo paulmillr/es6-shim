@@ -79,7 +79,7 @@
   };
 
   // Define configurable, writable and non-enumerable props
-  // if they don’t exist.
+  // if they don't exist.
   var defineProperties = function (object, map, forceOverride) {
     _forEach(keys(map), function (name) {
       var method = map[name];
