@@ -3694,7 +3694,7 @@
       if (!isArray(replacer)) {
         var replaceFn = ES.IsCallable(replacer) ? replacer : null;
         var wrappedReplacer = function (key, val) {
-          var parsedValue = replacer ? _call(replacer, this, key, val) : val;
+          var parsedValue = replaceFn ? _call(replaceFn, this, key, val) : val;
           if (typeof parsedValue !== 'symbol') {
             if (Type.symbol(parsedValue)) {
               return assignTo({})(parsedValue);

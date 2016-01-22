@@ -69,6 +69,10 @@ describe('JSON', function () {
         expect(JSON.stringify(obj, ['a', enumSym])).to.equal('{"a":1}');
         expect(JSON.stringify(obj, ['a', enumSym], '|')).to.equal('{\n|"a": 1\n}');
       });
+
+      it('ignores a non-array non-callable replacer object', function () {
+        expect(JSON.stringify('z', { test: null })).to.equal('"z"');
+      });
     });
   });
 });
