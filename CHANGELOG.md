@@ -1,5 +1,14 @@
 # es6-shim x.x.x (not yet released)
 
+# es6-shim 0.34.2 (22 Jan 2016)
+* [Fix] `JSON.stringify` should ignore a replacer arg unless it’s an array or function.
+* [Fix] `Array#copyWithin`: check for inherited properties as well
+* [Fix] `Array#copyWithin`: should delete the target key if the source key is not present
+* [Performance] Optimize Map/Set fast key path (#397)
+* [Tests] fix `Reflect.enumerate` tests to not call `next` too many times
+* [Dev Deps] update `jscs`, `jshint`
+* [Docs] update license year to 2016 (#400)
+
 # es6-shim 0.34.1 (5 Jan 2016)
 * [Fix] `RegExp#[Symbol.search]` was broken with a regex argument (#394)
 * [Fix] ensure that Set#clear works with both primitive and object values
