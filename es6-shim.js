@@ -1397,6 +1397,14 @@
       return NumberShim;
     }());
     wrapConstructor(OrigNumber, NumberShim, {});
+    // this is necessary for ES3 browsers, where these properties are non-enumerable.
+    defineProperties(NumberShim, {
+      NaN: OrigNumber.NaN,
+      MAX_VALUE: OrigNumber.MAX_VALUE,
+      MIN_VALUE: OrigNumber.MIN_VALUE,
+      NEGATIVE_INFINITY: OrigNumber.NEGATIVE_INFINITY,
+      POSITIVE_INFINITY: OrigNumber.POSITIVE_INFINITY
+    });
     /* globals Number: true */
     /* eslint-disable no-undef */
     /* jshint -W020 */
