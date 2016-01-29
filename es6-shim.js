@@ -2558,7 +2558,12 @@
       var p = Promise.resolve(5);
       p.constructor = {};
       var p2 = Promise.resolve(p);
-      return (p === p2); // This *should* be false!
+      try {
+        p2.then(null, function () {}); // avoid "uncaught rejection" warnings in console
+      } catch (e) {
+        return true; // v8 native Promises break here https://code.google.com/p/chromium/issues/detail?id=575314
+      }
+      return p === p2; // This *should* be false!
     }(globals.Promise));
 
     // Chrome 46 (probably older too) does not retrieve a thenable's .then synchronously
