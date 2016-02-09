@@ -29,5 +29,6 @@ describe('Promise.reject', function () {
     expect(function () { Promise.reject.call(42, promise); }).to['throw']();
     expect(function () { Promise.reject.call(false, promise); }).to['throw']();
     expect(function () { Promise.reject.call(true, promise); }).to['throw']();
+    promise.then(null, function () {}); // silence unhandled rejection errors in Chrome
   });
 });
