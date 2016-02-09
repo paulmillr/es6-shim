@@ -1,5 +1,10 @@
 # es6-shim x.x.x (not yet released)
 
+# es6-shim 0.34.4 (9 Feb 2016)
+* [Fix] 'Uncaught (in promise) TypeError' in Chrome 48 (#408, #407)
+* [Fix] handle the obscure case where `startsWith` throws on the second parameter (#399)
+* [Tests] silence a promise rejection error in Chrome
+
 # es6-shim 0.34.3 (8 Feb 2016)
 * [Fix] Suppress “uncaught rejection” warnings in Chrome 50 console (#403)
 * [Fix] ensure ES3 `Number` constants don’t get lost in ES3 browsers (#402)
