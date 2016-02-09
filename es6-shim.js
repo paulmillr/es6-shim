@@ -827,7 +827,9 @@
       /* throws if spec-compliant */
       '/a/'.startsWith(/a/);
     });
-    var startsWithHandlesInfinity = 'abc'.startsWith('a', Infinity) === false;
+    var startsWithHandlesInfinity = valueOrFalseIfThrows(function () {
+      return 'abc'.startsWith('a', Infinity) === false;
+    });
     if (!startsWithRejectsRegex || !startsWithHandlesInfinity) {
       // Firefox (< 37?) and IE 11 TP have a noncompliant startsWith implementation
       overrideNative(String.prototype, 'startsWith', StringPrototypeShims.startsWith);
