@@ -2561,7 +2561,7 @@
       p.constructor = {};
       var p2 = Promise.resolve(p);
       try {
-        p2.then(null, function () {}); // avoid "uncaught rejection" warnings in console
+        p2.then(null, noop).then(null, noop); // avoid "uncaught rejection" warnings in console
       } catch (e) {
         return true; // v8 native Promises break here https://code.google.com/p/chromium/issues/detail?id=575314
       }
