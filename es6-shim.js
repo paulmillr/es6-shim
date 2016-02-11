@@ -262,7 +262,7 @@
 
   // Reflect
   if (!globals.Reflect) {
-    defineProperty(globals, 'Reflect', {});
+    defineProperty(globals, 'Reflect', {}, true);
   }
   var Reflect = globals.Reflect;
 
