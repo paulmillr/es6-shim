@@ -75,6 +75,8 @@ In both browser and node you may also want to include `unorm`; see the [`String.
     * `is()` ([a standalone shim is also available](https://github.com/ljharb/object-is))
     * `keys()` (in ES5, but no longer throws on non-object non-null/undefined values in ES6)
     * `setPrototypeOf()` (IE >= 11)
+* `Function.prototype`:
+    * `toString()` (es6-sham, covers IE 9-11)
 * `Math`:
     * `acosh()`
     * `asinh()`
