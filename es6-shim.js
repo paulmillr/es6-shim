@@ -1743,6 +1743,26 @@
     return RegExp(regex) === regex;
   }());
 
+  var regexToStringIsGeneric = valueOrFalseIfThrows(function () {
+    return RegExp.prototype.toString.call({ source: 'abc' }) === '/abc/';
+  });
+  var regexToStringSupportsGenericFlags = regexToStringIsGeneric && valueOrFalseIfThrows(function () {
+    return RegExp.prototype.toString.call({ source: 'a', flags: 'b' }) === '/a/b';
+  });
+  if (!regexToStringIsGeneric || !regexToStringSupportsGenericFlags) {
+    var origRegExpToString = RegExp.prototype.toString;
+    defineProperty(RegExp.prototype, 'toString', function toString() {
+      var R = ES.RequireObjectCoercible(this);
+      if (Type.regex(R)) {
+        return _call(origRegExpToString, R);
+      }
+      var pattern = $String(R.source);
+      var flags = $String(R.flags);
+      return '/' + pattern + '/' + flags;
+    }, true);
+    Value.preserveToString(RegExp.prototype.toString, origRegExpToString);
+  }
+
   if (supportsDescriptors && (!regExpSupportsFlagsWithRegex || regExpNeedsToSupportSymbolMatch)) {
     var flagsGetter = Object.getOwnPropertyDescriptor(RegExp.prototype, 'flags').get;
     var sourceDesc = Object.getOwnPropertyDescriptor(RegExp.prototype, 'source') || {};

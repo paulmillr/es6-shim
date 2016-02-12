@@ -269,6 +269,35 @@ describe('RegExp', function () {
     });
   });
 
+  describe('#toString()', function () {
+    it('throws on null/undefined', function () {
+      expect(function () { RegExp.prototype.toString.call(null); }).to['throw'](TypeError);
+      expect(function () { RegExp.prototype.toString.call(undefined); }).to['throw'](TypeError);
+    });
+
+    it('works on regexes', function () {
+      expect(RegExp.prototype.toString.call(/a/g)).to.equal('/a/g');
+      expect(RegExp.prototype.toString.call(new RegExp('a', 'g'))).to.equal('/a/g');
+    });
+
+    it('works on non-regexes', function () {
+      expect(RegExp.prototype.toString.call({ source: 'abc', flags: '' })).to.equal('/abc/');
+      expect(RegExp.prototype.toString.call({ source: 'abc', flags: 'xyz' })).to.equal('/abc/xyz');
+    });
+
+    ifSymbolsDescribe('Symbol.match', function () {
+      if (!hasSymbols || typeof Symbol.match === 'undefined') {
+        return;
+      }
+
+      it('accepts a non-regex with Symbol.match', function () {
+        var obj = { source: 'abc', flags: 'def' };
+        obj[Symbol.match] = RegExp.prototype[Symbol.match];
+        expect(RegExp.prototype.toString.call(obj)).to.equal('/abc/def');
+      });
+    });
+  });
+
   describe('Object properties', function () {
     it('does not have the nonstandard $input property', function () {
       expect(RegExp).not.to.have.property('$input'); // Chrome < 39, Opera < 26 have this
