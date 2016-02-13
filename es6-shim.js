@@ -1059,48 +1059,6 @@
     return _concat(ownKeys, keys);
   };
 
-  var ObjectIterator = function (object, kind) {
-    defineProperties(this, {
-      object: object,
-      array: getAllKeys(object),
-      kind: kind
-    });
-  };
-
-  defineProperties(ObjectIterator.prototype, {
-    next: function next() {
-      var key;
-      var array = this.array;
-
-      if (!(this instanceof ObjectIterator)) {
-        throw new TypeError('Not an ObjectIterator');
-      }
-
-      // Find next key in the object
-      while (array.length > 0) {
-        key = _shift(array);
-
-        // The candidate key isn't defined on object.
-        // Must have been deleted, or object[[Prototype]]
-        // has been modified.
-        if (!(key in this.object)) {
-          continue;
-        }
-
-        if (this.kind === 'key') {
-          return iteratorResult(key);
-        } else if (this.kind === 'value') {
-          return iteratorResult(this.object[key]);
-        } else {
-          return iteratorResult([key, this.object[key]]);
-        }
-      }
-
-      return iteratorResult();
-    }
-  });
-  addIterator(ObjectIterator.prototype);
-
   // note: this is positioned here because it depends on ArrayIterator
   var arrayOfSupportsSubclassing = Array.of === ArrayShims.of || (function () {
     // Detects a bug in Webkit nightly r181886
@@ -3397,11 +3355,6 @@
 
       // Will return true.
       return delete target[key];
-    },
-
-    enumerate: function enumerate(target) {
-      throwUnlessTargetIsObject(target);
-      return new ObjectIterator(target, 'key');
     },
 
     has: function has(target, key) {

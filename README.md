@@ -103,7 +103,6 @@ Math functions’ accuracy is 1e-11.
     * `construct()`
     * `defineProperty()`
     * `deleteProperty()`
-    * `enumerate()`
     * `get()`
     * `getOwnPropertyDescriptor()`
     * `getPrototypeOf()`
