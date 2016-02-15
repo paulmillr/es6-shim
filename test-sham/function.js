@@ -29,12 +29,13 @@ describe('Function', function () {
       /* jshint evil: true */
       var func = Function('');
       /* jshint evil: false */
-      expect(func.name).to.equal('anonymous');
+      expect(typeof func.name).to.equal('string');
+      expect(func.name === 'anonymous' || func.name === '').to.equal(true);
       expect(func).to.have.ownPropertyDescriptor('name', {
         configurable: true,
         enumerable: false,
         writable: false,
-        value: 'anonymous'
+        value: func.name
       });
     });
   });
