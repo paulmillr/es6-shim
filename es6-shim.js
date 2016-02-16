@@ -1574,6 +1574,23 @@
     });
     keys = Object.keys;
   }
+  var objectKeysRejectsRegex = throwsError(function () { Object.keys(/a/g); });
+  if (objectKeysRejectsRegex) {
+    var regexRejectingObjectKeys = Object.keys;
+    overrideNative(Object, 'keys', function keys(value) {
+      if (Type.regex(value)) {
+        var regexKeys = [];
+        for (var k in value) {
+          if (_hasOwnProperty(value, k)) {
+            _push(regexKeys, k);
+          }
+        }
+       return regexKeys;
+      }
+      return regexRejectingObjectKeys(value);
+    });
+    keys = Object.keys;
+  }
 
   if (Object.getOwnPropertyNames) {
     var objectGOPNAcceptsPrimitives = !throwsError(function () { Object.getOwnPropertyNames('foo'); });
