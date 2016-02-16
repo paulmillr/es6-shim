@@ -14,6 +14,10 @@ var runArrayTests = function (it) {
   var ifSymbolUnscopablesIt = isSymbol(Sym.unscopables) ? it : xit;
   var ifShimIt = (typeof process !== 'undefined' && process.env.NO_ES6_SHIM) ? it.skip : it;
 
+  var isNegativeZero = function (x) {
+    return (1 / x) < 0;
+  };
+
   describe('Array', function () {
     var list = [5, 10, 15, 20];
 
@@ -973,6 +977,12 @@ var runArrayTests = function (it) {
           reduced = Array.prototype.reduceRight.call(obj, throwRangeErrorReduce, accumulator);
         }).not.to['throw']();
         expect(reduced).to.equal(accumulator);
+      });
+    });
+
+    describe('#indexOf()', function () {
+      it('converts second argument from -0 to +0', function () {
+        expect(isNegativeZero([true].indexOf(true, -0))).to.equal(false);
       });
     });
   });

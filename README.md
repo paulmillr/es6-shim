@@ -70,6 +70,7 @@ In both browser and node you may also want to include `unorm`; see the [`String.
     * `findIndex()` ([a standalone shim is also available](https://github.com/paulmillr/Array.prototype.findIndex))
     * `keys()` (note: keys/values/entries return an `ArrayIterator` object)
     * `values()`
+    * `indexOf()` (ES6 errata)
 * `Object`:
     * `assign()` ([a standalone shim is also available](https://github.com/ljharb/object.assign))
     * `is()` ([a standalone shim is also available](https://github.com/ljharb/object-is))

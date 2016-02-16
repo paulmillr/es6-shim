@@ -183,6 +183,7 @@
   var globals = getGlobal();
   var globalIsFinite = globals.isFinite;
   var _indexOf = Function.call.bind(String.prototype.indexOf);
+  var _arrayIndexOfApply = Function.apply.bind(Array.prototype.indexOf);
   var _concat = Function.call.bind(Array.prototype.concat);
   var _sort = Function.call.bind(Array.prototype.sort);
   var _strSlice = Function.call.bind(String.prototype.slice);
@@ -1199,6 +1200,18 @@
     defineProperty(Array.prototype, $iterator$, Array.prototype.values, true);
   }
   defineProperties(Array.prototype, ArrayPrototypeShims);
+
+  if (1 / [true].indexOf(true, -0) < 0) {
+    // indexOf when given a position arg of -0 should return +0.
+    // https://github.com/tc39/ecma262/pull/316
+    defineProperty(Array.prototype, 'indexOf', function indexOf(searchElement) {
+      var value = _arrayIndexOfApply(this, arguments);
+      if (value === 0 && (1 / value) < 0) {
+        return 0;
+      }
+      return value;
+    }, true);
+  }
 
   addIterator(Array.prototype, function () { return this.values(); });
   // Chrome defines keys/values/entries on Array, but doesn't give us
