@@ -3589,8 +3589,8 @@
   Object.keys(ReflectShims).forEach(function (key) {
     defineOrOverrideReflectProperty(key, ReflectShims[key]);
   });
-  if (functionsHaveNames && globals.Reflect.getPrototypeOf.name !== 'getPrototypeOf') {
-    var originalReflectGetProto = globals.Reflect.getPrototypeOf;
+  var originalReflectGetProto = globals.Reflect.getPrototypeOf;
+  if (functionsHaveNames && originalReflectGetProto && originalReflectGetProto.name !== 'getPrototypeOf') {
     overrideNative(globals.Reflect, 'getPrototypeOf', function getPrototypeOf(target) {
       return _call(originalReflectGetProto, globals.Reflect, target);
     });
