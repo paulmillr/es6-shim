@@ -1,11 +1,13 @@
 language: node_js
 node_js:
+  - "5.6"
   - "5.5"
   - "5.4"
   - "5.3"
   - "5.2"
   - "5.1"
   - "5.0"
+  - "4.3"
   - "4.2"
   - "4.1"
   - "4.0"
@@ -55,11 +57,13 @@ matrix:
     - node_js: "0.12"
       env: TRAVIS_RUN_SAUCE=false TRAVIS_RUN_LINT_ONLY=false
   allow_failures:
+    - node_js: "5.5"
     - node_js: "5.4"
     - node_js: "5.3"
     - node_js: "5.2"
     - node_js: "5.1"
     - node_js: "5.0"
+    - node_js: "4.2"
     - node_js: "4.1"
     - node_js: "4.0"
     - node_js: "iojs-v3.2"
