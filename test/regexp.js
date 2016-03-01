@@ -16,8 +16,10 @@ var ifShimIt = (typeof process !== 'undefined' && process.env.NO_ES6_SHIM) ? it.
 var hasSymbols = typeof Symbol === 'function' && typeof Symbol['for'] === 'function' && typeof Symbol() === 'symbol';
 var ifSymbolsDescribe = hasSymbols ? describe : describe.skip;
 var defaultRegex = (function () {
+  // Chrome Canary 51 has an undefined RegExp#toSource, and
+  // RegExp#toString produces `/undefined/`
   try {
-    return String(RegExp.prototype);
+    return RegExp.prototype.source ? String(RegExp.prototype) : '/(?:)/';
   } catch (e) {
     return '/(?:)/';
   }
