@@ -1,4 +1,16 @@
-# es6-shim x.x.x (not yet released)
+# es6-shim 0.35.0 (29 Feb 2016)
+* [Breaking] remove `Reflect.enumerate` (#405)
+* [New] Add `Array#indexOf` from post-ES6 errata
+* [New] Ensure `RegExp#toString` is compliant
+* [New] [sham] Add `Function#toString` to `es6-sham`
+* [Fix] ensure that a non-object `globals.Reflect` doesn’t break the shim (#392)
+* [Fix] In ES3 browsers (like Safari 4) `Reflect.getPrototypeOf` is undefined
+* [Fix] `Object.keys`: handle regexes in ES3 browsers (#287)
+* [Performance] Early exit from tanh for values outside of +-20 at limits of JS precision (#411)
+* [Tests] `Function#name` on `new Function`s is empty string in v8
+* [Tests] `Function#name` is non-configurable pre-ES6
+* [Tests] up to `node` `v5.7`, `v4.3`
+* [Docs] correct readme; we sham Function#name, not toString
 
 # es6-shim 0.34.4 (9 Feb 2016)
 * [Fix] 'Uncaught (in promise) TypeError' in Chrome 48 (#408, #407)
