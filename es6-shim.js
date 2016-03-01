@@ -1957,8 +1957,9 @@
     tanh: function tanh(value) {
       var x = Number(value);
       if (Number.isNaN(x) || x === 0) { return x; }
-      if (x === Infinity) { return 1; }
-      if (x === -Infinity) { return -1; }
+      // can exit early at +-20 as JS loses precision for true value at this integer
+      if (x >= 20) { return 1; }
+      if (x <= -20) { return -1; }
       var a = Math.expm1(x);
       var b = Math.expm1(-x);
       if (a === Infinity) { return 1; }
