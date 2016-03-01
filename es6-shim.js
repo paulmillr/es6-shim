@@ -1960,11 +1960,8 @@
       // can exit early at +-20 as JS loses precision for true value at this integer
       if (x >= 20) { return 1; }
       if (x <= -20) { return -1; }
-      var a = Math.expm1(x);
-      var b = Math.expm1(-x);
-      if (a === Infinity) { return 1; }
-      if (b === Infinity) { return -1; }
-      return (a - b) / (Math.exp(x) + Math.exp(-x));
+
+      return (Math.expm1(x) - Math.expm1(-x)) / (Math.exp(x) + Math.exp(-x));
     },
 
     trunc: function trunc(value) {
