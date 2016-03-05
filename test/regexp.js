@@ -354,7 +354,8 @@ describe('RegExp', function () {
     });
 
     describe('updates RegExp globals', function () {
-      var re, str = 'abcdefghijklmnopq';
+      var str = 'abcdefghijklmnopq';
+      var re;
       beforeEach(function () {
         re = /(b)(c)(d)(e)(f)(g)(h)(i)(j)(k)(l)(m)(n)(o)(p)/;
         re.exec(str);

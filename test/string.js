@@ -147,7 +147,8 @@ var runStringTests = function (it) {
         expect(myobj.startsWith('abc')).to.equal(true);
         expect(myobj.startsWith('bc')).to.equal(false);
 
-        var gotStr = false, gotPos = false;
+        var gotStr = false;
+        var gotPos = false;
 
         myobj = {
           toString: function () {
@@ -262,7 +263,8 @@ var runStringTests = function (it) {
         };
         expect(myobj.endsWith('abc')).to.equal(true);
         expect(myobj.endsWith('ab')).to.equal(false);
-        var gotStr = false, gotPos = false;
+        var gotStr = false;
+        var gotPos = false;
 
         myobj = {
           toString: function () {
@@ -382,7 +384,8 @@ var runStringTests = function (it) {
         expect(myobj.includes('abc')).to.equal(true);
         expect(myobj.includes('cd')).to.equal(false);
 
-        var gotStr = false, gotPos = false;
+        var gotStr = false;
+        var gotPos = false;
 
         myobj = {
           toString: function () {

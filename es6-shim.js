@@ -890,12 +890,14 @@
     this._i = 0;
   };
   StringIterator.prototype.next = function () {
-    var s = this._s, i = this._i;
+    var s = this._s;
+    var i = this._i;
     if (typeof s === 'undefined' || i >= s.length) {
       this._s = void 0;
       return { value: void 0, done: true };
     }
-    var first = s.charCodeAt(i), second, len;
+    var first = s.charCodeAt(i);
+    var second, len;
     if (first < 0xD800 || first > 0xDBFF || (i + 1) === s.length) {
       len = 1;
     } else {
@@ -1008,7 +1010,8 @@
 
   defineProperties(ArrayIterator.prototype, {
     next: function () {
-      var i = this.i, array = this.array;
+      var i = this.i;
+      var array = this.array;
       if (!(this instanceof ArrayIterator)) {
         throw new TypeError('Not an ArrayIterator');
       }
@@ -1553,7 +1556,8 @@
       Object.getPrototypeOf(Object.create(null)) === null) {
     (function () {
       var FAKENULL = Object.create(null);
-      var gpo = Object.getPrototypeOf, spo = Object.setPrototypeOf;
+      var gpo = Object.getPrototypeOf;
+      var spo = Object.setPrototypeOf;
       Object.getPrototypeOf = function (o) {
         var result = gpo(o);
         return result === FAKENULL ? null : result;
@@ -1852,7 +1856,8 @@
     cbrt: function cbrt(value) {
       var x = Number(value);
       if (x === 0) { return x; }
-      var negate = x < 0, result;
+      var negate = x < 0;
+      var result;
       if (negate) { x = -x; }
       if (x === Infinity) {
         result = Infinity;
@@ -2344,7 +2349,9 @@
 
     var performPromiseAll = function (iteratorRecord, C, resultCapability) {
       var it = iteratorRecord.iterator;
-      var values = [], remaining = { count: 1 }, next, nextValue;
+      var values = [];
+      var remaining = { count: 1 };
+      var next, nextValue;
       var index = 0;
       while (true) {
         try {
@@ -2375,7 +2382,8 @@
     };
 
     var performPromiseRace = function (iteratorRecord, C, resultCapability) {
-      var it = iteratorRecord.iterator, next, nextValue, nextPromise;
+      var it = iteratorRecord.iterator;
+      var next, nextValue, nextPromise;
       while (true) {
         try {
           next = ES.IteratorStep(it);
@@ -2783,7 +2791,9 @@
 
         MapIterator.prototype = {
           next: function next() {
-            var i = this.i, kind = this.kind, head = this.head, result;
+            var i = this.i;
+            var kind = this.kind;
+            var head = this.head;
             if (typeof this.i === 'undefined') {
               return { value: void 0, done: true };
             }
@@ -2792,6 +2802,7 @@
               i = i.prev;
             }
             // advance to next unreturned element.
+            var result;
             while (i.next !== head) {
               i = i.next;
               if (!i.isRemoved()) {
@@ -2861,7 +2872,8 @@
                 return;
               }
             }
-            var head = this._head, i = head;
+            var head = this._head;
+            var i = head;
             while ((i = i.next) !== head) {
               if (ES.SameValueZero(i.key, key)) {
                 return i.value;
@@ -2876,7 +2888,8 @@
               // fast O(1) path
               return typeof this._storage[fkey] !== 'undefined';
             }
-            var head = this._head, i = head;
+            var head = this._head;
+            var i = head;
             while ((i = i.next) !== head) {
               if (ES.SameValueZero(i.key, key)) {
                 return true;
@@ -2887,7 +2900,9 @@
 
           set: function set(key, value) {
             requireMapSlot(this, 'set');
-            var head = this._head, i = head, entry;
+            var head = this._head;
+            var i = head;
+            var entry;
             var fkey = fastkey(key);
             if (fkey !== null) {
               // fast O(1) path
@@ -2920,7 +2935,8 @@
 
           'delete': function (key) {
             requireMapSlot(this, 'delete');
-            var head = this._head, i = head;
+            var head = this._head;
+            var i = head;
             var fkey = fastkey(key);
             if (fkey !== null) {
               // fast O(1) path
@@ -2947,7 +2963,9 @@
             requireMapSlot(this, 'clear');
             this._size = 0;
             this._storage = emptyObject();
-            var head = this._head, i = head, p = i.next;
+            var head = this._head;
+            var i = head;
+            var p = i.next;
             while ((i = p) !== head) {
               i.key = i.value = empty;
               p = i.next;

@@ -3,11 +3,6 @@
 
 	"extends": "@ljharb",
 
-	"ecmaFeatures": {
-		"regexYFlag": true,
-		"regexUFlag": true
-	},
-
 	"rules": {
 		"callback-return": [0],
 		"complexity": [1],
@@ -32,6 +27,7 @@
 			"string": true
 		}],
 		"no-invalid-this": [0],
+		"no-invalid-regexp": [2, { "allowConstructorFlags": ["u", "y"] }],
 		"no-magic-numbers": [0],
 		"no-native-reassign": [2, { "exceptions": ["Number", "Promise", "RegExp"] }],
 		"no-negated-condition": [1],

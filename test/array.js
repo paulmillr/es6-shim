@@ -28,7 +28,8 @@ var runArrayTests = function (it) {
 
     describe('@@iterator', function () {
       ifSymbolIteratorIt('uses Symbol.iterator if available', function () {
-        var b = {}, c = {};
+        var b = {};
+        var c = {};
         var a = [b, c];
         var iteratorFn = a[Sym.iterator];
         var iterator = iteratorFn.call(a);
