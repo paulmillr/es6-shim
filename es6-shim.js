@@ -2782,7 +2782,11 @@
         };
 
         MapIterator.prototype = {
+          isMapIterator: true,
           next: function next() {
+            if (!this.isMapIterator) {
+              throw new TypeError('Not a MapIterator');
+            }
             var i = this.i, kind = this.kind, head = this.head, result;
             if (typeof this.i === 'undefined') {
               return { value: void 0, done: true };
@@ -3116,13 +3120,13 @@
           values: function values() {
             requireSetSlot(this, 'values');
             ensureMap(this);
-            return this['[[SetData]]'].values();
+            return new SetIterator(this['[[SetData]]'].values());
           },
 
           entries: function entries() {
             requireSetSlot(this, 'entries');
             ensureMap(this);
-            return this['[[SetData]]'].entries();
+            return new SetIterator(this['[[SetData]]'].entries());
           },
 
           forEach: function forEach(callback) {
@@ -3141,6 +3145,20 @@
         });
         defineProperty(SetShim.prototype, 'keys', SetShim.prototype.values, true);
         addIterator(SetShim.prototype, SetShim.prototype.values);
+
+        var SetIterator = function (it) {
+          this.it = it;
+        };
+        SetIterator.prototype = {
+          isSetIterator: true,
+          next: function next() {
+            if (!this.isSetIterator) {
+              throw new TypeError('Not a SetIterator');
+            }
+            return this.it.next();
+          }
+        };
+        addIterator(SetIterator.prototype);
 
         return SetShim;
       }())
