@@ -194,6 +194,7 @@
   var _min = Math.min;
   var _floor = Math.floor;
   var _abs = Math.abs;
+  var _exp = Math.exp;
   var _log = Math.log;
   var _sqrt = Math.sqrt;
   var _hasOwnProperty = Function.call.bind(Object.prototype.hasOwnProperty);
@@ -213,6 +214,12 @@
   };
   var numberIsFinite = Number.isFinite || function isFinite(value) {
     return typeof value === 'number' && globalIsFinite(value);
+  };
+  var _sign = isCallable(Math.sign) ? Math.sign : function sign(value) {
+    var number = Number(value);
+    if (number === 0) { return number; }
+    if (numberIsNaN(number)) { return number; }
+    return number < 0 ? -1 : 1;
   };
 
   // taken directly from https://github.com/ljharb/is-arguments/blob/master/index.js
@@ -1828,10 +1835,13 @@
   var MathShims = {
     acosh: function acosh(value) {
       var x = Number(value);
-      if (Number.isNaN(x) || value < 1) { return NaN; }
+      if (numberIsNaN(x) || value < 1) { return NaN; }
       if (x === 1) { return 0; }
       if (x === Infinity) { return x; }
-      return _log(x / Math.E + _sqrt(x + 1) * _sqrt(x - 1) / Math.E) + 1;
+      if (x > _sqrt(2 / Number.EPSILON)) {
+        return (Math.log1p(x - 1) + 1 / Math.LOG2E);
+      }
+      return Math.log1p(x - 1 + _sqrt(x * x - 1));
     },
 
     asinh: function asinh(value) {
@@ -1839,18 +1849,23 @@
       if (x === 0 || !globalIsFinite(x)) {
         return x;
       }
-      return x < 0 ? -Math.asinh(-x) : _log(x + _sqrt(x * x + 1));
+      var s = _sign(x);
+      var a = _abs(x);
+      if (a > _sqrt(2 / Number.EPSILON)) {
+        return s * (Math.log1p(a - 1) + 1 / Math.LOG2E);
+      }
+      return s * Math.log1p(a + Math.expm1(Math.log1p(a * a) / 2));
     },
 
     atanh: function atanh(value) {
       var x = Number(value);
-      if (Number.isNaN(x) || x < -1 || x > 1) {
+      if (numberIsNaN(x) || x < -1 || x > 1) {
         return NaN;
       }
       if (x === -1) { return -Infinity; }
       if (x === 1) { return Infinity; }
       if (x === 0) { return x; }
-      return _sign(x) * _log1p(2 * _abs(x) / (1 - _abs(x))) / 2;
+      return _sign(x) * Math.log1p(2 * _abs(x) / (1 - _abs(x))) / 2;
     },
 
     cbrt: function cbrt(value) {
@@ -1862,7 +1877,7 @@
       if (x === Infinity) {
         result = Infinity;
       } else {
-        result = Math.exp(_log(x) / 3);
+        result = _exp(_log(x) / 3);
         // from http://en.wikipedia.org/wiki/Cube_root#Numerical_methods
         result = (x / (result * result) + (2 * result)) / 3;
       }
@@ -1882,11 +1897,14 @@
     cosh: function cosh(value) {
       var x = Number(value);
       if (x === 0) { return 1; } // +0 or -0
-      if (Number.isNaN(x)) { return NaN; }
+      if (numberIsNaN(x)) { return NaN; }
       if (!globalIsFinite(x)) { return Infinity; }
-      if (x < 0) { x = -x; }
-      if (x > 21) { return Math.exp(x) / 2; }
-      return (Math.exp(x) + Math.exp(-x)) / 2;
+      var a = _abs(x);
+      if (a < Math.log1p(2 / Number.EPSILON - 1) / 2) {
+        var t = Math.expm1(a);
+        return 1 + (t * t) / (2 + 2 * t);
+      }
+      return (Math.expm1(a - 1) + 1) * (Math.E / 2);
     },
 
     expm1: function expm1(value) {
@@ -1894,7 +1912,7 @@
       if (x === -Infinity) { return -1; }
       if (!globalIsFinite(x) || x === 0) { return x; }
       if (_abs(x) > 0.5) {
-        return Math.exp(x) - 1;
+        return _exp(x) - 1;
       }
       // A more precise approximation using Taylor series expansion
       // from https://github.com/paulmillr/es6-shim/issues/314#issuecomment-70293986
@@ -1935,38 +1953,35 @@
 
     log1p: function log1p(value) {
       var x = Number(value);
-      if (x < -1 || Number.isNaN(x)) { return NaN; }
+      if (x < -1 || numberIsNaN(x)) { return NaN; }
       if (x === 0 || x === Infinity) { return x; }
       if (x === -1) { return -Infinity; }
 
       return (1 + x) - 1 === 0 ? x : x * (_log(1 + x) / ((1 + x) - 1));
     },
 
-    sign: function sign(value) {
-      var number = Number(value);
-      if (number === 0) { return number; }
-      if (Number.isNaN(number)) { return number; }
-      return number < 0 ? -1 : 1;
-    },
+    sign: _sign,
 
     sinh: function sinh(value) {
       var x = Number(value);
       if (!globalIsFinite(x) || x === 0) { return x; }
-
-      if (_abs(x) < 1) {
-        return (Math.expm1(x) - Math.expm1(-x)) / 2;
+      var s = _sign(x);
+      var a = _abs(x);
+      if (a < Math.log1p(2 / Number.EPSILON - 1) / 2) {
+        var t = Math.expm1(a);
+        return s * (t + t / (t + 1)) / 2;
       }
-      return (Math.exp(x - 1) - Math.exp(-x - 1)) * Math.E / 2;
+      return s * (Math.expm1(a - 1) + 1) * (Math.E / 2);
     },
 
     tanh: function tanh(value) {
       var x = Number(value);
-      if (Number.isNaN(x) || x === 0) { return x; }
+      if (numberIsNaN(x) || x === 0) { return x; }
       // can exit early at +-20 as JS loses precision for true value at this integer
       if (x >= 20) { return 1; }
       if (x <= -20) { return -1; }
 
-      return (Math.expm1(x) - Math.expm1(-x)) / (Math.exp(x) + Math.exp(-x));
+      return (Math.expm1(x) - Math.expm1(-x)) / (_exp(x) + _exp(-x));
     },
 
     trunc: function trunc(value) {
@@ -1992,7 +2007,7 @@
       if (v === 0 || v === Infinity || v === -Infinity || numberIsNaN(v)) {
         return v;
       }
-      var sign = Math.sign(v);
+      var sign = _sign(v);
       var abs = _abs(v);
       if (abs < BINARY_32_MIN_VALUE) {
         return sign * roundTiesToEven(abs / BINARY_32_MIN_VALUE / BINARY_32_EPSILON) * BINARY_32_MIN_VALUE * BINARY_32_EPSILON;
@@ -2011,12 +2026,14 @@
   defineProperty(Math, 'log1p', MathShims.log1p, Math.log1p(-1e-17) !== -1e-17);
   // IE 11 TP has an imprecise asinh: reports Math.asinh(-1e7) as not exactly equal to -Math.asinh(1e7)
   defineProperty(Math, 'asinh', MathShims.asinh, Math.asinh(-1e7) !== -Math.asinh(1e7));
-  // Chrome (https://code.google.com/p/v8/issues/detail?id=3509)
-  defineProperty(Math, 'atanh', MathShims.atanh, Math.atanh(1e-300) === 0);
   // Chrome 40 has an imprecise Math.tanh with very small numbers
   defineProperty(Math, 'tanh', MathShims.tanh, Math.tanh(-2e-17) !== -2e-17);
   // Chrome 40 loses Math.acosh precision with high numbers
   defineProperty(Math, 'acosh', MathShims.acosh, Math.acosh(Number.MAX_VALUE) === Infinity);
+  // Chrome - https://code.google.com/p/v8/issues/detail?id=3509
+  defineProperty(Math, 'asinh', MathShims.asinh, Math.asinh(Number.MAX_VALUE) === Infinity);
+  // Chrome - https://code.google.com/p/v8/issues/detail?id=3509
+  defineProperty(Math, 'atanh', MathShims.atanh, Math.atanh(1e-300) === 0);
   // Firefox 38 on Windows
   defineProperty(Math, 'cbrt', MathShims.cbrt, Math.abs(1 - Math.cbrt(1e-300) / 1e-100) / Number.EPSILON > 8);
   // node 0.11 has an imprecise Math.sinh with very small numbers
