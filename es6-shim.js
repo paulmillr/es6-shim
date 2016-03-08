@@ -1857,7 +1857,7 @@
       if (x === -1) { return -Infinity; }
       if (x === 1) { return Infinity; }
       if (x === 0) { return x; }
-      return 0.5 * _log((1 + x) / (1 - x));
+      return _sign(x) * _log1p(2 * _abs(x) / (1 - _abs(x))) / 2;
     },
 
     cbrt: function cbrt(value) {
@@ -2013,6 +2013,8 @@
   defineProperty(Math, 'log1p', MathShims.log1p, Math.log1p(-1e-17) !== -1e-17);
   // IE 11 TP has an imprecise asinh: reports Math.asinh(-1e7) as not exactly equal to -Math.asinh(1e7)
   defineProperty(Math, 'asinh', MathShims.asinh, Math.asinh(-1e7) !== -Math.asinh(1e7));
+  // Chrome (https://code.google.com/p/v8/issues/detail?id=3509)
+  defineProperty(Math, 'atanh', MathShims.atanh, Math.atanh(1e-300) === 0);
   // Chrome 40 has an imprecise Math.tanh with very small numbers
   defineProperty(Math, 'tanh', MathShims.tanh, Math.tanh(-2e-17) !== -2e-17);
   // Chrome 40 loses Math.acosh precision with high numbers
