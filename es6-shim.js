@@ -214,6 +214,12 @@
   var numberIsFinite = Number.isFinite || function isFinite(value) {
     return typeof value === 'number' && globalIsFinite(value);
   };
+  var _sign = isCallable(Math.sign) ? Math.sign : function sign(value) {
+    var number = Number(value);
+    if (number === 0) { return number; }
+    if (Number.isNaN(number)) { return number; }
+    return number < 0 ? -1 : 1;
+  };
 
   // taken directly from https://github.com/ljharb/is-arguments/blob/master/index.js
   // can be replaced with require('is-arguments') if we ever use a build process instead
@@ -1942,12 +1948,7 @@
       return (1 + x) - 1 === 0 ? x : x * (_log(1 + x) / ((1 + x) - 1));
     },
 
-    sign: function sign(value) {
-      var number = Number(value);
-      if (number === 0) { return number; }
-      if (Number.isNaN(number)) { return number; }
-      return number < 0 ? -1 : 1;
-    },
+    sign: _sign,
 
     sinh: function sinh(value) {
       var x = Number(value);
@@ -1992,7 +1993,7 @@
       if (v === 0 || v === Infinity || v === -Infinity || numberIsNaN(v)) {
         return v;
       }
-      var sign = Math.sign(v);
+      var sign = _sign(v);
       var abs = _abs(v);
       if (abs < BINARY_32_MIN_VALUE) {
         return sign * roundTiesToEven(abs / BINARY_32_MIN_VALUE / BINARY_32_EPSILON) * BINARY_32_MIN_VALUE * BINARY_32_EPSILON;
