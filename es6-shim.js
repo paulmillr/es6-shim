@@ -194,6 +194,7 @@
   var _min = Math.min;
   var _floor = Math.floor;
   var _abs = Math.abs;
+  var _exp = Math.exp;
   var _log = Math.log;
   var _sqrt = Math.sqrt;
   var _hasOwnProperty = Function.call.bind(Object.prototype.hasOwnProperty);
@@ -1868,7 +1869,7 @@
       if (x === Infinity) {
         result = Infinity;
       } else {
-        result = Math.exp(_log(x) / 3);
+        result = _exp(_log(x) / 3);
         // from http://en.wikipedia.org/wiki/Cube_root#Numerical_methods
         result = (x / (result * result) + (2 * result)) / 3;
       }
@@ -1891,8 +1892,8 @@
       if (numberIsNaN(x)) { return NaN; }
       if (!globalIsFinite(x)) { return Infinity; }
       if (x < 0) { x = -x; }
-      if (x > 21) { return Math.exp(x) / 2; }
-      return (Math.exp(x) + Math.exp(-x)) / 2;
+      if (x > 21) { return _exp(x) / 2; }
+      return (_exp(x) + _exp(-x)) / 2;
     },
 
     expm1: function expm1(value) {
@@ -1900,7 +1901,7 @@
       if (x === -Infinity) { return -1; }
       if (!globalIsFinite(x) || x === 0) { return x; }
       if (_abs(x) > 0.5) {
-        return Math.exp(x) - 1;
+        return _exp(x) - 1;
       }
       // A more precise approximation using Taylor series expansion
       // from https://github.com/paulmillr/es6-shim/issues/314#issuecomment-70293986
@@ -1957,7 +1958,7 @@
       if (_abs(x) < 1) {
         return (Math.expm1(x) - Math.expm1(-x)) / 2;
       }
-      return (Math.exp(x - 1) - Math.exp(-x - 1)) * Math.E / 2;
+      return (_exp(x - 1) - _exp(-x - 1)) * Math.E / 2;
     },
 
     tanh: function tanh(value) {
@@ -1967,7 +1968,7 @@
       if (x >= 20) { return 1; }
       if (x <= -20) { return -1; }
 
-      return (Math.expm1(x) - Math.expm1(-x)) / (Math.exp(x) + Math.exp(-x));
+      return (Math.expm1(x) - Math.expm1(-x)) / (_exp(x) + _exp(-x));
     },
 
     trunc: function trunc(value) {
