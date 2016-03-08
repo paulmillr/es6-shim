@@ -1845,7 +1845,7 @@
       if (x === 0 || !globalIsFinite(x)) {
         return x;
       }
-      return x < 0 ? -Math.asinh(-x) : _log(x + _sqrt(x * x + 1));
+      return x < 0 ? -asinh(-x) : _log(x + _sqrt(x * x + 1));
     },
 
     atanh: function atanh(value) {
