@@ -1838,7 +1838,10 @@
       if (numberIsNaN(x) || value < 1) { return NaN; }
       if (x === 1) { return 0; }
       if (x === Infinity) { return x; }
-      return _log(x / Math.E + _sqrt(x + 1) * _sqrt(x - 1) / Math.E) + 1;
+      if (x > _sqrt(2 / Number.EPSILON)) {
+        return (Math.log1p(x - 1) + 1 / Math.LOG2E);
+      }
+      return Math.log1p(x - 1 + _sqrt(x * x - 1));
     },
 
     asinh: function asinh(value) {
@@ -1846,7 +1849,12 @@
       if (x === 0 || !globalIsFinite(x)) {
         return x;
       }
-      return x < 0 ? -asinh(-x) : _log(x + _sqrt(x * x + 1));
+      var s = _sign(x);
+      var a = _abs(x);
+      if (a > _sqrt(2 / Number.EPSILON)) {
+        return s * (Math.log1p(a - 1) + 1 / Math.LOG2E);
+      }
+      return s * Math.log1p(a + Math.expm1(Math.log1p(a * a) / 2));
     },
 
     atanh: function atanh(value) {
@@ -1857,7 +1865,7 @@
       if (x === -1) { return -Infinity; }
       if (x === 1) { return Infinity; }
       if (x === 0) { return x; }
-      return 0.5 * _log((1 + x) / (1 - x));
+      return _sign(x) * Math.log1p(2 * _abs(x) / (1 - _abs(x))) / 2;
     },
 
     cbrt: function cbrt(value) {
@@ -1891,9 +1899,12 @@
       if (x === 0) { return 1; } // +0 or -0
       if (numberIsNaN(x)) { return NaN; }
       if (!globalIsFinite(x)) { return Infinity; }
-      if (x < 0) { x = -x; }
-      if (x > 21) { return _exp(x) / 2; }
-      return (_exp(x) + _exp(-x)) / 2;
+      var a = _abs(x);
+      if (a < Math.log1p(2 / Number.EPSILON - 1) / 2) {
+        var t = Math.expm1(a);
+        return 1 + (t * t) / (2 + 2 * t);
+      }
+      return (Math.expm1(a - 1) + 1) * (Math.E / 2);
     },
 
     expm1: function expm1(value) {
@@ -1954,11 +1965,13 @@
     sinh: function sinh(value) {
       var x = Number(value);
       if (!globalIsFinite(x) || x === 0) { return x; }
-
-      if (_abs(x) < 1) {
-        return (Math.expm1(x) - Math.expm1(-x)) / 2;
+      var s = _sign(x);
+      var a = _abs(x);
+      if (a < Math.log1p(2 / Number.EPSILON - 1) / 2) {
+        var t = Math.expm1(a);
+        return s * (t + t / (t + 1)) / 2;
       }
-      return (_exp(x - 1) - _exp(-x - 1)) * Math.E / 2;
+      return s * (Math.expm1(a - 1) + 1) * (Math.E / 2);
     },
 
     tanh: function tanh(value) {
@@ -2017,6 +2030,10 @@
   defineProperty(Math, 'tanh', MathShims.tanh, Math.tanh(-2e-17) !== -2e-17);
   // Chrome 40 loses Math.acosh precision with high numbers
   defineProperty(Math, 'acosh', MathShims.acosh, Math.acosh(Number.MAX_VALUE) === Infinity);
+  // Chrome - https://code.google.com/p/v8/issues/detail?id=3509
+  defineProperty(Math, 'asinh', MathShims.asinh, Math.asinh(Number.MAX_VALUE) === Infinity);
+  // Chrome - https://code.google.com/p/v8/issues/detail?id=3509
+  defineProperty(Math, 'atanh', MathShims.atanh, Math.atanh(1e-300) === 0);
   // Firefox 38 on Windows
   defineProperty(Math, 'cbrt', MathShims.cbrt, Math.abs(1 - Math.cbrt(1e-300) / 1e-100) / Number.EPSILON > 8);
   // node 0.11 has an imprecise Math.sinh with very small numbers
