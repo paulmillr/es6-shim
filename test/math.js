@@ -66,6 +66,7 @@ describe('Math', function () {
       expect(Math.acosh(8.88)).to.almostEqual(2.8737631531629235);
       expect(Math.acosh(1e160)).to.almostEqual(369.10676205960726);
       expect(Math.acosh(Number.MAX_VALUE)).to.almostEqual(710.4758600739439);
+      expect(Math.acosh(1 + EPSILON)).to.almostEqual(2.1073424255447017e-8, 1e-20);
     });
   });
 
@@ -108,6 +109,7 @@ describe('Math', function () {
       expect(Math.asinh(1e150)).to.almostEqual(346.0809111296668);
       expect(Math.asinh(1e7)).to.almostEqual(16.811242831518268);
       expect(Math.asinh(-1e7)).to.almostEqual(-16.811242831518268);
+      expect(Math.asinh(Number.MAX_VALUE)).to.almostEqual(710.4758600739439);
     });
   });
 
@@ -144,6 +146,7 @@ describe('Math', function () {
       expect(Math.atanh(-0.5)).to.almostEqual(-0.5493061443340549);
       expect(Math.atanh(-0.5)).to.almostEqual(-0.5493061443340549);
       expect(Math.atanh(0.444)).to.almostEqual(0.47720201260109457);
+      expect(Math.atanh(1e-300) != 0).to.equal(true);
     });
   });
 
@@ -292,6 +295,8 @@ describe('Math', function () {
       expect(Math.cosh(-10)).to.almostEqual(11013.23292010332313972137);
       expect(Math.cosh(-23)).to.almostEqual(4872401723.1244513000, 1e-5);
       expect(Math.cosh(-2e-17)).to.equal(1);
+      var EXP_NO_OVERFLOW = 709.782712893384; // Math.log(Number.MAX_VALUE)
+      expect(Math.cosh(EXP_NO_OVERFLOW + 1 / Math.LOG2E - 0.5) != Infinity).to.equal(true);
     });
   });
 
@@ -577,6 +582,8 @@ describe('Math', function () {
       expect(Math.sinh(-5)).to.almostEqual(-74.20321057778875);
       expect(Math.sinh(2)).to.almostEqual(3.6268604078470186);
       expect(Math.sinh(-2e-17)).to.equal(-2e-17);
+      var EXP_NO_OVERFLOW = 709.782712893384; // Math.log(Number.MAX_VALUE)
+      expect(Math.sinh(EXP_NO_OVERFLOW + 1 / Math.LOG2E - 0.5) != Infinity).to.equal(true);
     });
   });
 
