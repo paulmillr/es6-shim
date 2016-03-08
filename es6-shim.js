@@ -1850,7 +1850,7 @@
       if (x === -1) { return -Infinity; }
       if (x === 1) { return Infinity; }
       if (x === 0) { return x; }
-      return Math.sign(x) * Math.log1p(2 * Math.abs(x) / (1 - Math.abs(x))) / 2;
+      return _sign(x) * _log1p(2 * _abs(x) / (1 - _abs(x))) / 2;
     },
 
     cbrt: function cbrt(value) {
