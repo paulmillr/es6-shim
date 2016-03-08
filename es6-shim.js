@@ -2036,6 +2036,8 @@
   defineProperty(Math, 'atanh', MathShims.atanh, Math.atanh(1e-300) === 0);
   // Firefox 38 on Windows
   defineProperty(Math, 'cbrt', MathShims.cbrt, Math.abs(1 - Math.cbrt(1e-300) / 1e-100) / Number.EPSILON > 8);
+  // node 0.12
+  defineProperty(Math, 'cosh', MathShims.cosh, Math.cosh(710) === Infinity);
   // node 0.11 has an imprecise Math.sinh with very small numbers
   defineProperty(Math, 'sinh', MathShims.sinh, Math.sinh(-2e-17) !== -2e-17);
   // FF 35 on Linux reports 22025.465794806725 for Math.expm1(10)
