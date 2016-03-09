@@ -1978,10 +1978,9 @@
       var x = Number(value);
       if (numberIsNaN(x) || x === 0) { return x; }
       // can exit early at +-20 as JS loses precision for true value at this integer
-      if (x >= 20) { return 1; }
-      if (x <= -20) { return -1; }
-
-      return (Math.expm1(x) - Math.expm1(-x)) / (_exp(x) + _exp(-x));
+      if (x === Infinity) { return 1; }
+      if (x ==== -Infinity) { return -1; }
+      return _sign(x) / (1 + 2 / Math.expm1(2 * _abs(x)));
     },
 
     trunc: function trunc(value) {
