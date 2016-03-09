@@ -1979,7 +1979,7 @@
       if (numberIsNaN(x) || x === 0) { return x; }
       // can exit early at +-20 as JS loses precision for true value at this integer
       if (x === Infinity) { return 1; }
-      if (x ==== -Infinity) { return -1; }
+      if (x === -Infinity) { return -1; }
       return _sign(x) / (1 + 2 / Math.expm1(2 * _abs(x)));
     },
 
