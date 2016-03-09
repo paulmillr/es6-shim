@@ -1829,6 +1829,9 @@
   var BINARY_32_EPSILON = Math.pow(2, -23);
   var BINARY_32_MAX_VALUE = Math.pow(2, 127) * (2 - BINARY_32_EPSILON);
   var BINARY_32_MIN_VALUE = Math.pow(2, -126);
+  var E = Math.E;
+  var LOG2E = Math.LOG2E;
+  var LOG10E = Math.LOG10E;
   var numberCLZ = Number.prototype.clz;
   delete Number.prototype.clz; // Safari 8 has Number#clz
 
@@ -1838,7 +1841,7 @@
       if (numberIsNaN(x) || value < 1) { return NaN; }
       if (x === 1) { return 0; }
       if (x === Infinity) { return x; }
-      return _log(x / Math.E + _sqrt(x + 1) * _sqrt(x - 1) / Math.E) + 1;
+      return _log(x / E + _sqrt(x + 1) * _sqrt(x - 1) / E) + 1;
     },
 
     asinh: function asinh(value) {
@@ -1883,7 +1886,7 @@
       if (number === 0) {
         return 32;
       }
-      return numberCLZ ? ES.Call(numberCLZ, number) : 31 - _floor(_log(number + 0.5) * Math.LOG2E);
+      return numberCLZ ? ES.Call(numberCLZ, number) : 31 - _floor(_log(number + 0.5) * LOG2E);
     },
 
     cosh: function cosh(value) {
@@ -1933,11 +1936,11 @@
     },
 
     log2: function log2(value) {
-      return _log(value) * Math.LOG2E;
+      return _log(value) * LOG2E;
     },
 
     log10: function log10(value) {
-      return _log(value) * Math.LOG10E;
+      return _log(value) * LOG10E;
     },
 
     log1p: function log1p(value) {
@@ -1958,7 +1961,7 @@
       if (_abs(x) < 1) {
         return (Math.expm1(x) - Math.expm1(-x)) / 2;
       }
-      return (_exp(x - 1) - _exp(-x - 1)) * Math.E / 2;
+      return (_exp(x - 1) - _exp(-x - 1)) * E / 2;
     },
 
     tanh: function tanh(value) {
