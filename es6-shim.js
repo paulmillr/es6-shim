@@ -984,7 +984,7 @@
           if (mapping) {
             value = typeof T === 'undefined' ? mapFn(value, i) : _call(mapFn, T, value, i);
           }
-          result[i] = value;
+          createDataPropertyOrThrow(result, i, value);
         }
       }
 

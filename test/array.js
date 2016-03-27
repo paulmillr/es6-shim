@@ -1,4 +1,4 @@
-/* global describe, it, xit, expect, require, beforeEach, afterEach */
+/* global describe, it, expect, require, beforeEach, afterEach */
 
 var runArrayTests = function (it) {
   'use strict';
@@ -8,11 +8,12 @@ var runArrayTests = function (it) {
     return typeof Sym === 'function' && typeof sym === 'symbol';
   };
   var functionsHaveNames = (function foo() {}).name === 'foo';
-  var ifFunctionsHaveNamesIt = functionsHaveNames ? it : xit;
-  var ifSymbolIteratorIt = isSymbol(Sym.iterator) ? it : xit;
-  var ifSymbolIteratorAndArrayValuesIt = isSymbol(Sym.iterator) && Array.prototype.values ? it : xit;
-  var ifSymbolUnscopablesIt = isSymbol(Sym.unscopables) ? it : xit;
+  var ifFunctionsHaveNamesIt = functionsHaveNames ? it : it.skip;
+  var ifSymbolIteratorIt = isSymbol(Sym.iterator) ? it : it.skip;
+  var ifSymbolIteratorAndArrayValuesIt = isSymbol(Sym.iterator) && Array.prototype.values ? it : it.skip;
+  var ifSymbolUnscopablesIt = isSymbol(Sym.unscopables) ? it : it.skip;
   var ifShimIt = (typeof process !== 'undefined' && process.env.NO_ES6_SHIM) ? it.skip : it;
+  var ifSupportsDescriptorsIt = Object.getOwnPropertyDescriptor ? it : it.skip;
 
   var isNegativeZero = function (x) {
     return (1 / x) < 0;
@@ -251,6 +252,22 @@ var runArrayTests = function (it) {
 
       it('works with this flaky example', function () {
         expect(Array.from([1, NaN, false])).to.eql([1, NaN, false]);
+      });
+
+      ifSupportsDescriptorsIt('works when Object.prototype has a throwing setter', function () {
+        var key = 10;
+        /* eslint no-extend-native: 0 */
+        Object.defineProperty(Object.prototype, key, {
+          configurable: true,
+          get: function () {},
+          set: function (v) { throw new EvalError('boom'); }
+        });
+        expect(function () { var arr = []; arr[key] = 42; }).to['throw'](EvalError); // assert thrower
+
+        expect(function () { Array.from({ length: key + 1 }); }).not.to['throw']();
+
+        delete Object.prototype[key];
+        expect(key in Object.prototype).to.equal(false); // assert cleanup
       });
     });
 
