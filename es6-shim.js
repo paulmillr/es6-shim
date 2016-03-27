@@ -33,7 +33,9 @@
   var keys = Object.keys;
 
   var not = function notThunker(func) {
-    return function notThunk() { return !_apply(func, this, arguments); };
+    return function notThunk() {
+      return !_apply(func, this, arguments);
+    };
   };
   var throwsError = function (func) {
     try {
@@ -54,7 +56,9 @@
   var isCallableWithoutNew = not(throwsError);
   var arePropertyDescriptorsSupported = function () {
     // if Object.defineProperty exists but throws, it's IE 8
-    return !throwsError(function () { Object.defineProperty({}, 'x', { get: function () {} }); });
+    return !throwsError(function () {
+      Object.defineProperty({}, 'x', { get: function () {} });
+    });
   };
   var supportsDescriptors = !!Object.defineProperty && arePropertyDescriptorsSupported();
   var functionsHaveNames = (function foo() {}).name === 'foo';
@@ -692,7 +696,9 @@
   // https://bugzilla.mozilla.org/show_bug.cgi?id=1062484
   if (String.fromCodePoint && String.fromCodePoint.length !== 1) {
     var originalFromCodePoint = String.fromCodePoint;
-    overrideNative(String, 'fromCodePoint', function fromCodePoint(codePoints) { return ES.Call(originalFromCodePoint, this, arguments); });
+    overrideNative(String, 'fromCodePoint', function fromCodePoint(codePoints) {
+      return ES.Call(originalFromCodePoint, this, arguments);
+    });
   }
 
   var StringShims = {
@@ -1149,7 +1155,9 @@
       for (var i = 0, value; i < length; i++) {
         value = list[i];
         if (thisArg) {
-          if (_call(predicate, thisArg, value, i, list)) { return value; }
+          if (_call(predicate, thisArg, value, i, list)) {
+            return value;
+          }
         } else if (predicate(value, i, list)) {
           return value;
         }
@@ -1165,7 +1173,9 @@
       var thisArg = arguments.length > 1 ? arguments[1] : null;
       for (var i = 0; i < length; i++) {
         if (thisArg) {
-          if (_call(predicate, thisArg, list[i], i, list)) { return i; }
+          if (_call(predicate, thisArg, list[i], i, list)) {
+            return i;
+          }
         } else if (predicate(list[i], i, list)) {
           return i;
         }
@@ -1234,7 +1244,9 @@
   var arrayFromSwallowsNegativeLengths = (function () {
     // Detects a Firefox bug in v32
     // https://bugzilla.mozilla.org/show_bug.cgi?id=1063993
-    return valueOrFalseIfThrows(function () { return Array.from({ length: -1 }).length === 0; });
+    return valueOrFalseIfThrows(function () {
+      return Array.from({ length: -1 }).length === 0;
+    });
   }());
   var arrayFromHandlesIterables = (function () {
     // Detects a bug in Webkit nightly r181886
@@ -1247,7 +1259,9 @@
   var arrayFromHandlesUndefinedMapFunction = (function () {
     // Microsoft Edge v0.11 throws if the mapFn argument is *provided* but undefined,
     // but the spec doesn't care if it's provided or not - undefined doesn't throw.
-    return valueOrFalseIfThrows(function () { return Array.from([0], void 0); });
+    return valueOrFalseIfThrows(function () {
+      return Array.from([0], void 0);
+    });
   }());
   if (!arrayFromHandlesUndefinedMapFunction) {
     var origArrayFrom = Array.from;
@@ -2483,7 +2497,9 @@
         }
         if (ES.IsPromise(v)) {
           var constructor = v.constructor;
-          if (constructor === C) { return v; }
+          if (constructor === C) {
+            return v;
+          }
         }
         var capability = new PromiseCapability(C);
         var resolveFunc = capability.resolve;

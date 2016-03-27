@@ -60,7 +60,9 @@ var runStringTests = function (it) {
         expect('test'.repeat(NaN)).to.eql('');
         expect('test'.repeat({})).to.eql('');
         expect('test'.repeat([])).to.eql('');
-        expect('test'.repeat({ valueOf: function () { return 2; } })).to.eql('testtest');
+        expect('test'.repeat({
+          valueOf: function () { return 2; }
+        })).to.eql('testtest');
       });
       it('should work', function () {
         expect('test'.repeat(3)).to.eql('testtesttest');

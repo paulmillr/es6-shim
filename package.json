@@ -70,10 +70,10 @@
   "devDependencies": {
     "chai": "^3.5.0",
     "es5-shim": "^4.5.7",
-    "eslint": "^2.4.0",
-    "@ljharb/eslint-config": "^2.1.1",
+    "eslint": "^2.5.1",
+    "@ljharb/eslint-config": "^2.2.0",
     "grunt": "^0.4.5",
-    "grunt-contrib-connect": "^1.0.0",
+    "grunt-contrib-connect": "^1.0.1",
     "grunt-contrib-watch": "^1.0.0",
     "grunt-saucelabs": "^8.6.2",
     "jscs": "^2.11.0",

@@ -49,7 +49,9 @@
   };
   var arePropertyDescriptorsSupported = function () {
     // if Object.defineProperty exists but throws, it's IE 8
-    return !throwsError(function () { Object.defineProperty({}, 'x', { get: function () {} }); });
+    return !throwsError(function () {
+      Object.defineProperty({}, 'x', { get: function () {} });
+    });
   };
   var supportsDescriptors = !!Object.defineProperty && arePropertyDescriptorsSupported();
 

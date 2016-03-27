@@ -3,7 +3,9 @@
 var failIfThrows = function (done) {
   'use strict';
 
-  return function (e) { done(e || new Error()); };
+  return function (e) {
+    done(e || new Error());
+  };
 };
 
 describe('Promise.all', function () {
@@ -118,8 +120,10 @@ describe('Promise.all', function () {
   it('should be robust against tampering (1)', function (done) {
     var g = [tamper(Promise.resolve(0))];
     // Prevent countdownHolder.[[Countdown]] from ever reaching zero
-    Promise.all(g).
-      then(function () { done(); }, failIfThrows(done));
+    Promise.all(g).then(
+      function () { done(); },
+      failIfThrows(done)
+    );
   });
 
   it('should be robust against tampering (2)', function (done) {
@@ -135,12 +139,10 @@ describe('Promise.all', function () {
         assert(!fulfillCalled, 'should be resolved before all()');
       })['catch'](failIfThrows(done))
     ];
-    Promise.all(g).
-      then(function () {
-        assert(!fulfillCalled, 'should be resolved last');
-        fulfillCalled = true;
-      }).
-      then(done, failIfThrows(done));
+    Promise.all(g).then(function () {
+      assert(!fulfillCalled, 'should be resolved last');
+      fulfillCalled = true;
+    }).then(done, failIfThrows(done));
   });
 
   it('should be robust against tampering (3)', function (done) {
@@ -150,12 +152,11 @@ describe('Promise.all', function () {
       Promise.reject(2)
     ];
     // Promise from Promise.all resolved despite rejected promise in arguments
-    Promise.all(g).
-      then(function () {
-        throw new Error('should not reach here!');
-      }, function (e) {
-        assert.strictEqual(e, 2);
-      }).then(done, failIfThrows(done));
+    Promise.all(g).then(function () {
+      throw new Error('should not reach here!');
+    }, function (e) {
+      assert.strictEqual(e, 2);
+    }).then(done, failIfThrows(done));
   });
 
   it('should be robust against tampering (4)', function (done) {
@@ -193,11 +194,8 @@ describe('Promise.all', function () {
 
     // Promise.all calls resolver twice
     P.all(g)['catch'](failIfThrows(done));
-    Promise.
-      resolve().
-      then(function () {
-        assert.deepEqual(actualArguments, [[0, 'tampered', 2]]);
-      }).
-      then(done, failIfThrows(done));
+    Promise.resolve().then(function () {
+      assert.deepEqual(actualArguments, [[0, 'tampered', 2]]);
+    }).then(done, failIfThrows(done));
   });
 });
