@@ -1,5 +1,6 @@
 language: node_js
 node_js:
+  - "5.10"
   - "5.9"
   - "5.8"
   - "5.7"
@@ -61,6 +62,7 @@ matrix:
     - node_js: "0.12"
       env: TRAVIS_RUN_SAUCE=false TRAVIS_RUN_LINT_ONLY=false
   allow_failures:
+    - node_js: "5.9"
     - node_js: "5.8"
     - node_js: "5.7"
     - node_js: "5.6"
