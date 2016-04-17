@@ -281,7 +281,7 @@
   var $String = String;
 
   var ES = {
-    // https://people.mozilla.org/~jorendorff/es6-draft.html#sec-call-f-v-args
+    // http://www.ecma-international.org/ecma-262/6.0/#sec-call
     Call: function Call(F, V) {
       var args = arguments.length > 2 ? arguments[2] : [];
       if (!ES.IsCallable(F)) {
@@ -903,7 +903,7 @@
     return { value: x, done: arguments.length === 0 };
   };
 
-  // see https://people.mozilla.org/~jorendorff/es6-draft.html#sec-string.prototype-@@iterator
+  // see http://www.ecma-international.org/ecma-262/6.0/#sec-string.prototype-@@iterator
   var StringIterator = function (s) {
     ES.RequireObjectCoercible(s);
     this._s = ES.ToString(s);
@@ -2051,7 +2051,7 @@
 
   // When engines use Math.floor(x + 0.5) internally, Math.round can be buggy for large integers.
   // This behavior should be governed by "round to nearest, ties to even mode"
-  // see https://people.mozilla.org/~jorendorff/es6-draft.html#sec-ecmascript-language-types-number-type
+  // see http://www.ecma-international.org/ecma-262/6.0/#sec-terms-and-definitions-number-type
   // These are the boundary cases where it breaks.
   var smallestPositiveNumberWhereRoundBreaks = inverseEpsilon + 1;
   var largestPositiveNumberWhereRoundBreaks = 2 * inverseEpsilon - 1;
@@ -3693,7 +3693,7 @@
   }
 
   // Annex B HTML methods
-  // https://people.mozilla.org/~jorendorff/es6-draft.html#sec-additional-properties-of-the-string.prototype-object
+  // http://www.ecma-international.org/ecma-262/6.0/#sec-additional-properties-of-the-string.prototype-object
   var stringHTMLshims = {
     anchor: function anchor(name) { return ES.CreateHTML(this, 'a', 'name', name); },
     big: function big() { return ES.CreateHTML(this, 'big', '', ''); },
