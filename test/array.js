@@ -239,10 +239,12 @@ var runArrayTests = function (it) {
       it('removes holes', function () {
         /*jshint elision: true */
         /* jscs:disable disallowSpaceBeforeComma */
+        /* jscs:disable requireSpaceAfterComma */
         /* eslint-disable no-sparse-arrays */
         var input = [0, , 2];
         var result = Array.from([0, , 2]);
         /* eslint-enable no-sparse-arrays */
+        /* jscs:enable requireSpaceAfterComma */
         /* jscs:enable disallowSpaceBeforeComma */
         /*jshint elision: false */
         expect(1 in input).to.equal(false);
@@ -389,9 +391,11 @@ var runArrayTests = function (it) {
       it('should delete the target key if the source key is not present', function () {
         /* jshint elision: true */
         /* jscs:disable disallowSpaceBeforeComma */
+        /* jscs:disable requireSpaceAfterComma */
         /* eslint-disable no-sparse-arrays */
         expect([, 1, 2].copyWithin(1, 0)).to.eql([, , 1]);
         /* jshint elision: false */
+        /* jscs:enable requireSpaceAfterComma */
         /* jscs:enable disallowSpaceBeforeComma */
         /* eslint-enable no-sparse-arrays */
       });
@@ -475,9 +479,11 @@ var runArrayTests = function (it) {
       it('should work with a sparse array', function () {
         /*jshint elision: true */
         /* jscs:disable disallowSpaceBeforeComma */
+        /* jscs:disable requireSpaceAfterComma */
         /* eslint-disable no-sparse-arrays */
         var obj = [1, , undefined];
         /* eslint-enable no-sparse-arrays */
+        /* jscs:enable requireSpaceAfterComma */
         /* jscs:enable disallowSpaceBeforeComma */
         /*jshint elision: false */
         expect(1 in obj).to.equal(false);
@@ -572,9 +578,11 @@ var runArrayTests = function (it) {
       it('should work with a sparse array', function () {
         /*jshint elision: true */
         /* jscs:disable disallowSpaceBeforeComma */
+        /* jscs:disable requireSpaceAfterComma */
         /* eslint-disable no-sparse-arrays */
         var obj = [1, , undefined];
         /* eslint-enable no-sparse-arrays */
+        /* jscs:enable requireSpaceAfterComma */
         /* jscs:enable disallowSpaceBeforeComma */
         /*jshint elision: false */
         expect(1 in obj).to.equal(false);

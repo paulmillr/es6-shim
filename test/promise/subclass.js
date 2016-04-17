@@ -35,7 +35,7 @@ describe('Support user subclassing of Promise', function () {
 
     var p3 = MyPromise.all([p1, p2]);
     assert.strictEqual(p3.mine, 'yeah');
-    p3 = p3.then(function () { done(); }, done);
+    p3.then(function () { done(); }, done);
   });
 
   it("should throw if you don't inherit at all", function () {

@@ -61,7 +61,7 @@
     });
   };
   var supportsDescriptors = !!Object.defineProperty && arePropertyDescriptorsSupported();
-  var functionsHaveNames = (function foo() {}).name === 'foo';
+  var functionsHaveNames = (function foo() {}).name === 'foo'; // eslint-disable-line no-extra-parens
 
   var _forEach = Function.call.bind(Array.prototype.forEach);
   var _reduce = Function.call.bind(Array.prototype.reduce);
@@ -189,7 +189,7 @@
   var _indexOf = Function.call.bind(String.prototype.indexOf);
   var _arrayIndexOfApply = Function.apply.bind(Array.prototype.indexOf);
   var _concat = Function.call.bind(Array.prototype.concat);
-  var _sort = Function.call.bind(Array.prototype.sort);
+  // var _sort = Function.call.bind(Array.prototype.sort);
   var _strSlice = Function.call.bind(String.prototype.slice);
   var _push = Function.call.bind(Array.prototype.push);
   var _pushApply = Function.apply.bind(Array.prototype.push);
@@ -401,7 +401,7 @@
     },
 
     IteratorComplete: function (iterResult) {
-      return !!(iterResult.done);
+      return !!iterResult.done;
     },
 
     IteratorClose: function (iterator, completionIsThrow) {
@@ -824,7 +824,7 @@
       var length = thisStr.length;
       if (position >= 0 && position < length) {
         var first = thisStr.charCodeAt(position);
-        var isEnd = (position + 1 === length);
+        var isEnd = position + 1 === length;
         if (first < 0xD800 || first > 0xDBFF || isEnd) { return first; }
         var second = thisStr.charCodeAt(position + 1);
         if (second < 0xDC00 || second > 0xDFFF) { return first; }
@@ -1016,9 +1016,9 @@
   // Our ArrayIterator is private; see
   // https://github.com/paulmillr/es6-shim/issues/252
   ArrayIterator = function (array, kind) {
-      this.i = 0;
-      this.array = array;
-      this.kind = kind;
+    this.i = 0;
+    this.array = array;
+    this.kind = kind;
   };
 
   defineProperties(ArrayIterator.prototype, {
@@ -1050,6 +1050,7 @@
   });
   addIterator(ArrayIterator.prototype);
 
+/*
   var orderKeys = function orderKeys(a, b) {
     var aNumeric = String(ES.ToInteger(a)) === a;
     var bNumeric = String(ES.ToInteger(b)) === b;
@@ -1063,6 +1064,7 @@
       return a.localeCompare(b);
     }
   };
+
   var getAllKeys = function getAllKeys(object) {
     var ownKeys = [];
     var keys = [];
@@ -1075,6 +1077,7 @@
 
     return _concat(ownKeys, keys);
   };
+  */
 
   // note: this is positioned here because it depends on ArrayIterator
   var arrayOfSupportsSubclassing = Array.of === ArrayShims.of || (function () {
@@ -1277,7 +1280,7 @@
   var int32sAsOne = -(Math.pow(2, 32) - 1);
   var toLengthsCorrectly = function (method, reversed) {
     var obj = { length: int32sAsOne };
-    obj[reversed ? ((obj.length >>> 0) - 1) : 0] = true;
+    obj[reversed ? (obj.length >>> 0) - 1 : 0] = true;
     return valueOrFalseIfThrows(function () {
       _call(method, obj, function () {
         // note: in nonconforming browsers, this will be called
@@ -1610,7 +1613,7 @@
             _push(regexKeys, k);
           }
         }
-       return regexKeys;
+        return regexKeys;
       }
       return regexRejectingObjectKeys(value);
     });
@@ -1943,7 +1946,7 @@
           result += 1;
           largest = value;
         } else {
-          result += (value > 0 ? (value / largest) * (value / largest) : value);
+          result += value > 0 ? (value / largest) * (value / largest) : value;
         }
       }
       return largest === Infinity ? Infinity : largest * _sqrt(result);
@@ -2003,7 +2006,7 @@
       var bl = b & 0xffff;
       // the shift by 0 fixes the sign on the high part
       // the final |0 converts the unsigned value into a signed value
-      return ((al * bl) + (((ah * bl + al * bh) << 16) >>> 0) | 0);
+      return (al * bl) + (((ah * bl + al * bh) << 16) >>> 0) | 0;
     },
 
     fround: function fround(x) {
@@ -3326,8 +3329,9 @@
         defineProperty(globals.Set.prototype, 'constructor', globals.Set, true);
         Value.preserveToString(globals.Set, OrigSet);
       }
+      var newMap = new globals.Map();
       var mapIterationThrowsStopIterator = !valueOrFalseIfThrows(function () {
-        return (new Map()).keys().next().done;
+        return newMap.keys().next().done;
       });
       /*
         - In Firefox < 23, Map#size is a function.
@@ -3339,14 +3343,14 @@
       if (
         typeof globals.Map.prototype.clear !== 'function' ||
         new globals.Set().size !== 0 ||
-        new globals.Map().size !== 0 ||
+        newMap.size !== 0 ||
         typeof globals.Map.prototype.keys !== 'function' ||
         typeof globals.Set.prototype.keys !== 'function' ||
         typeof globals.Map.prototype.forEach !== 'function' ||
         typeof globals.Set.prototype.forEach !== 'function' ||
         isCallableWithoutNew(globals.Map) ||
         isCallableWithoutNew(globals.Set) ||
-        typeof (new globals.Map().keys().next) !== 'function' || // Safari 8
+        typeof newMap.keys().next !== 'function' || // Safari 8
         mapIterationThrowsStopIterator || // Firefox 25
         !mapSupportsSubclassing
       ) {

@@ -205,12 +205,12 @@ describe('Map', function () {
         'constructor',
         'toString',
         'isPrototypeOf',
-       '__proto__',
+        '__proto__',
         '__parent__',
         '__count__'
-       ].forEach(function (key) {
-         testMapping(map, key, {});
-       });
+      ].forEach(function (key) {
+        testMapping(map, key, {});
+      });
     });
   });
 

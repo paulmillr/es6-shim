@@ -8,7 +8,7 @@ if (typeof window !== 'undefined') {
     var handleResults = function (runner) {
       var failedTests = [];
       if (runner.stats.end) {
-        window.testsPassed = (runner.stats.failures === 0);
+        window.testsPassed = runner.stats.failures === 0;
       }
       runner.on('pass', function () {
         window.completedTests += 1;

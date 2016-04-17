@@ -188,9 +188,9 @@ var runStringTests = function (it) {
 
       ifSymbolsDescribe('Symbol.match', function () {
         if (!hasSymbols || !Symbol.match) {
-            return it('exists', function () {
-                expect(Symbol).to.have.property('match');
-            });
+          return it('exists', function () {
+            expect(Symbol).to.have.property('match');
+          });
         }
 
         it('allows a regex with Symbol.match set to a falsy value', function () {
@@ -314,9 +314,9 @@ var runStringTests = function (it) {
 
       ifSymbolsDescribe('Symbol.match', function () {
         if (!hasSymbols || !Symbol.match) {
-            return it('exists', function () {
-                expect(Symbol).to.have.property('match');
-            });
+          return it('exists', function () {
+            expect(Symbol).to.have.property('match');
+          });
         }
 
         it('allows a regex with Symbol.match set to a falsy value', function () {
@@ -429,9 +429,9 @@ var runStringTests = function (it) {
 
       ifSymbolsDescribe('Symbol.match', function () {
         if (!hasSymbols || !Symbol.match) {
-            return it('exists', function () {
-                expect(Symbol).to.have.property('match');
-            });
+          return it('exists', function () {
+            expect(Symbol).to.have.property('match');
+          });
         }
 
         it('allows a regex with Symbol.match set to a falsy value', function () {
