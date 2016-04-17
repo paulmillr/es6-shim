@@ -896,6 +896,13 @@
   var hasStringTrimBug = nonWS.trim().length !== nonWS.length;
   defineProperty(String.prototype, 'trim', trimShim, hasStringTrimBug);
 
+  // Given an argument x, it will return an IteratorResult object,
+  // with value set to x and done to false.
+  // Given no arguments, it will return an iterator completion object.
+  var iteratorResult = function (x) {
+    return { value: x, done: arguments.length === 0 };
+  };
+
   // see https://people.mozilla.org/~jorendorff/es6-draft.html#sec-string.prototype-@@iterator
   var StringIterator = function (s) {
     ES.RequireObjectCoercible(s);
@@ -907,7 +914,7 @@
     var i = this._i;
     if (typeof s === 'undefined' || i >= s.length) {
       this._s = void 0;
-      return { value: void 0, done: true };
+      return iteratorResult();
     }
     var first = s.charCodeAt(i);
     var second, len;
@@ -918,7 +925,7 @@
       len = (second < 0xDC00 || second > 0xDFFF) ? 1 : 2;
     }
     this._i = i + len;
-    return { value: s.substr(i, len), done: false };
+    return iteratorResult(s.substr(i, len));
   };
   addIterator(StringIterator.prototype);
   addIterator(String.prototype, function () {
@@ -1006,13 +1013,6 @@
   defineProperties(Array, ArrayShims);
   addDefaultSpecies(Array);
 
-  // Given an argument x, it will return an IteratorResult object,
-  // with value set to x and done to false.
-  // Given no arguments, it will return an iterator completion object.
-  var iteratorResult = function (x) {
-    return { value: x, done: arguments.length === 0 };
-  };
-
   // Our ArrayIterator is private; see
   // https://github.com/paulmillr/es6-shim/issues/252
   ArrayIterator = function (array, kind) {
@@ -1041,11 +1041,11 @@
             retval = [i, array[i]];
           }
           this.i = i + 1;
-          return { value: retval, done: false };
+          return iteratorResult(retval);
         }
       }
       this.array = void 0;
-      return { value: void 0, done: true };
+      return iteratorResult();
     }
   });
   addIterator(ArrayIterator.prototype);
@@ -2816,7 +2816,7 @@
             var kind = this.kind;
             var head = this.head;
             if (typeof this.i === 'undefined') {
-              return { value: void 0, done: true };
+              return iteratorResult();
             }
             while (i.isRemoved() && i !== head) {
               // back up off of removed entries
@@ -2835,12 +2835,12 @@
                   result = [i.key, i.value];
                 }
                 this.i = i;
-                return { value: result, done: false };
+                return iteratorResult(result);
               }
             }
             // once the iterator is done, it is done forever.
             this.i = void 0;
-            return { value: void 0, done: true };
+            return iteratorResult();
           }
         };
         addIterator(MapIterator.prototype);
