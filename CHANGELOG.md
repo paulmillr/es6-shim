@@ -1,3 +1,19 @@
+# es6-shim 0.35.1 (12 May 2016)
+* [Fix] Functions are objects (#418)
+* [Fix] use `createDataPropertyOrThrow` in `Array.from`, rather than `[[Put]]` (#415)
+* [Refactor] Use `iteratorResult` internally for iterator result objects
+* [Refactor] Simplify logic for Math.tanh (#412)
+* [Robustness] cache `Math` constants
+* [Robustness] cache `Math.exp`
+* [Robustness] don’t rely on a `Math` lookup inside `Math.asinh`
+* [Robustness] use cached `Number.isNaN`
+* [Robustness] cache `Math.sign`
+* [Dev Deps] update `es5-shim`, `eslint`, `@ljharb/eslint-config`, `jscs`, `uglify-js`, `grunt-contrib-connect`, `grunt-contrib-watch`, `evalmd`, `jshint`
+* [Tests] up to `node` `v6.1`, `v5.10`, `v4.4`
+* [Tests] `npm run --silent`, use “pretest” for linting
+* [Tests] `RegExp#toString`: Chrome Canary 51 produces `/undefined/`
+* [Docs] update ES6 draft comment URLs to point to the published spec
+
 # es6-shim 0.35.0 (29 Feb 2016)
 * [Breaking] remove `Reflect.enumerate` (#405)
 * [New] Add `Array#indexOf` from post-ES6 errata
