@@ -243,7 +243,6 @@
 
   var Type = {
     primitive: function (x) { return x === null || (typeof x !== 'function' && typeof x !== 'object'); },
-    object: function (x) { return x !== null && typeof x === 'object'; },
     string: function (x) { return _toString(x) === '[object String]'; },
     regex: function (x) { return _toString(x) === '[object RegExp]'; },
     symbol: function (x) {
@@ -1653,7 +1652,7 @@
     if (!objectSealAcceptsPrimitives) {
       var originalObjectSeal = Object.seal;
       overrideNative(Object, 'seal', function seal(value) {
-        if (!Type.object(value)) { return value; }
+        if (!ES.TypeIsObject(value)) { return value; }
         return originalObjectSeal(value);
       });
     }
@@ -1663,7 +1662,7 @@
     if (!objectIsSealedAcceptsPrimitives) {
       var originalObjectIsSealed = Object.isSealed;
       overrideNative(Object, 'isSealed', function isSealed(value) {
-        if (!Type.object(value)) { return true; }
+        if (!ES.TypeIsObject(value)) { return true; }
         return originalObjectIsSealed(value);
       });
     }
@@ -1673,7 +1672,7 @@
     if (!objectFreezeAcceptsPrimitives) {
       var originalObjectFreeze = Object.freeze;
       overrideNative(Object, 'freeze', function freeze(value) {
-        if (!Type.object(value)) { return value; }
+        if (!ES.TypeIsObject(value)) { return value; }
         return originalObjectFreeze(value);
       });
     }
@@ -1683,7 +1682,7 @@
     if (!objectIsFrozenAcceptsPrimitives) {
       var originalObjectIsFrozen = Object.isFrozen;
       overrideNative(Object, 'isFrozen', function isFrozen(value) {
-        if (!Type.object(value)) { return true; }
+        if (!ES.TypeIsObject(value)) { return true; }
         return originalObjectIsFrozen(value);
       });
     }
@@ -1693,7 +1692,7 @@
     if (!objectPreventExtensionsAcceptsPrimitives) {
       var originalObjectPreventExtensions = Object.preventExtensions;
       overrideNative(Object, 'preventExtensions', function preventExtensions(value) {
-        if (!Type.object(value)) { return value; }
+        if (!ES.TypeIsObject(value)) { return value; }
         return originalObjectPreventExtensions(value);
       });
     }
@@ -1703,7 +1702,7 @@
     if (!objectIsExtensibleAcceptsPrimitives) {
       var originalObjectIsExtensible = Object.isExtensible;
       overrideNative(Object, 'isExtensible', function isExtensible(value) {
-        if (!Type.object(value)) { return false; }
+        if (!ES.TypeIsObject(value)) { return false; }
         return originalObjectIsExtensible(value);
       });
     }
