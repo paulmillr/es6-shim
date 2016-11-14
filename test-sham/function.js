@@ -1,5 +1,3 @@
-/* global describe, it, expect, require */
-
 var identity = function (x) { return x; };
 
 describe('Function', function () {

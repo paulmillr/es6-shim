@@ -1,4 +1,3 @@
-/* global describe, it, xit, expect, require */
 describe('JSON', function () {
   var functionsHaveNames = (function foo() {}).name === 'foo';
   var ifFunctionsHaveNamesIt = functionsHaveNames ? it : xit;

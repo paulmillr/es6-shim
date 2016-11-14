@@ -1,5 +1,3 @@
-/* global describe, specify, assert, Promise */
-
 describe('Evil promises should not be able to break invariants', function () {
   'use strict';
 

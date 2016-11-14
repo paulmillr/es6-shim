@@ -891,7 +891,7 @@
   };
   var nonWS = ['\u0085', '\u200b', '\ufffe'].join('');
   var nonWSregex = new RegExp('[' + nonWS + ']', 'g');
-  var isBadHexRegex = /^[\-+]0x[0-9a-f]+$/i;
+  var isBadHexRegex = /^[-+]0x[0-9a-f]+$/i;
   var hasStringTrimBug = nonWS.trim().length !== nonWS.length;
   defineProperty(String.prototype, 'trim', trimShim, hasStringTrimBug);
 
@@ -1405,12 +1405,12 @@
       POSITIVE_INFINITY: OrigNumber.POSITIVE_INFINITY
     });
     /* globals Number: true */
-    /* eslint-disable no-undef */
+    /* eslint-disable no-undef, no-global-assign */
     /* jshint -W020 */
     Number = NumberShim;
     Value.redefine(globals, 'Number', NumberShim);
     /* jshint +W020 */
-    /* eslint-enable no-undef */
+    /* eslint-enable no-undef, no-global-assign */
     /* globals Number: false */
   }
 
@@ -1810,12 +1810,12 @@
       $input: true // Chrome < v39 & Opera < 26 have a nonstandard "$input" property
     });
     /* globals RegExp: true */
-    /* eslint-disable no-undef */
+    /* eslint-disable no-undef, no-global-assign */
     /* jshint -W020 */
     RegExp = RegExpShim;
     Value.redefine(globals, 'RegExp', RegExpShim);
     /* jshint +W020 */
-    /* eslint-enable no-undef */
+    /* eslint-enable no-undef, no-global-assign */
     /* globals RegExp: false */
   }
 
@@ -1857,7 +1857,7 @@
       if (numberIsNaN(x) || value < 1) { return NaN; }
       if (x === 1) { return 0; }
       if (x === Infinity) { return x; }
-      return _log(x / E + _sqrt(x + 1) * _sqrt(x - 1) / E) + 1;
+      return _log((x / E) + (_sqrt(x + 1) * _sqrt(x - 1) / E)) + 1;
     },
 
     asinh: function asinh(value) {
@@ -1865,7 +1865,7 @@
       if (x === 0 || !globalIsFinite(x)) {
         return x;
       }
-      return x < 0 ? -asinh(-x) : _log(x + _sqrt(x * x + 1));
+      return x < 0 ? -asinh(-x) : _log(x + _sqrt((x * x) + 1));
     },
 
     atanh: function atanh(value) {
@@ -1890,7 +1890,7 @@
       } else {
         result = _exp(_log(x) / 3);
         // from http://en.wikipedia.org/wiki/Cube_root#Numerical_methods
-        result = (x / (result * result) + (2 * result)) / 3;
+        result = ((x / (result * result)) + (2 * result)) / 3;
       }
       return negate ? -result : result;
     },
@@ -2005,7 +2005,7 @@
       var bl = b & 0xffff;
       // the shift by 0 fixes the sign on the high part
       // the final |0 converts the unsigned value into a signed value
-      return (al * bl) + (((ah * bl + al * bh) << 16) >>> 0) | 0;
+      return (al * bl) + ((((ah * bl) + (al * bh)) << 16) >>> 0) | 0;
     },
 
     fround: function fround(x) {
@@ -2019,7 +2019,7 @@
         return sign * roundTiesToEven(abs / BINARY_32_MIN_VALUE / BINARY_32_EPSILON) * BINARY_32_MIN_VALUE * BINARY_32_EPSILON;
       }
       // Veltkamp's splitting (?)
-      var a = (1 + BINARY_32_EPSILON / Number.EPSILON) * abs;
+      var a = (1 + (BINARY_32_EPSILON / Number.EPSILON)) * abs;
       var result = a - (a - abs);
       if (result > BINARY_32_MAX_VALUE || numberIsNaN(result)) {
         return sign * Infinity;
@@ -2037,7 +2037,7 @@
   // Chrome 40 loses Math.acosh precision with high numbers
   defineProperty(Math, 'acosh', MathShims.acosh, Math.acosh(Number.MAX_VALUE) === Infinity);
   // Firefox 38 on Windows
-  defineProperty(Math, 'cbrt', MathShims.cbrt, Math.abs(1 - Math.cbrt(1e-300) / 1e-100) / Number.EPSILON > 8);
+  defineProperty(Math, 'cbrt', MathShims.cbrt, Math.abs(1 - (Math.cbrt(1e-300) / 1e-100)) / Number.EPSILON > 8);
   // node 0.11 has an imprecise Math.sinh with very small numbers
   defineProperty(Math, 'sinh', MathShims.sinh, Math.sinh(-2e-17) !== -2e-17);
   // FF 35 on Linux reports 22025.465794806725 for Math.expm1(10)
@@ -2046,14 +2046,14 @@
 
   var origMathRound = Math.round;
   // breaks in e.g. Safari 8, Internet Explorer 11, Opera 12
-  var roundHandlesBoundaryConditions = Math.round(0.5 - Number.EPSILON / 4) === 0 && Math.round(-0.5 + Number.EPSILON / 3.99) === 1;
+  var roundHandlesBoundaryConditions = Math.round(0.5 - (Number.EPSILON / 4)) === 0 && Math.round(-0.5 + (Number.EPSILON / 3.99)) === 1;
 
   // When engines use Math.floor(x + 0.5) internally, Math.round can be buggy for large integers.
   // This behavior should be governed by "round to nearest, ties to even mode"
   // see http://www.ecma-international.org/ecma-262/6.0/#sec-terms-and-definitions-number-type
   // These are the boundary cases where it breaks.
   var smallestPositiveNumberWhereRoundBreaks = inverseEpsilon + 1;
-  var largestPositiveNumberWhereRoundBreaks = 2 * inverseEpsilon - 1;
+  var largestPositiveNumberWhereRoundBreaks = (2 * inverseEpsilon) - 1;
   var roundDoesNotIncreaseIntegers = [smallestPositiveNumberWhereRoundBreaks, largestPositiveNumberWhereRoundBreaks].every(function (num) {
     return Math.round(num) === num;
   });
@@ -2630,11 +2630,11 @@
         !promiseRequiresObjectContext || promiseResolveBroken ||
         !getsThenSynchronously || hasBadResolverPromise) {
       /* globals Promise: true */
-      /* eslint-disable no-undef */
+      /* eslint-disable no-undef, no-global-assign */
       /* jshint -W020 */
       Promise = PromiseShim;
       /* jshint +W020 */
-      /* eslint-enable no-undef */
+      /* eslint-enable no-undef, no-global-assign */
       /* globals Promise: false */
       overrideNative(globals, 'Promise', PromiseShim);
     }

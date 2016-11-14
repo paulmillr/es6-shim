@@ -1,5 +1,3 @@
-/* global describe, it, expect, require */
-
 var runStringTests = function (it) {
   'use strict';
 
@@ -26,7 +24,7 @@ var runStringTests = function (it) {
     });
 
     describe('#repeat()', function () {
-      if (!String.prototype.hasOwnProperty('repeat')) {
+      if (!Object.prototype.hasOwnProperty.call(String.prototype, 'repeat')) {
         return it('exists', function () {
           expect(String.prototype).to.have.property('repeat');
         });
@@ -80,7 +78,7 @@ var runStringTests = function (it) {
     });
 
     describe('#startsWith()', function () {
-      if (!String.prototype.hasOwnProperty('startsWith')) {
+      if (!Object.prototype.hasOwnProperty.call(String.prototype, 'startsWith')) {
         return it('exists', function () {
           expect(String.prototype).to.have.property('startsWith');
         });
@@ -203,7 +201,7 @@ var runStringTests = function (it) {
     });
 
     describe('#endsWith()', function () {
-      if (!String.prototype.hasOwnProperty('endsWith')) {
+      if (!Object.prototype.hasOwnProperty.call(String.prototype, 'endsWith')) {
         return it('exists', function () {
           expect(String.prototype).to.have.property('endsWith');
         });
@@ -329,7 +327,7 @@ var runStringTests = function (it) {
     });
 
     describe('#includes()', function () {
-      if (!String.prototype.hasOwnProperty('includes')) {
+      if (!Object.prototype.hasOwnProperty.call(String.prototype, 'includes')) {
         return it('exists', function () {
           expect(String.prototype).to.have.property('includes');
         });
@@ -444,7 +442,7 @@ var runStringTests = function (it) {
     });
 
     describe('.fromCodePoint()', function () {
-      if (!String.hasOwnProperty('fromCodePoint')) {
+      if (!Object.prototype.hasOwnProperty.call(String, 'fromCodePoint')) {
         return it('exists', function () {
           expect(String).to.have.property('fromCodePoint');
         });
@@ -496,7 +494,7 @@ var runStringTests = function (it) {
     });
 
     describe('#codePointAt()', function () {
-      if (!String.prototype.hasOwnProperty('codePointAt')) {
+      if (!Object.prototype.hasOwnProperty.call(String.prototype, 'codePointAt')) {
         return it('exists', function () {
           expect(String.prototype).to.have.property('codePointAt');
         });
@@ -543,7 +541,7 @@ var runStringTests = function (it) {
     });
 
     describe('#[Symbol.iterator]()', function () {
-      if (!Array.hasOwnProperty('from')) {
+      if (!Object.prototype.hasOwnProperty.call(Array, 'from')) {
         return it('requires Array.from to test', function () {
           expect(Array).to.have.property('from');
         });
@@ -563,7 +561,7 @@ var runStringTests = function (it) {
     });
 
     describe('.raw()', function () {
-      if (!String.hasOwnProperty('raw')) {
+      if (!Object.prototype.hasOwnProperty.call(String, 'raw')) {
         return it('exists', function () {
           expect(String).to.have.property('raw');
         });
@@ -588,6 +586,7 @@ var runStringTests = function (it) {
         callSite.raw = ['The total is ', ' ($', ' with tax)'];
         expect(String.raw(callSite, 10, 11)).to.eql(str);
 
+        // eslint-disable-next-line no-template-curly-in-string
         str = 'The total is {total} (${total * 1.01} with tax)';
         callSite.raw = ['The total is ', ' ($', ' with tax)'];
         expect(String.raw(callSite, '{total}', '{total * 1.01}')).to.eql(str);
@@ -600,6 +599,7 @@ var runStringTests = function (it) {
         callSite.raw = { 0: 'The total is ', 1: ' ($', 2: ' with tax)', length: 3 };
         expect(String.raw(callSite, 10, 11)).to.eql(str);
 
+        // eslint-disable-next-line no-template-curly-in-string
         str = 'The total is {total} (${total * 1.01} with tax)';
         callSite.raw = { 0: 'The total is ', 1: ' ($', 2: ' with tax)', length: 3 };
         expect(String.raw(callSite, '{total}', '{total * 1.01}')).to.eql(str);
@@ -621,7 +621,7 @@ var runStringTests = function (it) {
     });
 
     describe('#trim()', function () {
-      if (!String.prototype.hasOwnProperty('trim')) {
+      if (!Object.prototype.hasOwnProperty.call(String.prototype, 'trim')) {
         return it('exists', function () {
           expect(String.prototype).to.have.property('trim');
         });

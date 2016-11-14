@@ -1,5 +1,3 @@
-/* global describe, xdescribe, it, xit, expect, require, Reflect */
-
 var arePropertyDescriptorsSupported = function () {
   try {
     Object.defineProperty({}, 'x', {});

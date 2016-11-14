@@ -1,5 +1,3 @@
-/* global describe, it, expect, require, beforeEach, afterEach */
-
 var runArrayTests = function (it) {
   'use strict';
 
@@ -46,7 +44,7 @@ var runArrayTests = function (it) {
     });
 
     describe('.from()', function () {
-      if (!Array.hasOwnProperty('from')) {
+      if (!Object.prototype.hasOwnProperty.call(Array, 'from')) {
         return it('exists', function () {
           expect(Array).to.have.property('from');
         });
@@ -264,7 +262,10 @@ var runArrayTests = function (it) {
           get: function () {},
           set: function (v) { throw new EvalError('boom'); }
         });
-        expect(function () { var arr = []; arr[key] = 42; }).to['throw'](EvalError); // assert thrower
+        expect(function () {
+          var arr = [];
+          arr[key] = 42;
+        }).to['throw'](EvalError); // assert thrower
 
         expect(function () { Array.from({ length: key + 1 }); }).not.to['throw']();
 
@@ -274,7 +275,7 @@ var runArrayTests = function (it) {
     });
 
     describe('.of()', function () {
-      if (!Array.hasOwnProperty('of')) {
+      if (!Object.prototype.hasOwnProperty.call(Array, 'of')) {
         return it('exists', function () {
           expect(Array).to.have.property('of');
         });
@@ -327,7 +328,7 @@ var runArrayTests = function (it) {
     });
 
     describe('#copyWithin()', function () {
-      if (!Array.prototype.hasOwnProperty('copyWithin')) {
+      if (!Object.prototype.hasOwnProperty.call(Array.prototype, 'copyWithin')) {
         return it('exists', function () {
           expect(Array.prototype).to.have.property('copyWithin');
         });
@@ -416,7 +417,7 @@ var runArrayTests = function (it) {
     });
 
     describe('#find()', function () {
-      if (!Array.prototype.hasOwnProperty('find')) {
+      if (!Object.prototype.hasOwnProperty.call(Array.prototype, 'find')) {
         return it('exists', function () {
           expect(Array.prototype).to.have.property('find');
         });
@@ -515,7 +516,7 @@ var runArrayTests = function (it) {
     });
 
     describe('#findIndex()', function () {
-      if (!Array.prototype.hasOwnProperty('findIndex')) {
+      if (!Object.prototype.hasOwnProperty.call(Array.prototype, 'findIndex')) {
         return it('exists', function () {
           expect(Array.prototype).to.have.property('findIndex');
         });
@@ -614,7 +615,7 @@ var runArrayTests = function (it) {
     });
 
     describe('ArrayIterator', function () {
-      if (!Array.prototype.hasOwnProperty('keys')) {
+      if (!Object.prototype.hasOwnProperty.call(Array.prototype, 'keys')) {
         return it('can be tested', function () {
           expect(Array.prototype).to.have.property('keys');
         });
@@ -640,7 +641,7 @@ var runArrayTests = function (it) {
     });
 
     describe('#keys()', function () {
-      if (!Array.prototype.hasOwnProperty('keys')) {
+      if (!Object.prototype.hasOwnProperty.call(Array.prototype, 'keys')) {
         return it('exists', function () {
           expect(Array.prototype).to.have.property('keys');
         });
@@ -711,7 +712,7 @@ var runArrayTests = function (it) {
     });
 
     describe('#values()', function () {
-      if (!Array.prototype.hasOwnProperty('values')) {
+      if (!Object.prototype.hasOwnProperty.call(Array.prototype, 'values')) {
         return it('exists', function () {
           expect(Array.prototype).to.have.property('values');
         });
@@ -782,7 +783,7 @@ var runArrayTests = function (it) {
     });
 
     describe('#entries()', function () {
-      if (!Array.prototype.hasOwnProperty('entries')) {
+      if (!Object.prototype.hasOwnProperty.call(Array.prototype, 'entries')) {
         return it('exists', function () {
           expect(Array.prototype).to.have.property('entries');
         });
@@ -859,7 +860,7 @@ var runArrayTests = function (it) {
     });
 
     describe('#fill()', function () {
-      if (!Array.prototype.hasOwnProperty('fill')) {
+      if (!Object.prototype.hasOwnProperty.call(Array.prototype, 'fill')) {
         return it('exists', function () {
           expect(Array.prototype).to.have.property('fill');
         });

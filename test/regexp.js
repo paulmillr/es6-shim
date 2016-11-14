@@ -1,5 +1,3 @@
-/* global beforeEach, describe, it, expect, require */
-
 var getRegexLiteral = function (stringRegex) {
   try {
     /* jshint evil: true */
@@ -13,7 +11,7 @@ var describeIfSupportsDescriptors = Object.getOwnPropertyDescriptor ? describe :
 var callAllowsPrimitives = (function () { return this === 3; }.call(3));
 var ifCallAllowsPrimitivesIt = callAllowsPrimitives ? it : it.skip;
 var ifShimIt = (typeof process !== 'undefined' && process.env.NO_ES6_SHIM) ? it.skip : it;
-var hasSymbols = typeof Symbol === 'function' && typeof Symbol['for'] === 'function' && typeof Symbol() === 'symbol';
+var hasSymbols = typeof Symbol === 'function' && typeof Symbol['for'] === 'function' && typeof Symbol('') === 'symbol';
 var ifSymbolsDescribe = hasSymbols ? describe : describe.skip;
 var defaultRegex = (function () {
   // Chrome Canary 51 has an undefined RegExp#toSource, and
@@ -197,7 +195,7 @@ describe('RegExp', function () {
   });
 
   describeIfSupportsDescriptors('#flags', function () {
-    if (!RegExp.prototype.hasOwnProperty('flags')) {
+    if (!Object.prototype.hasOwnProperty.call(RegExp.prototype, 'flags')) {
       return it('exists', function () {
         expect(RegExp.prototype).to.have.property('flags');
       });
@@ -226,10 +224,10 @@ describe('RegExp', function () {
       expect((/a/g).flags).to.equal('g');
       expect((/a/i).flags).to.equal('i');
       expect((/a/m).flags).to.equal('m');
-      if (RegExp.prototype.hasOwnProperty('sticky')) {
+      if (Object.prototype.hasOwnProperty.call(RegExp.prototype, 'sticky')) {
         expect(getRegexLiteral('/a/y').flags).to.equal('y');
       }
-      if (RegExp.prototype.hasOwnProperty('unicode')) {
+      if (Object.prototype.hasOwnProperty.call(RegExp.prototype, 'unicode')) {
         expect(getRegexLiteral('/a/u').flags).to.equal('u');
       }
     });
@@ -238,10 +236,10 @@ describe('RegExp', function () {
       expect(new RegExp('a', 'g').flags).to.equal('g');
       expect(new RegExp('a', 'i').flags).to.equal('i');
       expect(new RegExp('a', 'm').flags).to.equal('m');
-      if (RegExp.prototype.hasOwnProperty('sticky')) {
+      if (Object.prototype.hasOwnProperty.call(RegExp.prototype, 'sticky')) {
         expect(new RegExp('a', 'y').flags).to.equal('y');
       }
-      if (RegExp.prototype.hasOwnProperty('unicode')) {
+      if (Object.prototype.hasOwnProperty.call(RegExp.prototype, 'unicode')) {
         expect(new RegExp('a', 'u').flags).to.equal('u');
       }
     });
@@ -250,10 +248,10 @@ describe('RegExp', function () {
       expect((/a/gim).flags).to.equal('gim');
       expect((/a/mig).flags).to.equal('gim');
       expect((/a/mgi).flags).to.equal('gim');
-      if (RegExp.prototype.hasOwnProperty('sticky')) {
+      if (Object.prototype.hasOwnProperty.call(RegExp.prototype, 'sticky')) {
         expect(getRegexLiteral('/a/gyim').flags).to.equal('gimy');
       }
-      if (RegExp.prototype.hasOwnProperty('unicode')) {
+      if (Object.prototype.hasOwnProperty.call(RegExp.prototype, 'unicode')) {
         expect(getRegexLiteral('/a/ugmi').flags).to.equal('gimu');
       }
     });
@@ -262,10 +260,10 @@ describe('RegExp', function () {
       expect(new RegExp('a', 'gim').flags).to.equal('gim');
       expect(new RegExp('a', 'mig').flags).to.equal('gim');
       expect(new RegExp('a', 'mgi').flags).to.equal('gim');
-      if (RegExp.prototype.hasOwnProperty('sticky')) {
+      if (Object.prototype.hasOwnProperty.call(RegExp.prototype, 'sticky')) {
         expect(new RegExp('a', 'mygi').flags).to.equal('gimy');
       }
-      if (RegExp.prototype.hasOwnProperty('unicode')) {
+      if (Object.prototype.hasOwnProperty.call(RegExp.prototype, 'unicode')) {
         expect(new RegExp('a', 'mugi').flags).to.equal('gimu');
       }
     });
@@ -367,10 +365,10 @@ describe('RegExp', function () {
       });
 
       it('has "multiline"', function () {
-        if (RegExp.hasOwnProperty('multiline')) {
+        if (Object.prototype.hasOwnProperty.call(RegExp, 'multiline')) {
           expect(RegExp.multiline).to.equal(false);
         }
-        if (RegExp.hasOwnProperty('$*')) {
+        if (Object.prototype.hasOwnProperty.call(RegExp, '$*')) {
           expect(RegExp['$*']).to.equal(false);
         }
       });

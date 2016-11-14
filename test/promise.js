@@ -1,5 +1,3 @@
-/* global describe, it, expect, require, Promise */
-
 /* This file is for testing implementation regressions of Promises. */
 
 describe('Promise', function () {

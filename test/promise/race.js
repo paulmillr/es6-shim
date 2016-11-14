@@ -1,5 +1,3 @@
-/* global describe, it, expect, setTimeout, assert, Promise */
-
 var failIfThrows = function (done) {
   'use strict';
 

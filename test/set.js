@@ -1,5 +1,3 @@
-/* global describe, it, xit, expect, require, beforeEach, afterEach */
-
 // Big thanks to V8 folks for test ideas.
 // v8/test/mjsunit/harmony/collections.js
 
@@ -56,7 +54,7 @@ describe('Set', function () {
     return result;
   };
 
-  var prototypePropIsEnumerable = (function () {}).propertyIsEnumerable('prototype');
+  var prototypePropIsEnumerable = Object.prototype.propertyIsEnumerable.call(function () {}, 'prototype');
   var expectNotEnumerable = function (object) {
     if (prototypePropIsEnumerable && typeof object === 'function') {
       expect(Object.keys(object)).to.eql(['prototype']);
@@ -289,7 +287,7 @@ describe('Set', function () {
   });
 
   describe('#keys()', function () {
-    if (!Set.prototype.hasOwnProperty('keys')) {
+    if (!Object.prototype.hasOwnProperty.call(Set.prototype, 'keys')) {
       return it('exists', function () {
         expect(Set.prototype).to.have.property('keys');
       });
@@ -313,7 +311,7 @@ describe('Set', function () {
   });
 
   describe('#values()', function () {
-    if (!Set.prototype.hasOwnProperty('values')) {
+    if (!Object.prototype.hasOwnProperty.call(Set.prototype, 'values')) {
       return it('exists', function () {
         expect(Set.prototype).to.have.property('values');
       });
@@ -341,7 +339,7 @@ describe('Set', function () {
   });
 
   describe('#entries()', function () {
-    if (!Set.prototype.hasOwnProperty('entries')) {
+    if (!Object.prototype.hasOwnProperty.call(Set.prototype, 'entries')) {
       return it('exists', function () {
         expect(Set.prototype).to.have.property('entries');
       });
@@ -361,7 +359,7 @@ describe('Set', function () {
   });
 
   describe('#has()', function () {
-    if (!Set.prototype.hasOwnProperty('has')) {
+    if (!Object.prototype.hasOwnProperty.call(Set.prototype, 'has')) {
       return it('exists', function () {
         expect(Set.prototype).to.have.property('has');
       });
@@ -414,7 +412,7 @@ describe('Set', function () {
   });
 
   describe('has an iterator that works with Array.from', function () {
-    if (!Array.hasOwnProperty('from')) {
+    if (!Object.prototype.hasOwnProperty.call(Array, 'from')) {
       return it('requires Array.from to exist', function () {
         expect(Array).to.have.property('from');
       });

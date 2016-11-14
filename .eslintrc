@@ -13,9 +13,11 @@
 		"id-length": [2, { "min": 1, "max": 40 }],
 		"indent": [2, 2],
 		"max-depth": [2, 5],
+		"max-lines": [1],
 		"max-params": [2, 4],
 		"max-nested-callbacks": [2, 5],
 		"max-statements": [1, 25],
+		"max-statements-per-line": [2, { "max": 2 }],
 		"new-cap": [2, { "capIsNewExceptions": ["Call", "Construct", "CreateHTML", "GetIterator", "GetMethod", "IsCallable", "IsConstructor", "IsPromise", "IsRegExp", "IteratorClose", "IteratorComplete", "IteratorNext", "IteratorStep", "Map", "OrigNumber", "RequireObjectCoercible", "SameValue", "SameValueZero", "Set", "SpeciesConstructor", "ToInteger", "ToLength", "ToNumber", "ToObject", "ToString", "ToUint32", "TypeIsObject"] }],
 		"no-constant-condition": [1],
 		"no-continue": [1],
@@ -39,7 +41,9 @@
 		"no-unused-vars": [1, { "vars": "all", "args": "after-used" }],
 		"no-use-before-define": [1],
 		"no-useless-call": [0],
+		"object-curly-newline": [1],
 		"operator-linebreak": [2, "after"],
+		"sort-keys": [0],
 		"spaced-comment": [0],
 		"strict": [0]
 	}

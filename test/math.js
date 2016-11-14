@@ -1,5 +1,3 @@
-/* global describe, it, xit, expect, require */
-
 var Assertion = expect().constructor;
 Assertion.prototype.almostEqual = function (obj, precision) {
   'use strict';
@@ -36,7 +34,7 @@ describe('Math', function () {
   });
 
   describe('.acosh()', function () {
-    if (!Math.hasOwnProperty('acosh')) {
+    if (!Object.prototype.hasOwnProperty.call(Math, 'acosh')) {
       return it('exists', function () {
         expect(Math).to.have.property('acosh');
       });
@@ -70,7 +68,7 @@ describe('Math', function () {
   });
 
   describe('.asinh()', function () {
-    if (!Math.hasOwnProperty('asinh')) {
+    if (!Object.prototype.hasOwnProperty.call(Math, 'asinh')) {
       return it('exists', function () {
         expect(Math).to.have.property('asinh');
       });
@@ -112,7 +110,7 @@ describe('Math', function () {
   });
 
   describe('.atanh()', function () {
-    if (!Math.hasOwnProperty('atanh')) {
+    if (!Object.prototype.hasOwnProperty.call(Math, 'atanh')) {
       return it('exists', function () {
         expect(Math).to.have.property('atanh');
       });
@@ -148,7 +146,7 @@ describe('Math', function () {
   });
 
   describe('.cbrt()', function () {
-    if (!Math.hasOwnProperty('cbrt')) {
+    if (!Object.prototype.hasOwnProperty.call(Math, 'cbrt')) {
       return it('exists', function () {
         expect(Math).to.have.property('cbrt');
       });
@@ -184,7 +182,7 @@ describe('Math', function () {
   });
 
   describe('.clz32()', function () {
-    if (!Math.hasOwnProperty('clz32')) {
+    if (!Object.prototype.hasOwnProperty.call(Math, 'clz32')) {
       return it('exists', function () {
         expect(Math).to.have.property('clz32');
       });
@@ -252,7 +250,7 @@ describe('Math', function () {
   });
 
   describe('.cosh()', function () {
-    if (!Math.hasOwnProperty('cosh')) {
+    if (!Object.prototype.hasOwnProperty.call(Math, 'cosh')) {
       return it('exists', function () {
         expect(Math).to.have.property('cosh');
       });
@@ -296,7 +294,7 @@ describe('Math', function () {
   });
 
   describe('.expm1()', function () {
-    if (!Math.hasOwnProperty('expm1')) {
+    if (!Object.prototype.hasOwnProperty.call(Math, 'expm1')) {
       return it('exists', function () {
         expect(Math).to.have.property('expm1');
       });
@@ -342,7 +340,7 @@ describe('Math', function () {
   });
 
   describe('.hypot()', function () {
-    if (!Math.hasOwnProperty('hypot')) {
+    if (!Object.prototype.hasOwnProperty.call(Math, 'hypot')) {
       return it('exists', function () {
         expect(Math).to.have.property('hypot');
       });
@@ -398,7 +396,7 @@ describe('Math', function () {
   });
 
   describe('.log2()', function () {
-    if (!Math.hasOwnProperty('log2')) {
+    if (!Object.prototype.hasOwnProperty.call(Math, 'log2')) {
       return it('exists', function () {
         expect(Math).to.have.property('log2');
       });
@@ -435,7 +433,7 @@ describe('Math', function () {
   });
 
   describe('.log10', function () {
-    if (!Math.hasOwnProperty('log10')) {
+    if (!Object.prototype.hasOwnProperty.call(Math, 'log10')) {
       return it('exists', function () {
         expect(Math).to.have.property('log10');
       });
@@ -469,7 +467,7 @@ describe('Math', function () {
   });
 
   describe('.log1p', function () {
-    if (!Math.hasOwnProperty('log1p')) {
+    if (!Object.prototype.hasOwnProperty.call(Math, 'log1p')) {
       return it('exists', function () {
         expect(Math).to.have.property('log1p');
       });
@@ -503,7 +501,7 @@ describe('Math', function () {
   });
 
   describe('.sign()', function () {
-    if (!Math.hasOwnProperty('sign')) {
+    if (!Object.prototype.hasOwnProperty.call(Math, 'sign')) {
       return it('exists', function () {
         expect(Math).to.have.property('sign');
       });
@@ -550,7 +548,7 @@ describe('Math', function () {
   });
 
   describe('.sinh()', function () {
-    if (!Math.hasOwnProperty('sinh')) {
+    if (!Object.prototype.hasOwnProperty.call(Math, 'sinh')) {
       return it('exists', function () {
         expect(Math).to.have.property('sinh');
       });
@@ -581,7 +579,7 @@ describe('Math', function () {
   });
 
   describe('.tanh()', function () {
-    if (!Math.hasOwnProperty('tanh')) {
+    if (!Object.prototype.hasOwnProperty.call(Math, 'tanh')) {
       return it('exists', function () {
         expect(Math).to.have.property('tanh');
       });
@@ -615,7 +613,7 @@ describe('Math', function () {
   });
 
   describe('.trunc()', function () {
-    if (!Math.hasOwnProperty('trunc')) {
+    if (!Object.prototype.hasOwnProperty.call(Math, 'trunc')) {
       return it('exists', function () {
         expect(Math).to.have.property('trunc');
       });
@@ -652,7 +650,7 @@ describe('Math', function () {
   });
 
   describe('.imul()', function () {
-    if (!Math.hasOwnProperty('imul')) {
+    if (!Object.prototype.hasOwnProperty.call(Math, 'imul')) {
       return it('exists', function () {
         expect(Math).to.have.property('imul');
       });
@@ -749,30 +747,30 @@ describe('Math', function () {
 
     it('returns 0 for (0,0.5)', function () {
       expect(Math.round(0.5)).not.to.equal(0);
-      expect(Math.round(0.5 - EPSILON / 4)).to.equal(0);
-      expect(Math.round(0 + EPSILON / 4)).to.equal(0);
+      expect(Math.round(0.5 - (EPSILON / 4))).to.equal(0);
+      expect(Math.round(0 + (EPSILON / 4))).to.equal(0);
     });
 
     it('returns -0 for (-0.5,0)', function () {
       expect(Math.round(-0.5)).to.equal(0);
-      expect(Math.round(-0.5 - EPSILON / 3.99)).not.to.equal(0);
-      expect(isNegativeZero(Math.round(-0.5 + EPSILON / 3.99))).to.equal(true);
-      expect(isNegativeZero(Math.round(0 - EPSILON / 3.99))).to.equal(true);
+      expect(Math.round(-0.5 - (EPSILON / 3.99))).not.to.equal(0);
+      expect(isNegativeZero(Math.round(-0.5 + (EPSILON / 3.99)))).to.equal(true);
+      expect(isNegativeZero(Math.round(0 - (EPSILON / 3.99)))).to.equal(true);
     });
 
     it('returns 1 / Number.EPSILON + 1 for 1 / Number.EPSILON + 1', function () {
-      var inverseEpsilonPlus1 = 1 / EPSILON + 1;
+      var inverseEpsilonPlus1 = (1 / EPSILON) + 1;
       expect(Math.round(inverseEpsilonPlus1)).to.equal(inverseEpsilonPlus1);
     });
 
     it('returns 2 / Number.EPSILON - 1 for 2 / Number.EPSILON - 1', function () {
-      var twiceInverseEpsilonMinus1 = 2 / EPSILON - 1;
+      var twiceInverseEpsilonMinus1 = (2 / EPSILON) - 1;
       expect(Math.round(twiceInverseEpsilonMinus1)).to.equal(twiceInverseEpsilonMinus1);
     });
   });
 
   describe('.fround()', function () {
-    if (!Math.hasOwnProperty('fround')) {
+    if (!Object.prototype.hasOwnProperty.call(Math, 'fround')) {
       return it('exists', function () {
         expect(Math).to.have.property('fround');
       });
@@ -841,8 +839,8 @@ describe('Math', function () {
       expect(Math.fround(-minFloat32)).to.equal(-minFloat32);
       expect(Math.fround(minFloat32 / 2)).to.equal(0);
       expect(Math.fround(-minFloat32 / 2)).to.equal(0);
-      expect(Math.fround(minFloat32 / 2 + Math.pow(2, -202))).to.equal(minFloat32);
-      expect(Math.fround(-minFloat32 / 2 - Math.pow(2, -202))).to.equal(-minFloat32);
+      expect(Math.fround((minFloat32 / 2) + Math.pow(2, -202))).to.equal(minFloat32);
+      expect(Math.fround((-minFloat32 / 2) - Math.pow(2, -202))).to.equal(-minFloat32);
     });
   });
 });

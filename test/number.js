@@ -1,5 +1,3 @@
-/* global describe, it, xit, expect, require */
-
 describe('Number', function () {
   var functionsHaveNames = (function foo() {}).name === 'foo';
   var ifFunctionsHaveNamesIt = functionsHaveNames ? it : xit;
@@ -49,55 +47,55 @@ describe('Number', function () {
   describe('Number constants', function () {
     it('should have max safe integer', function () {
       expect(Number).to.have.property('MAX_SAFE_INTEGER');
-      expect(Number.propertyIsEnumerable('MAX_SAFE_INTEGER')).to.equal(false);
+      expect(Object.prototype.propertyIsEnumerable.call(Number, 'MAX_SAFE_INTEGER')).to.equal(false);
       expect(Number.MAX_SAFE_INTEGER).to.equal(Math.pow(2, 53) - 1);
     });
 
     it('should have min safe integer', function () {
       expect(Number).to.have.property('MIN_SAFE_INTEGER');
-      expect(Number.propertyIsEnumerable('MIN_SAFE_INTEGER')).to.equal(false);
+      expect(Object.prototype.propertyIsEnumerable.call(Number, 'MIN_SAFE_INTEGER')).to.equal(false);
       expect(Number.MIN_SAFE_INTEGER).to.equal(-Math.pow(2, 53) + 1);
     });
 
     it('should have epsilon', function () {
       expect(Number).to.have.property('EPSILON');
-      expect(Number.propertyIsEnumerable('EPSILON')).to.equal(false);
+      expect(Object.prototype.propertyIsEnumerable.call(Number, 'EPSILON')).to.equal(false);
       expect(Number.EPSILON).to.equal(2.2204460492503130808472633361816e-16);
     });
 
     it('should have NaN', function () {
       expect(Number).to.have.property('NaN');
-      expect(Number.propertyIsEnumerable('NaN')).to.equal(false);
+      expect(Object.prototype.propertyIsEnumerable.call(Number, 'NaN')).to.equal(false);
       expect(isNaN(Number.NaN)).to.equal(true);
     });
 
     it('should have MAX_VALUE', function () {
       expect(Number).to.have.property('MAX_VALUE');
-      expect(Number.propertyIsEnumerable('MAX_VALUE')).to.equal(false);
+      expect(Object.prototype.propertyIsEnumerable.call(Number, 'MAX_VALUE')).to.equal(false);
       expect(Number.MAX_VALUE).to.equal(1.7976931348623157e+308);
     });
 
     it('should have MIN_VALUE', function () {
       expect(Number).to.have.property('MIN_VALUE');
-      expect(Number.propertyIsEnumerable('MIN_VALUE')).to.equal(false);
+      expect(Object.prototype.propertyIsEnumerable.call(Number, 'MIN_VALUE')).to.equal(false);
       expect(Number.MIN_VALUE).to.equal(5e-324);
     });
 
     it('should have NEGATIVE_INFINITY', function () {
       expect(Number).to.have.property('NEGATIVE_INFINITY');
-      expect(Number.propertyIsEnumerable('NEGATIVE_INFINITY')).to.equal(false);
+      expect(Object.prototype.propertyIsEnumerable.call(Number, 'NEGATIVE_INFINITY')).to.equal(false);
       expect(Number.NEGATIVE_INFINITY).to.equal(-Infinity);
     });
 
     it('should have POSITIVE_INFINITY', function () {
       expect(Number).to.have.property('POSITIVE_INFINITY');
-      expect(Number.propertyIsEnumerable('POSITIVE_INFINITY')).to.equal(false);
+      expect(Object.prototype.propertyIsEnumerable.call(Number, 'POSITIVE_INFINITY')).to.equal(false);
       expect(Number.POSITIVE_INFINITY).to.equal(Infinity);
     });
   });
 
   describe('.parseInt()', function () {
-    if (!Number.hasOwnProperty('parseInt')) {
+    if (!Object.prototype.hasOwnProperty.call(Number, 'parseInt')) {
       return it('exists', function () {
         expect(Number).to.have.property('parseInt');
       });
@@ -129,7 +127,7 @@ describe('Number', function () {
   });
 
   describe('.parseFloat()', function () {
-    if (!Number.hasOwnProperty('parseFloat')) {
+    if (!Object.prototype.hasOwnProperty.call(Number, 'parseFloat')) {
       return it('exists', function () {
         expect(Number).to.have.property('parseFloat');
       });
@@ -153,7 +151,7 @@ describe('Number', function () {
   });
 
   describe('.isFinite()', function () {
-    if (!Number.hasOwnProperty('isFinite')) {
+    if (!Object.prototype.hasOwnProperty.call(Number, 'isFinite')) {
       return it('exists', function () {
         expect(Number).to.have.property('isFinite');
       });
@@ -197,7 +195,7 @@ describe('Number', function () {
   });
 
   describe('.isInteger()', function () {
-    if (!Number.hasOwnProperty('isInteger')) {
+    if (!Object.prototype.hasOwnProperty.call(Number, 'isInteger')) {
       return it('exists', function () {
         expect(Number).to.have.property('isInteger');
       });
@@ -259,7 +257,7 @@ describe('Number', function () {
   });
 
   describe('.isSafeInteger()', function () {
-    if (!Number.hasOwnProperty('isSafeInteger')) {
+    if (!Object.prototype.hasOwnProperty.call(Number, 'isSafeInteger')) {
       return it('exists', function () {
         expect(Number).to.have.property('isSafeInteger');
       });
@@ -321,7 +319,7 @@ describe('Number', function () {
   });
 
   describe('.isNaN()', function () {
-    if (!Number.hasOwnProperty('isNaN')) {
+    if (!Object.prototype.hasOwnProperty.call(Number, 'isNaN')) {
       return it('exists', function () {
         expect(Number).to.have.property('isNaN');
       });
@@ -456,7 +454,10 @@ describe('Number', function () {
       expect(String(Number({ valueOf: '1.1' }))).to.equal('NaN');
       expect(Number({ valueOf: '1.1', toString: function () { return '2.2'; } })).to.equal(2.2);
       expect(Number({ valueOf: function () { return '1.1'; }, toString: '2.2' })).to.equal(1.1);
-      expect(Number({ valueOf: function () { return '1.1'; }, toString: function () { return '2.2'; } })).to.equal(1.1);
+      expect(Number({
+        valueOf: function () { return '1.1'; },
+        toString: function () { return '2.2'; }
+      })).to.equal(1.1);
       expect(String(Number({ valueOf: function () { return '-0x1a2b3c'; } }))).to.equal('NaN');
       expect(String(Number({ toString: function () { return '-0x1a2b3c'; } }))).to.equal('NaN');
       expect(Number({ valueOf: function () { return '0o12345'; } })).to.equal(5349);

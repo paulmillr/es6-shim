@@ -1,5 +1,3 @@
-/* global describe, require, Promise */
-
 // tests from promises-es6-tests
 (function () {
   'use strict';

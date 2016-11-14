@@ -1,5 +1,3 @@
-/* global describe, it, xit, expect, require, beforeEach, afterEach */
-
 // Big thanks to V8 folks for test ideas.
 // v8/test/mjsunit/harmony/collections.js
 
@@ -52,7 +50,7 @@ describe('Map', function () {
     return result;
   };
 
-  var prototypePropIsEnumerable = (function () {}).propertyIsEnumerable('prototype');
+  var prototypePropIsEnumerable = Object.prototype.propertyIsEnumerable.call(function () {}, 'prototype');
   var expectNotEnumerable = function (object) {
     if (prototypePropIsEnumerable && typeof object === 'function') {
       expect(Object.keys(object)).to.eql(['prototype']);
@@ -293,7 +291,7 @@ describe('Map', function () {
   });
 
   describe('#keys()', function () {
-    if (!Map.prototype.hasOwnProperty('keys')) {
+    if (!Object.prototype.hasOwnProperty.call(Map.prototype, 'keys')) {
       return it('exists', function () {
         expect(Map.prototype).to.have.property('keys');
       });
@@ -313,7 +311,7 @@ describe('Map', function () {
   });
 
   describe('#values()', function () {
-    if (!Map.prototype.hasOwnProperty('values')) {
+    if (!Object.prototype.hasOwnProperty.call(Map.prototype, 'values')) {
       return it('exists', function () {
         expect(Map.prototype).to.have.property('values');
       });
@@ -333,7 +331,7 @@ describe('Map', function () {
   });
 
   describe('#entries()', function () {
-    if (!Map.prototype.hasOwnProperty('entries')) {
+    if (!Object.prototype.hasOwnProperty.call(Map.prototype, 'entries')) {
       return it('exists', function () {
         expect(Map.prototype).to.have.property('entries');
       });
