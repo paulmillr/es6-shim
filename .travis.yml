@@ -1,7 +1,18 @@
 language: node_js
 node_js:
+  - "7.1"
+  - "7.0"
+  - "6.9"
+  - "6.8"
+  - "6.7"
+  - "6.6"
+  - "6.5"
+  - "6.4"
+  - "6.3"
+  - "6.2"
   - "6.1"
   - "6.0"
+  - "5.12"
   - "5.11"
   - "5.10"
   - "5.9"
@@ -14,6 +25,8 @@ node_js:
   - "5.2"
   - "5.1"
   - "5.0"
+  - "4.6"
+  - "4.5"
   - "4.4"
   - "4.3"
   - "4.2"
@@ -38,6 +51,7 @@ node_js:
   - "iojs-v1.2"
   - "iojs-v1.1"
   - "iojs-v1.0"
+  - "0.12"
   - "0.11"
   - "0.10"
   - "0.9"
@@ -47,25 +61,37 @@ node_js:
 before_install:
   - 'if [ "${TRAVIS_NODE_VERSION}" != "0.9" ]; then case "$(npm --version)" in 1.*) npm install -g npm@1.4.28 ;; 2.*) npm install -g npm@2 ;; esac ; fi'
   - 'if [ "${TRAVIS_NODE_VERSION}" != "0.6" ] && [ "${TRAVIS_NODE_VERSION}" != "0.9" ]; then npm install -g npm; fi'
-  - '[ "${TRAVIS_RUN_SAUCE}" != "true" ] || npm install -g grunt-cli'
+  - 'if [ "${SAUCE-}" = "true" ]; then npm install -g grunt-cli; fi'
 script:
-  - 'if [ "${TRAVIS_RUN_SAUCE}" == "true" ]; then npm run sauce ; elif [ "${TRAVIS_NODE_VERSION}" != "0.11" ] && [ "${TRAVIS_RUN_LINT_ONLY}" != "true" ]; then npm run tests-only ; else npm test ; fi'
+  - 'if [ "${SAUCE-}" = "true" ]; then npm run sauce; fi'
+  - 'if [ "${LINT-}" = "true" ]; then npm test; fi'
+  - 'if [ "${TEST-}" = "true"]; then npm run tests-only; fi'
 # NOTE: sauce_connect is disabled, because it applies to every test and we only need it on one of them.
 #  It's available inside `npm run sauce`
 # addons:
 #  sauce_connect: true
 sudo: false
+env:
+  - TEST=true
 matrix:
   fast_finish: true
   include:
-    - node_js: "0.12"
-      env: TRAVIS_RUN_SAUCE=false TRAVIS_RUN_LINT_ONLY=true
-    - node_js: "0.12"
-      env: TRAVIS_RUN_SAUCE=true TRAVIS_RUN_LINT_ONLY=false
-    - node_js: "0.12"
-      env: TRAVIS_RUN_SAUCE=false TRAVIS_RUN_LINT_ONLY=false
+    - node_js: "node"
+      env: LINT=true
+    - node_js: "node"
+      env: SAUCE=true
   allow_failures:
+    - node_js: "7.0"
+    - node_js: "6.8"
+    - node_js: "6.7"
+    - node_js: "6.6"
+    - node_js: "6.5"
+    - node_js: "6.4"
+    - node_js: "6.3"
+    - node_js: "6.2"
+    - node_js: "6.1"
     - node_js: "6.0"
+    - node_js: "5.11"
     - node_js: "5.10"
     - node_js: "5.9"
     - node_js: "5.8"
@@ -77,6 +103,8 @@ matrix:
     - node_js: "5.2"
     - node_js: "5.1"
     - node_js: "5.0"
+    - node_js: "4.5"
+    - node_js: "4.4"
     - node_js: "4.3"
     - node_js: "4.2"
     - node_js: "4.1"
@@ -101,8 +129,8 @@ matrix:
     - node_js: "0.9"
     - node_js: "0.6"
     - node_js: "0.4"
-    - node_js: "0.12"
-      env: TRAVIS_RUN_SAUCE=true TRAVIS_RUN_LINT_ONLY=false
+    - node_js: "node"
+      env: SAUCE=true
 env:
   global:
     - secure: YD4HLTE93NhSxa+64MYHhnbJ2ZkREp/HGiFGE4q+AWShqAiehtqE/K3hQUe7p0+1/2/34avhm2bz31j508ayCobm6SSUhpleJH58IK3v4LI2o9qtM+2N/MPJFOIvbziHqOM6fPluowU0k3OSdEAp4U+6S23wKSuXzcUSK8upAiM=
