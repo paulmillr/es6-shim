@@ -279,6 +279,16 @@
 
   var $String = String;
 
+  /* global document */
+  var domAll = typeof document === 'undefined' || !document ? null : document.all;
+  var isNullOrUndefined = domAll === null ? function isNullOrUndefined(x) {
+    /* jshint eqnull:true */
+    return x == null;
+  } : function isNullOrUndefinedAndNotDocumentAll(x) {
+    /* jshint eqnull:true */
+    return x == null && x !== domAll;
+  };
+
   var ES = {
     // http://www.ecma-international.org/ecma-262/6.0/#sec-call
     Call: function Call(F, V) {
@@ -290,8 +300,7 @@
     },
 
     RequireObjectCoercible: function (x, optMessage) {
-      /* jshint eqnull:true */
-      if (x == null) {
+      if (isNullOrUndefined(x)) {
         throw new TypeError(optMessage || 'Cannot call method on ' + x);
       }
       return x;
@@ -310,7 +319,7 @@
       if (x === void 0 || x === null || x === true || x === false) {
         return false;
       }
-      return typeof x === 'function' || typeof x === 'object';
+      return typeof x === 'function' || typeof x === 'object' || x === domAll;
     },
 
     ToObject: function (o, optMessage) {
@@ -390,7 +399,7 @@
 
     GetMethod: function (o, p) {
       var func = ES.ToObject(o)[p];
-      if (func === void 0 || func === null) {
+      if (isNullOrUndefined(func)) {
         return void 0;
       }
       if (!ES.IsCallable(func)) {
@@ -470,7 +479,7 @@
         throw new TypeError('Bad constructor');
       }
       var S = C[symbolSpecies];
-      if (S === void 0 || S === null) {
+      if (isNullOrUndefined(S)) {
         return defaultConstructor;
       }
       if (!ES.IsConstructor(S)) {
@@ -531,7 +540,7 @@
       });
       var searchShim = function search(regexp) {
         var O = ES.RequireObjectCoercible(this);
-        if (regexp !== null && typeof regexp !== 'undefined') {
+        if (!isNullOrUndefined(regexp)) {
           var searcher = ES.GetMethod(regexp, symbolSearch);
           if (typeof searcher !== 'undefined') {
             return ES.Call(searcher, regexp, [O]);
@@ -549,7 +558,7 @@
       });
       var replaceShim = function replace(searchValue, replaceValue) {
         var O = ES.RequireObjectCoercible(this);
-        if (searchValue !== null && typeof searchValue !== 'undefined') {
+        if (!isNullOrUndefined(searchValue)) {
           var replacer = ES.GetMethod(searchValue, symbolReplace);
           if (typeof replacer !== 'undefined') {
             return ES.Call(replacer, searchValue, [O, replaceValue]);
@@ -567,7 +576,7 @@
       });
       var splitShim = function split(separator, limit) {
         var O = ES.RequireObjectCoercible(this);
-        if (separator !== null && typeof separator !== 'undefined') {
+        if (!isNullOrUndefined(separator)) {
           var splitter = ES.GetMethod(separator, symbolSplit);
           if (typeof splitter !== 'undefined') {
             return ES.Call(splitter, separator, [O, limit]);
@@ -595,7 +604,7 @@
 
       var matchShim = function match(regexp) {
         var O = ES.RequireObjectCoercible(this);
-        if (regexp !== null && typeof regexp !== 'undefined') {
+        if (!isNullOrUndefined(regexp)) {
           var matcher = ES.GetMethod(regexp, symbolMatch);
           if (typeof matcher !== 'undefined') {
             return ES.Call(matcher, regexp, [O]);
@@ -2689,7 +2698,7 @@
       if (!preservesInsertionOrder) {
         return null;
       }
-      if (typeof key === 'undefined' || key === null) {
+      if (isNullOrUndefined(key)) {
         return '^' + ES.ToString(key);
       } else if (typeof key === 'string') {
         return '$' + key;
@@ -2724,7 +2733,7 @@
         });
       } else {
         var iter, adder;
-        if (iterable !== null && typeof iterable !== 'undefined') {
+        if (!isNullOrUndefined(iterable)) {
           adder = map.set;
           if (!ES.IsCallable(adder)) { throw new TypeError('bad map'); }
           iter = ES.GetIterator(iterable);
@@ -2758,7 +2767,7 @@
         });
       } else {
         var iter, adder;
-        if (iterable !== null && typeof iterable !== 'undefined') {
+        if (!isNullOrUndefined(iterable)) {
           adder = set.add;
           if (!ES.IsCallable(adder)) { throw new TypeError('bad set'); }
           iter = ES.GetIterator(iterable);
