@@ -205,6 +205,12 @@
   var ArrayIterator; // make our implementation private
   var noop = function () {};
 
+  var OrigMap = globals.Map;
+  var origMapDelete = OrigMap && OrigMap.prototype['delete'];
+  var origMapGet = OrigMap && OrigMap.prototype.get;
+  var origMapHas = OrigMap && OrigMap.prototype.has;
+  var origMapSet = OrigMap && OrigMap.prototype.set;
+
   var Symbol = globals.Symbol || {};
   var symbolSpecies = Symbol.species || '@@species';
 
@@ -2695,8 +2701,8 @@
 
   if (supportsDescriptors) {
 
-    var fastkey = function fastkey(key) {
-      if (!preservesInsertionOrder) {
+    var fastkey = function fastkey(key, skipInsertionOrderCheck) {
+      if (!skipInsertionOrderCheck && !preservesInsertionOrder) {
         return null;
       }
       if (isNullOrUndefined(key)) {
@@ -2868,8 +2874,9 @@
           var map = emulateES6construct(this, Map, Map$prototype, {
             _es6map: true,
             _head: null,
-            _storage: emptyObject(),
-            _size: 0
+            _map: OrigMap ? new OrigMap() : null,
+            _size: 0,
+            _storage: emptyObject()
           });
 
           var head = new MapEntry(null, null);
@@ -2895,10 +2902,20 @@
         defineProperties(Map$prototype, {
           get: function get(key) {
             requireMapSlot(this, 'get');
-            var fkey = fastkey(key);
+            var entry;
+            var fkey = fastkey(key, true);
             if (fkey !== null) {
               // fast O(1) path
-              var entry = this._storage[fkey];
+              entry = this._storage[fkey];
+              if (entry) {
+                return entry.value;
+              } else {
+                return;
+              }
+            }
+            if (this._map) {
+              // fast object key path
+              entry = origMapGet.call(this._map, key);
               if (entry) {
                 return entry.value;
               } else {
@@ -2916,10 +2933,14 @@
 
           has: function has(key) {
             requireMapSlot(this, 'has');
-            var fkey = fastkey(key);
+            var fkey = fastkey(key, true);
             if (fkey !== null) {
               // fast O(1) path
               return typeof this._storage[fkey] !== 'undefined';
+            }
+            if (this._map) {
+              // fast object key path
+              return origMapHas.call(this._map, key);
             }
             var head = this._head;
             var i = head;
@@ -2936,7 +2957,7 @@
             var head = this._head;
             var i = head;
             var entry;
-            var fkey = fastkey(key);
+            var fkey = fastkey(key, true);
             if (fkey !== null) {
               // fast O(1) path
               if (typeof this._storage[fkey] !== 'undefined') {
@@ -2944,6 +2965,16 @@
                 return this;
               } else {
                 entry = this._storage[fkey] = new MapEntry(key, value);
+                i = head.prev;
+                // fall through
+              }
+            } else if (this._map) {
+              // fast object key path
+              if (origMapHas.call(this._map, key)) {
+                origMapGet.call(this._map, key).value = value;
+              } else {
+                entry = new MapEntry(key, value);
+                origMapSet.call(this._map, key, entry);
                 i = head.prev;
                 // fall through
               }
@@ -2970,7 +3001,7 @@
             requireMapSlot(this, 'delete');
             var head = this._head;
             var i = head;
-            var fkey = fastkey(key);
+            var fkey = fastkey(key, true);
             if (fkey !== null) {
               // fast O(1) path
               if (typeof this._storage[fkey] === 'undefined') {
@@ -2978,6 +3009,14 @@
               }
               i = this._storage[fkey].prev;
               delete this._storage[fkey];
+              // fall through
+            } else if (this._map) {
+              // fast object key path
+              if (!origMapHas.call(this._map, key)) {
+                return false;
+              }
+              i = origMapGet.call(this._map, key).prev;
+              origMapDelete.call(this._map, key);
               // fall through
             }
             while ((i = i.next) !== head) {
@@ -2994,6 +3033,7 @@
 
           clear: function clear() {
             requireMapSlot(this, 'clear');
+            this._map = OrigMap ? new OrigMap() : null;
             this._size = 0;
             this._storage = emptyObject();
             var head = this._head;
@@ -3201,12 +3241,11 @@
       // Safari 8, for example, doesn't accept an iterable.
       var mapAcceptsArguments = valueOrFalseIfThrows(function () { return new Map([[1, 2]]).get(1) === 2; });
       if (!mapAcceptsArguments) {
-        var OrigMapNoArgs = globals.Map;
         globals.Map = function Map() {
           if (!(this instanceof Map)) {
             throw new TypeError('Constructor Map requires "new"');
           }
-          var m = new OrigMapNoArgs();
+          var m = new OrigMap();
           if (arguments.length > 0) {
             addIterableToMap(Map, m, arguments[0]);
           }
@@ -3214,9 +3253,9 @@
           Object.setPrototypeOf(m, globals.Map.prototype);
           return m;
         };
-        globals.Map.prototype = create(OrigMapNoArgs.prototype);
+        globals.Map.prototype = create(OrigMap.prototype);
         defineProperty(globals.Map.prototype, 'constructor', globals.Map, true);
-        Value.preserveToString(globals.Map, OrigMapNoArgs);
+        Value.preserveToString(globals.Map, OrigMap);
       }
       var testMap = new Map();
       var mapUsesSameValueZero = (function () {
@@ -3227,15 +3266,12 @@
       }());
       var mapSupportsChaining = testMap.set(1, 2) === testMap;
       if (!mapUsesSameValueZero || !mapSupportsChaining) {
-        var origMapSet = Map.prototype.set;
         overrideNative(Map.prototype, 'set', function set(k, v) {
           _call(origMapSet, this, k === 0 ? 0 : k, v);
           return this;
         });
       }
       if (!mapUsesSameValueZero) {
-        var origMapGet = Map.prototype.get;
-        var origMapHas = Map.prototype.has;
         defineProperties(Map.prototype, {
           get: function get(k) {
             return _call(origMapGet, this, k === 0 ? 0 : k);
@@ -3290,7 +3326,6 @@
         }
       }());
       if (globals.Map.length !== 0 || mapFailsToSupportSubclassing || !mapRequiresNew) {
-        var OrigMap = globals.Map;
         globals.Map = function Map() {
           if (!(this instanceof Map)) {
             throw new TypeError('Constructor Map requires "new"');
