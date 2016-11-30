@@ -330,7 +330,7 @@ describe('Set', function () {
     });
 
     it('throws when called on a non-Set', function () {
-      var expectedMessage = /^(Method )?Set.prototype.values called on incompatible receiver |^values method called on incompatible |^Cannot create a Set value iterator for a non-Set object.$|^Set.prototype.values: 'this' is not a Set object$/;
+      var expectedMessage = /^(Method )?Set.prototype.values called on incompatible receiver |^values method called on incompatible |^Cannot create a Set value iterator for a non-Set object.$|^Set.prototype.values: 'this' is not a Set object$|^std_Set_iterator method called on incompatible \w+$/;
       var nonSets = [true, false, 'abc', NaN, new Map([[1, 2]]), { a: true }, [1], Object('abc'), Object(NaN)];
       nonSets.forEach(function (nonSet) {
         expect(function () { return Set.prototype.values.call(nonSet); }).to['throw'](TypeError, expectedMessage);
