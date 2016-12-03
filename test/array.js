@@ -255,6 +255,7 @@ var runArrayTests = function (it) {
       });
 
       ifSupportsDescriptorsIt('works when Object.prototype has a throwing setter', function () {
+        // TODO: breaks in Chrome 17, IE 9, Safari 5.1-6
         var key = 10;
         /* eslint no-extend-native: 0 */
         Object.defineProperty(Object.prototype, key, {
