@@ -280,8 +280,9 @@
   var $String = String;
 
   /* global document */
-  var domAll = typeof document === 'undefined' || !document ? null : document.all;
-  var isNullOrUndefined = domAll === null ? function isNullOrUndefined(x) {
+  var domAll = (typeof document === 'undefined' || !document) ? null : document.all;
+  /* jshint eqnull:true */
+  var isNullOrUndefined = domAll == null ? function isNullOrUndefined(x) {
     /* jshint eqnull:true */
     return x == null;
   } : function isNullOrUndefinedAndNotDocumentAll(x) {
