@@ -766,7 +766,9 @@ var runStringTests = function (it) {
           var str = Object('a');
           var replaceVal = Object('replaceValue');
           var obj = {};
-          obj[Symbol.replace] = function (string, replaceValue) { return string === str && replaceValue === replaceVal && this === obj; };
+          obj[Symbol.replace] = function (string, replaceValue) {
+            return string === str && replaceValue === replaceVal && this === obj;
+          };
           expect(str.replace(obj, replaceVal)).to.equal(true);
         });
       });

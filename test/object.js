@@ -296,9 +296,15 @@ describe('Object', function () {
       var obj = {};
       Object.defineProperty(obj, 'a', { get: function () { visited.push('a'); return 42; }, enumerable: true });
       var symbol = Symbol('enumerable');
-      Object.defineProperty(obj, symbol, { get: function () { visited.push(symbol); return Infinity; }, enumerable: true });
+      Object.defineProperty(obj, symbol, {
+        get: function () { visited.push(symbol); return Infinity; },
+        enumerable: true
+      });
       var nonEnumSymbol = Symbol('non-enumerable');
-      Object.defineProperty(obj, nonEnumSymbol, { get: function () { visited.push(nonEnumSymbol); return -Infinity; }, enumerable: false });
+      Object.defineProperty(obj, nonEnumSymbol, {
+        get: function () { visited.push(nonEnumSymbol); return -Infinity; },
+        enumerable: false
+      });
       var target = Object.assign({}, obj);
       expect(visited).to.eql(['a', symbol]);
       expect(target.a).to.equal(42);

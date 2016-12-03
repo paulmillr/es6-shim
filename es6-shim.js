@@ -262,6 +262,7 @@
     Value.preserveToString(object[property], original);
   };
 
+  // eslint-disable-next-line no-restricted-properties
   var hasSymbols = typeof Symbol === 'function' && typeof Symbol['for'] === 'function' && Type.symbol(Symbol());
 
   // This is a private name in the es6 spec, equal to '[Symbol.iterator]'
@@ -530,6 +531,7 @@
       if (Type.symbol(Symbol[name])) {
         return Symbol[name];
       }
+      // eslint-disable-next-line no-restricted-properties
       var sym = Symbol['for']('Symbol.' + name);
       Object.defineProperty(Symbol, name, {
         configurable: false,
@@ -1797,7 +1799,10 @@
   if (supportsDescriptors && (!regExpSupportsFlagsWithRegex || regExpNeedsToSupportSymbolMatch)) {
     var flagsGetter = Object.getOwnPropertyDescriptor(RegExp.prototype, 'flags').get;
     var sourceDesc = Object.getOwnPropertyDescriptor(RegExp.prototype, 'source') || {};
-    var legacySourceGetter = function () { return this.source; }; // prior to it being a getter, it's own + nonconfigurable
+    var legacySourceGetter = function () {
+      // prior to it being a getter, it's own + nonconfigurable
+      return this.source;
+    };
     var sourceGetter = ES.IsCallable(sourceDesc.get) ? sourceDesc.get : legacySourceGetter;
 
     var OrigRegExp = RegExp;
@@ -2032,7 +2037,9 @@
       var sign = _sign(v);
       var abs = _abs(v);
       if (abs < BINARY_32_MIN_VALUE) {
-        return sign * roundTiesToEven(abs / BINARY_32_MIN_VALUE / BINARY_32_EPSILON) * BINARY_32_MIN_VALUE * BINARY_32_EPSILON;
+        return sign * roundTiesToEven(
+          abs / BINARY_32_MIN_VALUE / BINARY_32_EPSILON
+        ) * BINARY_32_MIN_VALUE * BINARY_32_EPSILON;
       }
       // Veltkamp's splitting (?)
       var a = (1 + (BINARY_32_EPSILON / Number.EPSILON)) * abs;
@@ -2062,7 +2069,8 @@
 
   var origMathRound = Math.round;
   // breaks in e.g. Safari 8, Internet Explorer 11, Opera 12
-  var roundHandlesBoundaryConditions = Math.round(0.5 - (Number.EPSILON / 4)) === 0 && Math.round(-0.5 + (Number.EPSILON / 3.99)) === 1;
+  var roundHandlesBoundaryConditions = Math.round(0.5 - (Number.EPSILON / 4)) === 0 &&
+    Math.round(-0.5 + (Number.EPSILON / 3.99)) === 1;
 
   // When engines use Math.floor(x + 0.5) internally, Math.round can be buggy for large integers.
   // This behavior should be governed by "round to nearest, ties to even mode"
@@ -2070,7 +2078,10 @@
   // These are the boundary cases where it breaks.
   var smallestPositiveNumberWhereRoundBreaks = inverseEpsilon + 1;
   var largestPositiveNumberWhereRoundBreaks = (2 * inverseEpsilon) - 1;
-  var roundDoesNotIncreaseIntegers = [smallestPositiveNumberWhereRoundBreaks, largestPositiveNumberWhereRoundBreaks].every(function (num) {
+  var roundDoesNotIncreaseIntegers = [
+    smallestPositiveNumberWhereRoundBreaks,
+    largestPositiveNumberWhereRoundBreaks
+  ].every(function (num) {
     return Math.round(num) === num;
   });
   defineProperty(Math, 'round', function round(x) {
@@ -2602,7 +2613,9 @@
     var promiseSupportsSubclassing = supportsSubclassing(globals.Promise, function (S) {
       return S.resolve(42).then(function () {}) instanceof S;
     });
-    var promiseIgnoresNonFunctionThenCallbacks = !throwsError(function () { globals.Promise.reject(42).then(null, 5).then(null, noop); });
+    var promiseIgnoresNonFunctionThenCallbacks = !throwsError(function () {
+      globals.Promise.reject(42).then(null, 5).then(null, noop);
+    });
     var promiseRequiresObjectContext = throwsError(function () { globals.Promise.call(3, noop); });
     // Promise.resolve() was errata'ed late in the ES6 process.
     // See: https://bugzilla.mozilla.org/show_bug.cgi?id=1170742
@@ -3317,7 +3330,8 @@
         m.set(42, 42);
         return m instanceof M;
       });
-      var mapFailsToSupportSubclassing = Object.setPrototypeOf && !mapSupportsSubclassing; // without Object.setPrototypeOf, subclassing is not possible
+      // without Object.setPrototypeOf, subclassing is not possible
+      var mapFailsToSupportSubclassing = Object.setPrototypeOf && !mapSupportsSubclassing;
       var mapRequiresNew = (function () {
         try {
           return !(globals.Map() instanceof globals.Map);
@@ -3347,7 +3361,8 @@
         s.add(42, 42);
         return s instanceof S;
       });
-      var setFailsToSupportSubclassing = Object.setPrototypeOf && !setSupportsSubclassing; // without Object.setPrototypeOf, subclassing is not possible
+      // without Object.setPrototypeOf, subclassing is not possible
+      var setFailsToSupportSubclassing = Object.setPrototypeOf && !setSupportsSubclassing;
       var setRequiresNew = (function () {
         try {
           return !(globals.Set() instanceof globals.Set);

@@ -830,7 +830,9 @@ describe('Math', function () {
       var maxFloat32 = 3.4028234663852886e+38;
       expect(Math.fround(maxFloat32)).to.equal(maxFloat32);
       expect(Math.fround(-maxFloat32)).to.equal(-maxFloat32);
-      expect(Math.fround(maxFloat32 + Math.pow(2, Math.pow(2, 8 - 1) - 1 - 23 - 2))).to.equal(maxFloat32); // round-nearest rounds down to maxFloat32
+
+      // round-nearest rounds down to maxFloat32
+      expect(Math.fround(maxFloat32 + Math.pow(2, Math.pow(2, 8 - 1) - 1 - 23 - 2))).to.equal(maxFloat32);
     });
 
     it('rounds properly with the min float 32', function () {
