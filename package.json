@@ -23,8 +23,8 @@
   },
   "main": "es6-shim",
   "scripts": {
-    "pretest": "npm run --silent lint",
-    "test": "evalmd *.md && npm run --silent tests-only",
+    "pretest": "npm run --silent lint && evalmd *.md",
+    "test": "npm run --silent tests-only",
     "tests-only": "npm run --silent test:shim && npm run --silent test:sham",
     "test:shim": "mocha test/*.js test/*/*.js",
     "test:sham": "mocha test-sham/*.js",

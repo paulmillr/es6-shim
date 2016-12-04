@@ -1,5 +1,6 @@
 language: node_js
 node_js:
+  - "7.2"
   - "7.1"
   - "7.0"
   - "6.9"
@@ -64,7 +65,7 @@ before_install:
   - 'if [ "${SAUCE-}" = "true" ]; then npm install -g grunt-cli; fi'
 script:
   - 'if [ "${SAUCE-}" = "true" ]; then npm run sauce; fi'
-  - 'if [ "${LINT-}" = "true" ]; then npm test; fi'
+  - 'if [ "${PRETEST-}" = "true" ]; then npm run pretest; fi'
   - 'if [ "${TEST-}" = "true"]; then npm run tests-only; fi'
 # NOTE: sauce_connect is disabled, because it applies to every test and we only need it on one of them.
 #  It's available inside `npm run sauce`
@@ -77,10 +78,11 @@ matrix:
   fast_finish: true
   include:
     - node_js: "node"
-      env: LINT=true
+      env: PRETEST=true
     - node_js: "node"
       env: SAUCE=true
   allow_failures:
+    - node_js: "7.1"
     - node_js: "7.0"
     - node_js: "6.8"
     - node_js: "6.7"
