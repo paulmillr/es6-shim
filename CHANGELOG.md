@@ -1,3 +1,11 @@
+# es6-shim 0.35.2 (3 December 2016)
+* [Fix] ensure `document.all` is not treated as a non-object-coercible (#428)
+* [Performance] Use original map for data backing when possible (#429, #422)
+* [Dev Deps] update `es5-shim`, `eslint`, `@ljharb/eslint-config`, `jscs`, `jshint`, `mocha`, `promises-plus-tests`, `uglify-js`
+* [Tests] up to `node` `v7.2`, `v5.12`, `v4.6`; improve test matrix
+* [Tests] avoid function name inference in node 7+
+* [Tests] add Firefox Nightly error messages to fix false failure
+
 # es6-shim 0.35.1 (12 May 2016)
 * [Fix] Functions are objects (#418)
 * [Fix] use `createDataPropertyOrThrow` in `Array.from`, rather than `[[Put]]` (#415)
