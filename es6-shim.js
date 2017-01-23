@@ -2894,6 +2894,7 @@
 
           var head = new MapEntry(null, null);
           // circular doubly-linked list.
+          /* eslint no-multi-assign: 1 */
           head.next = head.prev = head;
           map._head = head;
 
@@ -2977,7 +2978,7 @@
                 this._storage[fkey].value = value;
                 return this;
               } else {
-                entry = this._storage[fkey] = new MapEntry(key, value);
+                entry = this._storage[fkey] = new MapEntry(key, value); /* eslint no-multi-assign: 1 */
                 i = head.prev;
                 // fall through
               }
@@ -3034,7 +3035,8 @@
             }
             while ((i = i.next) !== head) {
               if (ES.SameValueZero(i.key, key)) {
-                i.key = i.value = empty;
+                i.key = empty;
+                i.value = empty;
                 i.prev.next = i.next;
                 i.next.prev = i.prev;
                 this._size -= 1;
@@ -3045,6 +3047,7 @@
           },
 
           clear: function clear() {
+             /* eslint no-multi-assign: 1 */
             requireMapSlot(this, 'clear');
             this._map = OrigMap ? new OrigMap() : null;
             this._size = 0;
@@ -3053,7 +3056,8 @@
             var i = head;
             var p = i.next;
             while ((i = p) !== head) {
-              i.key = i.value = empty;
+              i.key = empty;
+              i.value = empty;
               p = i.next;
               i.next = i.prev = head;
             }
@@ -3154,7 +3158,8 @@
         // Switch from the object backing storage to a full Map.
         var ensureMap = function ensureMap(set) {
           if (!set['[[SetData]]']) {
-            var m = set['[[SetData]]'] = new collectionShims.Map();
+            var m = new collectionShims.Map();
+            set['[[SetData]]'] = m;
             _forEach(keys(set._storage), function (key) {
               var k = decodeKey(key);
               m.set(k, k);
