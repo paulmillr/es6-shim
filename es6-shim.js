@@ -1462,10 +1462,10 @@
   // methods of Number, so this test has to happen down here.)
   /*jshint elision: true */
   /* eslint-disable no-sparse-arrays */
-  if (![, 1].find(function (item, idx) { return idx === 0; })) {
+  if ([, 1].find(function () { return true; }) === 1) {
     overrideNative(Array.prototype, 'find', ArrayPrototypeShims.find);
   }
-  if ([, 1].findIndex(function (item, idx) { return idx === 0; }) !== 0) {
+  if ([, 1].findIndex(function () { return true; }) !== 0) {
     overrideNative(Array.prototype, 'findIndex', ArrayPrototypeShims.findIndex);
   }
   /* eslint-enable no-sparse-arrays */
