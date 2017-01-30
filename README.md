@@ -13,8 +13,8 @@ closely as possible to ECMAScript 6 (Harmony).
 ## Installation
 If you want to use it in browser:
 
-* Just include es6-shim before your scripts.
-* Include [es5-shim][es5-shim-url] especially if your browser doesn't support ECMAScript 5 - but every JS engine requires the `es5-shim` to correct broken implementations, so it's strongly recommended to always include it.
+* Just include `es6-shim` before your scripts.
+* Include [es5-shim][es5-shim-url] especially if your browser doesn't support ECMAScript 5 - but every JS engine requires the `es5-shim` to correct broken implementations, so it's strongly recommended to always include it. Additionally, `es5-shim` should be loaded before `es6-shim`.
 
 For `node.js`, `io.js`, or any `npm`-managed workflow (this is the recommended method):
 
