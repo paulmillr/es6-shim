@@ -600,4 +600,22 @@ describe('Map', function () {
     expect(iterator.next().done).to.equal(true);
     expect(keys).to.eql(['a', 'd', 'e']);
   });
+
+  it('MapIterator identification', function () {
+    var mapEntriesProto = Object.getPrototypeOf(new Map().entries());
+    var setEntriesProto = Object.getPrototypeOf(new Set().entries());
+    expect(mapEntriesProto).to.not.equal(setEntriesProto);
+
+    var fnMapValues = Map.prototype.values;
+    var mapSentinel = new Map([[1, 'MapSentinel']]);
+    var testMap = new Map();
+    var testMapValues = testMap.values();
+    expect(testMapValues.next.call(fnMapValues.call(mapSentinel)).value).to.equal('MapSentinel');
+
+    var testSet = new Set();
+    var testSetValues = testSet.values();
+    expect(function () {
+      return testSetValues.next.call(fnMapValues.call(mapSentinel)).value;
+    }).to['throw'](TypeError);
+  });
 });

@@ -3255,7 +3255,7 @@
         defineProperty(SetShim.prototype, 'keys', SetShim.prototype.values, true);
         addIterator(SetShim.prototype, SetShim.prototype.values);
 
-        var SetIterator = function (it) {
+        var SetIterator = function SetIterator(it) {
           this.it = it;
         };
         SetIterator.prototype = {

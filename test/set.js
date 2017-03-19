@@ -634,4 +634,22 @@ describe('Set', function () {
 
   it.skip('should throw proper errors when user invokes methods with wrong types of receiver', function () {
   });
+
+  it('SetIterator identification', function () {
+    var mapEntriesProto = Object.getPrototypeOf(new Map().entries());
+    var setEntriesProto = Object.getPrototypeOf(new Set().entries());
+    expect(mapEntriesProto).to.not.equal(setEntriesProto);
+
+    var fnSetValues = Set.prototype.values;
+    var setSentinel = new Set(['SetSentinel']);
+    var testSet1 = new Set();
+    var testSetValues = testSet1.values();
+    expect(testSetValues.next.call(fnSetValues.call(setSentinel)).value).to.equal('SetSentinel');
+
+    var testMap = new Map();
+    var testMapValues = testMap.values();
+    expect(function () {
+      return testMapValues.next.call(fnSetValues.call(setSentinel)).value;
+    }).to['throw'](TypeError);
+  });
 });
