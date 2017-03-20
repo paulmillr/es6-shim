@@ -41,6 +41,7 @@ describe('Map', function () {
   var functionsHaveNames = (function foo() {}).name === 'foo';
   var ifFunctionsHaveNamesIt = functionsHaveNames ? it : xit;
   var ifShimIt = (typeof process !== 'undefined' && process.env.NO_ES6_SHIM) ? it.skip : it;
+  var ifGetPrototypeOfIt = Object.getPrototypeOf ? it : xit;
 
   var range = function range(from, to) {
     var result = [];
@@ -601,11 +602,13 @@ describe('Map', function () {
     expect(keys).to.eql(['a', 'd', 'e']);
   });
 
-  it('MapIterator identification', function () {
+  ifGetPrototypeOfIt('MapIterator identification test prototype inequality', function () {
     var mapEntriesProto = Object.getPrototypeOf(new Map().entries());
     var setEntriesProto = Object.getPrototypeOf(new Set().entries());
     expect(mapEntriesProto).to.not.equal(setEntriesProto);
+  });
 
+  it('MapIterator identification', function () {
     var fnMapValues = Map.prototype.values;
     var mapSentinel = new Map([[1, 'MapSentinel']]);
     var testMap = new Map();

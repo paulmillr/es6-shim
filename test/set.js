@@ -45,6 +45,7 @@ describe('Set', function () {
   var functionsHaveNames = (function foo() {}).name === 'foo';
   var ifFunctionsHaveNamesIt = functionsHaveNames ? it : xit;
   var ifShimIt = (typeof process !== 'undefined' && process.env.NO_ES6_SHIM) ? it.skip : it;
+  var ifGetPrototypeOfIt = Object.getPrototypeOf ? it : xit;
 
   var range = function (from, to) {
     var result = [];
@@ -635,11 +636,13 @@ describe('Set', function () {
   it.skip('should throw proper errors when user invokes methods with wrong types of receiver', function () {
   });
 
-  it('SetIterator identification', function () {
+  ifGetPrototypeOfIt('SetIterator identification test prototype inequality', function () {
     var mapEntriesProto = Object.getPrototypeOf(new Map().entries());
     var setEntriesProto = Object.getPrototypeOf(new Set().entries());
     expect(mapEntriesProto).to.not.equal(setEntriesProto);
+  });
 
+  it('SetIterator identification', function () {
     var fnSetValues = Set.prototype.values;
     var setSentinel = new Set(['SetSentinel']);
     var testSet1 = new Set();
