@@ -107,6 +107,11 @@ describe('Math', function () {
       expect(Math.asinh(1e7)).to.almostEqual(16.811242831518268);
       expect(Math.asinh(-1e7)).to.almostEqual(-16.811242831518268);
     });
+
+    it('is correct for extreme non-infinities', function () {
+      expect(Math.asinh(1e+300)).not.to.equal(Infinity);
+      expect(Math.asinh(1e+300)).to.almostEqual(691.4686750787736);
+    });
   });
 
   describe('.atanh()', function () {
@@ -142,6 +147,11 @@ describe('Math', function () {
       expect(Math.atanh(-0.5)).to.almostEqual(-0.5493061443340549);
       expect(Math.atanh(-0.5)).to.almostEqual(-0.5493061443340549);
       expect(Math.atanh(0.444)).to.almostEqual(0.47720201260109457);
+    });
+
+    it('is correct for extreme non-infinities', function () {
+      expect(Math.atanh(1e-300)).not.to.equal(0);
+      expect(Math.atanh(1e-300)).to.almostEqual(1e-300);
     });
   });
 
@@ -290,6 +300,11 @@ describe('Math', function () {
       expect(Math.cosh(-10)).to.almostEqual(11013.23292010332313972137);
       expect(Math.cosh(-23)).to.almostEqual(4872401723.1244513000, 1e-5);
       expect(Math.cosh(-2e-17)).to.equal(1);
+    });
+
+    it('is correct for extreme non-infinities', function () {
+      expect(Math.cosh(710)).not.to.equal(Infinity);
+      expect(Math.cosh(710) / 1e+308).to.almostEqual(1.1169973830808557);
     });
   });
 
@@ -575,6 +590,11 @@ describe('Math', function () {
       expect(Math.sinh(-5)).to.almostEqual(-74.20321057778875);
       expect(Math.sinh(2)).to.almostEqual(3.6268604078470186);
       expect(Math.sinh(-2e-17)).to.equal(-2e-17);
+    });
+
+    it('is correct for extreme non-infinities', function () {
+      expect(Math.sinh(710)).not.to.equal(Infinity);
+      expect(Math.sinh(710) / 1e+308).to.almostEqual(1.1169973830808557);
     });
   });
 

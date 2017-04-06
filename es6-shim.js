@@ -231,6 +231,14 @@
     if (numberIsNaN(number)) { return number; }
     return number < 0 ? -1 : 1;
   };
+  var _log1p = function log1p(value) {
+    var x = Number(value);
+    if (x < -1 || numberIsNaN(x)) { return NaN; }
+    if (x === 0 || x === Infinity) { return x; }
+    if (x === -1) { return -Infinity; }
+
+    return (1 + x) - 1 === 0 ? x : x * (_log(1 + x) / ((1 + x) - 1));
+  };
 
   // taken directly from https://github.com/ljharb/is-arguments/blob/master/index.js
   // can be replaced with require('is-arguments') if we ever use a build process instead
@@ -1886,18 +1894,26 @@
       if (x === 0 || !globalIsFinite(x)) {
         return x;
       }
-      return x < 0 ? -asinh(-x) : _log(x + _sqrt((x * x) + 1));
+
+      var a = _abs(x);
+      if (a < 1) {
+        return _sign(x) * _log1p(a + a * a / (_sqrt(a * a + 1) + 1));
+      }
+      return _sign(x) * (_log1p(a / 2 + _sqrt(1 + 1 / (a * a)) * a / 2 - 1) + 1 / LOG2E);
     },
 
     atanh: function atanh(value) {
       var x = Number(value);
+
+      if (x === 0) { return x; }
+      if (x === -1) { return -Infinity; }
+      if (x === 1) { return Infinity; }
       if (numberIsNaN(x) || x < -1 || x > 1) {
         return NaN;
       }
-      if (x === -1) { return -Infinity; }
-      if (x === 1) { return Infinity; }
-      if (x === 0) { return x; }
-      return 0.5 * _log((1 + x) / (1 - x));
+
+      var a = _abs(x);
+      return _sign(x) * _log1p(2 * a / (1 - a)) / 2;
     },
 
     cbrt: function cbrt(value) {
@@ -1931,9 +1947,9 @@
       if (x === 0) { return 1; } // +0 or -0
       if (numberIsNaN(x)) { return NaN; }
       if (!globalIsFinite(x)) { return Infinity; }
-      if (x < 0) { x = -x; }
-      if (x > 21) { return _exp(x) / 2; }
-      return (_exp(x) + _exp(-x)) / 2;
+
+      var t = _exp(_abs(x) - 1);
+      return (t + 1 / (t * E * E)) * (E / 2);
     },
 
     expm1: function expm1(value) {
@@ -1980,14 +1996,7 @@
       return _log(value) * LOG10E;
     },
 
-    log1p: function log1p(value) {
-      var x = Number(value);
-      if (x < -1 || numberIsNaN(x)) { return NaN; }
-      if (x === 0 || x === Infinity) { return x; }
-      if (x === -1) { return -Infinity; }
-
-      return (1 + x) - 1 === 0 ? x : x * (_log(1 + x) / ((1 + x) - 1));
-    },
+    log1p: _log1p,
 
     sign: _sign,
 
@@ -1995,10 +2004,13 @@
       var x = Number(value);
       if (!globalIsFinite(x) || x === 0) { return x; }
 
-      if (_abs(x) < 1) {
-        return (Math.expm1(x) - Math.expm1(-x)) / 2;
+      var a = _abs(x);
+      if (a < 1) {
+        var u = Math.expm1(a);
+        return _sign(x) * u * (1 + (1 / (u + 1))) / 2;
       }
-      return (_exp(x - 1) - _exp(-x - 1)) * E / 2;
+      var t = _exp(a - 1);
+      return _sign(x) * (t - (1 / (t * E * E))) * (E / 2);
     },
 
     tanh: function tanh(value) {
@@ -2051,10 +2063,18 @@
     }
   };
   defineProperties(Math, MathShims);
+  // Chrome < 40 sinh returns ∞ for large numbers
+  defineProperty(Math, 'sinh', MathShims.sinh, Math.sinh(710) === Infinity);
+  // Chrome < 40 cosh returns ∞ for large numbers
+  defineProperty(Math, 'cosh', MathShims.cosh, Math.cosh(710) === Infinity);
   // IE 11 TP has an imprecise log1p: reports Math.log1p(-1e-17) as 0
   defineProperty(Math, 'log1p', MathShims.log1p, Math.log1p(-1e-17) !== -1e-17);
   // IE 11 TP has an imprecise asinh: reports Math.asinh(-1e7) as not exactly equal to -Math.asinh(1e7)
   defineProperty(Math, 'asinh', MathShims.asinh, Math.asinh(-1e7) !== -Math.asinh(1e7));
+  // Chrome < 54 asinh returns ∞ for large numbers and should not
+  defineProperty(Math, 'asinh', MathShims.asinh, Math.asinh(1e+300) === Infinity);
+  // Chrome < 54 atanh incorrectly returns 0 for large numbers
+  defineProperty(Math, 'atanh', MathShims.atanh, Math.atanh(1e-300) === 0);
   // Chrome 40 has an imprecise Math.tanh with very small numbers
   defineProperty(Math, 'tanh', MathShims.tanh, Math.tanh(-2e-17) !== -2e-17);
   // Chrome 40 loses Math.acosh precision with high numbers
