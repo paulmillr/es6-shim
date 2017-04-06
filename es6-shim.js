@@ -3273,6 +3273,12 @@
       }())
     };
 
+    var isGoogleTranslate = globals.Set && !Set.prototype['delete'] && Set.prototype.remove && Set.prototype.items && Set.prototype.map && Array.isArray(new Set().keys);
+    if (isGoogleTranslate) {
+      // special-case force removal of wildly invalid Set implementation in Google Translate iframes
+      // see https://github.com/paulmillr/es6-shim/issues/438 / https://twitter.com/ljharb/status/849335573114363904
+      globals.Set = collectionShims.Set;
+    }
     if (globals.Map || globals.Set) {
       // Safari 8, for example, doesn't accept an iterable.
       var mapAcceptsArguments = valueOrFalseIfThrows(function () { return new Map([[1, 2]]).get(1) === 2; });
@@ -3320,7 +3326,7 @@
         Value.preserveToString(Map.prototype.has, origMapHas);
       }
       var testSet = new Set();
-      var setUsesSameValueZero = (function (s) {
+      var setUsesSameValueZero = Set.prototype['delete'] && Set.prototype.add && Set.prototype.has && (function (s) {
         s['delete'](0);
         s.add(-0);
         return !s.has(0);
