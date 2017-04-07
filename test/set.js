@@ -23,9 +23,9 @@ Assertion.addMethod('theSameSet', function (otherArray) {
   );
 });
 
-var $iterator$ = typeof Symbol === 'function' ? Symbol.iterator : void 0;
-if (!$iterator$ && typeof Set === 'function') {
-  $iterator$ = typeof Set['@@iterator'] === 'function' ? '@@iterator' : '_es6-shim iterator_';
+var $iterator$ = typeof Symbol === 'function' ? Symbol.iterator : '_es6-shim iterator_';
+if (typeof Set === 'function' && typeof Set.prototype['@@iterator'] === 'function') {
+  $iterator$ = '@@iterator';
 }
 
 Assertion.addMethod('iterations', function (expected) {
