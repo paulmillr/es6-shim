@@ -2,10 +2,10 @@ language: node_js
 os:
  - linux
 node_js:
-  - "7.4"
-  - "6.9"
+  - "7.8"
+  - "6.10"
   - "5.12"
-  - "4.7"
+  - "4.8"
   - "iojs-v3.3"
   - "iojs-v2.5"
   - "iojs-v1.8"
@@ -16,6 +16,8 @@ before_install:
   - 'if [ "${TRAVIS_NODE_VERSION}" = "0.6" ]; then npm install -g npm@1.3 ; elif [ "${TRAVIS_NODE_VERSION}" != "0.9" ]; then case "$(npm --version)" in 1.*) npm install -g npm@1.4.28 ;; 2.*) npm install -g npm@2 ;; esac ; fi'
   - 'if [ "${TRAVIS_NODE_VERSION}" != "0.6" ] && [ "${TRAVIS_NODE_VERSION}" != "0.9" ]; then npm install -g npm; fi'
   - 'if [ -n "${SAUCE-}" ]; then npm install -g grunt-cli; fi'
+install:
+  - 'if [ "${TRAVIS_NODE_VERSION}" = "0.6" ]; then nvm install 0.8 && npm install -g npm@1.3 && npm install -g npm@1.4.28 && npm install -g npm@2 && npm install && nvm use "${TRAVIS_NODE_VERSION}"; else npm install; fi;'
 script:
   - 'if [ -n "${SAUCE-}" ]; then npm run sauce; fi'
   - 'if [ -n "${PRETEST-}" ]; then npm run pretest ; fi'
@@ -36,6 +38,14 @@ matrix:
       env: PRETEST=true
     - node_js: "node"
       env: SAUCE=true
+    - node_js: "7.7"
+      env: TEST=true ALLOW_FAILURE=true
+    - node_js: "7.6"
+      env: TEST=true ALLOW_FAILURE=true
+    - node_js: "7.5"
+      env: TEST=true ALLOW_FAILURE=true
+    - node_js: "7.4"
+      env: TEST=true ALLOW_FAILURE=true
     - node_js: "7.3"
       env: TEST=true ALLOW_FAILURE=true
     - node_js: "7.2"
@@ -43,6 +53,8 @@ matrix:
     - node_js: "7.1"
       env: TEST=true ALLOW_FAILURE=true
     - node_js: "7.0"
+      env: TEST=true ALLOW_FAILURE=true
+    - node_js: "6.9"
       env: TEST=true ALLOW_FAILURE=true
     - node_js: "6.8"
       env: TEST=true ALLOW_FAILURE=true
@@ -85,6 +97,8 @@ matrix:
     - node_js: "5.1"
       env: TEST=true ALLOW_FAILURE=true
     - node_js: "5.0"
+      env: TEST=true ALLOW_FAILURE=true
+    - node_js: "4.7"
       env: TEST=true ALLOW_FAILURE=true
     - node_js: "4.6"
       env: TEST=true ALLOW_FAILURE=true
@@ -140,30 +154,30 @@ matrix:
       env: TEST=true ALLOW_FAILURE=true
     - node_js: "0.4"
       env: TEST=true ALLOW_FAILURE=true
-    - node_js: "7"
-      env: TEST=true
-      os: osx
-    - node_js: "6"
-      env: TEST=true
-      os: osx
-    - node_js: "5"
-      env: TEST=true
-      os: osx
-    - node_js: "4"
-      env: TEST=true
-      os: osx
-    - node_js: "iojs"
-      env: TEST=true
-      os: osx
-    - node_js: "0.12"
-      env: TEST=true
-      os: osx
-    - node_js: "0.10"
-      env: TEST=true
-      os: osx
-    - node_js: "0.8"
-      env: TEST=true
-      os: osx
+    ##- node_js: "7"
+      #env: TEST=true
+      #os: osx
+    #- node_js: "6"
+      #env: TEST=true
+      #os: osx
+    #- node_js: "5"
+      #env: TEST=true
+      #os: osx
+    #- node_js: "4"
+      #env: TEST=true
+      #os: osx
+    #- node_js: "iojs"
+      #env: TEST=true
+      #os: osx
+    #- node_js: "0.12"
+      #env: TEST=true
+      #os: osx
+    #- node_js: "0.10"
+      #env: TEST=true
+      #os: osx
+    #- node_js: "0.8"
+      #env: TEST=true
+      #os: osx
   allow_failures:
     - os: osx
     - env: TEST=true ALLOW_FAILURE=true
