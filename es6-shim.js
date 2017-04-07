@@ -1896,10 +1896,12 @@
       }
 
       var a = _abs(x);
+      var aSquared = a * a;
+      var s = _sign(x);
       if (a < 1) {
-        return _sign(x) * _log1p(a + a * a / (_sqrt(a * a + 1) + 1));
+        return s * _log1p(a + (aSquared / (_sqrt(aSquared + 1) + 1)));
       }
-      return _sign(x) * (_log1p(a / 2 + _sqrt(1 + 1 / (a * a)) * a / 2 - 1) + 1 / LOG2E);
+      return s * (_log1p((a / 2) + (_sqrt(1 + (1 / aSquared)) * a / 2) - 1) + (1 / LOG2E));
     },
 
     atanh: function atanh(value) {
@@ -1949,7 +1951,7 @@
       if (!globalIsFinite(x)) { return Infinity; }
 
       var t = _exp(_abs(x) - 1);
-      return (t + 1 / (t * E * E)) * (E / 2);
+      return (t + (1 / (t * E * E))) * (E / 2);
     },
 
     expm1: function expm1(value) {
