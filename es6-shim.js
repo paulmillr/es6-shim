@@ -1886,7 +1886,13 @@
       if (numberIsNaN(x) || value < 1) { return NaN; }
       if (x === 1) { return 0; }
       if (x === Infinity) { return x; }
-      return _log((x / E) + (_sqrt(x + 1) * _sqrt(x - 1) / E)) + 1;
+
+      var xInvSquared = 1 / (x * x);
+      if (x < 2) {
+        return _log1p(x - 1 + (_sqrt(1 - xInvSquared) * x));
+      }
+      var halfX = x / 2;
+      return _log1p(halfX + (_sqrt(1 - xInvSquared) * halfX) - 1) + (1 / LOG2E);
     },
 
     asinh: function asinh(value) {
@@ -2064,6 +2070,11 @@
       return sign * result;
     }
   };
+
+  var hasULPDistance = function hasULPDistance(result, expected, distance) {
+    return _abs(1 - (result / expected)) / Number.EPSILON > (distance || 8);
+  };
+
   defineProperties(Math, MathShims);
   // Chrome < 40 sinh returns ∞ for large numbers
   defineProperty(Math, 'sinh', MathShims.sinh, Math.sinh(710) === Infinity);
@@ -2081,8 +2092,10 @@
   defineProperty(Math, 'tanh', MathShims.tanh, Math.tanh(-2e-17) !== -2e-17);
   // Chrome 40 loses Math.acosh precision with high numbers
   defineProperty(Math, 'acosh', MathShims.acosh, Math.acosh(Number.MAX_VALUE) === Infinity);
+  // Chrome < 54 has an inaccurate acosh for EPSILON deltas
+  defineProperty(Math, 'acosh', MathShims.acosh, !hasULPDistance(Math.acosh(1 + Number.EPSILON), Math.sqrt(2 * Number.EPSILON)));
   // Firefox 38 on Windows
-  defineProperty(Math, 'cbrt', MathShims.cbrt, Math.abs(1 - (Math.cbrt(1e-300) / 1e-100)) / Number.EPSILON > 8);
+  defineProperty(Math, 'cbrt', MathShims.cbrt, !hasULPDistance(Math.cbrt(1e-300), 1e-100));
   // node 0.11 has an imprecise Math.sinh with very small numbers
   defineProperty(Math, 'sinh', MathShims.sinh, Math.sinh(-2e-17) !== -2e-17);
   // FF 35 on Linux reports 22025.465794806725 for Math.expm1(10)

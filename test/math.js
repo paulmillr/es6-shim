@@ -1,9 +1,16 @@
+var EPSILON = Number.EPSILON || 2.2204460492503130808472633361816e-16;
+
 var Assertion = expect().constructor;
 Assertion.prototype.almostEqual = function (obj, precision) {
   'use strict';
 
   var allowedDiff = precision || 1e-11;
   return this.within(obj - allowedDiff, obj + allowedDiff);
+};
+
+Assertion.prototype.haveULPDistance = function (expected, distance) {
+  var actual = this._obj;
+  return this.above(Math.abs(1 - (actual / expected)) / EPSILON, distance);
 };
 
 describe('Math', function () {
@@ -26,7 +33,6 @@ describe('Math', function () {
   };
   var valueOfIsNaN = { valueOf: function () { return NaN; } };
   var valueOfIsInfinity = { valueOf: function () { return Infinity; } };
-  var EPSILON = Number.EPSILON || 2.2204460492503130808472633361816e-16;
 
   ifShimIt('is on the exported object', function () {
     var exported = require('../');
@@ -67,7 +73,11 @@ describe('Math', function () {
     });
 
     it('works for EPSILON values near 1', function () {
-      expect(Math.acosh(1 + EPSILON)).to.almostEqual(Math.sqrt(2 * EPSILON));
+      var result = Math.acosh(1 + EPSILON);
+      var expected = Math.sqrt(2 * EPSILON);
+
+      expect(result).to.almostEqual(expected);
+      expect(result).to.haveULPDistance(expected, 8);
     });
   });
 
@@ -188,8 +198,15 @@ describe('Math', function () {
       expect(Math.cbrt(8)).to.almostEqual(2);
       expect(Math.cbrt(-1000)).to.almostEqual(-10);
       expect(Math.cbrt(1000)).to.almostEqual(10);
+    });
+
+    it('is correct at extremes', function () {
+      var result = Math.cbrt(1e-300);
+      var expected = 1e-100;
+      expect(result).to.almostEqual(expected);
+      expect(result).to.haveULPDistance(expected, 8);
+
       expect(Math.cbrt(-1e-300)).to.almostEqual(-1e-100);
-      expect(Math.cbrt(1e-300)).to.almostEqual(1e-100);
       expect(Math.cbrt(-1e+300)).to.almostEqual(-1e+100);
       expect(Math.cbrt(1e+300)).to.almostEqual(1e+100);
     });
