@@ -65,6 +65,10 @@ describe('Math', function () {
       expect(Math.acosh(1e160)).to.almostEqual(369.10676205960726);
       expect(Math.acosh(Number.MAX_VALUE)).to.almostEqual(710.4758600739439);
     });
+
+    it('works for EPSILON values near 1', function () {
+      expect(Math.acosh(1 + EPSILON)).to.almostEqual(Math.sqrt(2 * EPSILON));
+    });
   });
 
   describe('.asinh()', function () {
