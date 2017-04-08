@@ -2071,8 +2071,8 @@
     }
   };
 
-  var hasULPDistance = function hasULPDistance(result, expected, distance) {
-    return _abs(1 - (result / expected)) / Number.EPSILON > (distance || 8);
+  var withinULPDistance = function withinULPDistance(result, expected, distance) {
+    return _abs(1 - (result / expected)) / Number.EPSILON < (distance || 8);
   };
 
   defineProperties(Math, MathShims);
@@ -2093,9 +2093,9 @@
   // Chrome 40 loses Math.acosh precision with high numbers
   defineProperty(Math, 'acosh', MathShims.acosh, Math.acosh(Number.MAX_VALUE) === Infinity);
   // Chrome < 54 has an inaccurate acosh for EPSILON deltas
-  defineProperty(Math, 'acosh', MathShims.acosh, !hasULPDistance(Math.acosh(1 + Number.EPSILON), Math.sqrt(2 * Number.EPSILON)));
+  defineProperty(Math, 'acosh', MathShims.acosh, !withinULPDistance(Math.acosh(1 + Number.EPSILON), Math.sqrt(2 * Number.EPSILON)));
   // Firefox 38 on Windows
-  defineProperty(Math, 'cbrt', MathShims.cbrt, !hasULPDistance(Math.cbrt(1e-300), 1e-100));
+  defineProperty(Math, 'cbrt', MathShims.cbrt, !withinULPDistance(Math.cbrt(1e-300), 1e-100));
   // node 0.11 has an imprecise Math.sinh with very small numbers
   defineProperty(Math, 'sinh', MathShims.sinh, Math.sinh(-2e-17) !== -2e-17);
   // FF 35 on Linux reports 22025.465794806725 for Math.expm1(10)
