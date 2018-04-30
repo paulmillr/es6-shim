@@ -260,7 +260,7 @@ var runArrayTests = function (it) {
         /* eslint no-extend-native: 0 */
         Object.defineProperty(Object.prototype, key, {
           configurable: true,
-          get: function () {},
+          get: function () {}, // eslint-disable-line getter-return
           set: function (v) { throw new EvalError('boom'); }
         });
         expect(function () {

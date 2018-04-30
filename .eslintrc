@@ -4,6 +4,8 @@
 	"extends": "@ljharb",
 
 	"rules": {
+		"array-bracket-newline": [0],
+		"array-element-newline": [0],
 		"callback-return": [0],
 		"complexity": [1],
 		"consistent-return": [1],

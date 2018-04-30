@@ -1,12 +1,12 @@
- /*!
-  * https://github.com/paulmillr/es6-shim
-  * @license es6-shim Copyright 2013-2016 by Paul Miller (http://paulmillr.com)
-  *   and contributors,  MIT License
-  * es6-sham: v0.35.3
-  * see https://github.com/paulmillr/es6-shim/blob/0.35.3/LICENSE
-  * Details and documentation:
-  * https://github.com/paulmillr/es6-shim/
-  */
+/*!
+ * https://github.com/paulmillr/es6-shim
+ * @license es6-shim Copyright 2013-2016 by Paul Miller (http://paulmillr.com)
+ *   and contributors,  MIT License
+ * es6-sham: v0.35.3
+ * see https://github.com/paulmillr/es6-shim/blob/0.35.3/LICENSE
+ * Details and documentation:
+ * https://github.com/paulmillr/es6-shim/
+ */
 
 // UMD (Universal Module Definition)
 // see https://github.com/umdjs/umd/blob/master/returnExports.js
@@ -50,7 +50,7 @@
   var arePropertyDescriptorsSupported = function () {
     // if Object.defineProperty exists but throws, it's IE 8
     return !throwsError(function () {
-      Object.defineProperty({}, 'x', { get: function () {} });
+      Object.defineProperty({}, 'x', { get: function () {} }); // eslint-disable-line getter-return
     });
   };
   var supportsDescriptors = !!Object.defineProperty && arePropertyDescriptorsSupported();

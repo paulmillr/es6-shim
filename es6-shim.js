@@ -1,12 +1,12 @@
- /*!
-  * https://github.com/paulmillr/es6-shim
-  * @license es6-shim Copyright 2013-2016 by Paul Miller (http://paulmillr.com)
-  *   and contributors,  MIT License
-  * es6-shim: v0.35.3
-  * see https://github.com/paulmillr/es6-shim/blob/0.35.3/LICENSE
-  * Details and documentation:
-  * https://github.com/paulmillr/es6-shim/
-  */
+/*!
+ * https://github.com/paulmillr/es6-shim
+ * @license es6-shim Copyright 2013-2016 by Paul Miller (http://paulmillr.com)
+ *   and contributors,  MIT License
+ * es6-shim: v0.35.3
+ * see https://github.com/paulmillr/es6-shim/blob/0.35.3/LICENSE
+ * Details and documentation:
+ * https://github.com/paulmillr/es6-shim/
+ */
 
 // UMD (Universal Module Definition)
 // see https://github.com/umdjs/umd/blob/master/returnExports.js
@@ -57,7 +57,7 @@
   var arePropertyDescriptorsSupported = function () {
     // if Object.defineProperty exists but throws, it's IE 8
     return !throwsError(function () {
-      Object.defineProperty({}, 'x', { get: function () {} });
+      Object.defineProperty({}, 'x', { get: function () { } }); // eslint-disable-line getter-return
     });
   };
   var supportsDescriptors = !!Object.defineProperty && arePropertyDescriptorsSupported();
@@ -1075,7 +1075,7 @@
   });
   addIterator(ArrayIterator.prototype);
 
-/*
+  /*
   var orderKeys = function orderKeys(a, b) {
     var aNumeric = String(ES.ToInteger(a)) === a;
     var bNumeric = String(ES.ToInteger(b)) === b;
@@ -2220,10 +2220,8 @@
     /* jscs:disable disallowMultiLineTernary */
     var enqueue = ES.IsCallable(globals.setImmediate) ?
       globals.setImmediate :
-      typeof process === 'object' && process.nextTick ? process.nextTick :
-      makePromiseAsap() ||
-      (ES.IsCallable(makeZeroTimeout) ? makeZeroTimeout() :
-      function (task) { setTimeout(task, 0); }); // fallback
+      typeof process === 'object' && process.nextTick ? process.nextTick : makePromiseAsap() ||
+      (ES.IsCallable(makeZeroTimeout) ? makeZeroTimeout() : function (task) { setTimeout(task, 0); }); // fallback
     /* jscs:enable disallowMultiLineTernary */
 
     // Constants for Promise implementation
@@ -2672,6 +2670,7 @@
     // Chrome 46 (probably older too) does not retrieve a thenable's .then synchronously
     var getsThenSynchronously = supportsDescriptors && (function () {
       var count = 0;
+      // eslint-disable-next-line getter-return
       var thenable = Object.defineProperty({}, 'then', { get: function () { count += 1; } });
       Promise.resolve(thenable);
       return count === 1;
@@ -3086,7 +3085,7 @@
           },
 
           clear: function clear() {
-             /* eslint no-multi-assign: 1 */
+            /* eslint no-multi-assign: 1 */
             requireMapSlot(this, 'clear');
             this._map = OrigMap ? new OrigMap() : null;
             this._size = 0;
