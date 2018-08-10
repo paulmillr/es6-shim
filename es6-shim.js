@@ -2057,9 +2057,7 @@
       var sign = _sign(v);
       var abs = _abs(v);
       if (abs < BINARY_32_MIN_VALUE) {
-        return sign * roundTiesToEven(
-          abs / BINARY_32_MIN_VALUE / BINARY_32_EPSILON
-        ) * BINARY_32_MIN_VALUE * BINARY_32_EPSILON;
+        return sign * roundTiesToEven(abs / BINARY_32_MIN_VALUE / BINARY_32_EPSILON) * BINARY_32_MIN_VALUE * BINARY_32_EPSILON;
       }
       // Veltkamp's splitting (?)
       var a = (1 + (BINARY_32_EPSILON / Number.EPSILON)) * abs;
@@ -2449,7 +2447,10 @@
         values[index] = void 0;
         var nextPromise = C.resolve(nextValue);
         var resolveElement = _promiseAllResolver(
-          index, values, resultCapability, remaining
+          index,
+          values,
+          resultCapability,
+          remaining
         );
         remaining.count += 1;
         optimizedThen(nextPromise.then, nextPromise, resolveElement, resultCapability.reject);
@@ -2609,12 +2610,16 @@
         } else if (_promise.state === PROMISE_FULFILLED) {
           value = _promise.result;
           enqueuePromiseReactionJob(
-            fulfillReactionHandler, resultCapability, value
+            fulfillReactionHandler,
+            resultCapability,
+            value
           );
         } else if (_promise.state === PROMISE_REJECTED) {
           value = _promise.result;
           enqueuePromiseReactionJob(
-            rejectReactionHandler, resultCapability, value
+            rejectReactionHandler,
+            resultCapability,
+            value
           );
         } else {
           throw new TypeError('unexpected Promise state');

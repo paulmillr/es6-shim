@@ -554,9 +554,7 @@ var runStringTests = function (it) {
 
       it('should work with surrogate characters', function () {
         var str = '\u2500\ud800\udc00\udbff\udfff\ud800';
-        expect(Array.from(str)).to.eql(
-          ['\u2500', '\ud800\udc00', '\udbff\udfff', '\ud800']
-        );
+        expect(Array.from(str)).to.eql(['\u2500', '\ud800\udc00', '\udbff\udfff', '\ud800']);
       });
     });
 

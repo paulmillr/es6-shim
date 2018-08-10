@@ -561,9 +561,7 @@ describe('Map', function () {
       zeroMap.forEach(function (value, key) {
         result.push(String(1 / key) + ' ' + value);
       });
-      expect(result.join(', ')).to.equal(
-        'Infinity a, Infinity c, 1 b'
-      );
+      expect(result.join(', ')).to.equal('Infinity a, Infinity c, 1 b');
     });
   });
 

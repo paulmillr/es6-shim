@@ -77,14 +77,10 @@ var runArrayTests = function (it) {
           expect(Array.from(arguments)).to.eql([0, 1, 2]);
         }(0, 1, 2));
 
-        expect(Array.from([null, undefined, 0.1248, -0, 0])).to.eql(
-          [null, undefined, 0.1248, -0, 0]
-        );
+        expect(Array.from([null, undefined, 0.1248, -0, 0])).to.eql([null, undefined, 0.1248, -0, 0]);
 
         if (Array.prototype.values) {
-          expect(Array.from([null, undefined, 0.1248, -0, 0].values())).to.eql(
-            [null, undefined, 0.1248, -0, 0]
-          );
+          expect(Array.from([null, undefined, 0.1248, -0, 0].values())).to.eql([null, undefined, 0.1248, -0, 0]);
         }
       });
 

@@ -621,9 +621,7 @@ describe('Set', function () {
       zeroSet.forEach(function (key) {
         result.push(String(1 / key));
       });
-      expect(result.join(', ')).to.equal(
-        'Infinity, Infinity, 1'
-      );
+      expect(result.join(', ')).to.equal('Infinity, Infinity, 1');
     });
   });
 
