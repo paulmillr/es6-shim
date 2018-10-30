@@ -1,3 +1,12 @@
+# es6-shim 0.35.4 (29 October 2018)
+* [Fix] protect against evil build processes by ensuring these feature tests don‘t look like no-ops that are safe to remove
+* [Fix] broken `hasULPDistance` → working `withinULPDistance` helper
+* [Fix] `acosh`: fix precision (#338)
+* [Fix] `Math.{asinh,atanh,cosh,sinh}` precision (from #338)
+* [Fix] Google Translate adds a broken `Set` to the global scope (#438)
+* [Fix] Distinguish Set and Map iterators (#387)
+* [Docs] Tweaking documentation specifying inclusion order (#435)
+
 # es6-shim 0.35.3 (23 January 2017)
 * [Fix] avoid needlessly shimming `Array#{find, findIndex}` (#433)
 * [Dev Deps] update `eslint`, `@ljharb/eslint-config`, `grunt-saucelabs`
