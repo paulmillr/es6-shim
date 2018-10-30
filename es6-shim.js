@@ -57,7 +57,7 @@
   var arePropertyDescriptorsSupported = function () {
     // if Object.defineProperty exists but throws, it's IE 8
     return !throwsError(function () {
-      Object.defineProperty({}, 'x', { get: function () { } }); // eslint-disable-line getter-return
+      return Object.defineProperty({}, 'x', { get: function () { } }); // eslint-disable-line getter-return
     });
   };
   var supportsDescriptors = !!Object.defineProperty && arePropertyDescriptorsSupported();
@@ -864,7 +864,7 @@
   if (String.prototype.startsWith && String.prototype.endsWith) {
     var startsWithRejectsRegex = throwsError(function () {
       /* throws if spec-compliant */
-      '/a/'.startsWith(/a/);
+      return '/a/'.startsWith(/a/);
     });
     var startsWithHandlesInfinity = valueOrFalseIfThrows(function () {
       return 'abc'.startsWith('a', Infinity) === false;
@@ -1619,7 +1619,7 @@
     }());
   }
 
-  var objectKeysAcceptsPrimitives = !throwsError(function () { Object.keys('foo'); });
+  var objectKeysAcceptsPrimitives = !throwsError(function () { return Object.keys('foo'); });
   if (!objectKeysAcceptsPrimitives) {
     var originalObjectKeys = Object.keys;
     overrideNative(Object, 'keys', function keys(value) {
@@ -1627,7 +1627,7 @@
     });
     keys = Object.keys;
   }
-  var objectKeysRejectsRegex = throwsError(function () { Object.keys(/a/g); });
+  var objectKeysRejectsRegex = throwsError(function () { return Object.keys(/a/g); });
   if (objectKeysRejectsRegex) {
     var regexRejectingObjectKeys = Object.keys;
     overrideNative(Object, 'keys', function keys(value) {
@@ -1646,7 +1646,7 @@
   }
 
   if (Object.getOwnPropertyNames) {
-    var objectGOPNAcceptsPrimitives = !throwsError(function () { Object.getOwnPropertyNames('foo'); });
+    var objectGOPNAcceptsPrimitives = !throwsError(function () { return Object.getOwnPropertyNames('foo'); });
     if (!objectGOPNAcceptsPrimitives) {
       var cachedWindowNames = typeof window === 'object' ? Object.getOwnPropertyNames(window) : [];
       var originalObjectGetOwnPropertyNames = Object.getOwnPropertyNames;
@@ -1665,7 +1665,7 @@
     }
   }
   if (Object.getOwnPropertyDescriptor) {
-    var objectGOPDAcceptsPrimitives = !throwsError(function () { Object.getOwnPropertyDescriptor('foo', 'bar'); });
+    var objectGOPDAcceptsPrimitives = !throwsError(function () { return Object.getOwnPropertyDescriptor('foo', 'bar'); });
     if (!objectGOPDAcceptsPrimitives) {
       var originalObjectGetOwnPropertyDescriptor = Object.getOwnPropertyDescriptor;
       overrideNative(Object, 'getOwnPropertyDescriptor', function getOwnPropertyDescriptor(value, property) {
@@ -1674,7 +1674,7 @@
     }
   }
   if (Object.seal) {
-    var objectSealAcceptsPrimitives = !throwsError(function () { Object.seal('foo'); });
+    var objectSealAcceptsPrimitives = !throwsError(function () { return Object.seal('foo'); });
     if (!objectSealAcceptsPrimitives) {
       var originalObjectSeal = Object.seal;
       overrideNative(Object, 'seal', function seal(value) {
@@ -1684,7 +1684,7 @@
     }
   }
   if (Object.isSealed) {
-    var objectIsSealedAcceptsPrimitives = !throwsError(function () { Object.isSealed('foo'); });
+    var objectIsSealedAcceptsPrimitives = !throwsError(function () { return Object.isSealed('foo'); });
     if (!objectIsSealedAcceptsPrimitives) {
       var originalObjectIsSealed = Object.isSealed;
       overrideNative(Object, 'isSealed', function isSealed(value) {
@@ -1694,7 +1694,7 @@
     }
   }
   if (Object.freeze) {
-    var objectFreezeAcceptsPrimitives = !throwsError(function () { Object.freeze('foo'); });
+    var objectFreezeAcceptsPrimitives = !throwsError(function () { return Object.freeze('foo'); });
     if (!objectFreezeAcceptsPrimitives) {
       var originalObjectFreeze = Object.freeze;
       overrideNative(Object, 'freeze', function freeze(value) {
@@ -1704,7 +1704,7 @@
     }
   }
   if (Object.isFrozen) {
-    var objectIsFrozenAcceptsPrimitives = !throwsError(function () { Object.isFrozen('foo'); });
+    var objectIsFrozenAcceptsPrimitives = !throwsError(function () { return Object.isFrozen('foo'); });
     if (!objectIsFrozenAcceptsPrimitives) {
       var originalObjectIsFrozen = Object.isFrozen;
       overrideNative(Object, 'isFrozen', function isFrozen(value) {
@@ -1714,7 +1714,7 @@
     }
   }
   if (Object.preventExtensions) {
-    var objectPreventExtensionsAcceptsPrimitives = !throwsError(function () { Object.preventExtensions('foo'); });
+    var objectPreventExtensionsAcceptsPrimitives = !throwsError(function () { return Object.preventExtensions('foo'); });
     if (!objectPreventExtensionsAcceptsPrimitives) {
       var originalObjectPreventExtensions = Object.preventExtensions;
       overrideNative(Object, 'preventExtensions', function preventExtensions(value) {
@@ -1724,7 +1724,7 @@
     }
   }
   if (Object.isExtensible) {
-    var objectIsExtensibleAcceptsPrimitives = !throwsError(function () { Object.isExtensible('foo'); });
+    var objectIsExtensibleAcceptsPrimitives = !throwsError(function () { return Object.isExtensible('foo'); });
     if (!objectIsExtensibleAcceptsPrimitives) {
       var originalObjectIsExtensible = Object.isExtensible;
       overrideNative(Object, 'isExtensible', function isExtensible(value) {
@@ -1734,7 +1734,7 @@
     }
   }
   if (Object.getPrototypeOf) {
-    var objectGetProtoAcceptsPrimitives = !throwsError(function () { Object.getPrototypeOf('foo'); });
+    var objectGetProtoAcceptsPrimitives = !throwsError(function () { return Object.getPrototypeOf('foo'); });
     if (!objectGetProtoAcceptsPrimitives) {
       var originalGetProto = Object.getPrototypeOf;
       overrideNative(Object, 'getPrototypeOf', function getPrototypeOf(value) {
@@ -2652,9 +2652,9 @@
       return S.resolve(42).then(function () {}) instanceof S;
     });
     var promiseIgnoresNonFunctionThenCallbacks = !throwsError(function () {
-      globals.Promise.reject(42).then(null, 5).then(null, noop);
+      return globals.Promise.reject(42).then(null, 5).then(null, noop);
     });
-    var promiseRequiresObjectContext = throwsError(function () { globals.Promise.call(3, noop); });
+    var promiseRequiresObjectContext = throwsError(function () { return globals.Promise.call(3, noop); });
     // Promise.resolve() was errata'ed late in the ES6 process.
     // See: https://bugzilla.mozilla.org/show_bug.cgi?id=1170742
     //      https://code.google.com/p/v8/issues/detail?id=4161
@@ -3594,7 +3594,7 @@
       preventExtensions: function preventExtensions(target) {
         throwUnlessTargetIsObject(target);
         return callAndCatchException(function () {
-          Object.preventExtensions(target);
+          return Object.preventExtensions(target);
         });
       }
     });
@@ -3680,7 +3680,7 @@
       defineProperty: function defineProperty(target, propertyKey, attributes) {
         throwUnlessTargetIsObject(target);
         return callAndCatchException(function () {
-          Object.defineProperty(target, propertyKey, attributes);
+          return Object.defineProperty(target, propertyKey, attributes);
         });
       },
 
