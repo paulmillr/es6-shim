@@ -151,6 +151,9 @@
       configurable: true,
       enumerable: false,
       get: function () {
+        if (this === Function.prototype) {
+          return '';
+        }
         var str = _call(functionToString, this);
         var match = _call(_strMatch, str, /\s*function\s+([^(\s]*)\s*/);
         var name = match && match[1];
