@@ -1,3 +1,8 @@
+# es6-shim 0.35.5 (7 March 2019)
+* [Fix] `es6-sham`: `Function.prototype.name`: don’t poison the getter when the receiver is `Function.prototype` (#454)
+* [Dev Deps] update `eslint`, `@ljharb/eslint-config`
+* [Dev Deps] remove `jscs` and `jshint`
+
 # es6-shim 0.35.4 (29 October 2018)
 * [Fix] protect against evil build processes by ensuring these feature tests don‘t look like no-ops that are safe to remove
 * [Fix] broken `hasULPDistance` → working `withinULPDistance` helper
