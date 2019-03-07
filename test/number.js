@@ -395,12 +395,10 @@ describe('Number', function () {
     });
 
     it('works with `new`', function () {
-      /* jshint -W053 */
       /* eslint-disable no-new-wrappers */
       var one = new Number('1');
       var a = new Number('0xA');
       /* eslint-enable no-new-wrappers */
-      /* jshint +W053 */
 
       expect(+one).to.equal(1);
       expect(one instanceof Number).to.equal(true);
@@ -476,7 +474,6 @@ describe('Number', function () {
     });
 
     it.skip('it works with updated unicode values', function () {
-      /* jscs:disable disallowUnusedVariables */
       var whitespace = ' \t\x0b\f\xa0\ufeff\n\r\u2028\u2029\u1680\u180e\u2000\u2001\u2002\u2003\u2004\u2005\u2006\u2007\u2008\u2009\u200a\u202f\u205f\u3000';
 
       expect(String(Number(whitespace + '3' + whitespace))).to.equal('3');

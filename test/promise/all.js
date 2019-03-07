@@ -72,15 +72,9 @@ describe('Promise.all', function () {
   });
 
   it('fulfills when passed an sparse array, giving `undefined` for the omitted values', function (done) {
-    /* jshint elision: true */
-    /* jscs:disable disallowSpaceBeforeComma */
-    /* jscs:disable requireSpaceAfterComma */
     /* eslint-disable no-sparse-arrays */
     var iterable = [Promise.resolve(0), , , Promise.resolve(1)];
     /* eslint-enable no-sparse-arrays */
-    /* jscs:enable requireSpaceAfterComma */
-    /* jscs:enable disallowSpaceBeforeComma */
-    /* jshint elision: false */
 
     Promise.all(iterable).then(function (value) {
       assert.deepEqual(value, [0, undefined, undefined, 1]);

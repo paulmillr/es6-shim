@@ -33,10 +33,8 @@ describe('Function', function () {
     });
 
     it('returns "anomymous" for Function functions', function () {
-      /* eslint no-new-func: 1 */
-      /* jshint evil: true */
+      // eslint-disable-next-line no-new-func
       var func = identity(Function(''));
-      /* jshint evil: false */
       expect(typeof func.name).to.equal('string');
       expect(func.name === 'anonymous' || func.name === '').to.equal(true);
 

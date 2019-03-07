@@ -27,11 +27,9 @@
 }(this, function () {
   'use strict';
 
-  /*jshint evil: true */
   /* eslint-disable no-new-func */
   var getGlobal = new Function('return this;');
   /* eslint-enable no-new-func */
-  /*jshint evil: false */
 
   var globals = getGlobal();
   var Object = globals.Object;
@@ -67,7 +65,6 @@
   (function () {
     if (Object.setPrototypeOf) { return; }
 
-    /*jshint proto: true */
     // @author    Andrea Giammarchi - @WebReflection
 
     var getOwnPropertyNames = Object.getOwnPropertyNames;
