@@ -19,7 +19,7 @@ describe('Function', function () {
 
     it('does not poison every name when accessed on Function.prototype', function () {
       expect((function foo() {}).name).to.equal('foo');
-      expect(Function.prototype.name).to.equal('');
+      expect(Function.prototype.name).to.match(/^$|Empty/);
       expect((function foo() {}).name).to.equal('foo');
     });
 
