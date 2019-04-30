@@ -351,7 +351,7 @@ describe('Map', function () {
     });
 
     it('throws when called on a non-Map', function () {
-      var expectedMessage = /^(Method )?Map.prototype.entries called on incompatible receiver |^entries method called on incompatible |^Cannot create a Map entry iterator for a non-Map object.|^Map\.prototype\.entries: 'this' is not a Map object$|^std_Map_iterator method called on incompatible \w+$/;
+      var expectedMessage = /^(Method )?Map.prototype.entries called on incompatible receiver |^entries method called on incompatible |^Cannot create a Map entry iterator for a non-Map object.|^Map\.prototype\.entries: 'this' is not a Map object$|^std_Map_iterator method called on incompatible \w$|Map.prototype.entries requires that \|this\| be Map+$/;
       var nonMaps = [true, false, 'abc', NaN, new Set([1, 2]), { a: true }, [1], Object('abc'), Object(NaN)];
       nonMaps.forEach(function (nonMap) {
         expect(function () { return Map.prototype.entries.call(nonMap); }).to['throw'](TypeError, expectedMessage);
