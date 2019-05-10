@@ -258,6 +258,8 @@ Promise.resolve(5).then(function (value) {
 
 ## [License][license-url]
 
+The project was initially based on es6-shim by Axel Rauschmayer.
+
 [1]: https://travis-ci.org/paulmillr/es6-shim.svg
 [2]: https://travis-ci.org/paulmillr/es6-shim
 [3]: https://david-dm.org/paulmillr/es6-shim.svg
