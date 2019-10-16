@@ -255,13 +255,22 @@
   };
   var isArguments = isStandardArguments(arguments) ? isStandardArguments : isLegacyArguments;
 
+  var hasNativeSymbol = typeof Symbol === 'function' && typeof Symbol() === 'symbol';
+
+  var isNativeSymbol = function isNativeSymbol(value) {
+    return hasNativeSymbol && typeof value === 'symbol';
+  };
+
+  // idea from https://github.com/zloirock/core-js/blob/master/packages/core-js/modules/es.symbol.js#L88
+  var isNonNativeSymbol = function isNonNativeSymbol(value) {
+    return typeof globals.Symbol === 'function' && Object(value) instanceof globals.Symbol;
+  };
+
   var Type = {
     primitive: function (x) { return x === null || (typeof x !== 'function' && typeof x !== 'object'); },
     string: function (x) { return _toString(x) === '[object String]'; },
     regex: function (x) { return _toString(x) === '[object RegExp]'; },
-    symbol: function (x) {
-      return typeof globals.Symbol === 'function' && typeof x === 'symbol';
-    }
+    symbol: hasNativeSymbol ? isNativeSymbol : isNonNativeSymbol
   };
 
   var overrideNative = function overrideNative(object, property, replacement) {
@@ -295,7 +304,7 @@
   var $String = String;
 
   /* global document */
-  var domAll = (typeof document === 'undefined' || !document) ? null : document.all;
+  var domAll = typeof document === 'undefined' || !document ? null : document.all;
   var isNullOrUndefined = domAll == null ? function isNullOrUndefined(x) {
     return x == null;
   } : function isNullOrUndefinedAndNotDocumentAll(x) {
