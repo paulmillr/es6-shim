@@ -304,7 +304,7 @@
   var $String = String;
 
   /* global document */
-  var domAll = typeof document === 'undefined' || !document ? null : document.all;
+  var domAll = (typeof document === 'undefined' || !document) ? null : document.all;
   var isNullOrUndefined = domAll == null ? function isNullOrUndefined(x) {
     return x == null;
   } : function isNullOrUndefinedAndNotDocumentAll(x) {
