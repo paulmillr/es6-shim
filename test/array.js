@@ -12,6 +12,7 @@ var runArrayTests = function (it) {
   var ifSymbolUnscopablesIt = isSymbol(Sym.unscopables) ? it : it.skip;
   var ifShimIt = (typeof process !== 'undefined' && process.env.NO_ES6_SHIM) ? it.skip : it;
   var ifSupportsDescriptorsIt = Object.getOwnPropertyDescriptor ? it : it.skip;
+  var ifHasDunderProtoIt = [].__proto__ === Array.prototype ? it : it.skip; // eslint-disable-line no-proto
 
   var isNegativeZero = function (x) {
     return (1 / x) < 0;
@@ -398,6 +399,66 @@ var runArrayTests = function (it) {
         expect(result).not.to.have.ownProperty('0');
         expect(result).to.have.ownProperty('1');
         expect(result).to.eql({ 0: 'foo', 1: 'foo', 2: 1, length: 3 });
+      });
+
+      // https://github.com/tc39/test262/pull/2443
+      describe('security issues', function () {
+        // make a long integer Array
+        var longDenseArray = function longDenseArray() {
+          var a = [0];
+          for (var i = 0; i < 1024; i++) {
+            a[i] = i;
+          }
+          return a;
+        };
+
+        describe('coerced-values-start-change-start', function () {
+          var currArray;
+          var shorten = function shorten() {
+            currArray.length = 20;
+            return 1000;
+          };
+
+          it('coercion side-effect makes start out of bounds', function () {
+            currArray = longDenseArray();
+            var array = [];
+            array.length = 20;
+
+            expect(currArray.copyWithin(0, { valueOf: shorten })).to.deep.equal(array);
+          });
+
+          ifHasDunderProtoIt('coercion side-effect makes start out of bounds with prototype', function () {
+            currArray = longDenseArray();
+            Object.setPrototypeOf(currArray, longDenseArray());
+
+            var array2 = longDenseArray();
+            array2.length = 20;
+            for (var i = 0; i < 24; i++) {
+              array2[i] = Object.getPrototypeOf(currArray)[i + 1000];
+            }
+
+            expect(currArray.copyWithin(0, { valueOf: shorten })).to.have.deep.members(array2);
+          });
+        });
+
+        describe('coerced-values-start-change-target', function () {
+          it('coercion side-effect makes target out of bounds', function () {
+            var shorten = function shorten() {
+              currArray.length = 20;
+              return 1;
+            };
+
+            var array = longDenseArray();
+            array.length = 20;
+            for (var i = 0; i < 19; i++) {
+              array[i + 1000] = array[i + 1];
+            }
+
+            var currArray = longDenseArray();
+
+            expect(currArray.copyWithin(1000, { valueOf: shorten })).to.deep.equal(array);
+          });
+        });
       });
     });
 
