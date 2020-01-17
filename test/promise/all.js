@@ -1,5 +1,3 @@
-/* global it, describe, expect, assert, Promise */
-
 var failIfThrows = function (done) {
   'use strict';
 
@@ -106,6 +104,7 @@ describe('Promise.all', function () {
   // test cases from
   // https://github.com/domenic/promises-unwrapping/issues/89#issuecomment-33110203
   var tamper = function (p) {
+    // eslint-disable-next-line no-param-reassign
     p.then = function (fulfill, reject) {
       fulfill('tampered');
       return Promise.prototype.then.call(this, fulfill, reject);

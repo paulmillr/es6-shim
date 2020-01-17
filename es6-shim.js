@@ -11,7 +11,7 @@
 // UMD (Universal Module Definition)
 // see https://github.com/umdjs/umd/blob/master/returnExports.js
 (function (root, factory) {
-  /*global define, module, exports */
+  /*global define */
   if (typeof define === 'function' && define.amd) {
     // AMD. Register as an anonymous module.
     define(factory);
@@ -174,7 +174,7 @@
   };
 
   var getGlobal = function () {
-    /* global self, window, global */
+    /* global self, window */
     // the only reliable means to get the global object is
     // `Function('return this')()`
     // However, this causes CSP violations in Chrome apps.
@@ -1425,12 +1425,10 @@
       NEGATIVE_INFINITY: OrigNumber.NEGATIVE_INFINITY,
       POSITIVE_INFINITY: OrigNumber.POSITIVE_INFINITY
     });
-    /* globals Number: true */
     /* eslint-disable no-undef, no-global-assign */
     Number = NumberShim;
     Value.redefine(globals, 'Number', NumberShim);
     /* eslint-enable no-undef, no-global-assign */
-    /* globals Number: false */
   }
 
   var maxSafeInteger = Math.pow(2, 53) - 1;
@@ -1829,12 +1827,10 @@
     wrapConstructor(OrigRegExp, RegExpShim, {
       $input: true // Chrome < v39 & Opera < 26 have a nonstandard "$input" property
     });
-    /* globals RegExp: true */
     /* eslint-disable no-undef, no-global-assign */
     RegExp = RegExpShim;
     Value.redefine(globals, 'RegExp', RegExpShim);
     /* eslint-enable no-undef, no-global-assign */
-    /* globals RegExp: false */
   }
 
   if (supportsDescriptors) {
@@ -2170,7 +2166,6 @@
 
     // find an appropriate setImmediate-alike
     var makeZeroTimeout;
-    /*global window */
     if (typeof window !== 'undefined' && ES.IsCallable(window.postMessage)) {
       makeZeroTimeout = function () {
         // from http://dbaron.org/log/20100309-faster-timeouts
@@ -2203,7 +2198,6 @@
         return pr.then(task);
       };
     };
-    /*global process */
     var enqueue = ES.IsCallable(globals.setImmediate) ?
       globals.setImmediate :
       typeof process === 'object' && process.nextTick ? process.nextTick : makePromiseAsap() ||
@@ -2688,7 +2682,6 @@
       /* eslint-disable no-undef, no-global-assign */
       Promise = PromiseShim;
       /* eslint-enable no-undef, no-global-assign */
-      /* globals Promise: false */
       overrideNative(globals, 'Promise', PromiseShim);
     }
     if (Promise.all.length !== 1) {

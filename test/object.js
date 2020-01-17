@@ -30,7 +30,6 @@ describe('Object', function () {
       });
 
       ifBrowserIt('does not break when an iframe is added', function () {
-        /*global window, document */
         var div = document.createElement('div');
         div.innerHTML = '<iframe src="http://xkcd.com"></iframe>';
         document.body.appendChild(div);

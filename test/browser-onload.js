@@ -1,5 +1,3 @@
-/* global window, mocha */
-
 if (typeof window !== 'undefined') {
   window.completedTests = 0;
   window.sawFail = false;

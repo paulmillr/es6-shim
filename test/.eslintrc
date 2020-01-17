@@ -10,12 +10,14 @@
 		"consistent-return": 0,
 	},
 	"env": {
-		"mocha": true
+		"browser": true,
+		"mocha": true,
 	},
 	"globals": {
 		"Symbol": false,
 		"Promise": false,
+		"assert": false,
 		"expect": false,
-		"assert": false
+		"chai": false,
 	}
 }

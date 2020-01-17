@@ -40,6 +40,7 @@
 		"no-magic-numbers": [0],
 		"no-native-reassign": [2, { "exceptions": ["Number", "Promise", "RegExp"] }],
 		"no-negated-condition": [1],
+		"no-param-reassign": [1],
 		"no-plusplus": [1],
 		"no-restricted-syntax": [2, "DebuggerStatement", "LabeledStatement", "WithStatement"],
 		"no-shadow": [1],

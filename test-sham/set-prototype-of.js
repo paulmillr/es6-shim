@@ -1,5 +1,3 @@
-/* global expect, describe, it */
-
 describe('Object.setPrototypeOf(o, p)', function () {
   'use strict';
 
