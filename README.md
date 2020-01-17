@@ -31,18 +31,18 @@ In both browser and node you may also want to include `unorm`; see the [`String.
 * `Map`, `Set` (requires ES5 property descriptor support)
 * `Promise`
 * `String`:
-    * `fromCodePoint()` ([a standalone shim is also available](http://mths.be/fromcodepoint))
+    * `fromCodePoint()` ([a standalone shim is also available](https://npmjs.com/string.fromcodepoint))
     * `raw()`
 * `String.prototype`:
-    * `codePointAt()` ([a standalone shim is also available](http://mths.be/codepointat))
-    * `endsWith()` ([a standalone shim is also available](http://mths.be/endswith))
-    * `includes()` ([a standalone shim is also available](http://mths.be/includes))
-    * `repeat()` ([a standalone shim is also available](http://mths.be/repeat))
-    * `startsWith()` ([a standalone shim is also available](http://mths.be/startswith))
+    * `codePointAt()` ([a standalone shim is also available](https://npmjs.com/string.prototype.codepointat))
+    * `endsWith()` ([a standalone shim is also available](https://npmjs.com/string.prototype.endswith))
+    * `includes()` ([a standalone shim is also available](https://npmjs.com/string.prototype.includes))
+    * `repeat()` ([a standalone shim is also available](https://npmjs.com/string.prototype.repeat))
+    * `startsWith()` ([a standalone shim is also available](https://npmjs.com/string.prototype.startswith))
 * `RegExp`:
     * `new RegExp`, when given a RegExp as the pattern, will no longer throw when given a "flags" string argument. (requires ES5)
 * `RegExp.prototype`:
-    * `flags` (requires ES5) ([a standalone shim is also available](https://github.com/es-shims/RegExp.prototype.flags))
+    * `flags` (requires ES5) ([a standalone shim is also available](https://npmjs.com/regexp.prototype.flags))
     * `[Symbol.match]` (requires native `Symbol`s)
     * `[Symbol.replace]` (requires native `Symbol`s)
     * `[Symbol.search]` (requires native `Symbol`s)
@@ -66,18 +66,18 @@ In both browser and node you may also want to include `unorm`; see the [`String.
     * `copyWithin()`
     * `entries()`
     * `fill()`
-    * `find()` ([a standalone shim is also available](https://github.com/paulmillr/Array.prototype.find))
-    * `findIndex()` ([a standalone shim is also available](https://github.com/paulmillr/Array.prototype.findIndex))
+    * `find()` ([a standalone shim is also available](https://npmjs.com/array.prototype.find))
+    * `findIndex()` ([a standalone shim is also available](https://npmjs.com/array.prototype.findindex))
     * `keys()` (note: keys/values/entries return an `ArrayIterator` object)
     * `values()`
     * `indexOf()` (ES6 errata)
 * `Object`:
-    * `assign()` ([a standalone shim is also available](https://github.com/ljharb/object.assign))
-    * `is()` ([a standalone shim is also available](https://github.com/ljharb/object-is))
-    * `keys()` (in ES5, but no longer throws on non-object non-null/undefined values in ES6)
+    * `assign()` ([a standalone shim is also available](https://npmjs.com/object.assign))
+    * `is()` ([a standalone shim is also available](https://npmjs.com/object-is))
+    * `keys()` (in ES5, but no longer throws on non-object non-null/undefined values in ES6) ([a standalone shim is also available](https://npmjs.com/object-keys)
     * `setPrototypeOf()` (IE >= 11)
 * `Function.prototype`:
-    * `name` (es6-sham, covers IE 9-11)
+    * `name` (es6-sham, covers IE 9-11) ([a standalone shim is also available](https://npmjs.com/function.prototype.name)
 * `Math`:
     * `acosh()`
     * `asinh()`
@@ -109,7 +109,7 @@ Math functions’ accuracy is 1e-11.
     * `getPrototypeOf()`
     * `has()`
     * `isExtensible()`
-    * `ownKeys()`
+    * `ownKeys()` ([a standalone shim is also available](https://npmjs.com/reflect.ownkeys))
     * `preventExtensions()`
     * `set()`
     * `setPrototypeOf()`
