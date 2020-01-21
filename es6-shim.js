@@ -1316,43 +1316,43 @@
     var originalForEach = Array.prototype.forEach;
     overrideNative(Array.prototype, 'forEach', function forEach(callbackFn) {
       return ES.Call(originalForEach, this.length >= 0 ? this : [], arguments);
-    }, true);
+    });
   }
   if (!toLengthsCorrectly(Array.prototype.map)) {
     var originalMap = Array.prototype.map;
     overrideNative(Array.prototype, 'map', function map(callbackFn) {
       return ES.Call(originalMap, this.length >= 0 ? this : [], arguments);
-    }, true);
+    });
   }
   if (!toLengthsCorrectly(Array.prototype.filter)) {
     var originalFilter = Array.prototype.filter;
     overrideNative(Array.prototype, 'filter', function filter(callbackFn) {
       return ES.Call(originalFilter, this.length >= 0 ? this : [], arguments);
-    }, true);
+    });
   }
   if (!toLengthsCorrectly(Array.prototype.some)) {
     var originalSome = Array.prototype.some;
     overrideNative(Array.prototype, 'some', function some(callbackFn) {
       return ES.Call(originalSome, this.length >= 0 ? this : [], arguments);
-    }, true);
+    });
   }
   if (!toLengthsCorrectly(Array.prototype.every)) {
     var originalEvery = Array.prototype.every;
     overrideNative(Array.prototype, 'every', function every(callbackFn) {
       return ES.Call(originalEvery, this.length >= 0 ? this : [], arguments);
-    }, true);
+    });
   }
   if (!toLengthsCorrectly(Array.prototype.reduce)) {
     var originalReduce = Array.prototype.reduce;
     overrideNative(Array.prototype, 'reduce', function reduce(callbackFn) {
       return ES.Call(originalReduce, this.length >= 0 ? this : [], arguments);
-    }, true);
+    });
   }
   if (!toLengthsCorrectly(Array.prototype.reduceRight, true)) {
     var originalReduceRight = Array.prototype.reduceRight;
     overrideNative(Array.prototype, 'reduceRight', function reduceRight(callbackFn) {
       return ES.Call(originalReduceRight, this.length >= 0 ? this : [], arguments);
-    }, true);
+    });
   }
 
   var lacksOctalSupport = Number('0o10') !== 8;
@@ -1367,7 +1367,7 @@
     // Note that in IE 8, RegExp.prototype.test doesn't seem to exist: ie, "test" is an own property of regexes. wtf.
     var isBinary = binaryRegex.test.bind(binaryRegex);
     var isOctal = octalRegex.test.bind(octalRegex);
-    var toPrimitive = function (O) { // need to replace this with `es-to-primitive/es6`
+    var toPrimitive = function (O, hint) { // need to replace this with `es-to-primitive/es6`
       var result;
       if (typeof O.valueOf === 'function') {
         result = O.valueOf();
