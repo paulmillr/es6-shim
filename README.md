@@ -64,12 +64,12 @@ In both browser and node you may also want to include `unorm`; see the [`String.
     * `of()` ([a standalone shim is also available](https://www.npmjs.com/package/array.of))
 * `Array.prototype`:
     * `copyWithin()`
-    * `entries()`
+    * `entries()` ([a standalone shim is also available](https://npmjs.com/array.prototype.entries))
     * `fill()`
     * `find()` ([a standalone shim is also available](https://npmjs.com/array.prototype.find))
     * `findIndex()` ([a standalone shim is also available](https://npmjs.com/array.prototype.findindex))
-    * `keys()` (note: keys/values/entries return an `ArrayIterator` object)
-    * `values()`
+    * `keys()` ([a standalone shim is also available](https://npmjs.com/array.prototype.keys))
+    * `values()` ([a standalone shim is also available](https://npmjs.com/array.prototype.values))
     * `indexOf()` (ES6 errata)
 * `Object`:
     * `assign()` ([a standalone shim is also available](https://npmjs.com/object.assign))
