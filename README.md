@@ -70,7 +70,7 @@ In both browser and node you may also want to include `unorm`; see the [`String.
     * `findIndex()` ([a standalone shim is also available](https://npmjs.com/array.prototype.findindex))
     * `keys()` ([a standalone shim is also available](https://npmjs.com/array.prototype.keys))
     * `values()` ([a standalone shim is also available](https://npmjs.com/array.prototype.values))
-    * `indexOf()` (ES6 errata)
+    * `indexOf()` (ES6 errata) ([a standalone shim is also available](https://npmjs.com/array.prototype.indexof))
 * `Object`:
     * `assign()` ([a standalone shim is also available](https://npmjs.com/object.assign))
     * `is()` ([a standalone shim is also available](https://npmjs.com/object-is))
