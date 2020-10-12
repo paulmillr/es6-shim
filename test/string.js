@@ -577,44 +577,45 @@ var runStringTests = function (it) {
         expect(String.raw).to.have.property('length', 1);
       });
 
-      it('works with callSite.raw: Array', function () {
-        var callSite = {};
+      it('works with template.raw: Array', function () {
+        var template = {};
 
         var str = 'The total is 10 ($11 with tax)';
-        callSite.raw = ['The total is ', ' ($', ' with tax)'];
-        expect(String.raw(callSite, 10, 11)).to.eql(str);
+        template.raw = ['The total is ', ' ($', ' with tax)'];
+        expect(String.raw(template, 10, 11)).to.eql(str);
 
         // eslint-disable-next-line no-template-curly-in-string
         str = 'The total is {total} (${total * 1.01} with tax)';
-        callSite.raw = ['The total is ', ' ($', ' with tax)'];
-        expect(String.raw(callSite, '{total}', '{total * 1.01}')).to.eql(str);
+        template.raw = ['The total is ', ' ($', ' with tax)'];
+        expect(String.raw(template, '{total}', '{total * 1.01}')).to.eql(str);
       });
 
-      it('works with callSite.raw: array-like object', function () {
-        var callSite = {};
+      it('works with template.raw: array-like object', function () {
+        var template = {};
 
         var str = 'The total is 10 ($11 with tax)';
-        callSite.raw = { 0: 'The total is ', 1: ' ($', 2: ' with tax)', length: 3 };
-        expect(String.raw(callSite, 10, 11)).to.eql(str);
+        template.raw = { 0: 'The total is ', 1: ' ($', 2: ' with tax)', length: 3 };
+        expect(String.raw(template, 10, 11)).to.eql(str);
 
         // eslint-disable-next-line no-template-curly-in-string
         str = 'The total is {total} (${total * 1.01} with tax)';
-        callSite.raw = { 0: 'The total is ', 1: ' ($', 2: ' with tax)', length: 3 };
-        expect(String.raw(callSite, '{total}', '{total * 1.01}')).to.eql(str);
+        template.raw = { 0: 'The total is ', 1: ' ($', 2: ' with tax)', length: 3 };
+        expect(String.raw(template, '{total}', '{total * 1.01}')).to.eql(str);
       });
 
-      it('works with callSite.raw: empty Objects', function () {
-        var callSite = { raw: {} };
-        expect(String.raw(callSite, '{total}', '{total * 1.01}')).to.eql('');
-        expect(String.raw(callSite)).to.equal('');
+      it('works with template.raw: empty Objects', function () {
+        var template = { raw: {} };
+        expect(String.raw(template, '{total}', '{total * 1.01}')).to.eql('');
+        expect(String.raw(template)).to.equal('');
       });
 
       it('ReturnIfAbrupt - Less Substitutions', function () {
-        var callSite = {
+        var template = {
           raw: { 0: 'The total is ', 1: ' ($', 2: ' with tax)', length: 3 }
         };
         var str = 'The total is 10 ($ with tax)';
-        expect(String.raw(callSite, 10)).to.equal(str);
+        expect(String.raw(template, 10)).to.equal(str);
+      });
       });
     });
 

@@ -744,23 +744,24 @@
       return result.join('');
     },
 
-    raw: function raw(callSite) {
-      var cooked = ES.ToObject(callSite, 'bad callSite');
-      var rawString = ES.ToObject(cooked.raw, 'bad raw value');
-      var len = rawString.length;
-      var literalsegments = ES.ToLength(len);
-      if (literalsegments <= 0) {
+    raw: function raw(template) {
+      var numberOfSubstitutions = arguments.length - 1;
+      var cooked = ES.ToObject(template, 'bad template');
+      var raw = ES.ToObject(cooked.raw, 'bad raw value');
+      var len = raw.length;
+      var literalSegments = ES.ToLength(len);
+      if (literalSegments <= 0) {
         return '';
       }
 
       var stringElements = [];
       var nextIndex = 0;
       var nextKey, next, nextSeg, nextSub;
-      while (nextIndex < literalsegments) {
+      while (nextIndex < literalSegments) {
         nextKey = ES.ToString(nextIndex);
-        nextSeg = ES.ToString(rawString[nextKey]);
+        nextSeg = ES.ToString(raw[nextKey]);
         _push(stringElements, nextSeg);
-        if (nextIndex + 1 >= literalsegments) {
+        if (nextIndex + 1 >= literalSegments) {
           break;
         }
         next = nextIndex + 1 < arguments.length ? arguments[nextIndex + 1] : '';
