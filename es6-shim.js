@@ -193,6 +193,7 @@
   var _strSlice = Function.call.bind(String.prototype.slice);
   var _push = Function.call.bind(Array.prototype.push);
   var _pushApply = Function.apply.bind(Array.prototype.push);
+  var _join = Function.call.bind(Array.prototype.join);
   var _shift = Function.call.bind(Array.prototype.shift);
   var _max = Math.max;
   var _min = Math.min;
@@ -741,7 +742,7 @@
           _push(result, String.fromCharCode((next % 0x400) + 0xDC00));
         }
       }
-      return result.join('');
+      return _join(result, '');
     },
 
     raw: function raw(template) {
@@ -769,7 +770,7 @@
         _push(stringElements, nextSub);
         nextIndex += 1;
       }
-      return stringElements.join('');
+      return _join(stringElements, '');
     }
   };
   if (String.raw && String.raw({ raw: { 0: 'x', 1: 'y', length: 2 } }) !== 'xy') {
