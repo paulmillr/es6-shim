@@ -616,6 +616,15 @@ var runStringTests = function (it) {
         var str = 'The total is 10 ($ with tax)';
         expect(String.raw(template, 10)).to.equal(str);
       });
+
+      ifSymbolsDescribe('Symbol substitutions', function () {
+        it('throws', function () {
+          var template = {
+            raw: { 0: 'The total is ', 1: ' ($', 2: ' with tax)', length: 3 }
+          };
+          var str = 'The total is 10 ($ with tax)';
+          expect(function () { String.raw(template, Symbol()); }).to['throw'](TypeError);
+        });
       });
     });
 

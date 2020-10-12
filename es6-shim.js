@@ -356,7 +356,7 @@
     },
 
     ToNumber: function (value) {
-      if (_toString(value) === '[object Symbol]') {
+      if (hasSymbols && _toString(value) === '[object Symbol]') {
         throw new TypeError('Cannot convert a Symbol value to a number');
       }
       return +value;
@@ -527,6 +527,9 @@
     },
 
     ToString: function ToString(string) {
+      if (hasSymbols && _toString(string) === '[object Symbol]') {
+        throw new TypeError('Cannot convert a Symbol value to a number');
+      }
       return $String(string);
     }
   };
