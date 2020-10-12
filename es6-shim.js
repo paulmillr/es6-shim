@@ -1057,7 +1057,8 @@
       }
       if (typeof array !== 'undefined') {
         var len = ES.ToLength(array.length);
-        for (; i < len; i++) {
+        if (i < len) {
+        //for (; i < len; i++) {
           var kind = this.kind;
           var retval;
           if (kind === 'key') {

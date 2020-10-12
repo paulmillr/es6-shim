@@ -60,10 +60,10 @@
   },
   "dependencies": {},
   "devDependencies": {
-    "@ljharb/eslint-config": "^17.1.0",
+    "@ljharb/eslint-config": "^17.2.0",
     "chai": "^3.5.0",
     "es5-shim": "^4.5.14",
-    "eslint": "^7.2.0",
+    "eslint": "^7.11.0",
     "evalmd": "0.0.19",
     "grunt": "^0.4.5",
     "grunt-contrib-connect": "^1.0.2",

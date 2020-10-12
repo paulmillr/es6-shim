@@ -37,6 +37,7 @@
 		}],
 		"no-invalid-this": [0],
 		"no-invalid-regexp": [2, { "allowConstructorFlags": ["u", "y"] }],
+		"no-loss-of-precision": [1],
 		"no-magic-numbers": [0],
 		"no-native-reassign": [2, { "exceptions": ["Number", "Promise", "RegExp"] }],
 		"no-negated-condition": [1],

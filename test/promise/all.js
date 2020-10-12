@@ -162,7 +162,7 @@ describe('Promise.all', function () {
       if (hijack) {
         hijack = false;
         self = new Promise(function (resolve, reject) {
-          return resolver(function (values) {
+          resolver(function (values) {
             // record arguments & # of times resolve function is called
             actualArguments.push(values.slice());
             return resolve(values);
