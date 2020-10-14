@@ -23,7 +23,7 @@
   },
   "main": "es6-shim",
   "scripts": {
-    "prepublish": "safe-publish-latest && npm run minify",
+    "prepublish": "safe-publish-latest && (not-in-publish || npm run minify)",
     "pretest": "npm run lint && evalmd *.md",
     "test": "npm run tests-only",
     "posttest": "aud --production",
@@ -71,6 +71,7 @@
     "grunt-contrib-connect": "^1.0.2",
     "grunt-contrib-watch": "^1.1.0",
     "grunt-saucelabs": "^8.6.3",
+    "in-publish": "^2.0.1",
     "mocha": "^3.5.3",
     "promises-aplus-tests": "^2.1.2",
     "promises-es6-tests": "^0.5.0",
