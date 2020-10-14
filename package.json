@@ -26,6 +26,7 @@
     "prepublish": "safe-publish-latest && npm run minify",
     "pretest": "npm run lint && evalmd *.md",
     "test": "npm run tests-only",
+    "posttest": "aud --production",
     "tests-only": "npm run test:shim && npm run test:sham",
     "test:shim": "mocha test/*.js test/*/*.js",
     "test:sham": "mocha test-sham/*.js",
@@ -61,6 +62,7 @@
   "dependencies": {},
   "devDependencies": {
     "@ljharb/eslint-config": "^17.2.0",
+    "aud": "^1.1.2",
     "chai": "^3.5.0",
     "es5-shim": "^4.5.14",
     "eslint": "^7.11.0",
