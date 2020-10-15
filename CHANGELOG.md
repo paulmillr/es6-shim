@@ -1,3 +1,19 @@
+# es6-shim 0.35.6 (14 October 2020)
+* [Fix] `Math.hypot`: fix a bug in node v12.11 - v12.15
+* [Fix] internal `ToString` operation should throw on Symbols
+* [Robustness] call-bind `Array.prototype.join`
+* [Refactor] `String.raw`: match latest spec
+* [Refactor] address unused function args
+* [readme] updating standalone shim links
+* [Meta] Make LICENSE parseable by GitHub.
+* [Dev Deps] update `eslint`, `@ljharb/eslint-config`, `es5-shim`, `safe-publish-latest`, `evalmd`
+* [Tests] use shared travis-ci configs
+* [Tests] only run prepublish when in publish
+* [Tests] add `aud` in `npm run posttest`
+* [Tests] add failing tests from https://github.com/tc39/test262/pull/2443
+* [Tests] fix error message tests for Safari 12
+* [Tests] fix sham function name tests
+
 # es6-shim 0.35.5 (7 March 2019)
 * [Fix] `es6-sham`: `Function.prototype.name`: don’t poison the getter when the receiver is `Function.prototype` (#454)
 * [Dev Deps] update `eslint`, `@ljharb/eslint-config`
