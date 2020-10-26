@@ -63,7 +63,7 @@ In both browser and node you may also want to include `unorm`; see the [`String.
     * `from()` ([a standalone shim is also available](https://www.npmjs.com/package/array.from))
     * `of()` ([a standalone shim is also available](https://www.npmjs.com/package/array.of))
 * `Array.prototype`:
-    * `copyWithin()`
+    * `copyWithin()` ([a standalone shim is also available](https://npmjs.com/array.prototype.copywithin))
     * `entries()` ([a standalone shim is also available](https://npmjs.com/array.prototype.entries))
     * `fill()`
     * `find()` ([a standalone shim is also available](https://npmjs.com/array.prototype.find))
@@ -79,20 +79,20 @@ In both browser and node you may also want to include `unorm`; see the [`String.
 * `Function.prototype`:
     * `name` (es6-sham, covers IE 9-11) ([a standalone shim is also available](https://npmjs.com/function.prototype.name)
 * `Math`:
-    * `acosh()`
+    * `acosh()` ([a standalone shim is also available](https://npmjs.com/math.acosh))
     * `asinh()`
-    * `atanh()`
-    * `cbrt()`
-    * `clz32()`
+    * `atanh()` ([a standalone shim is also available](https://npmjs.com/math.atanh))
+    * `cbrt()` ([a standalone shim is also available](https://npmjs.com/math.cbrt))
+    * `clz32()` ([a standalone shim is also available](https://npmjs.com/math.clz32))
     * `cosh()`
     * `expm1()`
-    * `fround()`
+    * `fround()` ([a standalone shim is also available](https://npmjs.com/math.fround))
     * `hypot()`
     * `imul()`
     * `log10()`
-    * `log1p()`
+    * `log1p()` ([a standalone shim is also available](https://npmjs.com/math.log1p))
     * `log2()`
-    * `sign()`
+    * `sign()` ([a standalone shim is also available](https://npmjs.com/math.sign))
     * `sinh()`
     * `tanh()`
     * `trunc()`
