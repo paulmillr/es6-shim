@@ -59,13 +59,12 @@
       "android-browser/4.2..latest"
     ]
   },
-  "dependencies": {},
   "devDependencies": {
-    "@ljharb/eslint-config": "^17.2.0",
-    "aud": "^1.1.2",
+    "@ljharb/eslint-config": "^17.5.1",
+    "aud": "^1.1.4",
     "chai": "^3.5.0",
-    "es5-shim": "^4.5.14",
-    "eslint": "^7.11.0",
+    "es5-shim": "^4.5.15",
+    "eslint": "^7.25.0",
     "evalmd": "0.0.19",
     "grunt": "^0.4.5",
     "grunt-contrib-connect": "^1.0.2",
@@ -76,6 +75,7 @@
     "promises-aplus-tests": "^2.1.2",
     "promises-es6-tests": "^0.5.0",
     "safe-publish-latest": "^1.1.4",
+    "tape": "^5.2.2",
     "uglify-js": "2.7.3"
   }
 }
