@@ -390,10 +390,6 @@
       return (a === b) || (numberIsNaN(a) && numberIsNaN(b));
     },
 
-    IsIterable: function (o) {
-      return ES.TypeIsObject(o) && (typeof o[$iterator$] !== 'undefined' || isArguments(o));
-    },
-
     GetIterator: function (o) {
       if (isArguments(o)) {
         // special case support for `arguments`
