@@ -1,0 +1,70 @@
+name: 'Tests: node.js'
+
+on: [pull_request, push]
+
+jobs:
+  matrix:
+    runs-on: ubuntu-latest
+    outputs:
+      latest: ${{ steps.set-matrix.outputs.requireds }}
+      minors: ${{ steps.set-matrix.outputs.optionals }}
+    steps:
+      - uses: ljharb/actions/node/matrix@main
+        id: set-matrix
+        with:
+          preset: '>=4'
+
+  latest:
+    needs: [matrix]
+    name: 'latest minors'
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJson(needs.matrix.outputs.latest) }}
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: ljharb/actions/node/install@main
+        name: 'nvm install ${{ matrix.node-version }} && npm install'
+        with:
+          node-version: ${{ matrix.node-version }}
+      - run: npm run tests-only
+        if: ${{ startsWith(matrix.node-version, '11') || startsWith(matrix.node-version, '9') || startsWith(matrix.node-version, '8') || startsWith(matrix.node-version, '6') }}
+      - run: npm run tests-only
+        if: ${{ !startsWith(matrix.node-version, '11') && !startsWith(matrix.node-version, '9') && !startsWith(matrix.node-version, '8') && !startsWith(matrix.node-version, '6') }}
+        env:
+          NODE_OPTIONS: '--unhandled-rejections=none'
+      - uses: codecov/codecov-action@v1
+
+  minors:
+    needs: [matrix, latest]
+    name: 'non-latest minors'
+    continue-on-error: true
+    if: ${{ !github.head_ref || !startsWith(github.head_ref, 'renovate') }}
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJson(needs.matrix.outputs.minors) }}
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: ljharb/actions/node/install@main
+        name: 'nvm install ${{ matrix.node-version }} && npm install'
+        with:
+          node-version: ${{ matrix.node-version }}
+      - run: npm run tests-only
+        if: ${{ startsWith(matrix.node-version, '11') || startsWith(matrix.node-version, '9') || startsWith(matrix.node-version, '8') || startsWith(matrix.node-version, '6') }}
+      - run: npm run tests-only
+        if: ${{ !startsWith(matrix.node-version, '11') && !startsWith(matrix.node-version, '10.16') && !startsWith(matrix.node-version, '10.15') && !startsWith(matrix.node-version, '10.14') && !startsWith(matrix.node-version, '10.13') && !startsWith(matrix.node-version, '10.12') && !startsWith(matrix.node-version, '10.11') && !startsWith(matrix.node-version, '10.10') && !startsWith(matrix.node-version, '10.9') && !startsWith(matrix.node-version, '10.8') && !startsWith(matrix.node-version, '10.7') && !startsWith(matrix.node-version, '10.6') && !startsWith(matrix.node-version, '10.5') && !startsWith(matrix.node-version, '10.4') && !startsWith(matrix.node-version, '10.3') && !startsWith(matrix.node-version, '10.2') && !startsWith(matrix.node-version, '10.1') && !startsWith(matrix.node-version, '10.0') && !startsWith(matrix.node-version, '9') && !startsWith(matrix.node-version, '8') && !startsWith(matrix.node-version, '6') }}
+        env:
+          NODE_OPTIONS: '--unhandled-rejections=none'
+      - uses: codecov/codecov-action@v1
+
+  node:
+    name: 'node 4+'
+    needs: [latest, minors]
+    runs-on: ubuntu-latest
+    steps:
+      - run: 'echo tests completed'
