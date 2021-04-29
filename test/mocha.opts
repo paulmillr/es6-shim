@@ -1,2 +1,5 @@
+--require es5-shim
+--require ./es6-shim
+--require ./es6-sham
 --require test/test_helpers.js
 

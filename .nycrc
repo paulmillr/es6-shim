@@ -1,0 +1,12 @@
+{
+	"all": true,
+	"check-coverage": false,
+	"reporter": ["text-summary", "text", "html", "json"],
+	"exclude": [
+		"Gruntfile.js",
+		"*.min.js",
+		"coverage",
+		"test",
+		"test-sham"
+	]
+}
