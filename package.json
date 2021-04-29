@@ -27,7 +27,7 @@
     "pretest": "npm run lint && evalmd *.md",
     "test": "npm run tests-only",
     "posttest": "aud --production",
-    "tests-only": "npm run test:shim && npm run test:sham",
+    "tests-only": "NODE_OPTIONS='--unhandled-rejections=none' npm run test:shim && npm run test:sham",
     "test:shim": "mocha test/*.js test/*/*.js",
     "test:sham": "mocha test-sham/*.js",
     "test:native": "NO_ES6_SHIM=1 npm run tests-only",
