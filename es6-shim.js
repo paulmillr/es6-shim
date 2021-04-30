@@ -390,10 +390,6 @@
       return (a === b) || (numberIsNaN(a) && numberIsNaN(b));
     },
 
-    IsIterable: function (o) {
-      return ES.TypeIsObject(o) && (typeof o[$iterator$] !== 'undefined' || isArguments(o));
-    },
-
     GetIterator: function (o) {
       if (isArguments(o)) {
         // special case support for `arguments`
@@ -933,8 +929,8 @@
   // see http://www.ecma-international.org/ecma-262/6.0/#sec-string.prototype-@@iterator
   var StringIterator = function (s) {
     ES.RequireObjectCoercible(s);
-    this._s = ES.ToString(s);
-    this._i = 0;
+    defineProperty(this, '_s', ES.ToString(s));
+    defineProperty(this, '_i', 0);
   };
   StringIterator.prototype.next = function () {
     var s = this._s;
@@ -1043,9 +1039,9 @@
   // Our ArrayIterator is private; see
   // https://github.com/paulmillr/es6-shim/issues/252
   ArrayIterator = function (array, kind) {
-    this.i = 0;
-    this.array = array;
-    this.kind = kind;
+    defineProperty(this, 'i', 0);
+    defineProperty(this, 'array', array);
+    defineProperty(this, 'kind', kind);
   };
 
   defineProperties(ArrayIterator.prototype, {
@@ -1268,7 +1264,10 @@
   // Chrome defines keys/values/entries on Array, but doesn't give us
   // any way to identify its iterator.  So add our own shimmed field.
   if (Object.getPrototypeOf) {
-    addIterator(Object.getPrototypeOf([].values()));
+    var ChromeArrayIterator = Object.getPrototypeOf([].values());
+    if (ChromeArrayIterator) { // in WSH, this is `undefined`
+      addIterator(ChromeArrayIterator);
+    }
   }
 
   // note: this is positioned here because it relies on Array#entries
@@ -2861,9 +2860,9 @@
 
         var MapIterator = function MapIterator(map, kind) {
           requireMapSlot(map, '[[MapIterator]]');
-          this.head = map._head;
-          this.i = this.head;
-          this.kind = kind;
+          defineProperty(this, 'head', map._head);
+          defineProperty(this, 'i', this.head);
+          defineProperty(this, 'kind', kind);
         };
 
         MapIterator.prototype = {
@@ -3281,7 +3280,7 @@
         addIterator(SetShim.prototype, SetShim.prototype.values);
 
         var SetIterator = function SetIterator(it) {
-          this.it = it;
+          defineProperty(this, 'it', it);
         };
         SetIterator.prototype = {
           isSetIterator: true,

@@ -60,6 +60,9 @@
     var apply = FunctionPrototype.apply;
     var max = Math.max;
     var min = Math.min;
+    var floor = Math.floor;
+    var abs = Math.abs;
+    var pow = Math.pow;
 
     // Having a toString local variable name breaks in Opera so use to_string.
     var to_string = ObjectPrototype.toString;
@@ -77,9 +80,8 @@
         try {
             var obj = {};
             $Object.defineProperty(obj, 'x', { enumerable: false, value: obj });
-            for (var _ in obj) { // jscs:ignore disallowUnusedVariables
-                return false;
-            }
+            // eslint-disable-next-line no-unreachable-loop, max-statements-per-line
+            for (var _ in obj) { return false; } // jscs:ignore disallowUnusedVariables
             return obj.x === obj;
         } catch (e) { /* this is ES3 */
             return false;
@@ -143,7 +145,7 @@
             if (isActualNaN(n)) {
                 n = 0;
             } else if (n !== 0 && n !== (1 / 0) && n !== -(1 / 0)) {
-                n = (n > 0 || -1) * Math.floor(Math.abs(n));
+                n = (n > 0 || -1) * floor(abs(n));
             }
             return n;
         },
@@ -743,7 +745,7 @@
                 i = min(i, ES.ToInteger(arguments[1]));
             }
             // handle negative indices
-            i = i >= 0 ? i : length - Math.abs(i);
+            i = i >= 0 ? i : length - abs(i);
             for (; i >= 0; i--) {
                 if (i in self && searchElement === self[i]) {
                     return i;
@@ -1317,8 +1319,8 @@
             var minute = this.getMinutes();
             var second = this.getSeconds();
             var timezoneOffset = this.getTimezoneOffset();
-            var hoursOffset = Math.floor(Math.abs(timezoneOffset) / 60);
-            var minutesOffset = Math.floor(Math.abs(timezoneOffset) % 60);
+            var hoursOffset = floor(abs(timezoneOffset) / 60);
+            var minutesOffset = floor(abs(timezoneOffset) % 60);
             return dayName[day] + ' '
                 + monthName[month] + ' '
                 + (date < 10 ? '0' + date : date) + ' '
@@ -1364,7 +1366,7 @@
 
             var month = originalGetUTCMonth(this);
             // see https://github.com/es-shims/es5-shim/issues/111
-            year += Math.floor(month / 12);
+            year += floor(month / 12);
             month = ((month % 12) + 12) % 12;
 
             // the date time string format is specified in 15.9.1.15.
@@ -1377,7 +1379,7 @@
             ];
             year = (
                 (year < 0 ? '-' : (year > 9999 ? '+' : ''))
-                + strSlice('00000' + Math.abs(year), (0 <= year && year <= 9999) ? -4 : -6)
+                + strSlice('00000' + abs(year), (0 <= year && year <= 9999) ? -4 : -6)
             );
 
             for (var i = 0; i < result.length; ++i) {
@@ -1455,7 +1457,7 @@
     if (doesNotParseY2KNewYear || acceptsInvalidDates || !supportsExtendedYears) {
         // XXX global assignment won't work in embeddings that use
         // an alternate object for the context.
-        var maxSafeUnsigned32Bit = Math.pow(2, 31) - 1;
+        var maxSafeUnsigned32Bit = pow(2, 31) - 1;
         var hasSafariSignedIntBug = isActualNaN(new Date(1970, 0, 1, 0, 0, 0, maxSafeUnsigned32Bit + 1).getTime());
         // eslint-disable-next-line no-implicit-globals, no-global-assign
         Date = (function (NativeDate) {
@@ -1468,8 +1470,8 @@
                     var millis = ms;
                     if (hasSafariSignedIntBug && length >= 7 && ms > maxSafeUnsigned32Bit) {
                         // work around a Safari 8/9 bug where it treats the seconds as signed
-                        var msToShift = Math.floor(ms / maxSafeUnsigned32Bit) * maxSafeUnsigned32Bit;
-                        var sToShift = Math.floor(msToShift / 1e3);
+                        var msToShift = floor(ms / maxSafeUnsigned32Bit) * maxSafeUnsigned32Bit;
+                        var sToShift = floor(msToShift / 1e3);
                         seconds += sToShift;
                         millis -= sToShift * 1e3;
                     }
@@ -1524,9 +1526,9 @@
                 var t = month > 1 ? 1 : 0;
                 return (
                     months[month]
-                    + Math.floor((year - 1969 + t) / 4)
-                    - Math.floor((year - 1901 + t) / 100)
-                    + Math.floor((year - 1601 + t) / 400)
+                    + floor((year - 1969 + t) / 4)
+                    - floor((year - 1901 + t) / 100)
+                    + floor((year - 1601 + t) / 400)
                     + (365 * (year - 1970))
                 );
             };
@@ -1536,8 +1538,8 @@
                 var ms = t;
                 if (hasSafariSignedIntBug && ms > maxSafeUnsigned32Bit) {
                     // work around a Safari 8/9 bug where it treats the seconds as signed
-                    var msToShift = Math.floor(ms / maxSafeUnsigned32Bit) * maxSafeUnsigned32Bit;
-                    var sToShift = Math.floor(msToShift / 1e3);
+                    var msToShift = floor(ms / maxSafeUnsigned32Bit) * maxSafeUnsigned32Bit;
+                    var sToShift = floor(msToShift / 1e3);
                     s += sToShift;
                     ms -= sToShift * 1e3;
                 }
@@ -1572,7 +1574,7 @@
                         hour = $Number(match[4] || 0),
                         minute = $Number(match[5] || 0),
                         second = $Number(match[6] || 0),
-                        millisecond = Math.floor($Number(match[7] || 0) * 1000),
+                        millisecond = floor($Number(match[7] || 0) * 1000),
                         // When time zone is missed, local offset should be used
                         // (ES 5.1 bug)
                         // see https://bugs.ecmascript.org/show_bug.cgi?id=112
@@ -1648,7 +1650,7 @@
             while (++i < toFixedHelpers.size) {
                 c2 += n * toFixedHelpers.data[i];
                 toFixedHelpers.data[i] = c2 % toFixedHelpers.base;
-                c2 = Math.floor(c2 / toFixedHelpers.base);
+                c2 = floor(c2 / toFixedHelpers.base);
             }
         },
         divide: function divide(n) {
@@ -1656,7 +1658,7 @@
             var c = 0;
             while (--i >= 0) {
                 c += toFixedHelpers.data[i];
-                toFixedHelpers.data[i] = Math.floor(c / n);
+                toFixedHelpers.data[i] = floor(c / n);
                 c = (c % n) * toFixedHelpers.base;
             }
         },
@@ -1698,7 +1700,7 @@
 
         // Test for NaN and round fractionDigits down
         f = $Number(fractionDigits);
-        f = isActualNaN(f) ? 0 : Math.floor(f);
+        f = isActualNaN(f) ? 0 : floor(f);
 
         if (f < 0 || f > 20) {
             throw new RangeError('Number.toFixed called with invalid number of decimals');
@@ -1729,7 +1731,7 @@
             // -70 < log2(x) < 70
             e = toFixedHelpers.log(x * toFixedHelpers.pow(2, 69, 1)) - 69;
             z = (e < 0 ? x * toFixedHelpers.pow(2, -e, 1) : x / toFixedHelpers.pow(2, e, 1));
-            z *= 0x10000000000000; // Math.pow(2, 52);
+            z *= 0x10000000000000; // pow(2, 52);
             e = 52 - e;
 
             // -18 < e < 122
@@ -1822,9 +1824,9 @@
     ) {
         (function () {
             var compliantExecNpcg = typeof (/()??/).exec('')[1] === 'undefined'; // NPCG: nonparticipating capturing group
-            var maxSafe32BitInt = Math.pow(2, 32) - 1;
+            var maxSafe32BitInt = pow(2, 32) - 1;
 
-            StringPrototype.split = function (separator, limit) {
+            StringPrototype.split = function split(separator, limit) {
                 var string = String(this);
                 if (typeof separator === 'undefined' && limit === 0) {
                     return [];
@@ -1851,8 +1853,8 @@
                 /* Values for `limit`, per the spec:
                  * If undefined: 4294967295 // maxSafe32BitInt
                  * If 0, Infinity, or NaN: 0
-                 * If positive number: limit = Math.floor(limit); if (limit > 4294967295) limit -= 4294967296;
-                 * If negative number: 4294967296 - Math.floor(Math.abs(limit))
+                 * If positive number: limit = floor(limit); if (limit > 4294967295) limit -= 4294967296;
+                 * If negative number: 4294967296 - floor(abs(limit))
                  * If other: Type-convert, then use the above rules
                  */
                 var splitLimit = typeof limit === 'undefined' ? maxSafe32BitInt : ES.ToUint32(limit);
