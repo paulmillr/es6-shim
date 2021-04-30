@@ -137,7 +137,7 @@
       }
     },
     preserveToString: function (target, source) {
-      if (source && isCallable(source.toString)) {
+      if (target && source && isCallable(source.toString)) {
         defineProperty(target, 'toString', source.toString.bind(source), true);
       }
     }
