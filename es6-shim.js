@@ -1264,10 +1264,7 @@
   // Chrome defines keys/values/entries on Array, but doesn't give us
   // any way to identify its iterator.  So add our own shimmed field.
   if (Object.getPrototypeOf) {
-    var ChromeArrayIterator = Object.getPrototypeOf([].values());
-    if (ChromeArrayIterator) { // in WSH, this is `undefined`
-      addIterator(ChromeArrayIterator);
-    }
+    addIterator(Object.getPrototypeOf([].values());
   }
 
   // note: this is positioned here because it relies on Array#entries
@@ -3585,7 +3582,7 @@
     });
   }
 
-  if (supportsDescriptors) {
+  if (!ReflectShims.defineProperty) {    // possible alternative: if (supportsDescriptors)
     var internalGet = function get(target, key, receiver) {
       var desc = Object.getOwnPropertyDescriptor(target, key);
 
