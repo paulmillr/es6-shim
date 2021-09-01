@@ -88,8 +88,8 @@ In both browser and node you may also want to include `unorm`; see the [`String.
     * `expm1()`
     * `fround()` ([a standalone shim is also available](https://npmjs.com/math.fround))
     * `hypot()`
-    * `imul()`
-    * `log10()`
+    * `imul()` ([a standalone shim is also available](https://npmjs.com/math.imul))
+    * `log10()` ([a standalone shim is also available](https://npmjs.com/math.log10))
     * `log1p()` ([a standalone shim is also available](https://npmjs.com/math.log1p))
     * `log2()`
     * `sign()` ([a standalone shim is also available](https://npmjs.com/math.sign))
@@ -100,13 +100,13 @@ In both browser and node you may also want to include `unorm`; see the [`String.
 Math functions’ accuracy is 1e-11.
 
 * `Reflect`
-    * `apply()`
+    * `apply()` ([a standalone shim is also available](https://npmjs.com/reflect.apply))
     * `construct()`
     * `defineProperty()`
     * `deleteProperty()`
     * `get()`
     * `getOwnPropertyDescriptor()`
-    * `getPrototypeOf()`
+    * `getPrototypeOf()` ([a standalone shim is also available](https://npmjs.com/reflect.getprototypeof))
     * `has()`
     * `isExtensible()`
     * `ownKeys()` ([a standalone shim is also available](https://npmjs.com/reflect.ownkeys))
