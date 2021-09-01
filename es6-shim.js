@@ -1298,9 +1298,9 @@
     overrideNative(Array, 'from', function from(items) {
       if (arguments.length > 1 && typeof arguments[1] !== 'undefined') {
         return ES.Call(origArrayFrom, this, arguments);
-      } else {
-        return _call(origArrayFrom, this, items);
       }
+      return _call(origArrayFrom, this, items);
+
     });
   }
 
@@ -2951,18 +2951,18 @@
               entry = this._storage[fkey];
               if (entry) {
                 return entry.value;
-              } else {
-                return;
               }
+              return;
+
             }
             if (this._map) {
               // fast object key path
               entry = origMapGet.call(this._map, key);
               if (entry) {
                 return entry.value;
-              } else {
-                return;
               }
+              return;
+
             }
             var head = this._head;
             var i = head;
@@ -3005,11 +3005,11 @@
               if (typeof this._storage[fkey] !== 'undefined') {
                 this._storage[fkey].value = value;
                 return this;
-              } else {
-                entry = this._storage[fkey] = new MapEntry(key, value); /* eslint no-multi-assign: 1 */
-                i = head.prev;
-                // fall through
               }
+              entry = this._storage[fkey] = new MapEntry(key, value); /* eslint no-multi-assign: 1 */
+              i = head.prev;
+              // fall through
+
             } else if (this._map) {
               // fast object key path
               if (origMapHas.call(this._map, key)) {
@@ -3171,16 +3171,16 @@
             return null;
           } else if (k === '^undefined') {
             return void 0;
-          } else {
-            var first = k.charAt(0);
-            if (first === '$') {
-              return _strSlice(k, 1);
-            } else if (first === 'n') {
-              return +_strSlice(k, 1);
-            } else if (first === 'b') {
-              return k === 'btrue';
-            }
           }
+          var first = k.charAt(0);
+          if (first === '$') {
+            return _strSlice(k, 1);
+          } else if (first === 'n') {
+            return +_strSlice(k, 1);
+          } else if (first === 'b') {
+            return k === 'btrue';
+          }
+
           return +k;
         };
         // Switch from the object backing storage to a full Map.
@@ -3643,14 +3643,14 @@
           return Reflect.defineProperty(receiver, key, {
             value: value
           });
-        } else {
-          return Reflect.defineProperty(receiver, key, {
-            value: value,
-            writable: true,
-            enumerable: true,
-            configurable: true
-          });
         }
+        return Reflect.defineProperty(receiver, key, {
+          value: value,
+          writable: true,
+          enumerable: true,
+          configurable: true
+        });
+
       }
 
       if (desc.set) {
@@ -3869,9 +3869,9 @@
           if (typeof parsedValue !== 'symbol') {
             if (Type.symbol(parsedValue)) {
               return assignTo({})(parsedValue);
-            } else {
-              return parsedValue;
             }
+            return parsedValue;
+
           }
         };
         args.push(wrappedReplacer);

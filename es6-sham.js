@@ -134,10 +134,9 @@
               origin.__proto__ = proto;
               /* eslint-enable no-proto */
               return origin;
-            } else {
-              // otherwise unable to promote: fallback
-              return createAndCopy(origin, proto);
             }
+            // otherwise unable to promote: fallback
+            return createAndCopy(origin, proto);
           };
         }
       }
