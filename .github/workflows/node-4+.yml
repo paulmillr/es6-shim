@@ -35,7 +35,7 @@ jobs:
         if: ${{ !startsWith(matrix.node-version, '11') && !startsWith(matrix.node-version, '9') && !startsWith(matrix.node-version, '8') && !startsWith(matrix.node-version, '6') }}
         env:
           NODE_OPTIONS: '--unhandled-rejections=none'
-      - uses: codecov/codecov-action@v1
+      - uses: codecov/codecov-action@v2
 
   minors:
     needs: [matrix, latest]
@@ -60,7 +60,7 @@ jobs:
         if: ${{ !startsWith(matrix.node-version, '11') && !startsWith(matrix.node-version, '10.16') && !startsWith(matrix.node-version, '10.15') && !startsWith(matrix.node-version, '10.14') && !startsWith(matrix.node-version, '10.13') && !startsWith(matrix.node-version, '10.12') && !startsWith(matrix.node-version, '10.11') && !startsWith(matrix.node-version, '10.10') && !startsWith(matrix.node-version, '10.9') && !startsWith(matrix.node-version, '10.8') && !startsWith(matrix.node-version, '10.7') && !startsWith(matrix.node-version, '10.6') && !startsWith(matrix.node-version, '10.5') && !startsWith(matrix.node-version, '10.4') && !startsWith(matrix.node-version, '10.3') && !startsWith(matrix.node-version, '10.2') && !startsWith(matrix.node-version, '10.1') && !startsWith(matrix.node-version, '10.0') && !startsWith(matrix.node-version, '9') && !startsWith(matrix.node-version, '8') && !startsWith(matrix.node-version, '6') }}
         env:
           NODE_OPTIONS: '--unhandled-rejections=none'
-      - uses: codecov/codecov-action@v1
+      - uses: codecov/codecov-action@v2
 
   node:
     name: 'node 4+'
