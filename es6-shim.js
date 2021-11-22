@@ -247,12 +247,12 @@
     return _toString(value) === '[object Arguments]';
   };
   var isLegacyArguments = function isArguments(value) {
-    return value !== null &&
-      typeof value === 'object' &&
-      typeof value.length === 'number' &&
-      value.length >= 0 &&
-      _toString(value) !== '[object Array]' &&
-      _toString(value.callee) === '[object Function]';
+    return value !== null
+      && typeof value === 'object'
+      && typeof value.length === 'number'
+      && value.length >= 0
+      && _toString(value) !== '[object Array]'
+      && _toString(value.callee) === '[object Function]';
   };
   var isArguments = isStandardArguments(arguments) ? isStandardArguments : isLegacyArguments;
 
@@ -1430,10 +1430,10 @@
       NEGATIVE_INFINITY: OrigNumber.NEGATIVE_INFINITY,
       POSITIVE_INFINITY: OrigNumber.POSITIVE_INFINITY
     });
-    /* eslint-disable no-undef, no-global-assign */
+    /* eslint-disable no-global-assign */
     Number = NumberShim;
     Value.redefine(globals, 'Number', NumberShim);
-    /* eslint-enable no-undef, no-global-assign */
+    /* eslint-enable no-global-assign */
   }
 
   var maxSafeInteger = Math.pow(2, 53) - 1;
@@ -1594,9 +1594,11 @@
 
   // Workaround bug in Opera 12 where setPrototypeOf(x, null) doesn't work,
   // but Object.create(null) does.
-  if (Object.setPrototypeOf && Object.getPrototypeOf &&
-      Object.getPrototypeOf(Object.setPrototypeOf({}, null)) !== null &&
-      Object.getPrototypeOf(Object.create(null)) === null) {
+  if (
+    Object.setPrototypeOf && Object.getPrototypeOf
+    && Object.getPrototypeOf(Object.setPrototypeOf({}, null)) !== null
+    && Object.getPrototypeOf(Object.create(null)) === null
+  ) {
     (function () {
       var FAKENULL = Object.create(null);
       var gpo = Object.getPrototypeOf;
@@ -1832,10 +1834,10 @@
     wrapConstructor(OrigRegExp, RegExpShim, {
       $input: true // Chrome < v39 & Opera < 26 have a nonstandard "$input" property
     });
-    /* eslint-disable no-undef, no-global-assign */
+    /* eslint-disable no-global-assign */
     RegExp = RegExpShim;
     Value.redefine(globals, 'RegExp', RegExpShim);
-    /* eslint-enable no-undef, no-global-assign */
+    /* eslint-enable no-global-assign */
   }
 
   if (supportsDescriptors) {
@@ -2094,8 +2096,8 @@
 
   var origMathRound = Math.round;
   // breaks in e.g. Safari 8, Internet Explorer 11, Opera 12
-  var roundHandlesBoundaryConditions = Math.round(0.5 - (Number.EPSILON / 4)) === 0 &&
-    Math.round(-0.5 + (Number.EPSILON / 3.99)) === 1;
+  var roundHandlesBoundaryConditions = Math.round(0.5 - (Number.EPSILON / 4)) === 0
+    && Math.round(-0.5 + (Number.EPSILON / 3.99)) === 1;
 
   // When engines use Math.floor(x + 0.5) internally, Math.round can be buggy for large integers.
   // This behavior should be governed by "round to nearest, ties to even mode"
@@ -2205,10 +2207,13 @@
         return pr.then(task);
       };
     };
-    var enqueue = ES.IsCallable(globals.setImmediate) ?
-      globals.setImmediate :
-      typeof process === 'object' && process.nextTick ? process.nextTick : makePromiseAsap() ||
-      (ES.IsCallable(makeZeroTimeout) ? makeZeroTimeout() : function (task) { setTimeout(task, 0); }); // fallback
+    var enqueue = ES.IsCallable(globals.setImmediate)
+      ? globals.setImmediate
+      : (
+        typeof process === 'object' && process.nextTick
+          ? process.nextTick
+          : makePromiseAsap() || (ES.IsCallable(makeZeroTimeout) ? makeZeroTimeout() : function (task) { setTimeout(task, 0); })
+      ); // fallback
 
     // Constants for Promise implementation
     var PROMISE_IDENTITY = function (x) { return x; };
@@ -2682,13 +2687,16 @@
       return !!BadResolverPromise.all([1, 2]);
     });
 
-    if (!promiseSupportsSubclassing || !promiseIgnoresNonFunctionThenCallbacks ||
-        !promiseRequiresObjectContext || promiseResolveBroken ||
-        !getsThenSynchronously || hasBadResolverPromise) {
+    if (
+      !promiseSupportsSubclassing
+      || !promiseIgnoresNonFunctionThenCallbacks
+      || !promiseRequiresObjectContext
+      || promiseResolveBroken
+      || !getsThenSynchronously
+      || hasBadResolverPromise
+    ) {
       /* globals Promise: true */
-      /* eslint-disable no-undef, no-global-assign */
       Promise = PromiseShim;
-      /* eslint-enable no-undef, no-global-assign */
       overrideNative(globals, 'Promise', PromiseShim);
     }
     if (Promise.all.length !== 1) {
@@ -3453,18 +3461,18 @@
         - In Firefox 25 at least, Map and Set are callable without "new"
       */
       if (
-        typeof globals.Map.prototype.clear !== 'function' ||
-        new globals.Set().size !== 0 ||
-        newMap.size !== 0 ||
-        typeof globals.Map.prototype.keys !== 'function' ||
-        typeof globals.Set.prototype.keys !== 'function' ||
-        typeof globals.Map.prototype.forEach !== 'function' ||
-        typeof globals.Set.prototype.forEach !== 'function' ||
-        isCallableWithoutNew(globals.Map) ||
-        isCallableWithoutNew(globals.Set) ||
-        typeof newMap.keys().next !== 'function' || // Safari 8
-        mapIterationThrowsStopIterator || // Firefox 25
-        !mapSupportsSubclassing
+        typeof globals.Map.prototype.clear !== 'function'
+        || new globals.Set().size !== 0
+        || newMap.size !== 0
+        || typeof globals.Map.prototype.keys !== 'function'
+        || typeof globals.Set.prototype.keys !== 'function'
+        || typeof globals.Map.prototype.forEach !== 'function'
+        || typeof globals.Set.prototype.forEach !== 'function'
+        || isCallableWithoutNew(globals.Map)
+        || isCallableWithoutNew(globals.Set)
+        || typeof newMap.keys().next !== 'function' // Safari 8
+        || mapIterationThrowsStopIterator // Firefox 25
+        || !mapSupportsSubclassing
       ) {
         defineProperties(globals, {
           Map: collectionShims.Map,
