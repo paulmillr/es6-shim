@@ -9,7 +9,6 @@
 		"callback-return": [0],
 		"complexity": [1],
 		"consistent-return": [1],
-		"dot-notation": [2, { "allowKeywords": false }],
 		"eqeqeq": [2, "allow-null"],
         "func-name-matching": [0],
 		"global-require": [0],
@@ -20,25 +19,20 @@
 		"max-lines": [1],
 		"max-lines-per-function": [0],
 		"max-params": [2, 4],
-		"max-nested-callbacks": [2, 5],
 		"max-statements": [1, 25],
 		"max-statements-per-line": [2, { "max": 2 }],
 		"multiline-comment-style": [0],
 		"new-cap": [2, { "capIsNewExceptions": ["Call", "Construct", "CreateHTML", "GetIterator", "GetMethod", "IsCallable", "IsConstructor", "IsPromise", "IsRegExp", "IteratorClose", "IteratorComplete", "IteratorNext", "IteratorStep", "Map", "OrigNumber", "RequireObjectCoercible", "SameValue", "SameValueZero", "Set", "SpeciesConstructor", "ToInteger", "ToLength", "ToNumber", "ToObject", "ToString", "ToUint32", "TypeIsObject"] }],
 		"no-constant-condition": [1],
-		"no-continue": [1],
 		"no-extend-native": [2, { "exceptions": ["Set"] }],
 		"no-extra-parens": 0,
-		"no-func-assign": [1],
 		"no-implicit-coercion": [2, {
 			"boolean": false,
 			"number": false,
 			"string": true
 		}],
 		"no-invalid-this": [0],
-		"no-invalid-regexp": [2, { "allowConstructorFlags": ["u", "y"] }],
 		"no-loss-of-precision": [1],
-		"no-magic-numbers": [0],
 		"no-native-reassign": [2, { "exceptions": ["Number", "Promise", "RegExp"] }],
 		"no-negated-condition": [1],
 		"no-param-reassign": [1],
@@ -50,9 +44,44 @@
 		"no-use-before-define": [1],
 		"no-useless-call": [0],
 		"object-curly-newline": [1],
-		"operator-linebreak": [2, "before"],
 		"sort-keys": [0],
 		"spaced-comment": [0],
 		"strict": [0]
-	}
+	},
+	"overrides": [
+		{
+			"files": "test/**",
+			"env": {
+				"browser": true,
+				"mocha": true,
+			},
+			"globals": {
+				"assert": false,
+				"expect": false,
+				"chai": false,
+			},
+			"rules": {
+				"array-callback-return": 0,
+				"func-name-matching": 0,
+				"max-lines-per-function": 0,
+				"max-statements-per-line": [2, { "max": 2 }],
+				"no-restricted-properties": 1,
+				"symbol-description": 0,
+				"prefer-promise-reject-errors": 0,
+				"consistent-return": 0,
+			},
+		},
+		{
+			"files": "test-sham/**",
+			"env": {
+				"mocha": true,
+			},
+			"globals": {
+				"expect": false,
+			},
+			"rules": {
+				"max-nested-callbacks": [2, 5],
+			},
+		}
+	]
 }

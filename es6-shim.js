@@ -61,7 +61,7 @@
     });
   };
   var supportsDescriptors = !!Object.defineProperty && arePropertyDescriptorsSupported();
-  var functionsHaveNames = (function foo() {}).name === 'foo'; // eslint-disable-line no-extra-parens
+  var functionsHaveNames = (function foo() {}).name === 'foo';
 
   var _forEach = Function.call.bind(Array.prototype.forEach);
   var _reduce = Function.call.bind(Array.prototype.reduce);
@@ -1430,10 +1430,8 @@
       NEGATIVE_INFINITY: OrigNumber.NEGATIVE_INFINITY,
       POSITIVE_INFINITY: OrigNumber.POSITIVE_INFINITY
     });
-    /* eslint-disable no-global-assign */
-    Number = NumberShim;
+    Number = NumberShim; // eslint-disable-line no-global-assign
     Value.redefine(globals, 'Number', NumberShim);
-    /* eslint-enable no-global-assign */
   }
 
   var maxSafeInteger = Math.pow(2, 53) - 1;
@@ -1595,7 +1593,8 @@
   // Workaround bug in Opera 12 where setPrototypeOf(x, null) doesn't work,
   // but Object.create(null) does.
   if (
-    Object.setPrototypeOf && Object.getPrototypeOf
+    Object.setPrototypeOf
+    && Object.getPrototypeOf
     && Object.getPrototypeOf(Object.setPrototypeOf({}, null)) !== null
     && Object.getPrototypeOf(Object.create(null)) === null
   ) {
@@ -1834,10 +1833,8 @@
     wrapConstructor(OrigRegExp, RegExpShim, {
       $input: true // Chrome < v39 & Opera < 26 have a nonstandard "$input" property
     });
-    /* eslint-disable no-global-assign */
-    RegExp = RegExpShim;
+    RegExp = RegExpShim; // eslint-disable-line no-global-assign
     Value.redefine(globals, 'RegExp', RegExpShim);
-    /* eslint-enable no-global-assign */
   }
 
   if (supportsDescriptors) {
@@ -2695,8 +2692,7 @@
       || !getsThenSynchronously
       || hasBadResolverPromise
     ) {
-      /* globals Promise: true */
-      Promise = PromiseShim;
+      Promise = PromiseShim; // eslint-disable-line no-global-assign
       overrideNative(globals, 'Promise', PromiseShim);
     }
     if (Promise.all.length !== 1) {
