@@ -23,7 +23,8 @@
   },
   "main": "es6-shim",
   "scripts": {
-    "prepublish": "safe-publish-latest && (not-in-publish || npm run minify)",
+    "prepublishOnly": "safe-publish-latest && npm run minify",
+    "prepublih": "not-in-publish || npm run prepublishOnly",
     "pretest": "npm run lint && evalmd *.md",
     "test": "NODE_OPTIONS='--unhandled-rejections=none' npm run tests-only",
     "posttest": "aud --production",
@@ -75,8 +76,8 @@
     "nyc": "^10.3.2",
     "promises-aplus-tests": "^2.1.2",
     "promises-es6-tests": "^0.5.0",
-    "safe-publish-latest": "^1.1.4",
-    "tape": "^5.2.2",
+    "safe-publish-latest": "^2.0.0",
+    "tape": "^5.3.2",
     "uglify-js": "2.7.3"
   }
 }
