@@ -8,7 +8,7 @@ jobs:
     with:
       range: '>= 10'
       type: minors
-      command: npm run tests-only
+      command: NODE_OPTIONS=--unhandled-rejections=none node -pe '' 2>/dev/null && NODE_OPTIONS=--unhandled-rejections=none npm run tests-only || npm run tests-only
 
   node:
     name: 'node >= 10'
