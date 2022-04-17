@@ -3,6 +3,11 @@
 
 	"extends": "@ljharb",
 
+	"ignorePatterns": [
+		"Gruntfile.js",
+		"*.min.js",
+	],
+
 	"rules": {
 		"array-bracket-newline": [0],
 		"array-element-newline": [0],
