@@ -53,11 +53,11 @@ In both browser and node you may also want to include `unorm`; see the [`String.
     * `EPSILON`
     * `MAX_SAFE_INTEGER`
     * `MIN_SAFE_INTEGER`
-    * `isNaN()`([a standalone shim is also available](https://www.npmjs.com/package/is-nan))
+    * `isNaN()` ([a standalone shim is also available](https://www.npmjs.com/package/is-nan))
     * `isInteger()`
     * `isSafeInteger()`
     * `isFinite()`
-    * `parseInt()`
+    * `parseInt()` ([a standalone shim is also available](https://www.npmjs.com/package/parseint))
     * `parseFloat()`
 * `Array`:
     * `from()` ([a standalone shim is also available](https://www.npmjs.com/package/array.from))
@@ -122,7 +122,7 @@ Math functions’ accuracy is 1e-11.
 
 Well-known symbols will only be provided if the engine already has `Symbol` support.
 
-* `String.prototype` Annex B HTML methods
+* `String.prototype` Annex B HTML methods ([a standalone shim is also available](https://www.npmjs.com/package/es-string-html-methods))
     * `anchor()`
     * `big()`
     * `blink()`
