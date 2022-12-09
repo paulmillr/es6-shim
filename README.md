@@ -28,7 +28,8 @@ In both browser and node you may also want to include `unorm`; see the [`String.
 
 ## Safe shims
 
-* `Map`, `Set` (requires ES5 property descriptor support)
+* `Map` (requires ES5 property descriptor support) ([a standalone shim is also available](https://npmjs.com/es-map))
+* `Set` (requires ES5 property descriptor support) ([a standalone shim is also available](https://npmjs.com/es-map))
 * `Promise`
 * `String`:
     * `fromCodePoint()` ([a standalone shim is also available](https://npmjs.com/string.fromcodepoint))
@@ -54,9 +55,9 @@ In both browser and node you may also want to include `unorm`; see the [`String.
     * `MAX_SAFE_INTEGER`
     * `MIN_SAFE_INTEGER`
     * `isNaN()` ([a standalone shim is also available](https://www.npmjs.com/package/is-nan))
-    * `isInteger()`
-    * `isSafeInteger()`
-    * `isFinite()`
+    * `isInteger()` ([a standalone shim is also available(https://www.npmjs.com/package/number.isinteger))
+    * `isSafeInteger()`([a standalone shim is also available](https://www.npmjs.com/package/number.issafeinteger))
+    * `isFinite()` ([a standalone shim is also available](https://www.npmjs.com/package/number.isfinite))
     * `parseInt()` ([a standalone shim is also available](https://www.npmjs.com/package/parseint))
     * `parseFloat()`
 * `Array`:
