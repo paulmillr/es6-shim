@@ -29,11 +29,11 @@ In both browser and node you may also want to include `unorm`; see the [`String.
 ## Safe shims
 
 * `Map` (requires ES5 property descriptor support) ([a standalone shim is also available](https://npmjs.com/es-map))
-* `Set` (requires ES5 property descriptor support) ([a standalone shim is also available](https://npmjs.com/es-map))
+* `Set` (requires ES5 property descriptor support) ([a standalone shim is also available](https://npmjs.com/es-set))
 * `Promise`
 * `String`:
     * `fromCodePoint()` ([a standalone shim is also available](https://npmjs.com/string.fromcodepoint))
-    * `raw()`
+    * `raw()` ([a stanadlone shim is also available](https://www.npmjs.com/package/string.raw))
 * `String.prototype`:
     * `codePointAt()` ([a standalone shim is also available](https://npmjs.com/string.prototype.codepointat))
     * `endsWith()` ([a standalone shim is also available](https://npmjs.com/string.prototype.endswith))
