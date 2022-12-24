@@ -1,3 +1,20 @@
+# es6-shim 0.35.7 (24 December 2022)
+* [Fix] in WSH, `Object.getPrototypeOf([].values())` is falsy (#466)
+* [Refactor] remove unused `ES.IsIterable` function
+* [patch] make iterator bookkeeping properties non-enumerable when possible
+* [readme] updating standalone shim links
+* [Dev Deps] update `eslint`, `@ljharb/eslint-config`, `aud`, `es5-shim`, `safe-publish-latest`, `tape`
+* [actions] update codecov uploader
+* [actions] add Automatic Rebase and Require Allow Edits workflows
+* [Tests] migrate tests to Github Actions (#469)
+* [Tests] disable crashing on unhandled rejections in node >= 15
+* [Tests] use `nyc`
+* [actions] reuse common workflows
+* [eslint] fix `operator-linebreak`
+* [eslint] fix warnings
+* [Tests] add more error message variations
+* [Tests] disable unhandled rejection warnings
+
 # es6-shim 0.35.6 (14 October 2020)
 * [Fix] `Math.hypot`: fix a bug in node v12.11 - v12.15
 * [Fix] internal `ToString` operation should throw on Symbols
