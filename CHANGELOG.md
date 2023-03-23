@@ -1,3 +1,8 @@
+# es6-shim 0.35.8 (23 March 2023)
+ * [Fix] `RegExp#toString`: should not have an object `.prototype`
+ * [Refactor] minimize dynamic lookups of `__proto__`
+ * [Dev Deps] update `@ljharb/eslint-config`, `tape`
+
 # es6-shim 0.35.7 (24 December 2022)
 * [Fix] in WSH, `Object.getPrototypeOf([].values())` is falsy (#466)
 * [Refactor] remove unused `ES.IsIterable` function
