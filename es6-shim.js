@@ -1797,6 +1797,7 @@
       return '/' + pattern + '/' + flags;
     }, true);
     Value.preserveToString(RegExp.prototype.toString, origRegExpToString);
+    RegExp.prototype.toString.prototype = void 0;
   }
 
   if (supportsDescriptors && (!regExpSupportsFlagsWithRegex || regExpNeedsToSupportSymbolMatch)) {

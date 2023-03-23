@@ -273,6 +273,10 @@ describe('RegExp', function () {
       expect(function () { RegExp.prototype.toString.call(undefined); }).to['throw'](TypeError);
     });
 
+    it('has an undefined prototype', function () {
+      expect(RegExp.prototype.toString.prototype).to.equal(undefined);
+    });
+
     it('works on regexes', function () {
       expect(RegExp.prototype.toString.call(/a/g)).to.equal('/a/g');
       expect(RegExp.prototype.toString.call(new RegExp('a', 'g'))).to.equal('/a/g');
