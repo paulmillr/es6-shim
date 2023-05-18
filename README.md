@@ -51,11 +51,11 @@ In both browser and node you may also want to include `unorm`; see the [`String.
     * `toString`
 * `Number`:
     * binary and octal literals: `Number('0b1')` and `Number('0o7')`
-    * `EPSILON`
-    * `MAX_SAFE_INTEGER`
-    * `MIN_SAFE_INTEGER`
+    * `EPSILON` ([a standalone shim is also available](https://www.npmjs.com/package/es-constants))
+    * `MAX_SAFE_INTEGER` ([a standalone shim is also available](https://www.npmjs.com/package/es-constants))
+    * `MIN_SAFE_INTEGER` ([a standalone shim is also available](https://www.npmjs.com/package/es-constants))
     * `isNaN()` ([a standalone shim is also available](https://www.npmjs.com/package/is-nan))
-    * `isInteger()` ([a standalone shim is also available(https://www.npmjs.com/package/number.isinteger))
+    * `isInteger()` ([a standalone shim is also available](https://www.npmjs.com/package/number.isinteger))
     * `isSafeInteger()`([a standalone shim is also available](https://www.npmjs.com/package/number.issafeinteger))
     * `isFinite()` ([a standalone shim is also available](https://www.npmjs.com/package/number.isfinite))
     * `parseInt()` ([a standalone shim is also available](https://www.npmjs.com/package/parseint))
