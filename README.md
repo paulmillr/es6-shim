@@ -1,12 +1,17 @@
-# ES6 Shim
+# ES6 Shim <sup>[![Version Badge][npm-version-svg]][package-url]</sup>
 Provides compatibility shims so that legacy JavaScript engines behave as
 closely as possible to ECMAScript 6 (Harmony).
 
-[![Build Status][1]][2] [![dependency status][3]][4] [![dev dependency status][5]][6]
+[![github actions][actions-image]][actions-url]
+[![coverage][codecov-image]][codecov-url]
+[![License][license-image]][license-url]
+[![Downloads][downloads-image]][downloads-url]
 
-[![browser support](https://ci.testling.com/paulmillr/es6-shim.png)](https://ci.testling.com/paulmillr/es6-shim)
+[![npm badge][npm-badge-png]][package-url]
 
-[![Sauce Test Status](https://saucelabs.com/browser-matrix/es6-shim.svg)](https://saucelabs.com/u/es6-shim)
+<!-- [![browser support](https://ci.testling.com/paulmillr/es6-shim.png)](https://ci.testling.com/paulmillr/es6-shim) -->
+
+<!-- [![Sauce Test Status](https://saucelabs.com/browser-matrix/es6-shim.svg)](https://saucelabs.com/u/es6-shim) -->
 
 [HTML version of the final ECMAScript 6 spec][spec-html-url]
 
@@ -261,12 +266,22 @@ Promise.resolve(5).then(function (value) {
 
 The project was initially based on es6-shim by Axel Rauschmayer.
 
-[1]: https://travis-ci.org/paulmillr/es6-shim.svg
-[2]: https://travis-ci.org/paulmillr/es6-shim
-[3]: https://david-dm.org/paulmillr/es6-shim.svg
-[4]: https://david-dm.org/paulmillr/es6-shim
-[5]: https://david-dm.org/paulmillr/es6-shim/dev-status.svg
-[6]: https://david-dm.org/paulmillr/es6-shim#info=devDependencies
 [license-url]: https://github.com/paulmillr/es6-shim/blob/master/LICENSE
 [spec-html-url]: http://www.ecma-international.org/ecma-262/6.0/
 [es5-shim-url]: https://github.com/es-shims/es5-shim
+
+[package-url]: https://npmjs.org/package/es6-shim
+[npm-version-svg]: https://versionbadg.es/paulmillr/es6-shim.svg
+[deps-svg]: https://david-dm.org/paulmillr/es6-shim.svg
+[deps-url]: https://david-dm.org/paulmillr/es6-shim
+[dev-deps-svg]: https://david-dm.org/paulmillr/es6-shim/dev-status.svg
+[dev-deps-url]: https://david-dm.org/paulmillr/es6-shim#info=devDependencies
+[npm-badge-png]: https://nodei.co/npm/es6-shim.png?downloads=true&stars=true
+[license-image]: https://img.shields.io/npm/l/es6-shim.svg
+[license-url]: LICENSE
+[downloads-image]: https://img.shields.io/npm/dm/es6-shim.svg
+[downloads-url]: https://npm-stat.com/charts.html?package=es6-shim
+[codecov-image]: https://codecov.io/gh/paulmillr/es6-shim/branch/main/graphs/badge.svg
+[codecov-url]: https://app.codecov.io/gh/paulmillr/es6-shim/
+[actions-image]: https://img.shields.io/endpoint?url=https://github-actions-badge-u3jn4tfpocch.runkit.sh/paulmillr/es6-shim
+[actions-url]: https://github.com/paulmillr/es6-shim/actions
