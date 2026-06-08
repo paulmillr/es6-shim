@@ -154,8 +154,8 @@
           return '';
         }
         var str = _call(functionToString, this);
-        var match = _call(_strMatch, str, /\s*function\s+([^(\s]*)\s*/);
-        var name = match && match[1];
+        var match = _call(_strMatch, str, /^\s*function\s+([^(\s]*)\s*/);
+        var name = (match && match[1]) || '';
         Object.defineProperty(this, 'name', {
           configurable: true,
           enumerable: false,

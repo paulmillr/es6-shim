@@ -38,6 +38,21 @@ describe('Function', function () {
       });
     });
 
+    it('returns empty string for anonymous functions, no space', function () {
+      var anon = eval('(function(){})'); // eslint-disable-line no-eval
+      expect(anon.name).to.equal('');
+
+      // pre-ES6, this property is nonconfigurable.
+      var configurable = Object.getOwnPropertyDescriptor ? Object.getOwnPropertyDescriptor(anon, 'name').configurable : false;
+
+      expect(anon).to.have.ownPropertyDescriptor('name', {
+        configurable: !!configurable,
+        enumerable: false,
+        writable: false,
+        value: ''
+      });
+    });
+
     it('returns "anomymous" for Function functions', function () {
       // eslint-disable-next-line no-new-func
       var func = identity(Function(''));
@@ -53,6 +68,27 @@ describe('Function', function () {
         writable: false,
         value: func.name
       });
+    });
+
+    it('returns the name of the outer function', function () {
+      var func = eval('(function(){function inner(){}})'); // eslint-disable-line no-eval
+
+      var start = Date.now();
+      var result = func.name;
+      var elapsed = Date.now() - start;
+
+      expect(result).to.equal('');
+    });
+
+    it('runs on time for functions with lots of whitespace', function () {
+      var func = eval('(function(){' + new Array(100001).join(' ') + '})'); // eslint-disable-line no-eval
+
+      var start = Date.now();
+      var result = func.name;
+      var elapsed = Date.now() - start;
+
+      expect(result).to.equal('');
+      expect(result).to.be.lessThan(250);
     });
   });
 });
