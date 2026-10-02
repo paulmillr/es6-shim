@@ -1,33 +1,23 @@
-# ES6 Shim <sup>[![Version Badge][npm-version-svg]][package-url]</sup>
+# ES6 Shim
+
+> [!WARNING]  
+> The repository has been deprecated. Last stable version was v0.35.8.
+
 Provides compatibility shims so that legacy JavaScript engines behave as
 closely as possible to ECMAScript 6 (Harmony).
-
-[![github actions][actions-image]][actions-url]
-[![coverage][codecov-image]][codecov-url]
-[![License][license-image]][license-url]
-[![Downloads][downloads-image]][downloads-url]
-
-[![npm badge][npm-badge-png]][package-url]
-
-<!-- [![browser support](https://ci.testling.com/paulmillr/es6-shim.png)](https://ci.testling.com/paulmillr/es6-shim) -->
-
-<!-- [![Sauce Test Status](https://saucelabs.com/browser-matrix/es6-shim.svg)](https://saucelabs.com/u/es6-shim) -->
 
 [HTML version of the final ECMAScript 6 spec][spec-html-url]
 
 ## Installation
-If you want to use it in browser:
 
-* Just include `es6-shim` before your scripts.
-* Include [es5-shim][es5-shim-url] especially if your browser doesn't support ECMAScript 5 - but every JS engine requires the `es5-shim` to correct broken implementations, so it's strongly recommended to always include it. Additionally, `es5-shim` should be loaded before `es6-shim`.
-
-For `node.js`, `io.js`, or any `npm`-managed workflow (this is the recommended method):
+Use `npm`:
 
     npm install es6-shim
 
-Alternative methods:
-* `component install paulmillr/es6-shim` if you’re using [component(1)](https://github.com/componentjs/component).
-* `bower install es6-shim` if you’re using [Bower](http://bower.io/).
+If you want to use it in browser without npm:
+
+* Just include `es6-shim` before your scripts.
+* Include [es5-shim][es5-shim-url] especially if your browser doesn't support ECMAScript 5 - but every JS engine requires the `es5-shim` to correct broken implementations, so it's strongly recommended to always include it. Additionally, `es5-shim` should be loaded before `es6-shim`.
 
 In both browser and node you may also want to include `unorm`; see the [`String.prototype.normalize`](#stringprototypenormalize) section for details.
 
